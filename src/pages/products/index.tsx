@@ -243,7 +243,7 @@ export const ProductsPage: FunctionComponent = () => {
           </FiltersHolder>
         </Stack>
 
-        <StockWrapper>
+        <StockWrapper key={filteredAndSortedProducts.map((product) => product.productId).join('') }>
           {productList.length === 0 && (
             <Typography variant="h4" sx={{ color: theme.palette.common.white }}>
               {formatMessage({ id: 'PRODUCTS.NO_PRODUCTS' })}

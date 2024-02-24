@@ -8,10 +8,10 @@
   "importOrderParserPlugins": ["typescript", "decorators-legacy", "jsx"],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
-  "importOrder": ["reflect-metadata","aws-cdk-lib", "@sinapsis-co/cc-core", "@sinapsis-co/cc-sdk", "<THIRD_PARTY_MODULES>", "^[./]"],
+  "importOrder": ["reflect-metadata", "<THIRD_PARTY_MODULES>", "^[./]"],
   "overrides": [
     {
-      "files": ["frontend/**/*"],
+      "files": ["src"],
       "options": {
         "importOrder": [
           "^react$",

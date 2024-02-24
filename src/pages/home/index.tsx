@@ -1,5 +1,5 @@
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import { useTheme } from '@mui/material';
+import { styled, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -15,6 +15,7 @@ import { useAdminDataStore } from '@webapp/store/admin/admin-data';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';
+import { motion } from 'framer-motion';
 import { FunctionComponent, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
@@ -28,7 +29,7 @@ export const HomePage: FunctionComponent = () => {
   const { setUsers, setProducts, setOrders } = useAdminDataStore();
   const { productList, setProductList } = useProductsListData();
   const products = Object.values(productList);
-  const destacatedProducts = products.filter((product) => product.destacated === 'si');
+  const destacatedProducts = products.filter((product) => product.destacated === 'Si');
 
   useEffect(() => {
     getProducts().then((products: Products[]) => {
@@ -99,6 +100,9 @@ export const HomePage: FunctionComponent = () => {
                 width: '150px',
                 marginTop: theme.spacing(4),
                 marginLeft: theme.spacing(4),
+                ':hover': {
+                color: theme.palette.grey[200],
+                },
               }}
             >
               {formatMessage({ id: 'WELCOME.HOME.BUTTON' })}
@@ -127,7 +131,7 @@ export const HomePage: FunctionComponent = () => {
           >
             {formatMessage({ id: 'WELCOME.HOME.DESTACATED.PRODUCTS.TITLE' })}
           </Typography>
-          <Stack direction={'row'} gap={8}>
+          <StockWrapper key={destacatedProducts.map((product) => product.productId).join('')}>
             {destacatedProducts.map((product) => (
               <ProductCard
                 id={product.productId}
@@ -143,7 +147,7 @@ export const HomePage: FunctionComponent = () => {
                 }}
               />
             ))}
-          </Stack>
+          </StockWrapper>
         </Box>
       </Stack>
       <Box
@@ -161,3 +165,17 @@ export const HomePage: FunctionComponent = () => {
     </ContentWrapper>
   );
 };
+
+
+const StockWrapper = styled(motion.ul)(({ theme }) => ({
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(min(12.75rem, 100%), 1fr))',
+  gridGap: theme.spacing(4),
+  width: '100%',
+  listStyle: 'none',
+  padding: 0,
+  margin: 0,
+  '& > li': {
+    width: '100%',
+  },
+}));

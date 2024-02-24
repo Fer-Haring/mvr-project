@@ -103,7 +103,7 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
                   onAnimationStart: makeAnimationStartHandler(setEmailHasAutoFilled),
                 }}
                 InputLabelProps={{
-                  shrink: emailHasAutoFilled,
+                  shrink: emailHasAutoFilled || !!email,
                 }}
               />
               <InputField
@@ -136,7 +136,7 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
                   onAnimationStart: makeAnimationStartHandler(setPasswordHasAutoFilled),
                 }}
                 InputLabelProps={{
-                  shrink: passwordHasAutoFilled,
+                  shrink: passwordHasAutoFilled || !!password,
                 }}
               />
               <Link

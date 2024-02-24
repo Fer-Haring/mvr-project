@@ -5,10 +5,13 @@ import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import { updateUserInDb } from '@webapp/sdk/firebase/user';
 import { User } from '@webapp/sdk/users-types';
+import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useUserData } from '@webapp/store/users/user-data';
 import { useUserId } from '@webapp/store/users/user-id';
 import { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
+
+import CurrencySelectButtons from './botones-moneda-pago';
 
 interface DeliveryTypeButtonsProps {
   className?: string;
@@ -21,6 +24,7 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ user
   const { userId } = useUserId();
   const { setUser } = useUserData();
   const [deliveryType, setDeliveryType] = useState(userData.deliveryType);
+  const { setOrder, order } = useMessageStore();
 
   const handleSelectDelivery = () => {
     setDeliveryType('Delivery');
@@ -37,6 +41,7 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ user
     const { userId: ignoredUserId, ...restOfUserData } = userData;
     updateUserInDb({ userId, ...restOfUserData, deliveryType: selectedDelivery });
     setUser({ ...userData, deliveryType: selectedDelivery });
+    setOrder({ ...order, deliveryType: selectedDelivery });
   };
 
   return (
@@ -55,6 +60,7 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ user
           display: 'flex',
           width: '100%',
           gap: 2,
+          mb: 3,
           justifyContent: 'space-evenly',
           alignItems: 'center',
           flexDirection: 'column',
@@ -98,6 +104,7 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ user
           {formatMessage({ id: 'COMMON.SELECTED.DELIVERY.LOCAL_PICKUP' })}
         </Button>
       </Box>
+      <CurrencySelectButtons userData={userData} />
     </Stack>
   );
 };

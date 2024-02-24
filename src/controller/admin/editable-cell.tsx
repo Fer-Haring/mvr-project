@@ -129,11 +129,11 @@ export const CustomInputField = styled(InputField)(({ theme }) => ({
 }));
 
 const CustomSelect = styled(Select)(({ theme }) => ({
-  height: theme.spacing(2),
+  height: theme.spacing(3),
   borderRadius: theme.spacing(0.5),
   border: 'none',
   '& .MuiOutlinedInput-root': {
-    height: theme.spacing(2.5),
+    height: theme.spacing(3),
     paddingBlock: 0,
     borderRadius: theme.spacing(0.5),
     border: 'none',

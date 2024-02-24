@@ -41,7 +41,7 @@ export const ProductDetailPage: FunctionComponent = () => {
   }, []);
 
   const handleAddToCart = () => {
-    if (!product) return; 
+    if (!product) return;
 
     const cartItem: CartItem = {
       productId: product.productId,
@@ -178,8 +178,14 @@ export const ProductDetailPage: FunctionComponent = () => {
               variant="contained"
               color="primary"
               startIcon={<ShoppingCartRoundedIcon />}
-              sx={{ ml: 2 }}
+              sx={{
+                ml: 2,
+                ':hover': {
+                  color: theme.palette.grey[200],
+                },
+              }}
               onClick={handleAddToCart}
+
             >
               {formatMessage({ id: 'PRODUCT.ADD.TO.CART' })}
             </Button>

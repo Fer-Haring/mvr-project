@@ -288,6 +288,7 @@ export const CustomThemeOptions = (mode: PaletteMode): Partial<ThemeOptions> => 
                 mode === 'dark' ? darkModePalette[0].primaryText : lightModePalette[0].primaryText,
                 0.1
               ),
+              color: mode === 'dark' ? darkModePalette[0].primaryText : lightModePalette[0].primaryText,
             },
             '&.border': {
               border: '1px solid',

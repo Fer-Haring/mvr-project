@@ -20,6 +20,7 @@ const Wrapper = styled(Paper)(({ theme }) => ({
     cursor: 'pointer',
     transform: 'scale(1.05)',
     transition: 'transform 0.5s',
+    boxShadow: '10px 10px 20px 4px rgba(48,111,183,0.9)',
   },
 }));
 

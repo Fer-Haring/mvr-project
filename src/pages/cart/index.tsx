@@ -6,16 +6,18 @@ import Paper from '@mui/material/Paper';
 import ContentWrapper from '@webapp/components/content-wrapper';
 import InputField from '@webapp/components/form/input';
 import CartEmptyState from '@webapp/controller/cart/empty-cart';
-import { CartPaymentDetail } from '@webapp/controller/cart/step-1/cart-payment-detail';
-import { CartProductsDetail } from '@webapp/controller/cart/step-1/cart-products-detail';
-import PaymentTypeButtons from '@webapp/controller/cart/step-2/botones-metodo-pago';
-import DeliveryTypeButtons from '@webapp/controller/cart/step-2/botones-tipo-entrega';
+import { CartProductsDetail } from '@webapp/controller/cart/step-0/cart-products-detail';
+import PaymentTypeButtons from '@webapp/controller/cart/step-1/botones-metodo-pago';
+import DeliveryTypeButtons from '@webapp/controller/cart/step-1/botones-tipo-entrega';
+import ZoneDeliverButtons from '@webapp/controller/cart/step-1/botones-zona-entrega';
+import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useCartStore } from '@webapp/store/cart/cart';
 import { useUserData } from '@webapp/store/users/user-data';
 import { motion } from 'framer-motion';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
+import ReactWhatsapp from 'react-whatsapp';
 
 // import { useNavigate } from 'react-router-dom';
 
@@ -26,11 +28,24 @@ export const CartPage: FunctionComponent = () => {
   const { cart } = useCartStore();
   const [step, setStep] = useState(0);
   const { user } = useUserData();
-  const [address, setAdress] = useState(user.address);
+  const [address, setAddress] = useState(user.address);
   const [city, setCity] = useState(user.city);
   const [checked, setChecked] = useState(false);
+  const {
+    order,
+    setOrder,
+    setName,
+    setLastName,
+    msgCity,
+    setMsgCity,
+    setAddress: setMsgAddress,
+    address: msgAddress,
+    name: msgName,
+    lastName: msgLastName,
+  } = useMessageStore();
 
   const handleNextStep = () => {
+    handleCreateMessage();
     setStep((prevStep) => prevStep + 1);
   };
 
@@ -38,6 +53,37 @@ export const CartPage: FunctionComponent = () => {
     setStep((prevStep) => prevStep - 1);
   };
 
+  const handleCreateMessage = () => {};
+
+  useEffect(() => {
+    setName(user.name);
+    setLastName(user.lastName);
+    setMsgAddress(address);
+    setMsgCity(city);
+    setOrder({
+      ...order,
+      orderId: Math.floor(Math.random() * 100000000),
+      userId: user.userId,
+      cartItems: cart,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, setName, setLastName, setOrder, address, setMsgAddress]);
+
+  const fullMessage = `
+  Hola, quiero hacer un pedido.\n
+  
+  Soy ${msgName} ${msgLastName}.\n
+
+  Mi dirección es: ${msgAddress}, ${msgCity}  \n
+  
+  Mi pedido es:
+  ${order?.cartItems?.map((product) => `${product.unitQuantity} ${product.productName}`).join('\n  ')}.
+
+  El total es: $${order.totalOrderAmountARS}.
+
+  Gracias!
+  `;
+  console.log('fullMessage', fullMessage);
   return (
     <ContentWrapper>
       {cart.length === 0 ? (
@@ -67,15 +113,23 @@ export const CartPage: FunctionComponent = () => {
                   flexDirection: 'row',
                   alignItems: 'center',
                   gap: 10,
+                  [theme.breakpoints.down(1440)]: {
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                  },
                 }}
               >
-                <CartProductsDetail cartProducts={cart} />
-                <CartPaymentDetail cartProducts={cart} />
+                <CartProductsDetail cartProducts={cart} order={order} setOrder={setOrder} />
               </Box>
               <Button
                 variant="contained"
                 onClick={handleNextStep}
-                sx={{ maxWidth: 300 }}
+                sx={{
+                  maxWidth: 300,
+                  ': hover': {
+                    color: theme.palette.grey[200],
+                  },
+                }}
                 endIcon={<ArrowForwardIosRoundedIcon />}
               >
                 {formatMessage({ id: 'CART.PAYMENT.CHECKOUT' })}
@@ -84,7 +138,17 @@ export const CartPage: FunctionComponent = () => {
           )}
           {step === 1 && (
             <Stack direction={'column'} gap={2} width={'100%'} justifyContent={'center'} alignItems={'center'}>
-              <Button variant="contained" onClick={handlePreviousStep} startIcon={<ArrowBackIosNewRoundedIcon />}>
+              <Button
+                variant="contained"
+                onClick={handlePreviousStep}
+                startIcon={<ArrowBackIosNewRoundedIcon />}
+                sx={{
+                  maxWidth: 300,
+                  ': hover': {
+                    color: theme.palette.grey[200],
+                  },
+                }}
+              >
                 {formatMessage({ id: 'CART.PAYMENT.BACK' })}
               </Button>
               <Box
@@ -106,15 +170,24 @@ export const CartPage: FunctionComponent = () => {
                     fontWeight={600}
                     textAlign="center"
                     fontSize={24}
-                    sx={{ mb: 4, color: theme.palette.grey[900] }}
+                    sx={{ mb: 1, color: theme.palette.grey[900] }}
                   >
                     {formatMessage({ id: 'CART.PAYMENT.ADRESS.TITLE' })}
+                  </Typography>
+                  <Typography
+                    variant="h4"
+                    fontWeight={600}
+                    textAlign="center"
+                    fontSize={16}
+                    sx={{ mb: 4, color: theme.palette.grey[500] }}
+                  >
+                    {formatMessage({ id: 'CART.PAYMENT.ADDRESS.DESCRIPTION.WARNING' })}
                   </Typography>
                   <CustomInputField
                     name="address"
                     label={formatMessage({ id: 'COMMON.ADRESS' })}
                     value={address}
-                    onChange={(e) => setAdress(e.target.value)}
+                    onChange={(e) => setAddress(e.target.value)}
                     type="text"
                     fullWidth
                     size="small"
@@ -138,28 +211,32 @@ export const CartPage: FunctionComponent = () => {
                     aria-hidden="true"
                     sx={{ width: '100%' }}
                   />
+                  <ZoneDeliverButtons userData={user} />
                 </Box>
               </Box>
               <Stack direction={'column'} gap={4} width={'100%'} justifyContent={'center'} alignItems={'center'}>
-                <Button
-                  variant="contained"
-                  onClick={handleNextStep}
-                  disabled={!checked}
-                  sx={{
-                    maxWidth: 200,
-                    color: theme.palette.common.white,
-                    backgroundColor: checked ? theme.palette.primary.main : theme.palette.grey[200],
-                    '&:hover': {
-                      backgroundColor: checked ? theme.palette.primary.main : theme.palette.grey[300],
-                    },
-                    '&:disabled': {
-                      backgroundColor: theme.palette.grey[200],
-                      color: theme.palette.grey[400],
-                    },
-                  }}
-                >
-                  {formatMessage({ id: 'CART.PAYMENT.CONFIRM' })}
-                </Button>
+                <ReactWhatsapp number="5492215248329" message={fullMessage} element="span" rel="noopener noreferrer">
+                  <Button
+                    variant="contained"
+                    onClick={handleNextStep}
+                    disabled={!checked}
+                    sx={{
+                      maxWidth: 300,
+                      color: theme.palette.grey[800],
+                      backgroundColor: checked ? theme.palette.primary.main : theme.palette.grey[200],
+                      '&:hover': {
+                        backgroundColor: checked ? theme.palette.primary.main : theme.palette.grey[300],
+                        color: checked ? theme.palette.grey[200] : theme.palette.grey[400],
+                      },
+                      '&:disabled': {
+                        backgroundColor: theme.palette.grey[200],
+                        color: theme.palette.grey[400],
+                      },
+                    }}
+                  >
+                    {formatMessage({ id: 'CART.PAYMENT.CONFIRMATION.MESSAGE' })}
+                  </Button>
+                </ReactWhatsapp>
                 <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                   <Checkbox
                     checked={checked}

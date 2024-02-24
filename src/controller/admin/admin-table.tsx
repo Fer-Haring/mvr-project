@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import DensityLargeRoundedIcon from '@mui/icons-material/DensityLargeRounded';
 import DensityMediumRoundedIcon from '@mui/icons-material/DensityMediumRounded';
 import DensitySmallRoundedIcon from '@mui/icons-material/DensitySmallRounded';

@@ -26,18 +26,18 @@ export interface CartItem {
 }
 
 export interface Order {
-  orderId: string;
-  userId: string;
-  cartItems: CartItem[];
-  totalProducts: number;
-  totalOrderAmount: number;
-  orderDate: string;
-  status: string;
-  currencyUsedToPay: string;
-  paymentMethod: string;
-  deliveryType: string;
-  createdAt: Date;
-  updatedAt: Date;
+  orderId?: string | number;
+  userId?: string;
+  cartItems?: CartItem[];
+  totalProducts?: number;
+  totalOrderAmountUSD?: number;
+  totalOrderAmountARS?: number;
+  status?: string;
+  currencyUsedToPay?: string;
+  paymentMethod?: string;
+  deliveryType?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface CompletedOrder {

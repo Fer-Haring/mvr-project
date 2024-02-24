@@ -3,7 +3,7 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/system/Box';
 import Stack from '@mui/system/Stack';
 import ContentWrapper from '@webapp/components/content-wrapper';
-import { CartProductsDetail } from '@webapp/controller/cart/step-1/cart-products-detail';
+import { CartProductsDetail } from '@webapp/controller/cart/step-0/cart-products-detail';
 import { useCartStore } from '@webapp/store/cart/cart';
 import { FunctionComponent } from 'react';
 

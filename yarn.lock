@@ -9965,6 +9965,11 @@ react-useanimations@^2.10.0:
   dependencies:
     lottie-web "^5.5.7"
 
+react-whatsapp@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/react-whatsapp/-/react-whatsapp-0.3.0.tgz#1d8909939112b90411a70189be2677bdb6d53ac6"
+  integrity sha512-ZuCKhd30crVVNdLf/3BfDffqEOZLFW6mYRITA4fB6Vk5p3TU1Gl3YfTEfLE/7W+kTuwYPzF6aDnzbNt6GcatiQ==
+
 react@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react/-/react-18.2.0.tgz#555bd98592883255fa00de14f1151a917b5d77d5"

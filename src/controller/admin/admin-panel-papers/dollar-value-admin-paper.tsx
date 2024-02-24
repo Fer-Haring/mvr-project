@@ -14,7 +14,7 @@ const DollarValueInputPaper: FunctionComponent = () => {
   const { dollarValue, setDollarValue } = useDollarValue();
 
   const [inputValue, setInputValue] = useState(
-    Object.values(dollarValue?.value)[0] ? Object.values(dollarValue?.value)[0] : ''
+    Object.values(dollarValue?.value)[0] ? Object.values(dollarValue?.value)[0] : dollarValue.value
   );
 
   useEffect(() => {

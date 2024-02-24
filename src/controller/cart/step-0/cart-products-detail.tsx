@@ -13,10 +13,10 @@ import {
   useTheme,
 } from '@mui/material';
 import Stack from '@mui/system/Stack';
-import { CartItem } from '@webapp/sdk/users-types';
+import { CartItem, Order } from '@webapp/sdk/users-types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { useCartStore } from '@webapp/store/cart/cart';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 
 import { TableBox } from '../table-styles';
@@ -26,9 +26,11 @@ import { TableBox } from '../table-styles';
 interface CartProductsDetailProps {
   className?: string;
   cartProducts: CartItem[];
+  order: Order;
+  setOrder: (order: Order) => void;
 }
 
-export const CartProductsDetail: FunctionComponent<CartProductsDetailProps> = ({ cartProducts }) => {
+export const CartProductsDetail: FunctionComponent<CartProductsDetailProps> = ({ cartProducts, order, setOrder }) => {
   const theme = useTheme();
   const { formatMessage } = useIntl();
   const { dollarValue } = useDollarValue();
@@ -50,7 +52,38 @@ export const CartProductsDetail: FunctionComponent<CartProductsDetailProps> = ({
       return `$ ${price} USD`;
     }
   };
-  console.log('cartProducts', cartProducts);
+
+  useEffect(() => {
+    const calculateTotal = (): number => {
+      return cartProducts.reduce((acc, product) => {
+        const conversionRate = product.priceCurrency === 'USD' ? dollarValue.value : 1;
+        const convertedValue = product.subTotal * Number(conversionRate);
+        return convertedValue + acc;
+      }, 0);
+    };
+
+    const filterByUSD = cartProducts.filter((product) => {
+      return product.priceCurrency === 'USD';
+    });
+
+    const getProductsUSD = filterByUSD.map((product) => {
+      return product.subTotal;
+    });
+
+    const getTotalUSD = getProductsUSD.reduce((acc, product) => {
+      return product + acc;
+    }, 0);
+
+    const totalCartValue = calculateTotal();
+    setOrder({
+      ...order,
+      totalOrderAmountUSD: getTotalUSD,
+      totalOrderAmountARS: totalCartValue,
+      totalProducts: cartProducts.length,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cartProducts, dollarValue.value, setOrder]);
+
   return (
     <Stack direction={'column'} gap={2} width={'100%'}>
       <TableContainer component={TableBox}>

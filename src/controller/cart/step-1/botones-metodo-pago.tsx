@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import { updateUserInDb } from '@webapp/sdk/firebase/user';
 import { User } from '@webapp/sdk/users-types';
+import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useUserData } from '@webapp/store/users/user-data';
 import { useUserId } from '@webapp/store/users/user-id';
 import { FunctionComponent, useState } from 'react';
@@ -20,6 +21,7 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
   const { userId } = useUserId();
   const { setUser } = useUserData();
   const theme = useTheme();
+  const { setOrder, order } = useMessageStore();
 
   const [selectedPaymentType, setSelectedPaymentType] = useState(userData.paymentMethod || '');
 
@@ -33,6 +35,7 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
     const { userId: ignoredUserId, ...restOfUserData } = userData;
     updateUserInDb({ userId, ...restOfUserData, paymentMethod: selectedDelivery });
     setUser({ ...userData, paymentMethod: selectedDelivery });
+    setOrder({ ...order, paymentMethod: selectedDelivery });
   };
 
   const buttonStyle = (paymentType: string) => ({
@@ -44,6 +47,7 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
     '&:hover': {
       backgroundColor: selectedPaymentType === paymentType ? theme.palette.primary.main : theme.palette.grey[300],
       border: selectedPaymentType === paymentType ? 'none' : `1px solid ${theme.palette.divider}`,
+      color: selectedPaymentType === paymentType ? theme.palette.common.white : theme.palette.grey[200],
     },
   });
 
