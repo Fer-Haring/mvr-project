@@ -17,6 +17,8 @@ export async function updateUserInDb({
   phone,
   city,
   deliveryType,
+  deliverZone,
+  preferredCurrency,
   paymentMethod,
 }: {
   userId: string;
@@ -28,6 +30,9 @@ export async function updateUserInDb({
   city?: string;
   deliveryType?: string;
   paymentMethod?: string;
+  deliverZone?: string;
+  preferredCurrency?: string;
+
 }) {
   try {
     await update(ref(database, 'Users/' + userId), {
@@ -39,6 +44,8 @@ export async function updateUserInDb({
       ...(city && { city }),
       ...(deliveryType && { deliveryType }),
       ...(paymentMethod && { paymentMethod }),
+      ...(deliverZone && { deliverZone }),
+      ...(preferredCurrency && { preferredCurrency }),
       // No necesitas actualizar el campo admin aquí, a menos que sea parte de la lógica de actualización
     });
     SnackbarUtils.success('Usuario actualizado correctamente');

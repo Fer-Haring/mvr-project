@@ -56,6 +56,8 @@ export const TableBox = styled(Stack)(() => {
           borderRight: 0,
           width: 'auto',
           textWrap: 'nowrap',
+          fontWeight: theme.typography.fontWeightBold,
+          fontSize: 16,
         },
       },
     },

@@ -1,24 +1,22 @@
-import { Box, Paper, Stack, Typography, alpha, styled, useTheme } from '@mui/material';
-import { CartItem, Order } from '@webapp/sdk/users-types';
+import { Box, Divider, Paper, Stack, Typography, alpha, styled, useTheme } from '@mui/material';
+import { CartItem } from '@webapp/sdk/users-types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
-import { set } from 'lodash';
+import { useMessageStore } from '@webapp/store/admin/message-store';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 interface CartProductsDetailProps {
   className?: string;
   cartProducts: CartItem[];
-  order: Order;
-  setOrder: (order: Order) => void;
 }
 
-export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ cartProducts, order, setOrder }) => {
+export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ cartProducts }) => {
   const theme = useTheme();
   const { formatMessage } = useIntl();
   const { dollarValue } = useDollarValue();
-  const deliveryPrice = 2340;
   const [totalCartValue, setTotalCartValue] = useState(0);
   const [subTotal, setSubTotal] = useState(0);
+  const { order, setOrder, address, msgCity, deliverValue } = useMessageStore();
 
   useEffect(() => {
     const calculateTotal = (): number => {
@@ -28,43 +26,108 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
         return convertedValue + acc;
       }, 0);
     };
-    const totalCartValue = calculateTotal() + deliveryPrice;
+    const totalCartValue = calculateTotal() + deliverValue;
     setTotalCartValue(totalCartValue);
     setSubTotal(calculateTotal());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cartProducts, dollarValue, deliveryPrice]);
+  }, [cartProducts, dollarValue, deliverValue]);
 
   useEffect(() => {
-    setOrder({ ...set(order, 'totalOrderAmountARS', totalCartValue) });
+    setOrder({
+      ...order,
+      totalOrderAmountARS: totalCartValue,
+      totalOrderAmountUSD: totalCartValue / dollarValue.value,
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCartValue]);
 
   return (
-    <Paper sx={{ p: 2, width: 'auto', backgroundColor: alpha(theme.palette.common.white, 0.8) }}>
-      <Stack direction={'column'} gap={4} width={'100%'}>
-        <Typography variant="h6" sx={{ fontWeight: 'bold', textWrap: 'nowrap', color: theme.palette.grey[800] }}>
-          {formatMessage({ id: 'CART.PAYMENT.TITLE' })}
-        </Typography>
-        <TextsContainer>
-          <CustomTypography variant="subtitle1">Subtotal</CustomTypography>
+    <Paper
+      sx={{
+        p: 2,
+        minWidth: '100%',
+        backgroundColor: alpha(theme.palette.common.white, 0.8),
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Typography variant="h6" sx={{ fontWeight: 'bold', textWrap: 'nowrap', color: theme.palette.grey[800] }}>
+        {formatMessage({ id: 'CART.PAYMENT.TITLE' })}
+      </Typography>
 
-          <CustomTypography variant="subtitle1">$ {subTotal}</CustomTypography>
-        </TextsContainer>
-        <TextsContainer>
-          <CustomTypography variant="subtitle1">Envío</CustomTypography>
-          <CustomTypography variant="subtitle1">$ {deliveryPrice}</CustomTypography>
-        </TextsContainer>
-      </Stack>
-      <Stack direction={'column'} gap={2} width={'100%'} sx={{ marginTop: 10 }}>
-        <TextsContainer>
-          <CustomTypography sx={{ fontSize: 24, fontWeight: 'bold' }} variant="subtitle1">
-            Total
-          </CustomTypography>
-          <CustomTypography sx={{ fontSize: 24, fontWeight: 'bold' }} variant="subtitle1">
-            $ {totalCartValue}
-          </CustomTypography>
-        </TextsContainer>
-      </Stack>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 4,
+          width: '100%',
+          pt: 4,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Stack direction={'column'} gap={4} width={'100%'}>
+          <TextsContainer>
+            <CustomTypography variant="h5">{formatMessage({ id: 'CART.PAYMENT.DETAILS.ADDRESS' })}</CustomTypography>
+            <CustomTypography variant="subtitle1">
+              {address}, {msgCity}
+            </CustomTypography>
+          </TextsContainer>
+          <TextsContainer>
+            <CustomTypography variant="h5">{formatMessage({ id: 'CART.PAYMENT.DETAILS.PAYMENT' })}</CustomTypography>
+            <CustomTypography variant="subtitle1">{order.paymentMethod}</CustomTypography>
+          </TextsContainer>
+          <TextsContainer>
+            <CustomTypography variant="h5">
+              {formatMessage({ id: 'CART.PAYMENT.DETAILS.DELIVER.TYPE' })}
+            </CustomTypography>
+            <CustomTypography variant="subtitle1">{order.deliveryType}</CustomTypography>
+          </TextsContainer>
+          <TextsContainer>
+            <CustomTypography variant="h5">
+              {formatMessage({ id: 'CART.PAYMENT.DETAILS.SLECTED.CURRENCY' })}
+            </CustomTypography>
+            {order.currencyUsedToPay === 'USD' ? (
+              <CustomTypography variant="subtitle1">{formatMessage({ id: 'CART.PAYMENT.USD' })}</CustomTypography>
+            ) : (
+              <CustomTypography variant="subtitle1">{formatMessage({ id: 'CART.PAYMENT.ARS' })}</CustomTypography>
+            )}
+          </TextsContainer>
+        </Stack>
+
+        <Stack direction={'column'} gap={4} width={'100%'}>
+          <TextsRowContainer>
+            <CustomTypography variant="h4">{formatMessage({ id: 'CART.PAYMENT.DETAILS.SUBTOTAL' })}</CustomTypography>
+            <StyledDivider orientation="horizontal" flexItem />
+            <CustomTypography variant="h5">$ {subTotal}</CustomTypography>
+          </TextsRowContainer>
+          <TextsRowContainer>
+            <CustomTypography variant="h4">
+              {formatMessage({ id: 'CART:PAYMENT.DETAILS.DELIVERY.PRICE' })}
+            </CustomTypography>
+            <StyledDivider orientation="horizontal" flexItem />
+            <CustomTypography variant="h5">$ {deliverValue}</CustomTypography>
+          </TextsRowContainer>
+
+          <Stack direction={'row'} gap={2} width={'100%'} sx={{ marginTop: 10 }}>
+            <TextsRowContainer>
+              <CustomTypography sx={{ fontSize: 24, fontWeight: 'bold' }} variant="subtitle1">
+                {formatMessage({ id: 'CART.PAYMENT.DETAILS.TOTAL' })}
+              </CustomTypography>
+              <StyledDivider orientation="horizontal" flexItem />
+              {order.currencyUsedToPay === 'USD' ? (
+                <CustomTypography sx={{ fontSize: 24, fontWeight: 'bold' }} variant="subtitle1">
+                  $ {totalCartValue / dollarValue.value}
+                </CustomTypography>
+              ) : (
+                <CustomTypography sx={{ fontSize: 24, fontWeight: 'bold' }} variant="subtitle1">
+                  $ {totalCartValue}
+                </CustomTypography>
+              )}
+            </TextsRowContainer>
+          </Stack>
+        </Stack>
+      </Box>
     </Paper>
   );
 };
@@ -77,8 +140,21 @@ const CustomTypography = styled(Typography)(({ theme }) => ({
 
 const TextsContainer = styled(Box)(() => ({
   display: 'flex',
+  flexDirection: 'column',
+  gap: 2,
+  width: '100%',
+  justifyContent: 'space-between',
+}));
+
+const TextsRowContainer = styled(Box)(() => ({
+  display: 'flex',
   flexDirection: 'row',
   gap: 2,
   width: '100%',
   justifyContent: 'space-between',
 }));
+
+const StyledDivider = styled(Divider)({
+  flexGrow: 1,
+  margin: '10px 10px', // Ajusta el margen según necesites
+});

@@ -12,6 +12,8 @@ export interface User {
   city: string;
   paymentMethod: string;
   deliveryType: string;
+  deliverZone: string;
+  preferredCurrency: string;
   createdAt: Date;
   updatedAt: Date;
 }

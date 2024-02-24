@@ -24,6 +24,8 @@ export const useUserData = create(
         cartItems: [], // cartItems ahora es un arreglo directamente en User
         completedOrders: [], // completedOrders ahora es un arreglo directamente en User
         phone: '',
+        deliverZone: '',
+        preferredCurrency: '',
         createdAt: new Date(),
         updatedAt: new Date(),
       },

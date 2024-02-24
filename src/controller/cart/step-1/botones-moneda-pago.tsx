@@ -3,8 +3,11 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
+import { updateUserInDb } from '@webapp/sdk/firebase/user';
 import { User } from '@webapp/sdk/users-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
+import { useUserData } from '@webapp/store/users/user-data';
+import { useUserId } from '@webapp/store/users/user-id';
 import { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 
@@ -13,25 +16,32 @@ interface CurrencySelectButtonsProps {
   userData: User;
 }
 
-const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = () => {
+const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({userData}) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
-  const [deliveryType, setDeliveryType] = useState('');
+  const { userId } = useUserId();
+  const { setUser } = useUserData();
+  const [preferredCurrency, setPreferredCurrency] = useState(userData.preferredCurrency);
   const { setOrder, order } = useMessageStore();
 
   const handleSelectDollar = () => {
-    setDeliveryType('USD');
+    setPreferredCurrency('USD');
     handleOnChange('USD');
   };
 
   const handleSelectArs = () => {
-    setDeliveryType('ARS');
+    setPreferredCurrency('ARS');
     handleOnChange('ARS');
   };
 
-  const handleOnChange = (selectedDelivery: string) => {
-    setOrder({ ...order, currencyUsedToPay: selectedDelivery });
+  const handleOnChange = (selectedCurrency: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { userId: ignoredUserId, ...restOfUserData } = userData;
+    updateUserInDb({ userId, ...restOfUserData, preferredCurrency: selectedCurrency });
+    setUser({ ...userData, preferredCurrency: selectedCurrency });
+    setOrder({ ...order, currencyUsedToPay: selectedCurrency });
   };
+
 
   return (
     <Stack gap={2} sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -61,11 +71,11 @@ const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = () 
             width: '100%',
             maxWidth: '236px',
             height: '48px',
-            backgroundColor: deliveryType === 'USD' ? theme.palette.primary.main : theme.palette.grey[200],
-            border: deliveryType === 'USD' ? 'none' : `1px solid ${theme.palette.divider}`,
+            backgroundColor: preferredCurrency === 'USD' ? theme.palette.primary.main : theme.palette.grey[200],
+            border: preferredCurrency === 'USD' ? 'none' : `1px solid ${theme.palette.divider}`,
             '&:hover': {
-              backgroundColor: deliveryType === 'USD' ? theme.palette.primary.main : theme.palette.grey[300],
-              border: deliveryType === 'USD' ? 'none' : `1px solid ${theme.palette.divider}`,
+              backgroundColor: preferredCurrency === 'USD' ? theme.palette.primary.main : theme.palette.grey[300],
+              border: preferredCurrency === 'USD' ? 'none' : `1px solid ${theme.palette.divider}`,
             },
           }}
           aria-label={formatMessage({ id: 'CART.PAYMENT.USD' })}
@@ -79,11 +89,11 @@ const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = () 
             width: '100%',
             maxWidth: '236px',
             height: '48px',
-            backgroundColor: deliveryType === 'ARS' ? theme.palette.primary.main : theme.palette.grey[200],
-            border: deliveryType === 'ARS' ? 'none' : `1px solid ${theme.palette.divider}`,
+            backgroundColor: preferredCurrency === 'ARS' ? theme.palette.primary.main : theme.palette.grey[200],
+            border: preferredCurrency === 'ARS' ? 'none' : `1px solid ${theme.palette.divider}`,
             '&:hover': {
-              backgroundColor: deliveryType === 'ARS' ? theme.palette.primary.main : theme.palette.grey[300],
-              border: deliveryType === 'ARS' ? 'none' : `1px solid ${theme.palette.divider}`,
+              backgroundColor: preferredCurrency === 'ARS' ? theme.palette.primary.main : theme.palette.grey[300],
+              border: preferredCurrency === 'ARS' ? 'none' : `1px solid ${theme.palette.divider}`,
             },
           }}
           aria-label={formatMessage({ id: 'CART.PAYMENT.ARS' })}

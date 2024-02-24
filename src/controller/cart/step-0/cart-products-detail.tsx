@@ -54,31 +54,8 @@ export const CartProductsDetail: FunctionComponent<CartProductsDetailProps> = ({
   };
 
   useEffect(() => {
-    const calculateTotal = (): number => {
-      return cartProducts.reduce((acc, product) => {
-        const conversionRate = product.priceCurrency === 'USD' ? dollarValue.value : 1;
-        const convertedValue = product.subTotal * Number(conversionRate);
-        return convertedValue + acc;
-      }, 0);
-    };
-
-    const filterByUSD = cartProducts.filter((product) => {
-      return product.priceCurrency === 'USD';
-    });
-
-    const getProductsUSD = filterByUSD.map((product) => {
-      return product.subTotal;
-    });
-
-    const getTotalUSD = getProductsUSD.reduce((acc, product) => {
-      return product + acc;
-    }, 0);
-
-    const totalCartValue = calculateTotal();
     setOrder({
       ...order,
-      totalOrderAmountUSD: getTotalUSD,
-      totalOrderAmountARS: totalCartValue,
       totalProducts: cartProducts.length,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps

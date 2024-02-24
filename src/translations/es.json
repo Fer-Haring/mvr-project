@@ -242,7 +242,7 @@
   "ADD.NEWPRODUCT.LABEL.PRODUCTIMAGE": "Imagen del producto",
   "ADD.NEWPRODUCT.LABEL.PROMOPRICE": "Precio promocional",
   "CART.PAYMENT.CHECKOUT" : "Verificar Información de Compra",
-  "CART.PAYMENT.TITLE" : "Resumen de Compra",
+
   "CART.HEADER.NAME" : "Nombre",
   "CART.HEADER.QUANTITY" : "Cantidad",
   "CART.HEADER.PRICE" : "Precio Unitario",
@@ -258,9 +258,33 @@
   "CART.PAYMENT.SELECT.CURRENCY" : "Seleccionar Moneda de Pago",
   "CART.PAYMENT.USD" : "Dólares",
   "CART.PAYMENT.ARS" : "Pesos Argentinos",
+  "CART.PAYMENT.NEXT" : "Ver Detalles del Pedido",
   "CART.PAYMENT.DELIVER.ZONE.SELECTOR" : "Seleccionar Zona de Entrega",
   "CART.PAYMENT.DELIVER.ZONE.1" : "La plata, Berisso, Ensenada",
   "CART.PAYMENT.DELIVER.ZONE.2" : "Otras Zonas",
+
+
+  
+  "CART.PAYMENT.TITLE" : "Resumen del Pedido",
+  "CART.PAYMENT.DETAILS.ADDRESS" : "Dirección de Entrega",
+  "CART.PAYMENT.DETAILS.PHONE" : "Número de Teléfono",
+  "CART.PAYMENT.DETAILS.CITY" : "Ciudad",
+  "CART.PAYMENT.DETAILS.PAYMENT" : "Método de Pago seleccionado",
+  "CART.PAYMENT.DETAILS.DELIVER.TYPE" : "Tipo de Entrega",
+  "CART:PAYMENT.DETAILS.DELIVERY.PRICE" : "Costo de Envio",
+  "CART.PAYMENT.DETAILS.DELIVER.ZONE" : "Zona de Entrega",
+  "CART.PAYMENT.DETAILS.DELIVER.ZONE.1" : "La Plata, Berisso, Ensenada",
+  "CART.PAYMENT.DETAILS.DELIVER.ZONE.2" : "Otras Zonas",
+  "CART.PAYMENT.DETAILS.SLECTED.CURRENCY" : "Moneda de Pago Seleccionada",
+  "CART.PAYMENT.DETAILS.SUBTOTAL" : "Subtotal",
+  "CART.PAYMENT.DETAILS.DELIVERY" : "Entrega",
+  "CART.PAYMENT.DETAILS.TOTAL" : "Total",
+
+  "CART.PAYMENT.DETAILS.MODAL.TITLE" : "Asegúrese de que los detalles de su pedido sean correctos",
+  "CART.PAYMENT.DETAILS.MODAL.SUBTITLE" : "Una vez que confirme, los productos seran eliminados del carrito, por favor asegurese de que los detalles de su pedido sean correctos, si desea cambiar algo o agregar/eliminar productos, por favor vuelva atras y modifique los detalles de su pedido ",
+  "CART.PAYMENT.DETAILS.MODAL.CONFIRM" : "Confirmar Pedido y Enviar Whatsapp",
+  "CART.PAYMENT.DETAILS.MODAL.CANCEL" : "Volver atras",
+
 
   "CART.PAYMENT.CASH" : "Efectivo",
   "CART.PAYMENT.CREDIT_CARD" : "Tarjeta de Crédito",
