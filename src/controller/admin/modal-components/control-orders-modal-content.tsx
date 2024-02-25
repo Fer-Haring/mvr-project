@@ -3,13 +3,13 @@ import { Accordion, AccordionDetails, AccordionSummary, Typography, alpha, style
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Select from '@webapp/components/form/select';
+import SnackbarUtils from '@webapp/components/snackbar';
 import { updateOrderStatus } from '@webapp/sdk/firebase/admin';
 import { getUser } from '@webapp/sdk/firebase/user';
 import { CompletedOrder, User } from '@webapp/sdk/users-types';
 import { useAdminDataStore } from '@webapp/store/admin/admin-data';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
-import SnackbarUtils from '@webapp/components/snackbar';
 
 interface UserOrders {
   [userId: string]: {
@@ -31,15 +31,15 @@ const ControlOrdersContent: FunctionComponent<ControlOrdersContentProps> = ({ cl
   const [userOrders, setUserOrders] = useState<UserOrders>({});
   const [ordersStatus, setOrdersStatus] = useState<{ [orderId: string]: string }>({});
 
-  const handleStatusChange = (orderId: string, newStatus: string) => {
+  const handleStatusChange = (orderId: string | number | undefined, newStatus: string) => {
     // Actualiza el estado local
     setOrdersStatus((prevStatuses) => ({
       ...prevStatuses,
-      [orderId]: newStatus,
+      [orderId!]: newStatus,
     }));
 
     // Llama a la función que actualiza la base de datos
-    updateOrderStatus(orderId, newStatus)
+    updateOrderStatus(orderId as string, newStatus)
       .then(() => {
         SnackbarUtils.success('Estado actualizado con éxito');
 
@@ -63,13 +63,13 @@ const ControlOrdersContent: FunctionComponent<ControlOrdersContentProps> = ({ cl
 
       for (const order of ordersArray) {
         const userId = order.userId;
-        if (!ordersByUser[userId]) {
-          ordersByUser[userId] = {
+        if (!ordersByUser[userId!]) {
+          ordersByUser[userId!] = {
             orders: [],
-            userData: await getUser(userId), // Asegúrate de que el tipo de dato retornado por getUser sea correcto
+            userData: await getUser(userId!), // Asegúrate de que el tipo de dato retornado por getUser sea correcto
           };
         }
-        ordersByUser[userId].orders.push(order);
+        ordersByUser[userId!].orders.push(order);
       }
 
       setUserOrders(ordersByUser);
@@ -116,9 +116,10 @@ const ControlOrdersContent: FunctionComponent<ControlOrdersContentProps> = ({ cl
                                 {order.currencyUsedToPay}
                               </Typography>
                               <CustomSelect
-                                id={order.orderId}
+                                key={order.orderId}
+                                id={order.orderId + 'status'}
                                 label={formatMessage({ id: 'ADMIN.ORDERS.STATUS' })}
-                                value={ordersStatus[order.orderId] || order.status}
+                                value={ordersStatus[order.orderId!] || order.status}
                                 onChange={(e) => handleStatusChange(order.orderId, e.target.value as string)}
                                 options={[
                                   {

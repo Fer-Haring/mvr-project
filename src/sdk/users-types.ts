@@ -40,46 +40,48 @@ export interface Order {
   deliveryType?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  totalOrderAmount?: number;
+  expandable?: boolean;
 }
 
 export interface CompletedOrder {
-  orderId: string;
-  userId: string;
-  cartItems: CartItem[];
-  totalProducts: number;
-  totalOrderAmount: number;
-  orderDate: string;
-  status: string;
-  currencyUsedToPay: string;
-  paymentMethod: string;
-  deliveryType: string;
+  orderId?: string | number;
+  userId?: string;
+  cartItems?: CartItem[];
+  totalProducts?: number;
+  totalOrderAmountUSD?: number;
+  totalOrderAmountARS?: number;
+  status?: string;
+  currencyUsedToPay?: string;
+  paymentMethod?: string;
+  deliveryType?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  totalOrderAmount?: number;
   expandable?: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export interface Products {
-  actualStock: string;
-  costPrice: number;
+  productName: string;
   description: string;
-  destacated: string;
-  fraction: number;
-  minimumStock: number;
-  priceCurrency: string;
   productCategory: string;
   productCode: string;
+  priceCurrency: string;
+  costPrice: number;
+  salePrice: string;
+  promoPrice: number;
+  actualStock: string;
+  minimumStock: number;
+  stockControl: string;
+  showInCatalog: string;
+  destacated: string;
+  fraction: number;
+  mainProductCategory: string;
   productId: string;
   productImage: string;
-  productName: string;
-  promoPrice: number;
-  salePrice: string;
-  showInCatalog: string;
-  stockControl: string;
   createdAt: Date;
   updatedAt: Date;
 }
-
-
 
 export interface AdminData {
   users: User[];

@@ -41,7 +41,7 @@ const ExpandableTableContent: FunctionComponent<ExpandableTableContentProps> = (
           }}
         />
         <TableBody>
-          {row.cartItems.map((item) => (
+          {row.cartItems?.map((item) => (
             <React.Fragment key={item.productId}>
               <TableRow>
                 <TableCell>{item.productName}</TableCell>

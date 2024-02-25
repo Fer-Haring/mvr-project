@@ -4,6 +4,7 @@ import ContentWrapper from '@webapp/components/content-wrapper';
 import CartEmptyState from '@webapp/controller/cart/empty-cart';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useCartStore } from '@webapp/store/cart/cart';
+import { useCompletedOrdersStore } from '@webapp/store/orders/get-completed-orders';
 import { useUserData } from '@webapp/store/users/user-data';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -24,6 +25,7 @@ export const CartPage: FunctionComponent = () => {
   const [address, setAddress] = useState(user.address);
   const [city, setCity] = useState(user.city);
   const [checked, setChecked] = useState(false);
+  const { setOrders } = useCompletedOrdersStore();
   const {
     order,
     setOrder,
@@ -62,7 +64,9 @@ export const CartPage: FunctionComponent = () => {
       deliveryType: user.deliveryType,
       paymentMethod: user.paymentMethod,
       totalProducts: cart.length,
+      status: 'Pending',
     });
+    setOrders([order]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, setName, setLastName, setOrder, address, setMsgAddress]);
 
@@ -124,6 +128,7 @@ export const CartPage: FunctionComponent = () => {
               fullMessage={fullMessage}
               handleNextStep={handleNextStep}
               handlePreviousStep={handlePreviousStep}
+              order={order}
             />
           )}
           {step === 3 && <Step3 step={step} navigate={navigate} />}

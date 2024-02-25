@@ -25,8 +25,8 @@ import { TableBox } from '../table-styles';
 
 interface CartProductsDetailProps {
   className?: string;
-  cartProducts: CartItem[];
-  order: Order;
+  cartProducts?: CartItem[];
+  order?: Order;
   setOrder: (order: Order) => void;
 }
 
@@ -54,10 +54,12 @@ export const CartProductsDetail: FunctionComponent<CartProductsDetailProps> = ({
   };
 
   useEffect(() => {
-    setOrder({
-      ...order,
-      totalProducts: cartProducts.length,
-    });
+    if (!cartProducts || cartProducts.length === 0) {
+      setOrder({
+        ...order,
+        totalProducts: order?.totalProducts ? order.totalProducts : 0,
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cartProducts, dollarValue.value, setOrder]);
 
@@ -75,7 +77,7 @@ export const CartProductsDetail: FunctionComponent<CartProductsDetailProps> = ({
           </TableHead>
           <Box sx={{ height: 30 }} />
           <TableBody>
-            {cartProducts.map((cartProduct) => (
+            {cartProducts?.map((cartProduct) => (
               <TableRow key={cartProduct.productId}>
                 <TableCell>{cartProduct.productName}</TableCell>
                 <TableCell>

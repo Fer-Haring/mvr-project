@@ -5,6 +5,7 @@ import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { motion } from 'framer-motion';
 import { FunctionComponent, useMemo } from 'react';
 import { useIntl } from 'react-intl';
+import { useNavigate } from 'react-router-dom';
 
 interface SimilarProductsProps {
   productList: Products[];
@@ -13,6 +14,7 @@ interface SimilarProductsProps {
 
 const SimilarProducts: FunctionComponent<SimilarProductsProps> = ({ productList, selectedProduct }) => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const { formatMessage } = useIntl();
   const { setProduct } = useSingleProduct();
 
@@ -20,7 +22,7 @@ const SimilarProducts: FunctionComponent<SimilarProductsProps> = ({ productList,
     // Filtra productos por la misma categoría, excluyendo el producto actual
     const filteredProducts = Object.values(productList).filter(
       (product) =>
-        product.productCategory === selectedProduct.productCategory && product.productId !== selectedProduct.productId
+        product.mainProductCategory === selectedProduct.mainProductCategory && product.productId !== selectedProduct.productId
     );
     const shuffledProducts = filteredProducts.sort(() => 0.5 - Math.random());
     return shuffledProducts.slice(0, 4);
@@ -33,9 +35,10 @@ const SimilarProducts: FunctionComponent<SimilarProductsProps> = ({ productList,
       </Typography>
       <Divider sx={{ backgroundColor: theme.palette.common.white, height: 2 }} component={Box} />
       <Wrapper>
-        {similarProducts.map((product) => (
+        {similarProducts.map((product, id) => (
           <ProductCard
-            id={product.productId}
+            key={id}
+            id={id}
             image={''}
             name={product.productName}
             description={product.description}
@@ -43,6 +46,7 @@ const SimilarProducts: FunctionComponent<SimilarProductsProps> = ({ productList,
             currency={product.priceCurrency}
             onClick={() => {
               setProduct(product);
+              navigate(`/productos/${product.productId}`);
             }}
           />
         ))}

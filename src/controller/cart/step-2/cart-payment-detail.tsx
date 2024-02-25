@@ -2,6 +2,7 @@ import { Box, Divider, Paper, Stack, Typography, alpha, styled, useTheme } from 
 import { CartItem } from '@webapp/sdk/users-types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { useMessageStore } from '@webapp/store/admin/message-store';
+import { useCompletedOrdersStore } from '@webapp/store/orders/get-completed-orders';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
@@ -16,6 +17,8 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
   const { dollarValue } = useDollarValue();
   const [totalCartValue, setTotalCartValue] = useState(0);
   const [subTotal, setSubTotal] = useState(0);
+
+  const { setOrders } = useCompletedOrdersStore();
   const { order, setOrder, address, msgCity, deliverValue } = useMessageStore();
 
   useEffect(() => {
@@ -23,7 +26,8 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
       return cartProducts.reduce((acc, product) => {
         const conversionRate = product.priceCurrency === 'USD' ? dollarValue.value : 1;
         const convertedValue = product.subTotal * Number(conversionRate);
-        return convertedValue + acc;
+        const roundedResult = Math.round(convertedValue * 100) / 100;
+        return roundedResult + acc;
       }, 0);
     };
     const totalCartValue = calculateTotal() + deliverValue;
@@ -33,11 +37,20 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
   }, [cartProducts, dollarValue, deliverValue]);
 
   useEffect(() => {
+    const totalUSD = totalCartValue / dollarValue.value;
     setOrder({
       ...order,
       totalOrderAmountARS: totalCartValue,
-      totalOrderAmountUSD: totalCartValue / dollarValue.value,
+      totalOrderAmountUSD: Math.round(totalUSD * 100) / 100,
     });
+    setOrders([
+      {
+        ...order,
+        totalOrderAmount: totalCartValue,
+        totalOrderAmountARS: totalCartValue,
+        totalOrderAmountUSD: Math.round(totalUSD * 100) / 100,
+      },
+    ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCartValue]);
 

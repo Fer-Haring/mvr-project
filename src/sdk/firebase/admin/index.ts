@@ -1,7 +1,8 @@
 import SnackbarUtils from '@webapp/components/snackbar';
+import { CompletedOrder } from '@webapp/sdk/users-types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { useCompletedOrdersStore } from '@webapp/store/orders/get-completed-orders';
-import { get, getDatabase, ref, update } from 'firebase/database';
+import { get, getDatabase, push, ref, update } from 'firebase/database';
 
 export const getDollarValue = async () => {
   const db = getDatabase();
@@ -54,6 +55,16 @@ export const getCompletedOrders = async () => {
     return null;
   }
 };
+
+export const saveCompletedOrder = async (order: CompletedOrder, ) => {
+  const db = getDatabase();
+  const ordersRef = ref(db, 'CompletedOrders/');
+  try {
+    await push(ordersRef, order);
+  } catch (error) {
+    SnackbarUtils.error('Error saving order: ' + error);
+  }
+}
 
 export const updateOrderStatus = async (orderId: string, status: string) => {
   const db = getDatabase();

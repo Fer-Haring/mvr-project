@@ -7,7 +7,7 @@
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended"
   ],
-  "ignorePatterns": ["dist", "cdk.out", "*.js", "src"],
+  "ignorePatterns": ["dist", "cdk.out", "*.js", "frontend"],
   "rules": {
     "no-console": "warn",
     "semi": ["error", "always"],

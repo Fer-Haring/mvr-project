@@ -18,6 +18,7 @@ const initialState: ProductData = {
     minimumStock: 0,
     priceCurrency: '',
     productCategory: '',
+    mainProductCategory: '',
     productCode: '',
     productId: '',
     productImage: '',

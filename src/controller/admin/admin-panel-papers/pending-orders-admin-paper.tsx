@@ -17,7 +17,9 @@ interface PendingOrdersPaperProps {
 const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders }) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
-  const ordersStatus = Object.values(orders).map((order) => order.status);
+  const ordersStatus = Object.values(orders)
+    .map((order) => order.status)
+    .filter((status): status is string => status !== undefined);
   const [openModal, setOpenModal] = React.useState(false);
 
   const handleOpen = () => {
@@ -27,11 +29,11 @@ const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders
   const handleClose = () => {
     setOpenModal(false);
   };
-  
-  const orderStatusCountstringOccurrences = (arr: string[]) => {
+
+  const orderStatusCountstringOccurrences = (arr?: string[]) => {
     const orderStatusCounts: { [key: string]: number } = { Pending: 0, Completed: 0, Canceled: 0 };
 
-    arr.forEach((item) => {
+    arr?.forEach((item) => {
       if (Object.prototype.hasOwnProperty.call(orderStatusCounts, item)) {
         orderStatusCounts[item as keyof typeof orderStatusCounts] += 1;
       }

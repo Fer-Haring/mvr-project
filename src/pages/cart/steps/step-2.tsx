@@ -4,7 +4,8 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Modal from '@webapp/components/modal';
 import { CartPaymentDetail } from '@webapp/controller/cart/step-2/cart-payment-detail';
-import { CartItem } from '@webapp/sdk/users-types';
+import { saveCompletedOrder } from '@webapp/sdk/firebase/admin';
+import { CartItem, Order } from '@webapp/sdk/users-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useCartStore } from '@webapp/store/cart/cart';
 import { FunctionComponent, useState } from 'react';
@@ -17,9 +18,16 @@ interface Step2Props {
   fullMessage: string;
   handleNextStep: () => void;
   handlePreviousStep: () => void;
+  order: Order;
 }
 
-export const Step2: FunctionComponent<Step2Props> = ({ cart, fullMessage, handleNextStep, handlePreviousStep }) => {
+export const Step2: FunctionComponent<Step2Props> = ({
+  cart,
+  fullMessage,
+  handleNextStep,
+  handlePreviousStep,
+  order,
+}) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
   const { deleteMessageStore } = useMessageStore();
@@ -34,7 +42,8 @@ export const Step2: FunctionComponent<Step2Props> = ({ cart, fullMessage, handle
     setOpenModal(false);
   };
 
-  const handleLastStep = () => {
+  const handleLastStep = async () => {
+    await saveCompletedOrder(order);
     clearCart();
     deleteMessageStore();
     handleNextStep();
@@ -49,7 +58,6 @@ export const Step2: FunctionComponent<Step2Props> = ({ cart, fullMessage, handle
             onClick={handleLastStep}
             size="medium"
             sx={{
-
               maxWidth: 300,
               color: theme.palette.grey[800],
               backgroundColor: theme.palette.primary.main,
@@ -133,14 +141,6 @@ export const Step2: FunctionComponent<Step2Props> = ({ cart, fullMessage, handle
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
           customContent={<WhatsappButton />}
-          // primaryButtonColor="primary"
-          // primaryButtonText={formatMessage({ id: 'COMMON.CLOSE' })}
-          // primaryButtonOnClick={handleCloseModal}
-          // primaryButtonDisabled={false}
-          // secondaryButtonColor="secondary"
-          // secondaryButtonText={formatMessage({ id: 'COMMON.CLOSE' })}
-          // secondaryButtonOnClick={handleCloseModal}
-          // secondaryButtonDisabled={false}
         />
       )}
     </Stack>

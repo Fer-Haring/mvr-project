@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';
 import { SxProps, Theme } from '@mui/material/styles';
 import ImageUploader from '@webapp/components/image-uploader';
+import SnackbarUtils from '@webapp/components/snackbar';
 import { uploadProductImage } from '@webapp/sdk/firebase/products';
 import { Products } from '@webapp/sdk/users-types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
@@ -25,6 +26,7 @@ const ProductImageHolder: FunctionComponent<ProductImageHolderProps> = ({ classN
       return;
     }
     handleUpdateAvatar(avatarFile);
+    SnackbarUtils.success(formatMessage({ id: 'PROFILE.USER_INFO.AVATAR_UPDATED' }));
   };
 
   const handleUpdateAvatar = async (image: File) => {

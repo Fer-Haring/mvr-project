@@ -25,7 +25,7 @@ const Wrapper = styled(Paper)(({ theme }) => ({
 }));
 
 interface ProductCardProps {
-  id: string;
+  id: number;
   className?: string;
   children?: React.ReactNode;
   sx?: SxProps<Theme>;

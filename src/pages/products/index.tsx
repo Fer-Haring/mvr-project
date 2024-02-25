@@ -1,5 +1,15 @@
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import KeyboardArrowDownRounded from '@mui/icons-material/KeyboardArrowDownRounded';
-import { Box, FormControl, InputLabel, MenuItem, Popper, SelectChangeEvent, Typography } from '@mui/material';
+import {
+  Box,
+  FormControl,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Popper,
+  SelectChangeEvent,
+  Typography,
+} from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { alpha, styled, useTheme } from '@mui/material/styles';
 import ContentWrapper from '@webapp/components/content-wrapper';
@@ -12,7 +22,16 @@ import { FunctionComponent, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
-import { CustomAutoComplete, CustomInputSearch, CustomSelect, FiltersHolder, Slider, StockWrapper } from './products';
+import {
+  CategoryButton,
+  CategoryButtonWrapper,
+  CustomAutoComplete,
+  CustomInputSearch,
+  CustomSelect,
+  FiltersHolder,
+  Slider,
+  StockWrapper,
+} from './products';
 
 interface AutocompleteOption {
   label: string;
@@ -35,6 +54,7 @@ export const ProductsPage: FunctionComponent = () => {
   const [sortCriteria, setSortCriteria] = useState<string>('all');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [searchTerms, setSearchTerms] = useState<string>('');
+  const [mainCategory, setMainCategory] = useState<string>('');
   const [categoriesOptions, setCategoriesOptions] = useState<AutocompleteOption[]>([]);
   const [category, setCategory] = useState<AutocompleteOption | null>(null);
 
@@ -44,6 +64,14 @@ export const ProductsPage: FunctionComponent = () => {
     const formattedCategories = uniqueCategories.map((cat) => ({ label: cat, value: cat }));
     setCategoriesOptions(formattedCategories);
   }, [productList]);
+
+  // Función para manejar el cambio de categoría principal
+  const handleMainCategoryChange = (category: string) => {
+    setMainCategory(category);
+    // Resetea otros filtros si es necesario, por ejemplo:
+    setSelectedCategory('');
+    setSearchTerms('');
+  };
 
   // Modify the onChange handler for CustomAutocomplete
   const handleCategoryChange = (event: React.SyntheticEvent, newValue: AutocompleteOption | null) => {
@@ -62,6 +90,10 @@ export const ProductsPage: FunctionComponent = () => {
 
   const filteredAndSortedProducts = useMemo(() => {
     let result = Object.values(productList);
+
+    if (mainCategory) {
+      result = result.filter((product) => product.mainProductCategory === mainCategory);
+    }
 
     if (selectedCategory) {
       result = result.filter((product) => product.productCategory === selectedCategory);
@@ -95,7 +127,13 @@ export const ProductsPage: FunctionComponent = () => {
     }
 
     return result;
-  }, [priceRange, productList, searchTerms, selectedCategory, sortCriteria]);
+  }, [mainCategory, priceRange, productList, searchTerms, selectedCategory, sortCriteria]);
+
+  // Obtener categorías principales únicas para los botones
+  const mainCategories = useMemo(() => {
+    const allMainCategories = Object.values(productList).map((product) => product.mainProductCategory);
+    return Array.from(new Set(allMainCategories));
+  }, [productList]);
 
   useEffect(() => {
     getProducts().then((products) => {
@@ -243,28 +281,76 @@ export const ProductsPage: FunctionComponent = () => {
           </FiltersHolder>
         </Stack>
 
-        <StockWrapper key={filteredAndSortedProducts.map((product) => product.productId).join('') }>
-          {productList.length === 0 && (
-            <Typography variant="h4" sx={{ color: theme.palette.common.white }}>
-              {formatMessage({ id: 'PRODUCTS.NO_PRODUCTS' })}
-            </Typography>
+        <Stack direction={'column'} gap={2} width={'100%'}>
+          {mainCategory && (
+            <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', pb: 4 }}>
+              <IconButton onClick={() => setMainCategory('')} sx={{ color: theme.palette.common.white, zIndex: 1 }}>
+                <ArrowBackRoundedIcon sx={{ width: 48, height: 48 }} />
+              </IconButton>
+              <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Typography
+                  variant="h1"
+                  sx={{
+                    color: theme.palette.common.white,
+                    textAlign: 'center',
+                    position: 'absolute',
+                    fontFamily: 'WordMean',
+                  }}
+                >
+                  {mainCategory}
+                </Typography>
+              </Box>
+              <Box sx={{ width: 48 }} />
+            </Box>
           )}
-          {filteredAndSortedProducts.map((product) => (
-            <ProductCard
-              id={product.productId}
-              products={[product]}
-              image={product.productImage}
-              name={product.productName}
-              description={product.description}
-              price={product.salePrice}
-              currency={product.priceCurrency}
-              onClick={() => {
-                setProduct(product);
-                navigate(`/productos/${product.productId}`);
-              }}
-            />
-          ))}
-        </StockWrapper>
+          {!mainCategory && (
+            <>
+              <Typography
+                variant="h1"
+                sx={{ color: theme.palette.common.white, textAlign: 'center', pb: 4, fontFamily: 'WordMean' }}
+              >
+                {formatMessage({ id: 'PRODUCTS.SELECT.MAIN.CATEGORY' })}
+              </Typography>
+              <CategoryButtonWrapper>
+                {mainCategories.map((category) => (
+                  <CategoryButton
+                    key={category}
+                    variant="contained"
+                    className="bn26"
+                    onClick={() => handleMainCategoryChange(category)}
+                  >
+                    {category}
+                  </CategoryButton>
+                ))}
+              </CategoryButtonWrapper>
+            </>
+          )}
+          {mainCategory && (
+            <StockWrapper key={filteredAndSortedProducts.map((product) => product.productId).join('')}>
+              {productList.length === 0 && (
+                <Typography variant="h4" sx={{ color: theme.palette.common.white }}>
+                  {formatMessage({ id: 'PRODUCTS.NO_PRODUCTS' })}
+                </Typography>
+              )}
+              {filteredAndSortedProducts.map((product, id) => (
+                <ProductCard
+                  key={id}
+                  id={id}
+                  products={[product]}
+                  image={product.productImage}
+                  name={product.productName}
+                  description={product.description}
+                  price={product.salePrice}
+                  currency={product.priceCurrency}
+                  onClick={() => {
+                    setProduct(product);
+                    navigate(`/productos/${product.productId}`);
+                  }}
+                />
+              ))}
+            </StockWrapper>
+          )}
+        </Stack>
       </Stack>
     </ContentWrapper>
   );

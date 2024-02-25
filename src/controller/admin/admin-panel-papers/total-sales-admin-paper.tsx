@@ -21,7 +21,7 @@ const TotalSalesPaper: FunctionComponent = () => {
   const totalsByCurrency: TotalsByCurrency = {};
 
   Object.values(orders).forEach((order) => {
-    order.cartItems.forEach((item) => {
+    order.cartItems?.forEach((item) => {
       const currency = item.priceCurrency;
       const subTotal = Number(item.subTotal);
       if (totalsByCurrency[currency]) {

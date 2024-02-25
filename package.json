@@ -46,6 +46,7 @@
     "react-device-detect": "2.2.2",
     "react-dom": "^18.2.0",
     "react-dropzone": "14.2.3",
+    "react-export-table-to-excel": "^1.0.6",
     "react-form-wizard-component": "^0.1.7",
     "react-gtm-module": "2.0.11",
     "react-hook-mask": "1.1.18",

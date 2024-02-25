@@ -101,7 +101,7 @@ export const ProfileTable: FunctionComponent = () => {
         header: () => <Stack>{formatMessage({ id: 'PROFILE.USER.TABLE.HEADER.ORDER.NUMBER' })}</Stack>,
         footer: (info) => info.column.id,
       }),
-      columnHelper.accessor((row) => row.cartItems.map((cart) => cart.productName), {
+      columnHelper.accessor((row) => row.cartItems?.map((cart) => cart.productName), {
         id: 'productName',
         header: () => (
           <Stack>
@@ -158,10 +158,11 @@ export const ProfileTable: FunctionComponent = () => {
           const data = info.row.original; // Asumiendo que `original` contiene el objeto de datos completo
           const priceCurrency = data.currencyUsedToPay; // Asegúrate de que este camino de acceso sea correcto
           const price = info.getValue();
-          return <CellsTypos>{convertedPrice(price, priceCurrency)}</CellsTypos>;
+          return <CellsTypos>{convertedPrice(price, priceCurrency!)}</CellsTypos>;
         },
       }),
-      columnHelper.accessor('orderDate', {
+      columnHelper.accessor((row) => row.createdAt, {
+        id: 'createdAt',
         header: () => (
           <Stack>
             <HeadersTypos>{formatMessage({ id: 'PROFILE.USER.TABLE.HEADER.DATE' })}</HeadersTypos>
@@ -274,7 +275,7 @@ export const ProfileTable: FunctionComponent = () => {
                 <TableRow sx={{ border: 0 }}>
                   {row.getVisibleCells().map((cell) => {
                     if (cell.column.id === 'expandable') {
-                      const isExpanded = expandedRows[row.original.orderId];
+                      const isExpanded = expandedRows[row.original.orderId!];
                       return (
                         <TableCell key={cell.id}>
                           <Tooltip
@@ -295,7 +296,7 @@ export const ProfileTable: FunctionComponent = () => {
                                 height: 32,
                                 minWidth: 24,
                               }}
-                              onClick={() => handleExpandClick(row.original.orderId)}
+                              onClick={() => handleExpandClick(row.original.orderId! as string)}
                             >
                               {isExpanded ? (
                                 <KeyboardArrowUpRoundedIcon
@@ -322,7 +323,7 @@ export const ProfileTable: FunctionComponent = () => {
                     );
                   })}
                 </TableRow>
-                {expandedRows[row.original.orderId] && (
+                {expandedRows[row.original.orderId!] && (
                   <TableRow>
                     <TableCell colSpan={table.getAllColumns().length} key={row.original.orderId}>
                       <ExpandableTableContent row={row.original} />

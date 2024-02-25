@@ -249,9 +249,10 @@ export const ProductsPage: FunctionComponent = () => {
               {formatMessage({ id: 'PRODUCTS.NO_PRODUCTS' })}
             </Typography>
           )}
-          {filteredAndSortedProducts.map((product) => (
+          {filteredAndSortedProducts.map((product, id) => (
             <ProductCard
-              id={product.productId}
+              key={id}
+              id={id}
               products={[product]}
               image={product.productImage}
               name={product.productName}

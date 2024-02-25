@@ -101,7 +101,7 @@ export const HomePage: FunctionComponent = () => {
                 marginTop: theme.spacing(4),
                 marginLeft: theme.spacing(4),
                 ':hover': {
-                color: theme.palette.grey[200],
+                  color: theme.palette.grey[200],
                 },
               }}
             >
@@ -132,9 +132,10 @@ export const HomePage: FunctionComponent = () => {
             {formatMessage({ id: 'WELCOME.HOME.DESTACATED.PRODUCTS.TITLE' })}
           </Typography>
           <StockWrapper key={destacatedProducts.map((product) => product.productId).join('')}>
-            {destacatedProducts.map((product) => (
+            {destacatedProducts.map((product, id) => (
               <ProductCard
-                id={product.productId}
+                key={id}
+                id={id}
                 products={[product]}
                 image={product.productImage}
                 name={product.productName}
@@ -160,12 +161,15 @@ export const HomePage: FunctionComponent = () => {
           alignItems: 'center',
         }}
       >
-        <img src={VapeHomeImage} alt="Vape Home" style={{ width: '100%', height: '100%' }} />
+        <img
+          src={VapeHomeImage}
+          alt="Vape Home"
+          style={{ width: '100%', height: '100%', filter: 'drop-shadow(20px 10px 24px #000000)' }}
+        />
       </Box>
     </ContentWrapper>
   );
 };
-
 
 const StockWrapper = styled(motion.ul)(({ theme }) => ({
   display: 'grid',

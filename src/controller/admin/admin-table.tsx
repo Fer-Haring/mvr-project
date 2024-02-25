@@ -39,7 +39,8 @@ import { Products } from '@webapp/sdk/users-types';
 import { useAdminDataStore } from '@webapp/store/admin/admin-data';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { debounce } from 'lodash';
-import React, { FunctionComponent, useEffect, useMemo, useState } from 'react';
+import React, { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react';
+import { useDownloadExcel } from 'react-export-table-to-excel';
 import { useIntl } from 'react-intl';
 
 import EditableCell, { CustomInputField } from './editable-cell';
@@ -75,6 +76,13 @@ export const AdminTable: FunctionComponent = () => {
   const [activeFilterColumn, setActiveFilterColumn] = useState<string | null>(null);
   const [rowsDensity, setRowsDensity] = useState<number>(1);
   const { product, resetProduct } = useSingleProduct();
+  const tableRef = useRef(null);
+
+  const { onDownload } = useDownloadExcel({
+    currentTableRef: tableRef.current,
+    filename: 'Lista de Productos',
+    sheet: 'Productos',
+  });
 
   useEffect(() => {
     getProducts().then((products) => {
@@ -167,6 +175,34 @@ export const AdminTable: FunctionComponent = () => {
             />
           );
         },
+        footer: (info) => info.column.id,
+      }),
+      columnHelper.accessor((row) => row.mainProductCategory, {
+        id: 'mainProductCategory',
+        size: 120,
+        cell: (info) => {
+          return (
+            <EditableCell
+              initialValue={info.getValue()}
+              index={info.row.id as unknown as number}
+              productData={info.row.original}
+              id={info.column.id}
+              valueTypes="text"
+              updateData={
+                typeof info.table.options.meta?.updateData === 'function'
+                  ? info.table.options.meta.updateData
+                  : () => {}
+              }
+            />
+          );
+        },
+        header: () => (
+          <Stack>
+            <HeadersTypos>
+              {formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.HEADER.MAIN.PRODUCTCATEGORY' })}
+            </HeadersTypos>
+          </Stack>
+        ),
         footer: (info) => info.column.id,
       }),
       columnHelper.accessor((row) => row.productCategory, {
@@ -575,6 +611,24 @@ export const AdminTable: FunctionComponent = () => {
         <Button
           variant="contained"
           color="primary"
+          onClick={onDownload}
+          sx={{
+            height: 32,
+            width: 'auto',
+            alignContent: 'center',
+            alignSelf: 'end',
+            color: theme.palette.grey[200],
+            '&:hover': {
+              backgroundColor: theme.palette.primary.dark,
+              color: theme.palette.grey[200],
+            },
+          }}
+        >
+          {formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BUTTONS.EXPORT.AS.ECXEL' })}
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
           onClick={handleOpenAddProductModal}
           sx={{
             height: 32,
@@ -649,6 +703,7 @@ export const AdminTable: FunctionComponent = () => {
       <Box style={{ direction: table.options.columnResizeDirection }}>
         <TableContainer component={TableBox}>
           <Table
+            ref={tableRef}
             {...{
               className: classes.table,
               style: {

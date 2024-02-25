@@ -1,5 +1,5 @@
 import { Slider as BaseSlider, sliderClasses } from '@mui/base/Slider';
-import { Autocomplete, Paper, Select, TextField } from '@mui/material';
+import { Autocomplete, Button, Paper, Select, TextField } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
 
@@ -11,9 +11,7 @@ export const StockWrapper = styled(motion.ul)(({ theme }) => ({
   listStyle: 'none',
   padding: 0,
   margin: 0,
-  '& > li': {
-    width: '100%',
-  },
+
 }));
 
 export const Slider = styled(BaseSlider)(
@@ -136,7 +134,7 @@ export const CustomSelect = styled(Select)(({ theme }) => ({
     borderRadius: theme.spacing(0.5),
     width: 180,
     backgroundColor: 'transparent',
-    
+
     '&:focus-within': {
       borderRadius: theme.spacing(0.5),
       borderColor: theme.palette.grey[800],
@@ -205,4 +203,45 @@ export const FiltersHolder = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
   paddingTop: theme.spacing(4),
   backgroundColor: alpha(theme.palette.common.white, 1),
+}));
+
+// Main category button
+
+export const CategoryButtonWrapper = styled(motion.ul)(({ theme }) => ({
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(min(13.75rem, 100%), 1fr))',
+  gridGap: theme.spacing(4),
+  width: '100%',
+  listStyle: 'none',
+  padding: 0,
+  margin: 0,
+}));
+
+export const CategoryButton = styled(Button)(({ theme }) => ({
+  width: '100%',
+  maxWidth: '350px',
+  fontSize: '16px',
+  fontWeight: 600,
+  color: theme.palette.common.white,
+  cursor: 'pointer',
+  textAlign: 'center',
+  border: 'none',
+  backgroundSize: ' 300% 100%',
+  borderRadius: '50px',
+  textWrap: 'nowrap',
+  transition: 'all .4s ease-in-out',
+
+  '&:hover': {
+    backgroundPosition: '100% 0',
+    transition: 'all .4s ease-in-out',
+  },
+
+  '&:hover:focus': {
+    outline: 'none',
+  },
+
+  '&.bn26': {
+    backgroundImage: 'linear-gradient(to right, #25aae1, #4481eb, #04befe, #3f86ed)',
+    boxShadow: '0 4px 15px 0 rgba(65, 132, 234, 0.75)',
+  },
 }));
