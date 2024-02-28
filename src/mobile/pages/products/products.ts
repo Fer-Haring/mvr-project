@@ -11,7 +11,6 @@ export const StockWrapper = styled(motion.ul)(({ theme }) => ({
   listStyle: 'none',
   padding: 0,
   margin: 0,
-
 }));
 
 export const Slider = styled(BaseSlider)(
@@ -202,7 +201,8 @@ export const FiltersHolder = styled(Paper)(({ theme }) => ({
   gap: theme.spacing(4),
   padding: theme.spacing(2),
   paddingTop: theme.spacing(4),
-  backgroundColor: alpha(theme.palette.common.white, 1),
+  // backgroundColor: alpha(theme.palette.common.white, 1),
+  backgroundColor: theme.palette.grey[200],
 }));
 
 // Main category button
@@ -212,9 +212,11 @@ export const CategoryButtonWrapper = styled(motion.ul)(({ theme }) => ({
   gridTemplateColumns: 'repeat(auto-fit, minmax(min(13.75rem, 100%), 1fr))',
   gridGap: theme.spacing(4),
   width: '100%',
+  justifyItems: 'center',
+  alignItems: 'center',
   listStyle: 'none',
+  margin: '0 auto',
   padding: 0,
-  margin: 0,
 }));
 
 export const CategoryButton = styled(Button)(({ theme }) => ({

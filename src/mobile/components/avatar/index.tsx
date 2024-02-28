@@ -25,17 +25,17 @@ const AvatarWrapper = styled(Box)(({ theme }) => ({
       height: 40,
     },
   },
-  [theme.breakpoints.down('md')]: {
-    width: 32,
-    height: 32,
-  },
+  // [theme.breakpoints.down('md')]: {
+  //   width: 32,
+  //   height: 32,
+  // },
   '& .avatar-button': {
     width: 40,
     height: 40,
-    [theme.breakpoints.down('md')]: {
-      width: 32,
-      height: 32,
-    },
+    // [theme.breakpoints.down('md')]: {
+    //   width: 32,
+    //   height: 32,
+    // },
   },
   '& .mui-avatar': {
     backgroundColor: theme.palette.secondary.light,
@@ -50,13 +50,13 @@ const AvatarWrapper = styled(Box)(({ theme }) => ({
       color: theme.palette.text.primary,
       fontSize: theme.typography.h4.fontSize,
     },
-    [theme.breakpoints.down('md')]: {
-      width: 24,
-      height: 24,
-      '& .mui-avatar-text': {
-        fontSize: 12,
-      },
-    },
+    // [theme.breakpoints.down('md')]: {
+    //   width: 24,
+    //   height: 24,
+    //   '& .mui-avatar-text': {
+    //     fontSize: 12,
+    //   },
+    // },
   },
 }));
 

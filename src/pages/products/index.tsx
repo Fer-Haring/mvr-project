@@ -59,27 +59,33 @@ export const ProductsPage: FunctionComponent = () => {
   const [category, setCategory] = useState<AutocompleteOption | null>(null);
 
   useEffect(() => {
-    const allCategories = Object.values(productList).map((product) => product.productCategory);
-    const uniqueCategories = Array.from(new Set(allCategories));
-    const formattedCategories = uniqueCategories.map((cat) => ({ label: cat, value: cat }));
-    setCategoriesOptions(formattedCategories);
-  }, [productList]);
+    if (mainCategory) {
+      const filteredProducts = Object.values(productList).filter(
+        (product) => product.mainProductCategory === mainCategory
+      );
+      const relatedCategories = filteredProducts.map((product) => product.productCategory);
+      const uniqueRelatedCategories = Array.from(new Set(relatedCategories));
+      const formattedCategories = uniqueRelatedCategories.map((cat) => ({ label: cat, value: cat }));
+      setCategoriesOptions(formattedCategories);
+    } else {
+      const allCategories = Object.values(productList).map((product) => product.productCategory);
+      const uniqueCategories = Array.from(new Set(allCategories));
+      const formattedCategories = uniqueCategories.map((cat) => ({ label: cat, value: cat }));
+      setCategoriesOptions(formattedCategories);
+    }
+  }, [productList, mainCategory]);
 
-  // Función para manejar el cambio de categoría principal
   const handleMainCategoryChange = (category: string) => {
     setMainCategory(category);
-    // Resetea otros filtros si es necesario, por ejemplo:
     setSelectedCategory('');
     setSearchTerms('');
   };
 
-  // Modify the onChange handler for CustomAutocomplete
   const handleCategoryChange = (event: React.SyntheticEvent, newValue: AutocompleteOption | null) => {
     setSelectedCategory(newValue ? newValue.label : '');
     setCategory(newValue);
   };
 
-  // Actualiza el manejador de cambios de rango de precios
   const handlePriceRangeChange = (event: Event, newValue: number | number[]) => {
     setPriceRange(newValue as number[]);
   };
@@ -123,13 +129,12 @@ export const ProductsPage: FunctionComponent = () => {
         result.sort((a, b) => (a.productName || '').localeCompare(b.productName || ''));
         break;
       default:
-      // Manejo de otros criterios o no ordenar
+        break;
     }
 
     return result;
   }, [mainCategory, priceRange, productList, searchTerms, selectedCategory, sortCriteria]);
 
-  // Obtener categorías principales únicas para los botones
   const mainCategories = useMemo(() => {
     const allMainCategories = Object.values(productList).map((product) => product.mainProductCategory);
     return Array.from(new Set(allMainCategories));

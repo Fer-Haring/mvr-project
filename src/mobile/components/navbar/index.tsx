@@ -1,5 +1,5 @@
-import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
-import { Badge, Box, IconButton } from '@mui/material';
+// import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import { Badge, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import cartAnimation from '@webapp/assets/images/animations/cart.json';
 import { useCartStore } from '@webapp/store/cart/cart';
@@ -38,9 +38,9 @@ const Navbar: FunctionComponent<NavbarProps> = ({ className }) => {
   return (
     <NavbarContainer className={className || ''}>
       <div className="left">
-        <IconButton>
+        {/* <IconButton>
           <MenuRoundedIcon />
-        </IconButton>
+        </IconButton>*/}
       </div>
       <div className="right">
         <div className="forms">

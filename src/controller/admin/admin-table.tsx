@@ -112,13 +112,13 @@ export const AdminTable: FunctionComponent = () => {
   const getPaddingStyle = (density: number) => {
     switch (density) {
       case 1:
-        return { padding: '4px' }; // Cambia los valores según necesias
+        return { padding: '4px' };
       case 2:
-        return { padding: '12px' }; // Cambia los valores según necesias
+        return { padding: '12px' };
       case 3:
-        return { padding: '24px' }; // Cambia los valores según necesias
+        return { padding: '24px' };
       default:
-        return { padding: '4px' }; // Un valor por defecto
+        return { padding: '4px' };
     }
   };
 

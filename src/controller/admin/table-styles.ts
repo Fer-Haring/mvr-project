@@ -6,6 +6,7 @@ export const TableBox = styled(Paper)(() => {
   return {
     backgroundColor: alpha(theme.palette.common.white, 0.8),
     padding: theme.spacing(2),
+   
     marginTop: theme.spacing(2),
     boxShadow: theme.shadows[6],
     marginLeft: 'auto',
@@ -14,7 +15,6 @@ export const TableBox = styled(Paper)(() => {
     borderRadius: theme.spacing(2),
     overflow: 'hidden',
     '& table': {
-      overflowX: 'hidden',
       '& th': {
         backgroundColor: theme.palette.grey[200],
         color: theme.palette.common.black,
@@ -40,8 +40,6 @@ export const TableBox = styled(Paper)(() => {
       '& td': {
         padding: theme.spacing(1),
         borderBottom: 0,
-        // borderRight: `1px solid`,
-        // borderColor: alpha(theme.palette.grey[800], 0.5),
         color: theme.palette.common.black,
         fontSize: 12,
         '&:first-of-type': {
