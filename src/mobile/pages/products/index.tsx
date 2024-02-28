@@ -2,9 +2,9 @@ import KeyboardArrowDownRounded from '@mui/icons-material/KeyboardArrowDownRound
 import { Box, FormControl, InputLabel, MenuItem, Popper, SelectChangeEvent, Typography } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { alpha, styled, useTheme } from '@mui/material/styles';
-import ContentWrapper from '@webapp/components/content-wrapper';
-import InputField from '@webapp/components/form/input';
-import ProductCard from '@webapp/components/product-card';
+import ContentWrapper from '@webapp/mobile/components/content-wrapper';
+import InputField from '@webapp/mobile/components/form/input';
+import ProductCard from '@webapp/mobile/components/product-card';
 import { getProducts } from '@webapp/sdk/firebase/products';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';

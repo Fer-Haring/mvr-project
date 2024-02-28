@@ -1,23 +1,20 @@
 import { alpha, useTheme } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import ContentWrapper from '@webapp/components/content-wrapper';
-import DollarValueInputPaper from '@webapp/controller/admin/admin-panel-papers/dollar-value-admin-paper';
-import DonutChartPaper from '@webapp/controller/admin/admin-panel-papers/donut-chart-admin-paper';
-import PendingOrdersPaper from '@webapp/controller/admin/admin-panel-papers/pending-orders-admin-paper';
-import TotalOrdersPaper from '@webapp/controller/admin/admin-panel-papers/total-orders-admin-paper';
-import TotalProductsPaper from '@webapp/controller/admin/admin-panel-papers/total-products-admin-paper';
-import TotalSalesPaper from '@webapp/controller/admin/admin-panel-papers/total-sales-admin-paper';
-import { FunctionComponent } from 'react';
-
+import ContentWrapper from '@webapp/mobile/components/content-wrapper';
+import DollarValueInputPaper from '@webapp/mobile/controller/admin/admin-panel-papers/dollar-value-admin-paper';
+import DonutChartPaper from '@webapp/mobile/controller/admin/admin-panel-papers/donut-chart-admin-paper';
+import PendingOrdersPaper from '@webapp/mobile/controller/admin/admin-panel-papers/pending-orders-admin-paper';
+import TotalOrdersPaper from '@webapp/mobile/controller/admin/admin-panel-papers/total-orders-admin-paper';
+import TotalProductsPaper from '@webapp/mobile/controller/admin/admin-panel-papers/total-products-admin-paper';
+import TotalSalesPaper from '@webapp/mobile/controller/admin/admin-panel-papers/total-sales-admin-paper';
 // import { AdminTable } from '../../controller/admin/admin-table';
 import { useAdminDataStore } from '@webapp/store/admin/admin-data';
+import { FunctionComponent } from 'react';
 
 export const AdminDashboardPage: FunctionComponent = () => {
   const theme = useTheme();
   const { orders } = useAdminDataStore();
-
-
 
   return (
     <ContentWrapper>

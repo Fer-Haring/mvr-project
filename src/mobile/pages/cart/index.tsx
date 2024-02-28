@@ -1,8 +1,8 @@
 import { alpha, useTheme } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/system/Stack';
-import ContentWrapper from '@webapp/components/content-wrapper';
-import { CartProductsDetail } from '@webapp/controller/cart/step-0/cart-products-detail';
+import ContentWrapper from '@webapp/mobile/components/content-wrapper';
+import { CartProductsDetail } from '@webapp/mobile/controller/cart/step-0/cart-products-detail';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useCartStore } from '@webapp/store/cart/cart';
 import { FunctionComponent } from 'react';

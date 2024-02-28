@@ -1,3 +1,5 @@
+import MobileSignInPage from '@webapp/mobile/pages/auth/sign-in';
+import MobileSignUpPage from '@webapp/mobile/pages/auth/sign-up';
 import { MobileHomePage } from '@webapp/mobile/pages/home';
 import {
   AboutUsPage,
@@ -87,8 +89,18 @@ const MobileRoutes: Route[] = [
     path: '/home',
     component: <MobileHomePage />,
   },
+  {
+    path: '/',
+    component: <Navigate to="/sign-in" />,
+  },
+  {
+    path: '/sign-in',
+    component: <MobileSignInPage />,
+  },
+  {
+    path: '/sign-up',
+    component: <MobileSignUpPage />,
+  },
 ];
 
-
 export { MobileRoutes, ProjectRoutes };
-

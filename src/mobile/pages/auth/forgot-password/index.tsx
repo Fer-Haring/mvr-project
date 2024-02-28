@@ -1,11 +1,11 @@
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import FormWrapper from '@webapp/components/auth/form-wrapper';
-import Button from '@webapp/components/button';
-import InputField from '@webapp/components/form/input';
-import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
 import { EMAIL_REGEX } from '@webapp/configuration/regex';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
+import FormWrapper from '@webapp/mobile/components/auth/form-wrapper';
+import Button from '@webapp/mobile/components/button';
+import InputField from '@webapp/mobile/components/form/input';
+import AuthLayoutContainer from '@webapp/mobile/components/layout/auth-layout-variants';
 import { recoverPassword } from '@webapp/sdk/firebase/auth';
 import { normalizeUserData } from '@webapp/utils/normalize-user-data';
 import React, { FunctionComponent, useState } from 'react';

@@ -2,10 +2,10 @@ import { Divider, alpha, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import ContentWrapper from '@webapp/components/content-wrapper';
-import { ProfileTable } from '@webapp/controller/profile/profile-table';
-import UserData from '@webapp/controller/profile/user-data';
-import UserImageHolder from '@webapp/controller/profile/user-image-holder';
+import ContentWrapper from '@webapp/mobile/components/content-wrapper';
+import { ProfileTable } from '@webapp/mobile/controller/profile/profile-table';
+import UserData from '@webapp/mobile/controller/profile/user-data';
+import UserImageHolder from '@webapp/mobile/controller/profile/user-image-holder';
 import { useUserData } from '@webapp/store/users/user-data';
 import { FunctionComponent } from 'react';
 

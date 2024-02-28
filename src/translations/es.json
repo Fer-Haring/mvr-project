@@ -307,5 +307,37 @@
   "CART.PAYMENT.ADRESS.TITLE": "Confirmar Datos de Entrega",
   "CART.PAYMENT.SUCCESS.BUTTON.BACK.HOME": "Volver al Inicio",
   "CART.PAYMENT.SUCCESS": "Pedido realizado con éxito",
-  "CART.PAYMENT.SUCCESS.TITLE": "¡Gracias por su compra!"
+  "CART.PAYMENT.SUCCESS.TITLE": "¡Gracias por su compra!",
+
+  "CONTACT.PAGE.WHERE.WE.ARE" : "Donde estamos",
+  "CONTACT.PAGE.TITLE" : "Contactanos",
+  "CONTACT.PAGE.SUBTITLE" : "¿Tienes alguna pregunta? ¡Estamos aquí para ayudarte!",
+
+  "CONTACT.PAGE.PHONE.NUMBER" : "+54 221 399 7379",
+  "CONTACT.PAGE.ATTENTION.HRS" : "Lunes a Sabado, 12Hs a 20Hs",
+  "CONTACT.PAGE.EMAIL" : "medicinevaperoom@hotmail.com",
+  "CONTACT.PAGE.SAND.DOUBTS" : "Envíanos tus dudas",
+  "CONTACT.PAGE.INSTAGRAM" : "@medicine.vape.room",
+  "CONTACT.PAGE.VISIT" : "Visita nuestro Instagram",
+
+
+
+  "CONTACT.PAGE.FORM.TITLE" : "Envíanos un mensaje",
+  "CONTACT.PAGE.FORM.NAME" : "Nombre",
+  "CONTACT.PAGE.FORM.EMAIL" : "Correo Electrónico",
+  "CONTACT.PAGE.FORM.SUBJECT" : "Asunto",
+  "CONTACT.PAGE.FORM.MESSAGE" : "Mensaje",
+  "CONTACT.PAGE.FORM.SUBMIT" : "Enviar",
+  "CONTACT.PAGE.FORM.SUBMITTING" : "Enviando Mensaje",
+  "CONTACT.PAGE.FORM.SUCCESS" : "Mensaje Enviado con Éxito",
+  "CONTACT.PAGE.FORM.ERROR" : "Error al enviar el mensaje",
+  "CONTACT.PAGE.FORM.ERRORS.REQUIRED" : "Este campo es obligatorio",
+  "CONTACT.PAGE.FORM.ERRORS.EMAIL" : "Por favor, ingrese un correo electrónico válido",
+  "CONTACT.PAGE.FORM.ERRORS.MESSAGE" : "Por favor, ingrese un mensaje",
+  "CONTACT.PAGE.FORM.ERRORS.MESSAGE.MIN" : "El mensaje debe tener al menos 10 caracteres",
+  "CONTACT.PAGE.FORM.ERRORS.MESSAGE.MAX" : "El mensaje debe tener menos de 1000 caracteres",
+  "CONTACT.PAGE.FORM.ERRORS.NAME" : "Por favor, ingrese su nombre",
+  "CONTACT.PAGE.FORM.ERRORS.NAME.MIN" : "El nombre debe tener al menos 2 caracteres",
+  "CONTACT.PAGE.FORM.ERRORS.NAME.MAX" : "El nombre debe tener menos de 100 caracteres",
+  "CONTACT.PAGE.FORM.ERRORS.GENERIC" : "¡Oops! Algo salió mal, por favor inténtelo de nuevo"
 }

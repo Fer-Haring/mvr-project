@@ -6,11 +6,12 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
-import FormWrapper from '@webapp/components/auth/form-wrapper';
-import Button from '@webapp/components/button';
-import InputField from '@webapp/components/form/input';
-import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
+
 import { useIsMobile } from '@webapp/hooks/is-mobile';
+import FormWrapper from '@webapp/mobile/components/auth/form-wrapper';
+import Button from '@webapp/mobile/components/button';
+import InputField from '@webapp/mobile/components/form/input';
+import AuthLayoutContainer from '@webapp/mobile/components/layout/auth-layout-variants';
 import { signIn } from '@webapp/sdk/firebase/auth';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -20,7 +21,7 @@ interface SignInPage2Props {
   className?: string;
 }
 
-const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
+const MobileSignInPage: FunctionComponent<SignInPage2Props> = ({ className }) => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const theme = useTheme();
@@ -177,4 +178,4 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
   );
 };
 
-export default SignInPage2;
+export default MobileSignInPage;

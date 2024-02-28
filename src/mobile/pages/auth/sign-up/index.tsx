@@ -5,13 +5,13 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
-import FormWrapper from '@webapp/components/auth/form-wrapper';
-import PasswordRequirements from '@webapp/components/auth/password-requirements';
-import Button from '@webapp/components/button';
-import InputField from '@webapp/components/form/input';
-import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
-import SnackbarUtils from '@webapp/components/snackbar';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
+import FormWrapper from '@webapp/mobile/components/auth/form-wrapper';
+import PasswordRequirements from '@webapp/mobile/components/auth/password-requirements';
+import Button from '@webapp/mobile/components/button';
+import InputField from '@webapp/mobile/components/form/input';
+import AuthLayoutContainer from '@webapp/mobile/components/layout/auth-layout-variants';
+import SnackbarUtils from '@webapp/mobile/components/snackbar';
 import { saveUserInDb, signUp } from '@webapp/sdk/firebase/auth';
 import { auth } from '@webapp/sdk/firebase/firebase';
 import { validateEmail } from '@webapp/utils/input-validations';
@@ -24,7 +24,7 @@ interface SignUpPage2Props {
   className?: string;
 }
 
-const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
+const MobileSignUpPage: FunctionComponent<SignUpPage2Props> = ({ className }) => {
   const theme = useTheme();
   const isMobile = useIsMobile();
   const navigate = useNavigate();
@@ -270,4 +270,4 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
   );
 };
 
-export default SignUpPage2;
+export default MobileSignUpPage;

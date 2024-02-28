@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
-
 import { useTheme } from '@mui/material/styles';
+import { useEffect, useState } from 'react';
 
 export const useIsMobile = (): boolean => {
   const theme = useTheme();
@@ -14,7 +13,8 @@ export const useIsMobile = (): boolean => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [theme.breakpoints.values.sm]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return isMobile;
 };

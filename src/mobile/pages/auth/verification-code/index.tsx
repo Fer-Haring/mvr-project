@@ -1,18 +1,15 @@
-import React, { FunctionComponent, useState } from 'react';
-
-import { useIntl } from 'react-intl';
-import { useLocation } from 'react-router-dom';
-
-import FormWrapper from '@webapp/components/auth/form-wrapper';
-import VerificationCodeCtrl from '@webapp/components/auth/verification-code';
-import Button from '@webapp/components/button';
-import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
-import { useIsMobile } from '@webapp/hooks/is-mobile';
-
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
+import FormWrapper from '@webapp/mobile/components/auth/form-wrapper';
+import VerificationCodeCtrl from '@webapp/mobile/components/auth/verification-code';
+import Button from '@webapp/mobile/components/button';
+import AuthLayoutContainer from '@webapp/mobile/components/layout/auth-layout-variants';
+import React, { FunctionComponent, useState } from 'react';
+import { useIntl } from 'react-intl';
+import { useLocation } from 'react-router-dom';
 
 interface VerificationCodePage2Props {
   className?: string;

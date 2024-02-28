@@ -3,11 +3,11 @@ import { FormControl, MenuItem, Select, SelectChangeEvent, styled, useTheme } fr
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import Button from '@webapp/components/button';
-import ContentWrapper from '@webapp/components/content-wrapper';
-import SnackbarUtils from '@webapp/components/snackbar';
-import ProductImageHolder from '@webapp/controller/product-detail/product-image-holder';
-import SimilarProducts from '@webapp/controller/product-detail/similar-products';
+import Button from '@webapp/mobile/components/button';
+import ContentWrapper from '@webapp/mobile/components/content-wrapper';
+import SnackbarUtils from '@webapp/mobile/components/snackbar';
+import ProductImageHolder from '@webapp/mobile/controller/product-detail/product-image-holder';
+import SimilarProducts from '@webapp/mobile/controller/product-detail/similar-products';
 import { getProductById } from '@webapp/sdk/firebase/products';
 // import { useCartStore } from '@webapp/store/cart/cart';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';

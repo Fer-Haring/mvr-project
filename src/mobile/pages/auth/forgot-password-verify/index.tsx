@@ -1,24 +1,20 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
-
-import { useIntl } from 'react-intl';
-import { useLocation, useNavigate } from 'react-router-dom';
-
-import FormWrapper from '@webapp/components/auth/form-wrapper';
-import PasswordRequirements from '@webapp/components/auth/password-requirements';
-import Button from '@webapp/components/button';
-import InputField from '@webapp/components/form/input';
-import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
-import { useIsMobile } from '@webapp/hooks/is-mobile';
-
 import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
 import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
-
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
+import FormWrapper from '@webapp/mobile/components/auth/form-wrapper';
+import PasswordRequirements from '@webapp/mobile/components/auth/password-requirements';
+import Button from '@webapp/mobile/components/button';
+import InputField from '@webapp/mobile/components/form/input';
+import AuthLayoutContainer from '@webapp/mobile/components/layout/auth-layout-variants';
+import React, { FunctionComponent, useEffect, useState } from 'react';
+import { useIntl } from 'react-intl';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface ForgotPasswordVerifyPage2Props {
   className?: string;
@@ -29,7 +25,6 @@ const ForgotPasswordVerifyPage2: FunctionComponent<ForgotPasswordVerifyPage2Prop
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const { formatMessage } = useIntl();
-
 
   const params = new URLSearchParams(useLocation().search);
 
