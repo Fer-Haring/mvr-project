@@ -1,4 +1,5 @@
-import { Badge, Box } from '@mui/material';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import { Badge, Box, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import cartAnimation from '@webapp/assets/images/animations/cart.json';
 import { useCartStore } from '@webapp/store/cart/cart';
@@ -36,6 +37,11 @@ const Navbar: FunctionComponent<NavbarProps> = ({ className }) => {
 
   return (
     <NavbarContainer className={className || ''}>
+      <div className="left">
+        <IconButton>
+          <MenuRoundedIcon />
+        </IconButton>
+      </div>
       <div className="right">
         <div className="forms">
           <Box onClick={handlePause}>
@@ -77,7 +83,7 @@ const NavbarContainer = styled('nav')(({ theme }) => ({
   borderBottom: `1px solid ${theme.palette.divider}`,
   position: 'relative',
   display: 'flex',
-  justifyContent: 'flex-end',
+  justifyContent: 'space-between',
   alignItems: 'center',
   padding: theme.spacing(0.5, 2),
   '.right': {
@@ -88,6 +94,21 @@ const NavbarContainer = styled('nav')(({ theme }) => ({
     '.forms': {
       display: 'flex',
       justifyContent: 'flex-end',
+      alignItems: 'center',
+      gap: theme.spacing(3),
+      '.MuiFormControl-root': {
+        width: 260,
+      },
+    },
+  },
+  '.left': {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    gap: theme.spacing(3),
+    '.forms': {
+      display: 'flex',
+      justifyContent: 'flex-start',
       alignItems: 'center',
       gap: theme.spacing(3),
       '.MuiFormControl-root': {

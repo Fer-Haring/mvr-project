@@ -1,6 +1,12 @@
+import { MobileAdminDashboardPage } from '@webapp/mobile/pages/admin';
 import MobileSignInPage from '@webapp/mobile/pages/auth/sign-in';
 import MobileSignUpPage from '@webapp/mobile/pages/auth/sign-up';
+import { MobileCartPage } from '@webapp/mobile/pages/cart';
+import { MobileContactPage } from '@webapp/mobile/pages/contact';
 import { MobileHomePage } from '@webapp/mobile/pages/home';
+import { MobileProductsPage } from '@webapp/mobile/pages/products';
+import { MobileProductDetailPage } from '@webapp/mobile/pages/products/detail';
+import { MobileProfilePage } from '@webapp/mobile/pages/profile';
 import {
   AboutUsPage,
   AdminDashboardPage,
@@ -100,6 +106,34 @@ const MobileRoutes: Route[] = [
   {
     path: '/sign-up',
     component: <MobileSignUpPage />,
+  },
+  {
+    path: '/sobre-nosotros',
+    component: <AboutUsPage />,
+  },
+  {
+    path: '/admin-dashboard',
+    component: <MobileAdminDashboardPage />,
+  },
+  {
+    path: '/contacto',
+    component: <MobileContactPage />,
+  },
+  {
+    path: '/productos',
+    component: <MobileProductsPage />,
+  },
+  {
+    path: '/profile',
+    component: <MobileProfilePage />,
+  },
+  {
+    path: '/productos/:id?',
+    component: <MobileProductDetailPage />,
+  },
+  {
+    path: '/cart',
+    component: <MobileCartPage />,
   },
 ];
 

@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import BackgroundImage from '@webapp/assets/images/content/background.jpg';
 import { easing } from '@webapp/mobile/components/framer';
 import Navbar from '@webapp/mobile/components/navbar';
-import Sidebar, { NAVBAR_HEIGHT } from '@webapp/mobile/components/sidebar';
+import { NAVBAR_HEIGHT } from '@webapp/mobile/components/sidebar';
 import { motion } from 'framer-motion';
 import React, { FunctionComponent } from 'react';
 
@@ -17,7 +17,6 @@ interface ContentWrapperProps {
 const ContentWrapper: FunctionComponent<ContentWrapperProps> = ({ className, children, loading }) => {
   return (
     <Wrapper className={className || ''}>
-      <Sidebar />
       <InsideContent>
         <Navbar />
         <motion.div

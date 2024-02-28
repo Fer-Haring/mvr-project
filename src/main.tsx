@@ -11,6 +11,7 @@ import App from './App';
 import { SnackbarUtilsConfigurator } from './components/snackbar';
 import { StyledMaterialDesignContent } from './configuration/material-ui/theme';
 import './index.scss';
+import BottomNavigationBar from './mobile/controller/main/bottom-navigation-bar';
 import reportWebVitals from './reportWebVitals';
 import { TranslationsProvider } from './translations';
 
@@ -55,6 +56,7 @@ root.render(
             >
               <SnackbarUtilsConfigurator />
               <App />
+              <BottomNavigationBar />
             </SnackbarProvider>
             {/* </Elements> */}
           </ColorModeProvider>

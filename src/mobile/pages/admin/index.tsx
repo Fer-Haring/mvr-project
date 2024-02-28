@@ -8,17 +8,18 @@ import PendingOrdersPaper from '@webapp/mobile/controller/admin/admin-panel-pape
 import TotalOrdersPaper from '@webapp/mobile/controller/admin/admin-panel-papers/total-orders-admin-paper';
 import TotalProductsPaper from '@webapp/mobile/controller/admin/admin-panel-papers/total-products-admin-paper';
 import TotalSalesPaper from '@webapp/mobile/controller/admin/admin-panel-papers/total-sales-admin-paper';
+import { AdminTable } from '@webapp/mobile/controller/admin/admin-table';
 // import { AdminTable } from '../../controller/admin/admin-table';
 import { useAdminDataStore } from '@webapp/store/admin/admin-data';
 import { FunctionComponent } from 'react';
 
-export const AdminDashboardPage: FunctionComponent = () => {
+export const MobileAdminDashboardPage: FunctionComponent = () => {
   const theme = useTheme();
   const { orders } = useAdminDataStore();
 
   return (
     <ContentWrapper>
-      <Stack
+       <Stack
         sx={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
@@ -34,7 +35,7 @@ export const AdminDashboardPage: FunctionComponent = () => {
         <PendingOrdersPaper orders={orders} />
       </Stack>
       <Paper sx={{ p: 2, width: '100%', mt: 2, backgroundColor: alpha(theme.palette.common.white, 0.7) }}>
-        {/* <AdminTable /> */}
+        <AdminTable />
       </Paper>
     </ContentWrapper>
   );

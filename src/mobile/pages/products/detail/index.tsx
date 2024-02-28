@@ -9,6 +9,8 @@ import SnackbarUtils from '@webapp/mobile/components/snackbar';
 import ProductImageHolder from '@webapp/mobile/controller/product-detail/product-image-holder';
 import SimilarProducts from '@webapp/mobile/controller/product-detail/similar-products';
 import { getProductById } from '@webapp/sdk/firebase/products';
+import { CartItem } from '@webapp/sdk/users-types';
+import { useCartStore } from '@webapp/store/cart/cart';
 // import { useCartStore } from '@webapp/store/cart/cart';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';
@@ -16,7 +18,7 @@ import { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
 
-export const ProductDetailPage: FunctionComponent = () => {
+export const MobileProductDetailPage: FunctionComponent = () => {
   const theme = useTheme();
   const { id } = useParams();
   const { formatMessage } = useIntl();
@@ -24,16 +26,7 @@ export const ProductDetailPage: FunctionComponent = () => {
   const { productList } = useProductsListData();
   const stockNumber = parseInt(product.actualStock, 10);
   const [selectedQuantity, setSelectedQuantity] = useState('1');
-  // const { addToCart } = useCartStore();
-
-  useEffect(() => {
-    const fetchProduct = async () => {
-      const productData = await getProductById(id!);
-      setProduct(productData);
-    };
-
-    fetchProduct();
-  }, [id, setProduct]);
+  const { addToCart } = useCartStore();
 
   const handleQuantityChange = (event: SelectChangeEvent<string>) => {
     setSelectedQuantity(event.target.value);
@@ -49,7 +42,18 @@ export const ProductDetailPage: FunctionComponent = () => {
   }, []);
 
   const handleAddToCart = () => {
-    // addToCart(product, parseInt(selectedQuantity, 10));
+    if (!product) return;
+
+    const cartItem: CartItem = {
+      productId: product.productId,
+      productName: product.productName,
+      unitPrice: parseFloat(product.salePrice),
+      unitQuantity: parseInt(selectedQuantity, 10),
+      priceCurrency: product.priceCurrency,
+      subTotal: parseFloat(product.salePrice) * parseInt(selectedQuantity, 10),
+    };
+
+    addToCart(cartItem, parseInt(selectedQuantity, 10));
     SnackbarUtils.success(`${selectedQuantity} ${product.productName} agregado(s) al carrito`);
   };
 
@@ -175,7 +179,12 @@ export const ProductDetailPage: FunctionComponent = () => {
               variant="contained"
               color="primary"
               startIcon={<ShoppingCartRoundedIcon />}
-              sx={{ ml: 2 }}
+              sx={{
+                ml: 2,
+                ':hover': {
+                  color: theme.palette.grey[200],
+                },
+              }}
               onClick={handleAddToCart}
             >
               {formatMessage({ id: 'PRODUCT.ADD.TO.CART' })}

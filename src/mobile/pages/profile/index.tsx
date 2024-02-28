@@ -9,7 +9,7 @@ import UserImageHolder from '@webapp/mobile/controller/profile/user-image-holder
 import { useUserData } from '@webapp/store/users/user-data';
 import { FunctionComponent } from 'react';
 
-export const ProfilePage: FunctionComponent = () => {
+export const MobileProfilePage: FunctionComponent = () => {
   const { user } = useUserData();
   const theme = useTheme();
 
