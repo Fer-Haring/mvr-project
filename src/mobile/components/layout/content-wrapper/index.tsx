@@ -71,9 +71,7 @@ const Wrapper = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  [theme.breakpoints.down('md')]: {
-    paddingInline: theme.spacing(6),
-  },
+  paddingBottom: theme.spacing(32),
 
   '.content': {
     width: '80%',

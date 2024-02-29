@@ -82,13 +82,17 @@ export const MobileProductDetailPage: FunctionComponent = () => {
           mt: 3,
           width: '100%',
           display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-          alignItems: 'flex-start',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
           gap: theme.spacing(1),
           mb: theme.spacing(6),
         }}
       >
+        {' '}
+        <Typography variant="h2" fontWeight={600} sx={{ mb: 2, color: theme.palette.grey[200], fontSize: 39 }}>
+          {product.productName}
+        </Typography>
         <ProductImageHolder product={product} id={product.productId} />
         <Paper sx={{ p: 2, width: '100%', mt: 3, maxWidth: 700, backgroundColor: 'rgba(255,255,255, 0.6)' }}>
           <Stack
@@ -97,13 +101,10 @@ export const MobileProductDetailPage: FunctionComponent = () => {
               width: '100%',
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
           >
-            <Typography variant="h2" fontWeight={600} sx={{ mb: 2, color: theme.palette.grey[900], fontSize: 39 }}>
-              {product.productName}
-            </Typography>
             <Typography variant="h4" fontWeight={400} sx={{ mb: 2, color: theme.palette.grey[700] }}>
               {product.description}
             </Typography>
@@ -111,7 +112,7 @@ export const MobileProductDetailPage: FunctionComponent = () => {
 
           <Stack
             sx={{
-              mt: 3,
+              mt: 2,
               width: '100%',
               display: 'flex',
               flexDirection: 'column',
@@ -192,9 +193,7 @@ export const MobileProductDetailPage: FunctionComponent = () => {
           </Stack>
         </Paper>
       </Stack>
-      <Stack direction={'row'} width={'100%'}>
-        <SimilarProducts productList={productList} selectedProduct={product} />
-      </Stack>
+      <SimilarProducts productList={productList} selectedProduct={product} />
     </ContentWrapper>
   );
 };

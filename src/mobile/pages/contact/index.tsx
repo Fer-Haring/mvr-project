@@ -1,11 +1,10 @@
 import { Icon } from '@iconify/react';
-import { Box, Divider } from '@mui/material';
+import { Box } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { alpha, styled, useTheme } from '@mui/material/styles';
-import mapImage from '@webapp/assets/images/map.png';
-import ContentWrapper from '@webapp/components/content-wrapper';
+import { alpha, useTheme } from '@mui/material/styles';
+import ContentWrapper from '@webapp/mobile/components/content-wrapper';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 
@@ -27,28 +26,10 @@ export const MobileContactPage: FunctionComponent = () => {
           alignItems: 'center',
         }}
       >
-        <Typography
-          variant="h1"
-          gutterBottom
-          sx={{ fontFamily: 'WordMean', textAlign: 'center', color: theme.palette.grey[800], p: 4 }}
-        >
-          {formatMessage({ id: 'CONTACT.PAGE.WHERE.WE.ARE' })}
-        </Typography>
-        <img
-          src={mapImage}
-          alt="Map"
-          style={{
-            width: '90%',
-            height: 'auto',
-            borderRadius: '10px',
-            boxShadow: theme.shadows[2],
-          }}
-        />
-        <StyledDivider orientation="horizontal" flexItem />
         <Stack spacing={2} sx={{ mt: 0, width: '100%' }}>
           {/* TITULO */}
           <Typography
-            variant="h1"
+            variant="h2"
             gutterBottom
             sx={{ fontFamily: 'WordMean', textAlign: 'center', color: theme.palette.grey[800] }}
           >
@@ -56,14 +37,7 @@ export const MobileContactPage: FunctionComponent = () => {
           </Typography>
 
           {/* CONTAINER */}
-          <Stack
-            direction={'row'}
-            gap={2}
-            width={'100%'}
-            justifyContent={'space-evenly'}
-            alignItems={'flex-start'}
-            p={3}
-          >
+          <Stack direction={'column'} gap={2} width={'100%'} justifyContent={'center'} alignItems={'center'} p={3}>
             {/* INFO CONTACTO */}
             <Box
               sx={{
@@ -72,15 +46,16 @@ export const MobileContactPage: FunctionComponent = () => {
                 gap: 5,
                 justifyContent: 'space-between',
                 alignItems: 'flex-start',
+                mb: 10,
               }}
             >
               <Stack direction={'row'} gap={2} width={'100%'} justifyContent={'flex-start'} alignItems={'center'}>
                 <Icon icon="mdi:cellphone" style={{ color: theme.palette.grey[800], width: 48, height: 48 }} />
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-                  <Typography variant="h2" sx={{ color: theme.palette.grey[800] }}>
+                  <Typography variant="h4" sx={{ color: theme.palette.grey[800] }}>
                     {formatMessage({ id: 'CONTACT.PAGE.PHONE.NUMBER' })}
                   </Typography>
-                  <Typography variant="h5" sx={{ color: theme.palette.grey[800] }}>
+                  <Typography variant="h6" sx={{ color: theme.palette.grey[800] }}>
                     {formatMessage({ id: 'CONTACT.PAGE.ATTENTION.HRS' })}
                   </Typography>
                 </Box>
@@ -91,10 +66,10 @@ export const MobileContactPage: FunctionComponent = () => {
                   style={{ color: theme.palette.grey[800], width: 48, height: 48, maxWidth: 'none' }}
                 />
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-                  <Typography variant="h2" sx={{ color: theme.palette.grey[800] }}>
+                  <Typography variant="h4" sx={{ color: theme.palette.grey[800] }}>
                     {formatMessage({ id: 'CONTACT.PAGE.EMAIL' })}
                   </Typography>
-                  <Typography variant="h5" sx={{ color: theme.palette.grey[800] }}>
+                  <Typography variant="h6" sx={{ color: theme.palette.grey[800] }}>
                     {formatMessage({ id: 'CONTACT.PAGE.SAND.DOUBTS' })}
                   </Typography>
                 </Box>
@@ -102,18 +77,19 @@ export const MobileContactPage: FunctionComponent = () => {
               <Stack direction={'row'} gap={2} width={'100%'} justifyContent={'flex-start'} alignItems={'center'}>
                 <Icon icon="mdi:instagram" style={{ color: theme.palette.grey[800], width: 48, height: 48 }} />
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-                  <Typography variant="h2" sx={{ color: theme.palette.grey[800] }}>
+                  <Typography variant="h4" sx={{ color: theme.palette.grey[800] }}>
                     {formatMessage({ id: 'CONTACT.PAGE.INSTAGRAM' })}
                   </Typography>
-                  <Typography variant="h5" sx={{ color: theme.palette.grey[800] }}>
+                  <Typography variant="h6" sx={{ color: theme.palette.grey[800] }}>
                     {formatMessage({ id: 'CONTACT.PAGE.VISIT' })}
                   </Typography>
                 </Box>
               </Stack>
             </Box>
-
             {/* FORMULARIO */}
-
+            <Typography variant="h3" sx={{ color: theme.palette.grey[800] }}>
+              {formatMessage({ id: 'CONTACT.PAGE.FORM.TITLE' })}
+            </Typography>
             <MailForm />
           </Stack>
         </Stack>
@@ -121,9 +97,3 @@ export const MobileContactPage: FunctionComponent = () => {
     </ContentWrapper>
   );
 };
-
-const StyledDivider = styled(Divider)({
-  flexGrow: 1,
-  margin: '10px 10px',
-  marginTop: '60px',
-});

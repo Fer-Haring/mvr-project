@@ -5,9 +5,11 @@ import Stack from '@mui/material/Stack';
 import Modal from '@webapp/components/modal';
 import { CartPaymentDetail } from '@webapp/controller/cart/step-2/cart-payment-detail';
 import { saveCompletedOrder } from '@webapp/sdk/firebase/admin';
+import { updateUserInDb } from '@webapp/sdk/firebase/user';
 import { CartItem, Order } from '@webapp/sdk/users-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useCartStore } from '@webapp/store/cart/cart';
+import { useUserData } from '@webapp/store/users/user-data';
 import { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 import ReactWhatsapp from 'react-whatsapp';
@@ -33,6 +35,7 @@ export const Step2: FunctionComponent<Step2Props> = ({
   const { deleteMessageStore } = useMessageStore();
   const { clearCart } = useCartStore();
   const [openModal, setOpenModal] = useState(false);
+  const { user } = useUserData();
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -43,6 +46,10 @@ export const Step2: FunctionComponent<Step2Props> = ({
   };
 
   const handleLastStep = async () => {
+    updateUserInDb({
+      userId: user.userId,
+      completedOrders: [...user.completedOrders, order],
+    });
     await saveCompletedOrder(order);
     clearCart();
     deleteMessageStore();

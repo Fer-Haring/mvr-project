@@ -19,12 +19,8 @@ const UserData: FunctionComponent<UserDataProps> = ({ className }) => {
   const { user } = useUserData();
 
   return (
-    <Box
-      className={className || ''}
-      sx={{ padding: 6, paddingLeft: 8 }}
-      aria-label={formatMessage({ id: 'PROFILE.USER_INFO.PANEL' })}
-    >
-      <Stack gap={4} sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+    <Box className={className || ''} aria-label={formatMessage({ id: 'PROFILE.USER_INFO.PANEL' })}>
+      <Stack gap={2} sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
         <UserInfoPersonal userData={user} />
         <DeliveryTypeButtons userData={user} />
         <PaymentTypeButtons userData={user} />

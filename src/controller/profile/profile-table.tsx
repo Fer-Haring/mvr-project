@@ -32,7 +32,7 @@ import arrowDownAnimation from '@webapp/assets/images/animations/downArrow.json'
 import arrowUpAnimation from '@webapp/assets/images/animations/upArrow.json';
 import { CompletedOrder } from '@webapp/sdk/users-types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
-import { useCompletedOrdersStore } from '@webapp/store/orders/get-completed-orders';
+import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 import Lottie from 'react-lottie';
@@ -56,11 +56,10 @@ export const ProfileTable: FunctionComponent = () => {
   const theme = useTheme();
   const { formatMessage } = useIntl();
   const classes = useStyles();
-  const { orders } = useCompletedOrdersStore();
+  const { user } = useUserData();
   const { dollarValue } = useDollarValue();
-  const defaultData = Object.values(orders);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [data, setData] = useState(() => [...defaultData]);
+  const [data] = useState(() => [...user.completedOrders]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const columnHelper = createColumnHelper<CompletedOrder>();
   const [expandedRows, setExpandedRows] = useState<ExpandedRowsType>({});

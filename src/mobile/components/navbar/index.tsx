@@ -81,7 +81,7 @@ const NavbarContainer = styled('nav')(({ theme }) => ({
   width: '100%',
   background: theme.palette.background.default,
   borderBottom: `1px solid ${theme.palette.divider}`,
-  position: 'relative',
+  position: 'sticky',
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',

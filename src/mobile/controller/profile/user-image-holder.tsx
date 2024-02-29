@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { SxProps, Theme, useTheme } from '@mui/material/styles';
@@ -8,6 +7,7 @@ import { User } from '@webapp/sdk/users-types';
 import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
+import SnackbarUtils from '@webapp/components/snackbar';
 
 interface UserImageHolderProps {
   className?: string;
@@ -15,7 +15,7 @@ interface UserImageHolderProps {
   sx?: SxProps<Theme>;
 }
 
-const UserImageHolder: FunctionComponent<UserImageHolderProps> = ({ className, user, sx }) => {
+const UserImageHolder: FunctionComponent<UserImageHolderProps> = ({ user }) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
   const [avatar, setAvatar] = React.useState<{ file?: File; url?: string }>({});
@@ -29,7 +29,12 @@ const UserImageHolder: FunctionComponent<UserImageHolderProps> = ({ className, u
       file: avatarFile,
       url,
     });
-    handleUpdateAvatar(avatarFile);
+    try {
+      handleUpdateAvatar(avatarFile);
+      SnackbarUtils.success(formatMessage({ id: 'PROFILE.USER_INFO.AVATAR_UPDATED' }));
+    } catch (error) {
+      SnackbarUtils.error(formatMessage({ id: 'PROFILE.USER_INFO.AVATAR_ERROR' }));
+    }
   };
 
   const handleUpdateAvatar = async (image: File) => {
@@ -40,10 +45,15 @@ const UserImageHolder: FunctionComponent<UserImageHolderProps> = ({ className, u
   };
 
   return (
-    <Box
-      className={className || ''}
-      sx={{ ...sx, mt: 5 }}
-      aria-label={formatMessage({ id: 'PROFILE.USER_INFO.PANEL' })}
+    <Stack
+      sx={{
+        mt: 3,
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}
     >
       <ImageUploader
         sx={{ width: '100%' }}
@@ -58,21 +68,20 @@ const UserImageHolder: FunctionComponent<UserImageHolderProps> = ({ className, u
         sx={{
           mt: 3,
           width: '100%',
-          minWidth: '250px',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
         }}
       >
-        <Typography variant="h2" fontWeight={600} sx={{ mb: 2, color: theme.palette.grey[900] }}>
+        <Typography variant="h4" fontWeight={600} sx={{ mb: 2, color: theme.palette.grey[900], textWrap: 'nowrap' }}>
           {user.name + ' ' + user.lastName}
         </Typography>
-        <Typography variant="body1" fontWeight={400} sx={{ mb: 2, color: theme.palette.grey[600] }}>
+        <Typography variant="body2" fontWeight={400} sx={{ mb: 2, color: theme.palette.grey[600] }}>
           {user.email}
         </Typography>
       </Stack>
-    </Box>
+    </Stack>
   );
 };
 

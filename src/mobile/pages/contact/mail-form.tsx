@@ -1,6 +1,6 @@
 import { ValidationError, useForm } from '@formspree/react';
 import { Box, Button, TextField, TextareaAutosize, styled } from '@mui/material';
-import SnackbarUtils from '@webapp/components/snackbar';
+import SnackbarUtils from '@webapp/mobile/components/snackbar';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 

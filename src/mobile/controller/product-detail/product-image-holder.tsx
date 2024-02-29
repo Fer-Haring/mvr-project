@@ -39,7 +39,7 @@ const ProductImageHolder: FunctionComponent<ProductImageHolderProps> = ({ classN
   return (
     <Box
       className={className || ''}
-      sx={{ ...sx, minWidth: 300, maxWidth: 400, width: '100%' }}
+      sx={{ ...sx, minWidth: 400, width: '100%' }}
       aria-label={formatMessage({ id: 'PROFILE.USER_INFO.PANEL' })}
       key={id}
     >

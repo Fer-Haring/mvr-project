@@ -1,9 +1,7 @@
-import React, { FunctionComponent } from 'react';
-
-import LogoHeader, { HeaderWrapperHeight } from '@webapp/components/logo-header';
-
 import Box from '@mui/material/Box';
 import { SxProps, Theme, styled } from '@mui/material/styles';
+import LogoHeader, { HeaderWrapperHeight } from '@webapp/components/logo-header';
+import React, { FunctionComponent } from 'react';
 
 interface ContentWrapperProps {
   className?: string;

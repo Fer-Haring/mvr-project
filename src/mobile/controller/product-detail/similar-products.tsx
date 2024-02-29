@@ -1,11 +1,11 @@
 import { Box, Divider, Stack, Typography, styled, useTheme } from '@mui/material';
-import ProductCard from '@webapp/mobile/components/product-card';
+import DestacatedProductCard from '@webapp/mobile/components/destacated-product-card';
 import { Products } from '@webapp/sdk/users-types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
-import { motion } from 'framer-motion';
 import { FunctionComponent, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 interface SimilarProductsProps {
   productList: Products[];
@@ -36,21 +36,32 @@ const SimilarProducts: FunctionComponent<SimilarProductsProps> = ({ productList,
       </Typography>
       <Divider sx={{ backgroundColor: theme.palette.common.white, height: 2 }} component={Box} />
       <Wrapper>
-        {similarProducts.map((product, id) => (
-          <ProductCard
-            key={id}
-            id={id}
-            image={''}
-            name={product.productName}
-            description={product.description}
-            price={product.salePrice}
-            currency={product.priceCurrency}
-            onClick={() => {
-              setProduct(product);
-              navigate(`/productos/${product.productId}`);
-            }}
-          />
-        ))}
+        <Swiper
+          // navigation
+          spaceBetween={30}
+          centeredSlides={true}
+          slidesPerView={1.5}
+          onSlideChange={() => console.log('slide change')}
+          onSwiper={(swiper) => console.log(swiper)}
+        >
+          {similarProducts.map((product, id) => (
+            <SwiperSlide key={id} virtualIndex={id}>
+              <DestacatedProductCard
+                key={id}
+                id={id}
+                image={''}
+                name={product.productName}
+                description={product.description}
+                price={product.salePrice}
+                currency={product.priceCurrency}
+                onClick={() => {
+                  setProduct(product);
+                  navigate(`/productos/${product.productId}`);
+                }}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </Wrapper>
     </Stack>
   );
@@ -58,15 +69,16 @@ const SimilarProducts: FunctionComponent<SimilarProductsProps> = ({ productList,
 
 export default SimilarProducts;
 
-const Wrapper = styled(motion.ul)(({ theme }) => ({
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(min(19.75rem, 100%), 1fr))',
-  gridGap: theme.spacing(4),
+const Wrapper = styled(Box)(() => ({
   width: '100%',
-  listStyle: 'none',
-  padding: 0,
-  margin: 0,
-  '& > li': {
-    width: '100%',
+  overflow: 'hidden',
+  '&. swiper-wrapper': {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 2,
+    padding: 0,
+    margin: 1,
   },
 }));

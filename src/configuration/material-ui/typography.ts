@@ -1,5 +1,5 @@
 // This file contains the typography configuration for the Material UI theme.
-const projectFont = 'Montserrat';
+const projectFont = 'Anta';
 const fontStyle = 'sans';
 
 const fontsSansFallback = [

@@ -13,21 +13,14 @@ import { DropzoneOptions, useDropzone } from 'react-dropzone';
 import { useIntl } from 'react-intl';
 
 const Wrapper = styled(Box)(({ theme }) => ({
-  minWidth: '245px',
   position: 'relative',
-  // backgroundColor: theme.palette.background.default,
-  // borderRadius: theme.shape.borderRadius,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
   cursor: 'pointer',
   height: '100%',
-  minHeight: '400px',
   padding: theme.spacing(3),
-  [theme.breakpoints.between('xs', 'sm')]: {
-    minHeight: '200px',
-  },
   transition: theme.transitions.create(['border'], {
     duration: theme.transitions.duration.short,
     easing: theme.transitions.easing.easeInOut,
@@ -64,25 +57,25 @@ const Wrapper = styled(Box)(({ theme }) => ({
   '& .upload-image-img': {
     backgroundColor: theme.palette.grey[300],
     width: '100%',
-    height: theme.spacing(40),
+    height: '100%',
+    minWidth: 100,
+    aspectRatio: '1/1',
     '& img': {
       objectFit: 'cover',
-    },
-    [theme.breakpoints.between('xs', 'sm')]: {
-      height: theme.spacing(25),
     },
   },
 
   '& .upload-image-icon': {
     borderRadius: '50%',
     display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 'auto',
     marginRight: 'auto',
+    minWidth: 75,
+    minHeight: 75,
     backgroundColor: theme.palette.grey[300],
-    width: theme.spacing(12),
-    height: theme.spacing(12),
   },
 
   '& .delete-image-icon': {
@@ -268,6 +261,9 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
             <div className="upload-image-icon">
               <FileUploadRoundedIcon />
             </div>
+              <Typography variant="caption" fontWeight={700} lineHeight="12px">
+              {intl.formatMessage({ id: getTitle() })}
+            </Typography>
           </motion.div>
         )}
         <Stack sx={{ mt: 2, textAlign: 'center' }} spacing={0.5}>

@@ -54,6 +54,7 @@ const Wrapper = styled('main')(() => ({
   alignItems: 'flex-start',
   padding: 0,
   margin: 0,
+  paddingBottom: 56,
 }));
 
 const InsideContent = styled('section')(({ theme }) => ({
@@ -78,7 +79,7 @@ const InsideContent = styled('section')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     padding: theme.spacing(2, 3),
     margin: 0,
   },

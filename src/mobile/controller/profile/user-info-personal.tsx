@@ -65,7 +65,7 @@ const UserInfoPersonal: FunctionComponent<UserInfoPersonalProps> = ({ className,
         {formatMessage({ id: 'PROFILE.USER_INFO.PANEL' })}
       </Typography>
       <Divider sx={{ mb: 4 }} />
-      <Stack gap={4} sx={{ width: '100%' }}>
+      <Stack gap={2} sx={{ width: '100%' }}>
         <Box sx={{ display: 'flex', width: '100%', gap: 2, justifyContent: 'space-between', mt: 4 }}>
           <CustomInputField
             name="name"
