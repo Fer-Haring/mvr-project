@@ -1,4 +1,4 @@
-import { useTheme } from '@mui/material';
+import { styled, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -52,36 +52,27 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
   });
 
   return (
-    <Stack gap={2} sx={{ width: '33%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Stack gap={2} sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <Typography
         variant="h4"
         fontWeight={600}
         textAlign="center"
         fontSize={24}
-        sx={{ mb: 4, color: theme.palette.grey[900] }}
+        sx={{ mb: 2, color: theme.palette.grey[900], textAlign: 'center' }}
       >
         {formatMessage({ id: 'PROFILE.USER_INFO.SELECTED.PAYMENT' })}
       </Typography>
+
       <Box
         sx={{
           display: 'flex',
           width: '100%',
           gap: 2,
-          justifyContent: 'space-evenly',
+          flexDirection: 'column',
           alignItems: 'center',
         }}
       >
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexDirection: 'column',
-            gap: 4,
-            maxWidth: '236px',
-            width: '100%',
-          }}
-        >
+        <ButtonContainer>
           <Button
             onClick={() => selectPaymentType('Efectivo')}
             sx={buttonStyle('Efectivo')}
@@ -96,6 +87,8 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
           >
             {formatMessage({ id: 'COMMON.SELECTED.PAYMENT.CREDIT_CARD' })}
           </Button>
+        </ButtonContainer>
+        <ButtonContainer>
           <Button
             onClick={() => selectPaymentType('Transferencia bancaria')}
             sx={buttonStyle('Transferencia bancaria')}
@@ -110,17 +103,26 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
           >
             {formatMessage({ id: 'COMMON.SELECTED.PAYMENT.DELIVERY_PAY' })}
           </Button>
-          <Button
-            onClick={() => selectPaymentType('Pago con Crypto')}
-            sx={buttonStyle('Pago con Crypto')}
-            aria-label={formatMessage({ id: 'COMMON.SELECTED.PAYMENT.CRYPTO' })}
-          >
-            {formatMessage({ id: 'COMMON.SELECTED.PAYMENT.CRYPTO' })}
-          </Button>
-        </Box>
+        </ButtonContainer>
+        <Button
+          onClick={() => selectPaymentType('Pago con Crypto')}
+          sx={buttonStyle('Pago con Crypto')}
+          aria-label={formatMessage({ id: 'COMMON.SELECTED.PAYMENT.CRYPTO' })}
+        >
+          {formatMessage({ id: 'COMMON.SELECTED.PAYMENT.CRYPTO' })}
+        </Button>
       </Box>
     </Stack>
   );
 };
 
 export default PaymentTypeButtons;
+
+const ButtonContainer = styled(Stack)(({ theme }) => ({
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  gap: theme.spacing(2),
+}));

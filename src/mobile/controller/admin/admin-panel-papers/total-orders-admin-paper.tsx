@@ -1,7 +1,5 @@
 import { Typography, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-// import { CompletedOrder } from '@webapp/sdk/users-types';
 import deliverAnimation from '@webapp/assets/images/animations/deliver.json';
 import { useAdminDataStore } from '@webapp/store/admin/admin-data';
 import { FunctionComponent } from 'react';
@@ -22,8 +20,9 @@ const TotalOrdersPaper: FunctionComponent = () => {
         sx={{
           display: 'flex',
           width: '100%',
-          gap: 2,
-          justifyContent: 'space-between',
+          gap: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
           flexDirection: 'column',
         }}
       >
@@ -37,17 +36,8 @@ const TotalOrdersPaper: FunctionComponent = () => {
         >
           {formatMessage({ id: 'ADMIN.TOTAL.ORDERS' })}
         </Typography>
-
-        <Paper
-          sx={{
-            display: 'flex',
-            border: 0,
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100px',
-          }}
-        >
           <Lottie
+            style={{ margin: 0 }}
             options={{
               loop: true,
               autoplay: true,
@@ -56,9 +46,8 @@ const TotalOrdersPaper: FunctionComponent = () => {
                 preserveAspectRatio: 'xMidYMid slice',
               },
             }}
-            height={50}
-            width={50}
-            style={{ margin: '0' }}
+            height={35}
+            width={35}
           />
           <Typography
             variant="h2"
@@ -66,12 +55,11 @@ const TotalOrdersPaper: FunctionComponent = () => {
               color: theme.palette.grey[800],
               fontWeight: 'bold',
               textAlign: 'center',
-              padding: theme.spacing(4),
+              padding: theme.spacing(1),
             }}
           >
             {totalOrders}
           </Typography>
-        </Paper>
       </Box>
     </CustomAdminPaper>
   );

@@ -1,14 +1,10 @@
-import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
-import { IconButton, Tooltip, Typography, useTheme } from '@mui/material';
+import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
+import { Accordion, AccordionDetails, AccordionSummary, Typography, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Modal from '@webapp/mobile/components/modal';
+import ControlOrdersContent from '@webapp/mobile/controller/admin/modal-components/control-orders-modal-content';
 import { CompletedOrder } from '@webapp/sdk/users-types';
-import React, { FunctionComponent } from 'react';
+import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
-
-import ControlOrdersContent from '../modal-components/control-orders-modal-content';
-import { CustomAdminPaper } from './papers-styles';
 
 interface PendingOrdersPaperProps {
   orders: CompletedOrder[];
@@ -20,15 +16,6 @@ const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders
   const ordersStatus = Object.values(orders)
     .map((order) => order.status)
     .filter((status): status is string => status !== undefined);
-  const [openModal, setOpenModal] = React.useState(false);
-
-  const handleOpen = () => {
-    setOpenModal(true);
-  };
-
-  const handleClose = () => {
-    setOpenModal(false);
-  };
 
   const orderStatusCountstringOccurrences = (arr?: string[]) => {
     const orderStatusCounts: { [key: string]: number } = { Pending: 0, Completed: 0, Canceled: 0 };
@@ -46,88 +33,60 @@ const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders
   const pendingCount = orderStatusCounts['Pending'];
 
   return (
-    <CustomAdminPaper>
-      <Box
-        sx={{
-          display: 'flex',
-          width: '100%',
-          gap: 2,
-          justifyContent: 'space-between',
-          flexDirection: 'column',
-        }}
-      >
-        <Typography
-          variant="body1"
-          sx={{
-            color: theme.palette.grey[800],
-            fontWeight: 'bold',
-            textAlign: 'center',
-          }}
-        >
-          {formatMessage({ id: 'ADMIN.ORDERS.CONTROL' })}
-        </Typography>
-
-        <Paper
-          sx={{
-            display: 'flex',
-            border: 0,
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexDirection: 'column',
-          }}
-        >
-          <Box sx={{ display: 'flex', flexDirection: 'row', gap: 4, justifyContent: 'center', alignItems: 'center' }}>
-            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
-              <Typography
-                variant="body1"
-                sx={{
-                  color: theme.palette.grey[800],
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-                }}
-              >
-                {formatMessage({ id: 'ADMIN.ORDERS.PENDING' })}
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{
-                  color: theme.palette.grey[800],
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-                }}
-              >
-                {pendingCount}
-              </Typography>
-            </Box>
-            <Tooltip title={formatMessage({ id: 'ADMIN.ORDERS.VIEW' })}>
-              <Box>
-                <IconButton onClick={handleOpen}>
-                  <VisibilityRoundedIcon
-                    sx={{
-                      color: theme.palette.grey[800],
-                      fontSize: 24,
-                    }}
-                  />
-                </IconButton>
-              </Box>
-            </Tooltip>
-          </Box>
-          {openModal && (
-            <Modal
-              open={openModal}
-              title={formatMessage({ id: 'ADMIN.ORDERS.CONTROL' })}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-              customContent={<ControlOrdersContent />}
-              secondaryButtonColor="secondary"
-              secondaryButtonText={formatMessage({ id: 'COMMON.CLOSE' })}
-              secondaryButtonOnClick={handleClose}
-              secondaryButtonDisabled={false}
+    <Box
+      sx={{
+        display: 'flex',
+        width: '100%',
+        gap: 2,
+        justifyContent: 'space-between',
+        flexDirection: 'column',
+        height: '100%',
+      }}
+    >
+      <Accordion>
+        <AccordionSummary
+          expandIcon={
+            <ExpandMoreRoundedIcon
+              sx={{
+                color: theme.palette.grey[800],
+              }}
             />
-          )}
-        </Paper>
-      </Box>
-    </CustomAdminPaper>
+          }
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              width: '100%',
+            }}
+          >
+            <Typography
+              variant="body1"
+              sx={{
+                color: theme.palette.grey[800],
+                fontWeight: 'bold',
+              }}
+            >
+              {formatMessage({ id: 'ADMIN.ORDERS.PENDING.MOBILE' })}
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{
+                color: theme.palette.grey[800],
+                fontWeight: 'bold',
+              }}
+            >
+              {pendingCount}
+            </Typography>
+          </Box>
+        </AccordionSummary>
+        <AccordionDetails>
+          <ControlOrdersContent />
+        </AccordionDetails>
+      </Accordion>
+    </Box>
   );
 };
 

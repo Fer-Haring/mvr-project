@@ -6,6 +6,7 @@ import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { alpha, styled, useTheme } from '@mui/material/styles';
 import { logout } from '@webapp/sdk/firebase/auth';
+import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
@@ -25,17 +26,9 @@ const AvatarWrapper = styled(Box)(({ theme }) => ({
       height: 40,
     },
   },
-  // [theme.breakpoints.down('md')]: {
-  //   width: 32,
-  //   height: 32,
-  // },
   '& .avatar-button': {
     width: 40,
     height: 40,
-    // [theme.breakpoints.down('md')]: {
-    //   width: 32,
-    //   height: 32,
-    // },
   },
   '& .mui-avatar': {
     backgroundColor: theme.palette.secondary.light,
@@ -50,13 +43,6 @@ const AvatarWrapper = styled(Box)(({ theme }) => ({
       color: theme.palette.text.primary,
       fontSize: theme.typography.h4.fontSize,
     },
-    // [theme.breakpoints.down('md')]: {
-    //   width: 24,
-    //   height: 24,
-    //   '& .mui-avatar-text': {
-    //     fontSize: 12,
-    //   },
-    // },
   },
 }));
 
@@ -79,6 +65,7 @@ const Avatar: FunctionComponent<AvatarProps> = ({ className, active, fullName, i
   const intl = useIntl();
   const theme = useTheme();
   const navigate = useNavigate();
+  const { cleanUserLogout } = useUserData();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -113,6 +100,7 @@ const Avatar: FunctionComponent<AvatarProps> = ({ className, active, fullName, i
 
   const handleLogout = async () => {
     await logout();
+    cleanUserLogout();
     navigate('/sign-in');
   };
 

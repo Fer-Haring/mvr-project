@@ -54,14 +54,16 @@ export async function updateUserInDb({
   }
 }
 
-export const getUser = async (userId: string) => {
+export const getUser = async (userId: string, updateGlobalState = true) => {
   const db = getDatabase();
   const starCountRef = ref(db, 'Users/' + userId);
   try {
     const snapshot = await get(starCountRef);
     if (snapshot.exists()) {
       const data = snapshot.val();
-      useUserData.getState().setUser(data);
+      if (updateGlobalState) {
+        useUserData.getState().setUser(data);
+      }
       return data; // Retorna los datos si la captura es exitosa y existe.
     } else {
       return null; // O maneja según sea necesario si no hay datos disponibles.

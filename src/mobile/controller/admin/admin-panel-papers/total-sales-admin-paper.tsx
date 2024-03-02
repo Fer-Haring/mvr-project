@@ -1,7 +1,5 @@
 import { Typography, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-// import { CompletedOrder } from '@webapp/sdk/users-types';
 import statisticsAnimation from '@webapp/assets/images/animations/statistics.json';
 import { useAdminDataStore } from '@webapp/store/admin/admin-data';
 import { FunctionComponent } from 'react';
@@ -45,7 +43,8 @@ const TotalSalesPaper: FunctionComponent = () => {
           display: 'flex',
           width: '100%',
           gap: 2,
-          justifyContent: 'space-between',
+          justifyContent: 'center',
+          alignItems: 'center',
           flexDirection: 'column',
         }}
       >
@@ -60,55 +59,43 @@ const TotalSalesPaper: FunctionComponent = () => {
           {formatMessage({ id: 'ADMIN.TOTAL.SALES.AMOUNT' })}
         </Typography>
 
-        <Paper
-          sx={{
-            display: 'flex',
-            border: 0,
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100px',
+        <Lottie
+          options={{
+            loop: true,
+            autoplay: true,
+            animationData: statisticsAnimation,
+            rendererSettings: {
+              preserveAspectRatio: 'xMidYMid slice',
+            },
           }}
-        >
-          <Lottie
-            options={{
-              loop: true,
-              autoplay: true,
-              animationData: statisticsAnimation,
-              rendererSettings: {
-                preserveAspectRatio: 'xMidYMid slice',
-              },
+          height={50}
+          width={40}
+          style={{ margin: '0' }}
+        />
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Typography
+            variant="h5"
+            sx={{
+              color: theme.palette.grey[800],
+              fontWeight: 'bold',
+              textAlign: 'right',
+              fontSize: 16,
             }}
-            height={50}
-            width={40}
-            style={{ margin: '0' }}
-          />
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography
-              variant="h3"
-              sx={{
-                color: theme.palette.grey[800],
-                fontWeight: 'bold',
-                textAlign: 'right',
-                fontSize: 16,
-                paddingLeft: theme.spacing(3),
-              }}
-            >
-              {totalsByCurrency.USD ? `$ ${totalsByCurrency.USD} USD` : '$ 0 USD'}
-            </Typography>
-            <Typography
-              variant="h3"
-              sx={{
-                color: theme.palette.grey[800],
-                fontWeight: 'bold',
-                textAlign: 'right',
-                fontSize: 16,
-                paddingLeft: theme.spacing(3),
-              }}
-            >
-              {totalsByCurrency.ARS ? `$ ${totalsByCurrency.ARS} ARS` : '$ 0 ARS'}
-            </Typography>
-          </Box>
-        </Paper>
+          >
+            {totalsByCurrency.USD ? `$ ${totalsByCurrency.USD} USD` : '$ 0 USD'}
+          </Typography>
+          <Typography
+            variant="h5"
+            sx={{
+              color: theme.palette.grey[800],
+              fontWeight: 'bold',
+              textAlign: 'right',
+              fontSize: 16,
+            }}
+          >
+            {totalsByCurrency.ARS ? `$ ${totalsByCurrency.ARS} ARS` : '$ 0 ARS'}
+          </Typography>
+        </Box>
       </Box>
     </CustomAdminPaper>
   );

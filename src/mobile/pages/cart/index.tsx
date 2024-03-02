@@ -96,7 +96,7 @@ export const MobileCartPage: FunctionComponent = () => {
         <Paper
           sx={{
             p: 2,
-            width: '90%',
+            width: '100%',
             backgroundColor: alpha(theme.palette.common.white, 0.6),
             display: 'flex',
             flexDirection: 'column',

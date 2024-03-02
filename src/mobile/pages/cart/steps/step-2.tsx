@@ -2,8 +2,8 @@ import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRound
 import { useTheme } from '@mui/material';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { CartPaymentDetail } from '@webapp/controller/cart/step-2/cart-payment-detail';
 import Modal from '@webapp/mobile/components/modal';
+import { CartPaymentDetail } from '@webapp/mobile/controller/cart/step-2/cart-payment-detail';
 import { saveCompletedOrder } from '@webapp/sdk/firebase/admin';
 import { updateUserInDb } from '@webapp/sdk/firebase/user';
 import { CartItem, Order } from '@webapp/sdk/users-types';
@@ -48,9 +48,9 @@ export const Step2: FunctionComponent<Step2Props> = ({
   const handleLastStep = async () => {
     updateUserInDb({
       userId: user.userId,
-      completedOrders: [...user.completedOrders, order ],
+      completedOrders: [...user.completedOrders, order],
     });
-    await saveCompletedOrder(order);
+    await saveCompletedOrder(order, order.orderId as number);
     clearCart();
     deleteMessageStore();
     handleNextStep();

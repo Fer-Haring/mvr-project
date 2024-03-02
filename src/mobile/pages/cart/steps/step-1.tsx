@@ -4,10 +4,10 @@ import { styled, useTheme } from '@mui/material';
 import { Box, Checkbox, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import PaymentTypeButtons from '@webapp/controller/cart/step-1/botones-metodo-pago';
-import DeliveryTypeButtons from '@webapp/controller/cart/step-1/botones-tipo-entrega';
-import ZoneDeliverButtons from '@webapp/controller/cart/step-1/botones-zona-entrega';
 import InputField from '@webapp/mobile/components/form/input';
+import PaymentTypeButtons from '@webapp/mobile/controller/cart/step-1/botones-metodo-pago';
+import DeliveryTypeButtons from '@webapp/mobile/controller/cart/step-1/botones-tipo-entrega';
+import ZoneDeliverButtons from '@webapp/mobile/controller/cart/step-1/botones-zona-entrega';
 import { User } from '@webapp/sdk/users-types';
 import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
@@ -57,16 +57,16 @@ export const Step1: FunctionComponent<Step1Props> = ({
           p: 2,
           width: '100%',
           display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-evenly',
-          gap: 1,
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+          gap: 5,
         }}
       >
         <PaymentTypeButtons userData={user} />
         <DeliveryTypeButtons userData={user} />
         {user.deliveryType === 'Delivery' && (
-          <Box sx={{ width: '33%' }}>
+          <Box sx={{ width: '100%' }}>
             <Typography
               variant="h4"
               fontWeight={600}
@@ -118,6 +118,16 @@ export const Step1: FunctionComponent<Step1Props> = ({
         )}
       </Box>
       <Stack direction={'column'} gap={4} width={'100%'} justifyContent={'center'} alignItems={'center'}>
+          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+            <Checkbox
+              checked={checked}
+              onChange={(e) => setChecked(e.target.checked)}
+              sx={{ color: theme.palette.grey[800] }}
+            />
+            <Typography variant="body1" fontWeight={400} sx={{ color: theme.palette.grey[800], textAlign: 'center' }}>
+              {formatMessage({ id: 'CART.PAYMENT.CONFIRMATION' })}
+            </Typography>
+          </Box>
         <Button
           variant="contained"
           onClick={handleNextStep}
@@ -132,16 +142,6 @@ export const Step1: FunctionComponent<Step1Props> = ({
         >
           {formatMessage({ id: 'CART.PAYMENT.NEXT' })}
         </Button>
-        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-          <Checkbox
-            checked={checked}
-            onChange={(e) => setChecked(e.target.checked)}
-            sx={{ color: theme.palette.grey[800] }}
-          />
-          <Typography variant="body1" fontWeight={400} sx={{ color: theme.palette.grey[800], textAlign: 'center' }}>
-            {formatMessage({ id: 'CART.PAYMENT.CONFIRMATION' })}
-          </Typography>
-        </Box>
       </Stack>
     </Stack>
   );

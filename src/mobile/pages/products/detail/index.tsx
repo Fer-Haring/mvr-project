@@ -1,5 +1,5 @@
 import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
-import { FormControl, MenuItem, Select, SelectChangeEvent, styled, useTheme } from '@mui/material';
+import { Box, FormControl, MenuItem, Select, SelectChangeEvent, styled, useTheme } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -139,43 +139,45 @@ export const MobileProductDetailPage: FunctionComponent = () => {
               mt: 3,
               width: '100%',
               display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'flex-start',
+              flexDirection: 'column',
+              justifyContent: 'center',
               alignItems: 'center',
             }}
           >
-            <Typography
-              variant="body1"
-              fontWeight={400}
-              sx={{ color: theme.palette.grey[800], textAlign: 'center', p: 2 }}
-            >
-              {formatMessage({ id: 'PRODUCT.DETAIL.SELECT.QUANTITY' })}
-            </Typography>
-            <FormControl fullWidth sx={{ maxWidth: 100 }}>
-              <CustomSelect
-                labelId="product-quantity-select-label"
-                id="quantity-select"
-                onChange={(e) => {
-                  handleQuantityChange(e as SelectChangeEvent<string>);
-                }}
-                displayEmpty
-                sx={{ width: '100%', maxWidth: 300, color: theme.palette.grey[900] }}
-                value={selectedQuantity}
-                defaultValue={selectedQuantity}
-                disabled={stockNumber === 0}
-                MenuProps={{
-                  PaperProps: {
-                    style: {
-                      maxHeight: 300,
-                      width: 'fit-content',
-                      borderRadius: theme.spacing(0.5),
-                    },
-                  },
-                }}
+            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', mb: 3 }}>
+              <Typography
+                variant="body1"
+                fontWeight={400}
+                sx={{ color: theme.palette.grey[800], textAlign: 'center', p: 2 }}
               >
-                {options}
-              </CustomSelect>
-            </FormControl>
+                {formatMessage({ id: 'PRODUCT.DETAIL.SELECT.QUANTITY' })}
+              </Typography>
+              <FormControl fullWidth sx={{ maxWidth: 100 }}>
+                <CustomSelect
+                  labelId="product-quantity-select-label"
+                  id="quantity-select"
+                  onChange={(e) => {
+                    handleQuantityChange(e as SelectChangeEvent<string>);
+                  }}
+                  displayEmpty
+                  sx={{ width: '100%', maxWidth: 300, color: theme.palette.grey[900] }}
+                  value={selectedQuantity}
+                  defaultValue={selectedQuantity}
+                  disabled={stockNumber === 0}
+                  MenuProps={{
+                    PaperProps: {
+                      style: {
+                        maxHeight: 300,
+                        width: 'fit-content',
+                        borderRadius: theme.spacing(0.5),
+                      },
+                    },
+                  }}
+                >
+                  {options}
+                </CustomSelect>
+              </FormControl>
+            </Box>
             <Button
               variant="contained"
               color="primary"

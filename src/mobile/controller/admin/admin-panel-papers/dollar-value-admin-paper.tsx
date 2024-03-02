@@ -51,7 +51,7 @@ const DollarValueInputPaper: FunctionComponent = () => {
             color: theme.palette.grey[800],
             fontWeight: 'bold',
             textAlign: 'center',
-            mb: 3,
+            mb: 1,
           }}
         >
           {formatMessage({ id: 'ADMIN.DOLLAR.VALUE' })}
@@ -66,7 +66,7 @@ const DollarValueInputPaper: FunctionComponent = () => {
           aria-hidden="true"
           aria-label={formatMessage({ id: 'COMMON.DOLLAR.VALUE' })}
           sx={{
-            paddingX: theme.spacing(6),
+            paddingX: theme.spacing(0),
             '& .MuiOutlinedInput-root': {
               // borderRadius: '0px',
               backgroundColor: theme.palette.common.white,

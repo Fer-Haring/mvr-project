@@ -4,6 +4,8 @@ import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { useCompletedOrdersStore } from '@webapp/store/orders/get-completed-orders';
 import { get, getDatabase, push, ref, update } from 'firebase/database';
 
+import { database } from '../firebase';
+
 export const getDollarValue = async () => {
   const db = getDatabase();
   const dollarValueRef = ref(db, 'dollarValue/');
@@ -31,7 +33,7 @@ export const updateDollarValue = async (value: number) => {
   const dollarValueRef = ref(db, 'dollarValue/');
   try {
     await update(dollarValueRef, { value: value });
-    SnackbarUtils.success('Dollar value updated successfully');
+    SnackbarUtils.success('Valor del dólar actualizado exitosamente');
   } catch (error) {
     SnackbarUtils.error('Error updating dollar value: ' + error);
   }
@@ -56,23 +58,25 @@ export const getCompletedOrders = async () => {
   }
 };
 
-export const saveCompletedOrder = async (order: CompletedOrder, ) => {
+export const saveCompletedOrder = async (order: CompletedOrder, id: number) => {
   const db = getDatabase();
-  const ordersRef = ref(db, 'CompletedOrders/');
+  const ordersRef = ref(db, 'CompletedOrders/' + id);
   try {
     await push(ordersRef, order);
   } catch (error) {
     SnackbarUtils.error('Error saving order: ' + error);
   }
-}
+};
 
-export const updateOrderStatus = async (orderId: string, status: string) => {
-  const db = getDatabase();
-  const orderRef = ref(db, `CompletedOrders/${orderId}`);
+export const updateOrderStatus = async (orderId: number, status: string) => {
+  const orderRef = ref(database, 'CompletedOrders/' + orderId);
   try {
-    await update(orderRef, { status: status });
-    SnackbarUtils.success('Orden Actualizada Exitosamente');
+    await update(orderRef, { status });
+    SnackbarUtils.success('Estado del pedido actualizado con éxito');
+    return { orderId, status };
   } catch (error) {
-    SnackbarUtils.error('Error updating order status: ' + error);
+    console.error('Error actualizando el estado del pedido:', error);
+    SnackbarUtils.error('Error al actualizar el estado del pedido');
+    return null;
   }
 };

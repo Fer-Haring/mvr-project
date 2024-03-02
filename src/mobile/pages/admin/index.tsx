@@ -1,4 +1,4 @@
-import { alpha, useTheme } from '@mui/material';
+import { Box, alpha, useTheme } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import ContentWrapper from '@webapp/mobile/components/content-wrapper';
@@ -9,7 +9,6 @@ import TotalOrdersPaper from '@webapp/mobile/controller/admin/admin-panel-papers
 import TotalProductsPaper from '@webapp/mobile/controller/admin/admin-panel-papers/total-products-admin-paper';
 import TotalSalesPaper from '@webapp/mobile/controller/admin/admin-panel-papers/total-sales-admin-paper';
 import { AdminTable } from '@webapp/mobile/controller/admin/admin-table';
-// import { AdminTable } from '../../controller/admin/admin-table';
 import { useAdminDataStore } from '@webapp/store/admin/admin-data';
 import { FunctionComponent } from 'react';
 
@@ -19,10 +18,10 @@ export const MobileAdminDashboardPage: FunctionComponent = () => {
 
   return (
     <ContentWrapper>
-       <Stack
+      <Stack
         sx={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))',
           gap: 2,
           width: '100%',
         }}
@@ -31,9 +30,19 @@ export const MobileAdminDashboardPage: FunctionComponent = () => {
         <TotalProductsPaper />
         <TotalOrdersPaper />
         <TotalSalesPaper />
+      </Stack>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          width: '100%',
+          mt: 2,
+        }}
+      >
         <DonutChartPaper />
         <PendingOrdersPaper orders={orders} />
-      </Stack>
+      </Box>
       <Paper sx={{ p: 2, width: '100%', mt: 2, backgroundColor: alpha(theme.palette.common.white, 0.7) }}>
         <AdminTable />
       </Paper>

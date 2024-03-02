@@ -1,11 +1,13 @@
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import FileUploadRoundedIcon from '@mui/icons-material/FileUploadRounded';
+import { IconButton } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { SxProps, Theme, alpha, styled } from '@mui/material/styles';
+import { SxProps, Theme, alpha, styled, useTheme } from '@mui/material/styles';
 import { easing } from '@webapp/mobile/components/framer';
 import { motion } from 'framer-motion';
 import React, { FunctionComponent, useCallback, useState } from 'react';
@@ -114,7 +116,7 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
   admin,
 }) => {
   const intl = useIntl();
-
+  const theme = useTheme();
   const IDLE_STATUS = 'COMMON.IMAGE_UPLOAD.STATUS.IDLE';
   const LOADING_STATUS = 'COMMON.IMAGE_UPLOAD.STATUS.LOADING';
   const ERROR_STATUS = 'COMMON.IMAGE_UPLOAD.STATUS.ERROR';
@@ -245,29 +247,51 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
       >
         <input {...getInputProps()} type="file" disabled={disabled} />
         {imageUrl ? (
-          <motion.div variants={ImageVariants} initial="initial" animate={imageUrl ? 'animate' : 'initial'}>
-            <Avatar
-              variant="square"
-              className="upload-image-img"
-              src={imageUrl}
-              alt="Image"
-              sx={{
-                borderRadius: 2,
-              }}
-            />
-          </motion.div>
+          <>
+            <motion.div variants={ImageVariants} initial="initial" animate={imageUrl ? 'animate' : 'initial'}>
+              <Avatar
+                variant="square"
+                className="upload-image-img"
+                src={imageUrl}
+                alt="Image"
+                sx={{
+                  borderRadius: 2,
+                }}
+              />
+              {!disabled && (
+                <IconButton
+                  sx={{
+                    position: 'absolute',
+                    bottom: 78,
+                    right: 48,
+                    backgroundColor: alpha(theme.palette.grey[200], 0.5),
+                    boxShadow: 5,
+                    '&:hover': {
+                      backgroundColor: 'white',
+                    },
+                  }}
+                >
+                  <EditRoundedIcon
+                    sx={{
+                      color: theme.palette.primary.main,
+                    }}
+                  />
+                </IconButton>
+              )}
+            </motion.div>
+          </>
         ) : (
           <motion.div variants={ImageVariants} initial="initial" animate={!imageUrl ? 'animate' : 'initial'}>
             <div className="upload-image-icon">
               <FileUploadRoundedIcon />
             </div>
-              <Typography variant="caption" fontWeight={700} lineHeight="12px">
+            <Typography variant="caption" fontWeight={700} lineHeight="12px">
               {intl.formatMessage({ id: getTitle() })}
             </Typography>
           </motion.div>
         )}
         <Stack sx={{ mt: 2, textAlign: 'center' }} spacing={0.5}>
-          {admin && (
+          {admin && imageUrl && (
             <Typography variant="caption" fontWeight={700} lineHeight="12px">
               {intl.formatMessage({ id: getTitle() })}
             </Typography>

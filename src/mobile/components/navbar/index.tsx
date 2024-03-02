@@ -1,5 +1,6 @@
 // import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
-import { Badge, Box } from '@mui/material';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+import { Badge, Box, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import cartAnimation from '@webapp/assets/images/animations/cart.json';
 import { useCartStore } from '@webapp/store/cart/cart';
@@ -38,9 +39,9 @@ const Navbar: FunctionComponent<NavbarProps> = ({ className }) => {
   return (
     <NavbarContainer className={className || ''}>
       <div className="left">
-        {/* <IconButton>
-          <MenuRoundedIcon />
-        </IconButton>*/}
+        <IconButton onClick={() => navigate(-1)}>
+          <ArrowBackRoundedIcon />
+        </IconButton>
       </div>
       <div className="right">
         <div className="forms">

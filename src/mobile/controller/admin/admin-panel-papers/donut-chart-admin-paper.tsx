@@ -46,14 +46,12 @@ const DonutChartPaper: FunctionComponent = () => {
       colors: ['#F44336', '#2977a8', '#26b100'],
       responsive: [
         {
-          breakpoint: 480,
+          breakpoint: 400,
           options: {
             chart: {
-              width: 150,
+              width: 320,
             },
-            legend: {
-              position: 'bottom' as const,
-            },
+            
           },
         },
       ],
@@ -78,14 +76,12 @@ const DonutChartPaper: FunctionComponent = () => {
     colors: ['#F44336', '#2977a8', '#26b100'],
     responsive: [
       {
-        breakpoint: 480,
+        breakpoint: 400,
         options: {
           chart: {
-            width: 150,
+            width: 320,
           },
-          legend: {
-            position: 'bottom' as const,
-          },
+         
         },
       },
     ],

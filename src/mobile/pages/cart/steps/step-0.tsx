@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material';
 import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { CartProductsDetail } from '@webapp/controller/cart/step-0/cart-products-detail';
+import { CartProductsDetail } from '@webapp/mobile/controller/cart/step-0/cart-products-detail';
 import { CartItem, Order } from '@webapp/sdk/users-types';
 import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';

@@ -45,7 +45,7 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ user
   };
 
   return (
-    <Stack gap={2} sx={{ width: '33%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Stack gap={2} sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <Typography
         variant="h4"
         fontWeight={600}

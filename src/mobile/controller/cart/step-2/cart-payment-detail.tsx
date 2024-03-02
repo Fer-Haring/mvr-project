@@ -106,9 +106,6 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
               <CustomTypography variant="subtitle1">{formatMessage({ id: 'CART.PAYMENT.ARS' })}</CustomTypography>
             )}
           </TextsContainer>
-        </Stack>
-
-        <Stack direction={'column'} gap={4} width={'100%'}>
           <TextsRowContainer>
             <CustomTypography variant="h4">{formatMessage({ id: 'CART.PAYMENT.DETAILS.SUBTOTAL' })}</CustomTypography>
             <StyledDivider orientation="horizontal" flexItem />
@@ -153,7 +150,7 @@ const CustomTypography = styled(Typography)(({ theme }) => ({
 
 const TextsContainer = styled(Box)(() => ({
   display: 'flex',
-  flexDirection: 'column',
+  flexDirection: 'row',
   gap: 2,
   width: '100%',
   justifyContent: 'space-between',

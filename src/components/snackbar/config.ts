@@ -1,12 +1,21 @@
+import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { OptionsObject } from 'notistack';
 
-const SHARED_CONFIG: OptionsObject = {
-  anchorOrigin: {
-    vertical: 'bottom',
-    horizontal: 'center',
-  },
-  preventDuplicate: true,
-  autoHideDuration: 5000,
-};
+export const useSharedConfig = (): OptionsObject => {
+  const isMobile = useIsMobile();
 
-export default SHARED_CONFIG;
+  const config: OptionsObject = {
+    anchorOrigin: {
+      vertical: isMobile ? 'top' : 'bottom',
+      horizontal: 'center',
+    },
+    preventDuplicate: true,
+    autoHideDuration: 5000,
+    style: {
+      borderRadius: 8,
+      zIndex: 9999,
+    },
+  };
+
+  return config;
+};

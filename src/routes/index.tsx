@@ -1,4 +1,5 @@
 import { MobileAdminDashboardPage } from '@webapp/mobile/pages/admin';
+import MobileProductAdminDetail from '@webapp/mobile/pages/admin/product-admin-detail';
 import MobileSignInPage from '@webapp/mobile/pages/auth/sign-in';
 import MobileSignUpPage from '@webapp/mobile/pages/auth/sign-up';
 import { MobileCartPage } from '@webapp/mobile/pages/cart';
@@ -114,6 +115,14 @@ const MobileRoutes: Route[] = [
   {
     path: '/admin-dashboard',
     component: <MobileAdminDashboardPage />,
+  },
+  {
+    path: '/admin-dashboard/product/:id?',
+    component: <MobileProductAdminDetail />,
+  },
+  {
+    path: 'nuevo-producto',
+    component: <MobileProductAdminDetail />,
   },
   {
     path: '/contacto',
