@@ -50,7 +50,7 @@ export const Step2: FunctionComponent<Step2Props> = ({
       userId: user.userId,
       completedOrders: [...user.completedOrders, order],
     });
-    await saveCompletedOrder(order);
+    await saveCompletedOrder(order, order.orderId as number);
     clearCart();
     deleteMessageStore();
     handleNextStep();

@@ -39,7 +39,7 @@ const ControlOrdersContent: FunctionComponent<ControlOrdersContentProps> = ({ cl
     }));
 
     // Llama a la función que actualiza la base de datos
-    updateOrderStatus(orderId as string, newStatus)
+    updateOrderStatus(orderId as number, newStatus)
       .then(() => {
         SnackbarUtils.success('Estado actualizado con éxito');
 

@@ -1,7 +1,2 @@
 export { AboutUsPage } from './about-us';
-export { AdminDashboardPage } from './admin';
-export { ContactPage } from './contact';
 export { MobileHomePage } from './home';
-export { ProductsPage } from './products';
-export { ProductDetailPage } from './products/detail';
-export { ProfilePage } from './profile';
