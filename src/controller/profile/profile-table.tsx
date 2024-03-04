@@ -59,7 +59,7 @@ export const ProfileTable: FunctionComponent = () => {
   const { user } = useUserData();
   const { dollarValue } = useDollarValue();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [data] = useState(() => [...user.completedOrders]);
+  const [data] = useState(() => (user.completedOrders ? [...user.completedOrders] : []));
   const [sorting, setSorting] = useState<SortingState>([]);
   const columnHelper = createColumnHelper<CompletedOrder>();
   const [expandedRows, setExpandedRows] = useState<ExpandedRowsType>({});

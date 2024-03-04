@@ -8,6 +8,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { SxProps, Theme, alpha, styled, useTheme } from '@mui/material/styles';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { easing } from '@webapp/mobile/components/framer';
 import { motion } from 'framer-motion';
 import React, { FunctionComponent, useCallback, useState } from 'react';
@@ -104,6 +105,8 @@ interface ImageUploaderProps {
   onImageChange?: (imageFile: File | undefined) => void;
   onImageDelete: () => void;
   admin?: boolean;
+  onClick?: () => void;
+  entity: 'mobile-profile' | 'mobile-product';
 }
 
 const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
@@ -114,9 +117,12 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
   onImageChange,
   onImageDelete,
   admin,
+  onClick,
+  entity,
 }) => {
   const intl = useIntl();
   const theme = useTheme();
+  const isMobile = useIsMobile();
   const IDLE_STATUS = 'COMMON.IMAGE_UPLOAD.STATUS.IDLE';
   const LOADING_STATUS = 'COMMON.IMAGE_UPLOAD.STATUS.LOADING';
   const ERROR_STATUS = 'COMMON.IMAGE_UPLOAD.STATUS.ERROR';
@@ -171,7 +177,11 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
     [disabled, onImageChange]
   );
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, ...options });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    ...options,
+    noClick: isMobile,
+  });
 
   const getTitle = () => {
     switch (status) {
@@ -187,24 +197,6 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
         return 'COMMON.IMAGE_UPLOAD.TITLE';
     }
   };
-
-  // const showSubtitle = () => {
-  //   if (status === LOADING_STATUS) {
-  //     return (
-  //       <Typography variant="caption" lineHeight="12px">
-  //         {intl.formatMessage({ id: 'COMMON.IMAGE_UPLOAD.UPLOADING.SUBTITLE' })}
-  //       </Typography>
-  //     );
-  //   } else if (status === DONE_STATUS) {
-  //     return;
-  //   } else {
-  //     return (
-  //       <Typography variant="caption" lineHeight="12px">
-  //         {intl.formatMessage({ id: 'COMMON.IMAGE_UPLOAD.SUBTITLE' })}
-  //       </Typography>
-  //     );
-  //   }
-  // };
 
   const handleDeleteImage = (ev: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
     if (disabled) {
@@ -241,9 +233,10 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
         sx={{ ...sx }}
         data-disabled={disabled}
         {...getRootProps()}
-        tabIndex={0} // Add tabIndex to make it focusable
-        role="button" // Add role="button" to indicate it's an interactive element
-        aria-label={intl.formatMessage({ id: getTitle() })} // Add an aria-label for accessibility
+        onClick={() => onClick && onClick()}
+        tabIndex={0}
+        role="button"
+        aria-label={intl.formatMessage({ id: getTitle() })}
       >
         <input {...getInputProps()} type="file" disabled={disabled} />
         {imageUrl ? (
@@ -258,27 +251,27 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
                   borderRadius: 2,
                 }}
               />
-              {!disabled && (
-                <IconButton
-                  sx={{
-                    position: 'absolute',
-                    bottom: 78,
-                    right: 48,
-                    backgroundColor: alpha(theme.palette.grey[200], 0.5),
-                    boxShadow: 5,
-                    '&:hover': {
-                      backgroundColor: 'white',
-                    },
-                  }}
-                >
-                  <EditRoundedIcon
-                    sx={{
-                      color: theme.palette.primary.main,
-                    }}
-                  />
-                </IconButton>
-              )}
             </motion.div>
+            {!disabled && (
+              <IconButton
+                sx={{
+                  position: 'absolute',
+                  bottom: entity === 'mobile-profile' ? 50 : 78,
+                  right: entity === 'mobile-profile' ? 30 : 48,
+                  backgroundColor: alpha(theme.palette.grey[200], 0.5),
+                  boxShadow: 5,
+                  '&:hover': {
+                    backgroundColor: 'white',
+                  },
+                }}
+              >
+                <EditRoundedIcon
+                  sx={{
+                    color: theme.palette.primary.main,
+                  }}
+                />
+              </IconButton>
+            )}
           </>
         ) : (
           <motion.div variants={ImageVariants} initial="initial" animate={!imageUrl ? 'animate' : 'initial'}>

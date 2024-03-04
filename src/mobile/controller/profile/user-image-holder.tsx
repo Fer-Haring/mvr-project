@@ -1,13 +1,15 @@
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { SxProps, Theme, useTheme } from '@mui/material/styles';
+import SnackbarUtils from '@webapp/components/snackbar';
+import { ImageUploadDrawer } from '@webapp/mobile/components/image-upload-drawer';
 import ImageUploader from '@webapp/mobile/components/image-uploader';
 import { uploadAvatar } from '@webapp/sdk/firebase/user';
 import { User } from '@webapp/sdk/users-types';
 import { useUserData } from '@webapp/store/users/user-data';
-import React, { FunctionComponent } from 'react';
+import { convertBase64ImageToFile } from '@webapp/utils/convert-base64-to-file';
+import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
-import SnackbarUtils from '@webapp/components/snackbar';
 
 interface UserImageHolderProps {
   className?: string;
@@ -20,29 +22,66 @@ const UserImageHolder: FunctionComponent<UserImageHolderProps> = ({ user }) => {
   const theme = useTheme();
   const [avatar, setAvatar] = React.useState<{ file?: File; url?: string }>({});
   const { setUser } = useUserData();
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
 
-  const onAvatarChange = (avatarFile: File | undefined, url?: string) => {
-    if (!avatarFile) {
-      return;
+  const onAvatarChange = useCallback(
+    (avatarFile: File | undefined, url?: string) => {
+      if (!avatarFile) {
+        return;
+      }
+      const handleUpdateAvatar = async (image: File) => {
+        const downloadURL = await uploadAvatar(image);
+        if (downloadURL) {
+          setUser({ ...user, profilePicture: downloadURL });
+        }
+      };
+      setAvatar({
+        file: avatarFile,
+        url,
+      });
+      try {
+        handleUpdateAvatar(avatarFile);
+        SnackbarUtils.success(formatMessage({ id: 'PROFILE.USER_INFO.AVATAR_UPDATED' }));
+      } catch (error) {
+        SnackbarUtils.error(formatMessage({ id: 'PROFILE.USER_INFO.AVATAR_ERROR' }));
+      }
+    },
+    [formatMessage, setUser, user]
+  );
+
+  function sendMessageToReactNative(message: string) {
+    if (window.nativeAppHandler) {
+      window.nativeAppHandler.postMessage(message);
     }
-    setAvatar({
-      file: avatarFile,
-      url,
-    });
-    try {
-      handleUpdateAvatar(avatarFile);
-      SnackbarUtils.success(formatMessage({ id: 'PROFILE.USER_INFO.AVATAR_UPDATED' }));
-    } catch (error) {
-      SnackbarUtils.error(formatMessage({ id: 'PROFILE.USER_INFO.AVATAR_ERROR' }));
-    }
+  }
+
+  const handleOpenDrawer = () => {
+    setDrawerOpen(true);
   };
 
-  const handleUpdateAvatar = async (image: File) => {
-    const downloadURL = await uploadAvatar(image);
-    if (downloadURL) {
-      setUser({ ...user, profilePicture: downloadURL });
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    function handleMessage(event: any) {
+      const data = event.data;
+      if (data.type === 'selected_image') {
+        setSelectedImage(data.base64Image);
+        onAvatarChange(convertBase64ImageToFile(data.base64Image), data.base64Image);
+      }
+      if (data.type === 'camera_error') {
+        SnackbarUtils.error(data.message);
+      }
+      if (data.type === 'gallery_error') {
+        SnackbarUtils.error(data.message);
+      }
     }
-  };
+
+    window.addEventListener('message', handleMessage);
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, [formatMessage, onAvatarChange, selectedImage]);
 
   return (
     <Stack
@@ -63,6 +102,8 @@ const UserImageHolder: FunctionComponent<UserImageHolderProps> = ({ user }) => {
         }}
         defaultImageUrl={user.profilePicture || avatar.url}
         aria-label={formatMessage({ id: 'PROFILE.USER_INFO.AVATAR_UPLOAD' })}
+        onClick={handleOpenDrawer}
+        entity="mobile-profile"
       />
       <Stack
         sx={{
@@ -81,6 +122,14 @@ const UserImageHolder: FunctionComponent<UserImageHolderProps> = ({ user }) => {
           {user.email}
         </Typography>
       </Stack>
+      {drawerOpen && (
+        <ImageUploadDrawer
+          drawerOpen={drawerOpen}
+          setDrawerOpen={setDrawerOpen}
+          sendMessageToReactNative={sendMessageToReactNative}
+          entity="mobile-profile"
+        />
+      )}
     </Stack>
   );
 };

@@ -22,9 +22,9 @@ export interface AuthLayoutProps {
 const AuthLayout: FunctionComponent<AuthLayoutProps> = ({ className, children }) => {
   return (
     <MainWrapper>
-      <BackgroundVideoStyle autoPlay loop muted className="bg-video">
+      {/* <BackgroundVideoStyle autoPlay loop muted className="bg-video">
         <source src={BackgroundVideo} type="video/mp4" />
-      </BackgroundVideoStyle>
+      </BackgroundVideoStyle> */}
       <Wrapper
         className={className || ''}
         role="main" // Define the role as "main" for the main content area
