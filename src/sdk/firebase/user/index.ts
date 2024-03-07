@@ -1,10 +1,9 @@
-import SnackbarUtils from '@webapp/components/snackbar';
 import { CartItem, CompletedOrder } from '@webapp/sdk/users-types';
 import { useAdminDataStore } from '@webapp/store/admin/admin-data';
 import { useUserData } from '@webapp/store/users/user-data';
+import SnackbarUtils from '@webapp/web/components/snackbar';
 import { get, getDatabase, ref, update } from 'firebase/database';
 import { getDownloadURL, ref as storageReference, uploadBytes } from 'firebase/storage';
-
 
 import { auth, database, storage } from '../firebase';
 
@@ -32,7 +31,6 @@ export async function updateUserInDb({
   paymentMethod?: string;
   deliverZone?: string;
   preferredCurrency?: string;
-
 }) {
   try {
     await update(ref(database, 'Users/' + userId), {

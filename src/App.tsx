@@ -8,12 +8,12 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 
 import './App.css';
 import { CustomThemeOptions, getPaletteMode } from './configuration/material-ui/theme';
-import { useColorMode } from './context';
 // Ensure this is correctly imported
 import { useIsMobile } from './hooks/is-mobile';
 import { MobileRoutes, ProjectRoutes } from './routes';
 import AuthGuard from './routes/auth-guard';
 import { firebase } from './sdk/firebase/firebase';
+import { useColorMode } from './web/context';
 
 const tagManagerArgs = {
   gtmId: import.meta.env.VITE_APP_GTM_ID || '',

@@ -1,8 +1,8 @@
 import { Products } from '@webapp/sdk/users-types';
+import SnackbarUtils from '@webapp/web/components/snackbar';
 import { ref, update } from 'firebase/database';
 
 import { database } from '../firebase';
-import SnackbarUtils from '@webapp/components/snackbar';
 
 export const updateProduct = async (id: string, productData: Products) => {
   const productsRef = ref(database, 'Products/' + id);

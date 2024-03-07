@@ -1,10 +1,10 @@
-
 import Drawer from '@mui/material/Drawer';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { styled, useTheme } from '@mui/material/styles';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
+
 import Button from '../button';
 
 interface ImageUploadDrawerProps {
@@ -48,7 +48,7 @@ export const ImageUploadDrawer: FunctionComponent<ImageUploadDrawerProps> = ({
         <Button
           sx={{ width: '100%', mb: 2 }}
           onClick={() => {
-            sendMessageToReactNative('camera_permission');
+            sendMessageToReactNative('open_camera');
             setDrawerOpen(false);
           }}
         >

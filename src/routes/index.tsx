@@ -16,14 +16,14 @@ import {
   ProductDetailPage,
   ProductsPage,
   ProfilePage,
-} from '@webapp/pages';
-import ForgotPasswordPage2 from '@webapp/pages/auth/forgot-password';
-import ForgotPasswordVerifyPage2 from '@webapp/pages/auth/forgot-password-verify';
+} from '@webapp/web/pages';
+import ForgotPasswordPage2 from '@webapp/web/pages/auth/forgot-password';
+import ForgotPasswordVerifyPage2 from '@webapp/web/pages/auth/forgot-password-verify';
 // Auth pages
-import SignInPage2 from '@webapp/pages/auth/sign-in';
-import SignUpPage2 from '@webapp/pages/auth/sign-up';
-import VerificationCodePage2 from '@webapp/pages/auth/verification-code';
-import { CartPage } from '@webapp/pages/cart';
+import SignInPage2 from '@webapp/web/pages/auth/sign-in';
+import SignUpPage2 from '@webapp/web/pages/auth/sign-up';
+import VerificationCodePage2 from '@webapp/web/pages/auth/verification-code';
+import { CartPage } from '@webapp/web/pages/cart';
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 

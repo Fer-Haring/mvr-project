@@ -1,9 +1,9 @@
 import { Products } from '@webapp/sdk/users-types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';
+import SnackbarUtils from '@webapp/web/components/snackbar';
 import { get, getDatabase, push, ref, update } from 'firebase/database';
 import { getDownloadURL, ref as storageReference, uploadBytes } from 'firebase/storage';
-import SnackbarUtils from '@webapp/components/snackbar';
 
 import { database, storage } from '../firebase';
 
@@ -62,7 +62,7 @@ export const addNewProduct = async (productData: Products) => {
   try {
     // Añade el producto a la base de datos y genera un ID único
     const newProductRef = await push(productsRef, productData);
-    SnackbarUtils.success(`Producto añadido con ID: ${newProductRef.key}` );
+    SnackbarUtils.success(`Producto añadido con ID: ${newProductRef.key}`);
 
     // Actualiza el producto recién añadido con su propio ID generado
     await update(ref(db, `Products/${newProductRef.key}`), { productId: newProductRef.key });

@@ -3,7 +3,6 @@ import KeyboardArrowDownRounded from '@mui/icons-material/KeyboardArrowDownRound
 import { AutocompleteChangeReason, Typography, alpha, styled, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import SnackbarUtils from '@webapp/components/snackbar';
 import Button from '@webapp/mobile/components/button';
 import ContentWrapper from '@webapp/mobile/components/content-wrapper';
 import Autocomplete, { AutocompleteOption } from '@webapp/mobile/components/form/autocomplete';
@@ -15,6 +14,7 @@ import { addNewProduct, getProductById } from '@webapp/sdk/firebase/products';
 import { updateProduct } from '@webapp/sdk/firebase/products/update-products';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';
+import SnackbarUtils from '@webapp/web/components/snackbar';
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';

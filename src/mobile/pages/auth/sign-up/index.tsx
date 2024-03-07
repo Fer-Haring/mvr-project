@@ -14,7 +14,7 @@ import AuthLayoutContainer from '@webapp/mobile/components/layout/auth-layout-va
 import SnackbarUtils from '@webapp/mobile/components/snackbar';
 import { saveUserInDb, signUp } from '@webapp/sdk/firebase/auth';
 import { auth } from '@webapp/sdk/firebase/firebase';
-import { validateEmail } from '@webapp/utils/input-validations';
+import { validateEmail } from '@webapp/web/utils/input-validations';
 import { AnimatePresence } from 'framer-motion';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';

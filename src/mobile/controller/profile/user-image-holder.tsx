@@ -1,13 +1,13 @@
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { SxProps, Theme, useTheme } from '@mui/material/styles';
-import SnackbarUtils from '@webapp/components/snackbar';
 import { ImageUploadDrawer } from '@webapp/mobile/components/image-upload-drawer';
 import ImageUploader from '@webapp/mobile/components/image-uploader';
 import { uploadAvatar } from '@webapp/sdk/firebase/user';
 import { User } from '@webapp/sdk/users-types';
 import { useUserData } from '@webapp/store/users/user-data';
-import { convertBase64ImageToFile } from '@webapp/utils/convert-base64-to-file';
+import SnackbarUtils from '@webapp/web/components/snackbar';
+import { convertBase64ImageToFile } from '@webapp/web/utils/convert-base64-to-file';
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 

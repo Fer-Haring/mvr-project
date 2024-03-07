@@ -7,7 +7,7 @@ import { uploadProductImage } from '@webapp/sdk/firebase/products';
 import { Products } from '@webapp/sdk/users-types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useUserData } from '@webapp/store/users/user-data';
-import { convertBase64ImageToFile } from '@webapp/utils/convert-base64-to-file';
+import { convertBase64ImageToFile } from '@webapp/web/utils/convert-base64-to-file';
 import { FunctionComponent, useCallback, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 

@@ -1,6 +1,6 @@
 import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { ColorModeProvider } from '@webapp/context';
+import { ColorModeProvider } from '@webapp/web/context';
 // import { Elements } from '@stripe/react-stripe-js';
 import { SnackbarProvider } from 'notistack';
 import React from 'react';
@@ -8,12 +8,12 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 
 import App from './App';
-import { SnackbarUtilsConfigurator } from './components/snackbar';
 import { StyledMaterialDesignContent } from './configuration/material-ui/theme';
 import './index.scss';
 import BottomNavigationBar from './mobile/controller/main/bottom-navigation-bar';
 import reportWebVitals from './reportWebVitals';
 import { TranslationsProvider } from './translations';
+import { SnackbarUtilsConfigurator } from './web/components/snackbar';
 
 // import { BugsnagInitializer, ELEMENTS_OPTIONS, GTMInitializer, stripePromise } from './3rd-party-initializer';
 
