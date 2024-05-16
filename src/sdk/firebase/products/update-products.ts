@@ -1,5 +1,5 @@
+import SnackbarUtils from '@webapp/components/snackbar';
 import { Products } from '@webapp/sdk/users-types';
-import SnackbarUtils from '@webapp/web/components/snackbar';
 import { ref, update } from 'firebase/database';
 
 import { database } from '../firebase';

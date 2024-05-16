@@ -5,15 +5,13 @@ import React from 'react';
 import TagManager from 'react-gtm-module';
 import { useIntl } from 'react-intl';
 import { Navigate, Route, Routes } from 'react-router-dom';
-
 import './App.css';
 import { CustomThemeOptions, getPaletteMode } from './configuration/material-ui/theme';
 // Ensure this is correctly imported
-import { useIsMobile } from './hooks/is-mobile';
-import { MobileRoutes, ProjectRoutes } from './routes';
+import { ProjectRoutes } from './routes';
 import AuthGuard from './routes/auth-guard';
 import { firebase } from './sdk/firebase/firebase';
-import { useColorMode } from './web/context';
+import { useColorMode } from './context';
 
 const tagManagerArgs = {
   gtmId: import.meta.env.VITE_APP_GTM_ID || '',
@@ -24,7 +22,6 @@ import.meta.env.VITE_APP_STAGE === 'prod' && TagManager.initialize(tagManagerArg
 const App: React.FunctionComponent = (): JSX.Element => {
   const { locale } = useIntl();
   const { mode } = useColorMode(); // Use the hook here
-  const isMobile = useIsMobile();
 
   const getLocale = () => {
     switch (locale) {
@@ -57,16 +54,6 @@ const App: React.FunctionComponent = (): JSX.Element => {
     <main className="App">
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        {isMobile ? (
-          <Routes>
-            <Route element={<AuthGuard />}>
-              {MobileRoutes.map((route, index) => (
-                <Route key={index} path={route.path} element={route.component} />
-              ))}
-              <Route path={'*'} element={<Navigate to="/" />} />
-            </Route>
-          </Routes>
-        ) : (
           <Routes>
             <Route element={<AuthGuard />}>
               {ProjectRoutes.map((route, index) => (
@@ -75,7 +62,6 @@ const App: React.FunctionComponent = (): JSX.Element => {
               <Route path={'*'} element={<Navigate to="/" />} />
             </Route>
           </Routes>
-        )}
       </ThemeProvider>
     </main>
   );

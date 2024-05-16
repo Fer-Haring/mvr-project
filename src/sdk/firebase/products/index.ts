@@ -1,7 +1,7 @@
+import SnackbarUtils from '@webapp/components/snackbar';
 import { Products } from '@webapp/sdk/users-types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';
-import SnackbarUtils from '@webapp/web/components/snackbar';
 import { get, getDatabase, push, ref, update } from 'firebase/database';
 import { getDownloadURL, ref as storageReference, uploadBytes } from 'firebase/storage';
 

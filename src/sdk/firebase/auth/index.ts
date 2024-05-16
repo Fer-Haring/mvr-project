@@ -1,6 +1,6 @@
+import SnackbarUtils from '@webapp/components/snackbar';
 import { useUserStore } from '@webapp/store/auth/session';
 import { useUserId } from '@webapp/store/users/user-id';
-import SnackbarUtils from '@webapp/web/components/snackbar';
 import { FirebaseError } from 'firebase/app';
 import {
   GoogleAuthProvider,
