@@ -137,7 +137,7 @@ export const HomePage: FunctionComponent = () => {
                 key={id}
                 id={id}
                 products={[product]}
-                image={product.productImage}
+                image={product.productImage || ''}
                 name={product.productName}
                 description={product.description}
                 price={product.salePrice}

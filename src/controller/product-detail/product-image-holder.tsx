@@ -30,7 +30,7 @@ const ProductImageHolder: FunctionComponent<ProductImageHolderProps> = ({ classN
   };
 
   const handleUpdateAvatar = async (image: File) => {
-    const downloadURL = await uploadProductImage(image, product.productId);
+    const downloadURL = await uploadProductImage(image, product.productId!);
     if (downloadURL) {
       setProduct({ ...product, productImage: downloadURL });
     }

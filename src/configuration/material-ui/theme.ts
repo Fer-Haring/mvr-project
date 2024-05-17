@@ -2,7 +2,6 @@ import { PaletteColor, PaletteColorOptions, PaletteMode } from '@mui/material';
 import '@mui/material/Button';
 import { alpha, styled } from '@mui/material/styles';
 import { ThemeOptions } from '@mui/material/styles/createTheme';
-import type {} from '@mui/x-data-grid-pro/themeAugmentation';
 import { MaterialDesignContent } from 'notistack';
 
 // Custom theme configuration
@@ -549,7 +548,10 @@ export const CustomThemeOptions = (mode: PaletteMode): Partial<ThemeOptions> => 
           borderRadius: sizes.borderRadius,
         },
         arrow: {
-          color: alpha(mode === 'dark' ? darkModePalette[0].contrastBackground : lightModePalette[0].contrastBackground, 0.5),
+          color: alpha(
+            mode === 'dark' ? darkModePalette[0].contrastBackground : lightModePalette[0].contrastBackground,
+            0.5
+          ),
         },
       },
     },
@@ -587,9 +589,7 @@ export const CustomThemeOptions = (mode: PaletteMode): Partial<ThemeOptions> => 
           '&:hover:not(&.Mui-selected)': {
             color: mode === 'dark' ? darkModePalette[0].primaryText : lightModePalette[0].primaryText,
             backgroundColor:
-              mode === 'dark'
-                ? alpha(darkModePalette[0].grey300, 1)
-                : alpha(lightModePalette[0].grey300, 1),
+              mode === 'dark' ? alpha(darkModePalette[0].grey300, 1) : alpha(lightModePalette[0].grey300, 1),
           },
           '&.Mui-selected': {
             backgroundColor: mode === 'dark' ? darkModePalette[0].grey300 : lightModePalette[0].grey300,
@@ -807,147 +807,6 @@ export const CustomThemeOptions = (mode: PaletteMode): Partial<ThemeOptions> => 
             '.MuiBadge-badge': {
               color: 'white',
               fontWeight: 600,
-            },
-          },
-        },
-      },
-    },
-    MuiDataGrid: {
-      styleOverrides: {
-        root: {
-          background: 'transparent',
-          border: 'none',
-          color: mode === 'dark' ? darkModePalette[0].primaryText : lightModePalette[0].primaryText,
-          '& .MuiDataGrid-withBorderColor': {
-            borderColor: 'transparent',
-          },
-          '& .MuiDataGrid-main': {
-            border: `1px solid ${mode === 'dark' ? darkModePalette[0].divider : lightModePalette[0].grey300}`,
-            borderRadius: sizes.borderRadius,
-          },
-          '& .MuiDataGrid-detailPanel': {
-            borderBottom: `1px solid ${mode === 'dark' ? darkModePalette[0].divider : lightModePalette[0].grey300}`,
-          },
-          '& .MuiDataGrid-pinnedColumns': {
-            backgroundImage: 'none',
-          },
-          '& .MuiDataGrid-columnHeader, .MuiDataGrid-columnHeader--alignCenter': {
-            textAlign: 'center',
-            minHeight: '50px !important',
-            height: '50px',
-          },
-          '& .MuiDataGrid-columnHeaders, .MuiDataGrid-pinnedColumnHeaders': {
-            minHeight: '50px !important',
-            height: '50px',
-            backgroundColor: mode === 'dark' ? colors.common.black : lightModePalette[0].grey200,
-            backgroundImage: 'none',
-            textTransform: 'uppercase',
-          },
-          '& .MuiDataGrid-columnHeader': {
-            '&:focus': {
-              outlineColor: `${colors.secondary.main} !important`,
-            },
-          },
-          '& .MuiDataGrid-columnHeaders': {
-            fontSize: typography.caption.fontSize,
-            borderRadius: sizes.borderRadius,
-            minHeight: '50px !important',
-            height: '50px',
-          },
-          '& .MuiDataGrid-columnHeaderTitle': {
-            fontWeight: 700,
-          },
-          '& .MuiDataGrid-columnsContainer': {
-            backgroundColor: mode === 'dark' ? darkModePalette[0].background : lightModePalette[0].background,
-          },
-          '& .MuiDataGrid-iconSeparator': {
-            display: 'flex',
-          },
-          '& .MuiDataGrid-columnHeader, .MuiDataGrid-cell': {
-            // borderRight: 'none'
-            borderRight: `1px solid ${mode === 'dark' ? darkModePalette[0].divider : lightModePalette[0].divider}`,
-          },
-          '.MuiDataGrid-cell.actions': {
-            // borderRight: 'none',
-          },
-          '& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell': {
-            borderBottom: `1px solid ${mode === 'dark' ? darkModePalette[0].divider : lightModePalette[0].grey300}`,
-          },
-          '& .MuiDataGrid-cell': {
-            color: mode === 'dark' ? darkModePalette[0].primaryText : lightModePalette[0].primaryText,
-            '&:focus': {
-              outlineColor: `${
-                mode === 'dark' ? darkModePalette[0].primaryText : lightModePalette[0].primaryText
-              } !important`,
-            },
-          },
-          '& .MuiDataGrid-row': {
-            '&:hover, &.Mui-hovered': {
-              backgroundColor: `${alpha(
-                mode === 'dark' ? darkModePalette[0].secondaryText : lightModePalette[0].secondaryText,
-                0.05
-              )} !important`,
-            },
-            '&.Mui-selected': {
-              backgroundColor: `${alpha(colors.secondary.light, 0.25)} !important`,
-            },
-            '&:nth-of-type(even)': {
-              backgroundColor: alpha(
-                mode === 'dark' ? darkModePalette[0].contrastBackground : lightModePalette[0].contrastBackground,
-                0.5
-              ),
-            },
-            '&--lastVisible': {
-              '& .MuiDataGrid-cell': {
-                borderBottom: 'none',
-              },
-            },
-          },
-          '& .MuiDataGrid-columnHeader, & .MuiDataGrid-cell': {
-            '&[data-field="actions"]': {
-              borderRight: 'none !important',
-            },
-          },
-          '& .MuiDataGrid-cell--withRenderer': {
-            '&:focus-within': {
-              outline: 'none',
-            },
-          },
-          '& .MuiDataGrid-cell--editing': {
-            '& .MuiAutocomplete-root': {
-              height: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              '.MuiTextField-root': {
-                height: '100%',
-                alignItems: 'center',
-                justifyContent: 'center',
-              },
-              '.MuiInputBase-root': {
-                height: '80%',
-                maxWidth: '90%',
-                margin: '0 auto',
-                paddingBlock: 0,
-                '.MuiInputBase-input': {
-                  height: '100%',
-                  paddingBlock: 0,
-                },
-                input: {
-                  paddingBlock: 0,
-                },
-              },
-            },
-            '& .MuiInputBase-root': {
-              '&:has(.MuiSelect-select)': {
-                height: '80%',
-                maxWidth: '90%',
-                margin: '0 auto',
-              },
-              '&:has(.MuiInputBase-input[type=date])': {
-                maxWidth: '90%',
-                margin: '0 auto',
-              },
             },
           },
         },

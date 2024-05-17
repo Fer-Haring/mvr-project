@@ -44,7 +44,7 @@ export const ProductDetailPage: FunctionComponent = () => {
     if (!product) return;
 
     const cartItem: CartItem = {
-      productId: product.productId,
+      productId: product.productId!,
       productName: product.productName,
       unitPrice: parseFloat(product.salePrice),
       unitQuantity: parseInt(selectedQuantity, 10),
@@ -88,7 +88,7 @@ export const ProductDetailPage: FunctionComponent = () => {
           mb: theme.spacing(6),
         }}
       >
-        <ProductImageHolder product={product} id={product.productId} />
+        <ProductImageHolder product={product} id={product.productId!} />
         <Paper sx={{ p: 2, width: '100%', mt: 3, maxWidth: 700, backgroundColor: 'rgba(255,255,255, 0.6)' }}>
           <Stack
             sx={{
