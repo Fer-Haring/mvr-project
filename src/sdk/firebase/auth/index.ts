@@ -5,6 +5,8 @@ import { FirebaseError } from 'firebase/app';
 import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
+  getAuth,
+  linkWithRedirect,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -14,6 +16,7 @@ import { ref, set } from 'firebase/database';
 import { NavigateFunction } from 'react-router-dom';
 
 import { auth, database } from '../firebase';
+import { getUser } from '../user';
 
 export const logout = async () => {
   try {
@@ -66,9 +69,48 @@ export const signIn = async (email: string, password: string, navigate: Navigate
   }
 };
 
-export const signInWithGoogle = () => {
+export const signInWithGoogle = async (navigate: NavigateFunction) => {
   const provider = new GoogleAuthProvider();
-  return signInWithPopup(auth, provider);
+  const auth = getAuth();
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+    console.log('user', user);
+    const userId = user.uid;
+
+    const userData = await getUser(userId);
+    if (userData) {
+      // Si el usuario ya existe, verificamos si el proveedor ya está vinculado
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        const providerId = provider.providerId;
+        const alreadyLinked = currentUser.providerData.some(
+          (profile) => profile.providerId === providerId
+        );
+
+        if (!alreadyLinked) {
+          await linkWithRedirect(currentUser, provider);
+          console.log('Provider linked:', providerId);
+        } else {
+          console.log('Provider already linked:', providerId);
+        }
+        navigate('/home');
+        // Realizar la redirección aquí
+      } else {
+        throw new Error('No current user');
+      }
+    } else {
+      console.log('User data:', userData);
+      // En caso de que el usuario no exista en la base de datos
+      navigate('/home');
+    }
+  } catch (error) {
+    if (error instanceof FirebaseError) {
+      console.error('Firebase error during sign-in:', error.code, error.message);
+    } else {
+      console.error('Unexpected error during sign-in:', error);
+    }
+  }
 };
 
 export function saveUserInDb(name: string, lastName: string, email: string, profilePicture: string, userId?: string) {

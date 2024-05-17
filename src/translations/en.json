@@ -22,7 +22,7 @@
   "COMMON.PASSWORD.MATCH": "Please enter a different password",
   "AUTH.SIGN_IN.ERRORS.NotAuthorizedException": "Incorrect email or password.",
   "AUTH.SIGN_IN.ERRORS.UserNotConfirmedException": "The email address is not verified",
-  "AUTH.SIGN_IN.TITLE": "Welcome back!",
+  "AUTH.SIGN_IN.TITLE": "Welcome!",
   "AUTH.SIGN_IN.SUBTITLE": "Sign in to your account.",
   "AUTH.SIGN_IN.LOGIN.FAIL": "The email address or password is incorrect",
   "AUTH.SIGN_IN.EMAIL.LABEL": "Email Address",

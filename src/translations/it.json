@@ -22,7 +22,7 @@
   "COMMON.PASSWORD.MATCH": "Inserisci una password diversa",
   "AUTH.SIGN_IN.ERRORS.NotAuthorizedException": "Email o password non corretti.",
   "AUTH.SIGN_IN.ERRORS.UserNotConfirmedException": "L'indirizzo email non è verificato",
-  "AUTH.SIGN_IN.TITLE": "Benvenuto di nuovo!",
+  "AUTH.SIGN_IN.TITLE": "Benvenuto!",
   "AUTH.SIGN_IN.SUBTITLE": "Accedi al tuo account.",
   "AUTH.SIGN_IN.LOGIN.FAIL": "L'indirizzo email o la password non sono corretti",
   "AUTH.SIGN_IN.EMAIL.LABEL": "Indirizzo email",

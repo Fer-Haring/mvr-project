@@ -11,7 +11,8 @@ import TotalSalesPaper from '@webapp/controller/admin/admin-panel-papers/total-s
 import { useAdminDataStore } from '@webapp/store/admin/admin-data';
 import { FunctionComponent } from 'react';
 
-import { AdminTable } from '../../controller/admin/admin-table';
+// import { AdminTable } from '../../controller/admin/admin-table';
+import AdminDataGrid from '@webapp/controller/admin/admin-data-grid';
 
 export const AdminDashboardPage: FunctionComponent = () => {
   const theme = useTheme();
@@ -35,7 +36,8 @@ export const AdminDashboardPage: FunctionComponent = () => {
         <PendingOrdersPaper orders={orders} />
       </Stack>
       <Paper sx={{ p: 2, width: '100%', mt: 2, backgroundColor: alpha(theme.palette.common.white, 0.7) }}>
-        <AdminTable />
+        {/* <AdminTable /> */}
+        <AdminDataGrid/>
       </Paper>
     </ContentWrapper>
   );

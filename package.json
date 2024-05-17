@@ -21,7 +21,6 @@
     "@mui/material": "^5.15.7",
     "@mui/styled-engine-sc": "5.14.12",
     "@mui/styles": "^5.15.10",
-    "@mui/x-data-grid-pro": "6.17.0",
     "@stripe/react-stripe-js": "^2.1.0",
     "@stripe/stripe-js": "^1.52.0",
     "@tanstack/react-query": "5.0.5",
@@ -31,6 +30,7 @@
     "@types/node": "20.8.10",
     "@types/react-slick": "^0.23.13",
     "@types/react-window": "^1.8.8",
+    "ag-grid-community": "^31.3.2",
     "ag-grid-react": "^31.3.2",
     "amazon-cognito-identity-js": "6.1.2",
     "apexcharts": "^3.45.2",
@@ -76,6 +76,7 @@
     "swiper": "^11.0.7",
     "vite-tsconfig-paths": "4.2.1",
     "web-vitals": "3.5.0",
+    "xlsx": "^0.18.5",
     "zustand": "4.4.4"
   },
   "devDependencies": {

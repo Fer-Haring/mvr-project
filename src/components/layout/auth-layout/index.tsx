@@ -1,5 +1,4 @@
 import { styled } from '@mui/material/styles';
-import BackgroundVideo from '@webapp/assets/videos/video-login.mp4';
 import Card from '@webapp/components/card';
 import LogoHeader from '@webapp/components/logo-header';
 import React, { FunctionComponent } from 'react';
@@ -18,9 +17,6 @@ export interface AuthLayoutProps {
 const AuthLayout: FunctionComponent<AuthLayoutProps> = ({ className, children }) => {
   return (
     <MainWrapper>
-      <BackgroundVideoStyle autoPlay loop muted className="bg-video">
-        <source src={BackgroundVideo} type="video/mp4" />
-      </BackgroundVideoStyle>
       <Wrapper
         className={className || ''}
         role="main" // Define the role as "main" for the main content area
@@ -50,16 +46,6 @@ const MainWrapper = styled('div')(({ theme }) => ({
   height: '100vh', // Asegúrate de que el contenedor ocupe toda la ventana gráfica
   overflow: 'hidden', // Esto evitará cualquier desbordamiento si el video es más grande que el contenedor
 }));
-
-const BackgroundVideoStyle = styled('video')({
-  position: 'absolute', // Posición absoluta para cubrir todo el contenedor
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: '100%',
-  objectFit: 'cover', // Esto asegurará que el video cubra todo el espacio disponible sin perder su proporción
-  zIndex: -1, // Coloca el video detrás de todo el contenido
-});
 
 const Wrapper = styled('div')(({ theme }) => ({
   position: 'relative',

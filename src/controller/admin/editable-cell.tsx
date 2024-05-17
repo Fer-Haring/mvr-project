@@ -34,7 +34,7 @@ const EditableCell: FunctionComponent<EditableCellProps> = ({
 
   const handleUpdate = (value: string) => {
     const { productId } = productData;
-    updateProduct(productId, { ...productData, [id]: value });
+    updateProduct(productId!, { ...productData, [id]: value });
   };
   const onBlur = () => {
     updateData(index, id, value);

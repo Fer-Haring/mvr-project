@@ -65,7 +65,7 @@ export interface Products {
   productName: string;
   description: string;
   productCategory: string;
-  productCode: string;
+  productCode?: string;
   priceCurrency: string;
   costPrice: number;
   salePrice: string;
@@ -77,10 +77,10 @@ export interface Products {
   destacated: string;
   fraction: number;
   mainProductCategory: string;
-  productId: string;
-  productImage: string;
-  createdAt: Date;
-  updatedAt: Date;
+  productId?: string;
+  productImage?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface AdminData {
