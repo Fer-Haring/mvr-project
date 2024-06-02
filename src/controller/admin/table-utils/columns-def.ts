@@ -14,6 +14,16 @@ const currencyFormatter = (params: any) => {
 };
 
 export const columnDefs: ColDef[] = [
+  {
+    headerName: '',
+    field: 'checks',
+    editable: false,
+    filter: false,
+    checkboxSelection: true,
+    headerCheckboxSelection: true,
+    headerCheckboxSelectionFilteredOnly: true,
+    width: 50,
+  },
   { headerName: 'Nombre del Producto', field: 'productName', editable: true, filter: true },
   { headerName: 'Descripción', field: 'description', editable: true, filter: true },
   { headerName: 'Categoría Principal', field: 'mainProductCategory', editable: true, filter: true },
@@ -50,4 +60,5 @@ export const columnDefs: ColDef[] = [
   { headerName: 'Destacado', field: 'destacated', editable: true, filter: true },
   { headerName: 'Fracción', field: 'fraction', editable: true, filter: true },
   { headerName: 'Id Producto', field: 'productId', hide: true },
+  { headerName: 'Id Producto', field: 'productImage', hide: true },
 ];
