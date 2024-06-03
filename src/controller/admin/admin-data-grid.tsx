@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box, CircularProgress, alpha, styled } from '@mui/material';
 import { getProducts } from '@webapp/sdk/firebase/products';
 import { updateProduct } from '@webapp/sdk/firebase/products/update-products';
@@ -17,13 +16,14 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ProductHeaderActions from './table-header-actions';
 import { localeText } from './table-utils/ag-grid-text-locale';
 import { columnDefs } from './table-utils/columns-def';
+import useBulkEditStore from '@webapp/store/admin/bulk-edit-store';
 
 interface AdminDataGridProps {}
 
 const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
   const [rowData, setRowData] = useState<Products[]>([]);
   const [loading, setLoading] = useState(false);
-  const [selectedRows, setSelectedRows] = useState<Products[]>([]);
+  const { setProducts, setSelectedProducts, products } = useBulkEditStore();
 
   useEffect(() => {
     setLoading(true);
@@ -31,12 +31,13 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
       if (products && typeof products === 'object') {
         const productsArray: Products[] = Object.values(products);
         setRowData(productsArray);
+        setProducts(productsArray);
       } else {
         console.error('Products data is not an array or an object:', products);
       }
       setLoading(false);
     });
-  }, []);
+  }, [setProducts]);
 
   const paginationPageSizeSelector = useMemo<number[] | boolean>(() => {
     return [200, 500, 1000];
@@ -78,12 +79,12 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
 
   const onSelectionChanged = useCallback((event: SelectionChangedEvent) => {
     const allSelectedRows: Products[] = event.api.getSelectedRows();
-    setSelectedRows(allSelectedRows);
-  }, []);
+    setSelectedProducts(allSelectedRows);
+  }, [setSelectedProducts]);
 
   return (
     <div>
-      <ProductHeaderActions rowData={rowData} setRowData={setRowData} selectedRows={selectedRows} />
+      <ProductHeaderActions rowData={rowData} setRowData={setRowData} selectedRows={products} />
       <div className="ag-theme-quartz" style={{ height: 400, width: '100%', marginTop: 25 }}>
         {loading ? (
           <Box display="flex" justifyContent="center" alignItems="center" height="100%">
