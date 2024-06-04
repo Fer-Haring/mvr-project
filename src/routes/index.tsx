@@ -14,6 +14,7 @@ import SignInPage2 from '@webapp/pages/auth/sign-in';
 import SignUpPage2 from '@webapp/pages/auth/sign-up';
 import VerificationCodePage2 from '@webapp/pages/auth/verification-code';
 import { CartPage } from '@webapp/pages/cart';
+import UnderConstructionPage from '@webapp/pages/under-construction';
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 
@@ -27,9 +28,17 @@ const ProjectRoutes: Route[] = [
     path: '/home',
     component: <HomePage />,
   },
+  // {
+  //   path: '/',
+  //   component: <Navigate to="/sign-in" />,
+  // },
   {
     path: '/',
-    component: <Navigate to="/sign-in" />,
+    component: <Navigate to="/under-construction" />,
+  },
+  {
+    path: '/under-construction',
+    component: <UnderConstructionPage />,
   },
   {
     path: '/sign-in',

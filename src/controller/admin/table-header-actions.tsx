@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Stack, useTheme } from '@mui/material';
 import Button from '@webapp/components/button';
+import Modal from '@webapp/components/modal';
 import SnackbarUtils from '@webapp/components/snackbar';
 import { addNewProduct } from '@webapp/sdk/firebase/products';
+import { updateProduct } from '@webapp/sdk/firebase/products/update-products';
 import { Products } from '@webapp/sdk/users-types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -10,14 +12,15 @@ import 'ag-grid-community/styles/ag-theme-quartz.css';
 import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
 import * as XLSX from 'xlsx';
+
 import AddProductContent from './modal-components/add-new-product-modal-content';
 import AddProductModal from './modal-components/add-product-modal';
-import Modal from '@webapp/components/modal';
-import { updateProduct } from '@webapp/sdk/firebase/products/update-products';
+import BulkEditButton from './table-utils/bulk-edit-button';
 
 interface ProductHeaderActionsProps {
   setRowData: (value: React.SetStateAction<any[]>) => void;
   rowData: any[];
+  selectedRows: Products[];
 }
 
 const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ setRowData, rowData }) => {
@@ -113,36 +116,37 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ setRowData,
 
   const exportToExcel = () => {
     if (!Array.isArray(rowData)) {
-      console.error("rowData is not an array:", rowData);
+      console.error('rowData is not an array:', rowData);
       return;
     }
 
     const dataToExport = rowData.map((item: any) => {
-      console.log('item:', item); // Verifica cada item en rowData
       return {
-        'Nombre del producto': item['Nombre del producto'],
-        'Descripción': item['Descripción'],
-        'Categoría Principal': item['Categoría Principal'],
-        'Categoría del producto': item['Categoría del producto'],
-        'Tipo de Moneda': item['Tipo de Moneda'],
-        'Precio de costo': item['Precio de costo'],
-        'Precio de venta': item['Precio de venta'],
-        'Precio promocional': item['Precio promocional'],
-        'Stock actual': item['Stock actual'],
-        'Stock mínimo': item['Stock mínimo'],
-        'Control de stock': item['Control de stock'],
-        'Mostrar en catálogo': item['Mostrar en catálogo'],
-        'Destacado': item['Destacado'],
-        'Fracción': item['Fracción'],
-        'productId': item['productId'],
+        'Nombre del producto': item.productName || 'N/A',
+        Descripción: item.description || 'N/A',
+        'Categoría Principal': item.mainProductCategory || 'N/A',
+        'Categoría del producto': item.productCategory || 'N/A',
+        'Tipo de Moneda': item.priceCurrency || 'N/A',
+        'Precio de costo': item.costPrice || 'N/A',
+        'Precio de venta': item.salePrice || 'N/A',
+        'Precio promocional': item.promoPrice || 'N/A',
+        'Stock actual': item.actualStock || 'N/A',
+        'Stock mínimo': item.minimumStock || 'N/A',
+        'Control de stock': item.stockControl || 'N/A',
+        'Mostrar en catálogo': item.showInCatalog || 'N/A',
+        Destacado: item.destacated || 'N/A',
+        Fracción: item.fraction || 'N/A',
+        productId: item.productId || 'N/A',
       };
     });
-    handleExportToExcel(dataToExport, 'Productos');
+    console.log('dataToExport:', dataToExport);
+    handleExportToExcel(dataToExport, 'Lista de Productos');
     setOpenExportModal(false);
   };
 
   return (
     <Stack spacing={2} direction="row" justifyContent="flex-end">
+      <BulkEditButton/>
       <Button
         variant="contained"
         color="primary"

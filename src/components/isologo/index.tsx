@@ -20,7 +20,7 @@ const Isologo: FunctionComponent<IsologoProps> = ({ className }) => {
 
   return (
     <svg
-      id="SinapsisIsologo"
+      id="MVPIsologo"
       className={className || ''}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 216 216"

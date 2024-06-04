@@ -9,6 +9,7 @@ interface AuthGuardProps {
 }
 
 const SIGN_IN_PATH = '/sign-in';
+const UNDER_CONSTRUCTION_PATH = '/under-construction';
 
 const AuthGuard: React.FunctionComponent<AuthGuardProps> = ({ children }) => {
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
@@ -19,7 +20,7 @@ const AuthGuard: React.FunctionComponent<AuthGuardProps> = ({ children }) => {
   }
 
   if (!isLoggedIn && !isPublicRoute(location.pathname)) {
-    return <Navigate to={SIGN_IN_PATH} replace />;
+    return <Navigate to={UNDER_CONSTRUCTION_PATH} replace />;
   }
 
   return children ? children : <Outlet />;
