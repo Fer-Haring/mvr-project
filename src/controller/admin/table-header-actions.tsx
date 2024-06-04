@@ -15,7 +15,7 @@ import * as XLSX from 'xlsx';
 
 import AddProductContent from './modal-components/add-new-product-modal-content';
 import AddProductModal from './modal-components/add-product-modal';
-import BulkEditModal from './modal-components/product-bulk-edit-modal';
+import BulkEditButton from './table-utils/bulk-edit-button';
 
 interface ProductHeaderActionsProps {
   setRowData: (value: React.SetStateAction<any[]>) => void;
@@ -29,11 +29,7 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ setRowData,
   const { product, resetProduct } = useSingleProduct();
   const [openAddProductModal, setOpenAddProductModal] = useState(false);
   const [openExportModal, setOpenExportModal] = useState(false);
-  const [openBulkEditModal, setOpenBulkEditModal] = useState(false);
 
-  const handleOpenBulkEditModal = () => {
-    setOpenBulkEditModal(true);
-  };
   const handleOpenExportModal = () => {
     setOpenExportModal(true);
   };
@@ -150,24 +146,7 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ setRowData,
 
   return (
     <Stack spacing={2} direction="row" justifyContent="flex-end">
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleOpenBulkEditModal}
-        sx={{
-          height: 32,
-          width: 'auto',
-          alignContent: 'center',
-          alignSelf: 'end',
-          color: theme.palette.grey[200],
-          '&:hover': {
-            backgroundColor: theme.palette.primary.dark,
-            color: theme.palette.grey[200],
-          },
-        }}
-      >
-        {formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BUTTONS.BULKEDIT' })}
-      </Button>
+      <BulkEditButton/>
       <Button
         variant="contained"
         color="primary"
@@ -251,16 +230,6 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ setRowData,
           primaryButtonText="Exportar"
           primaryButtonOnClick={exportToExcel}
           primaryButtonColor="primary"
-        />
-      )}
-      {openBulkEditModal && (
-        <BulkEditModal
-          open={openBulkEditModal}
-          onClose={() => setOpenBulkEditModal(false)}
-          selectedRows={rowData.filter((row) => row.checked)}
-          onSave={() => {
-            console.log('Updated Values:');
-          }}
         />
       )}
     </Stack>
