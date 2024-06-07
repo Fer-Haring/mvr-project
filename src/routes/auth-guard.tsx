@@ -20,7 +20,7 @@ const AuthGuard: React.FunctionComponent<AuthGuardProps> = ({ children }) => {
   }
 
   if (!isLoggedIn && !isPublicRoute(location.pathname)) {
-    return <Navigate to={UNDER_CONSTRUCTION_PATH} replace />;
+    return <Navigate to={SIGN_IN_PATH} replace />;
   }
 
   return children ? children : <Outlet />;

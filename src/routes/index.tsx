@@ -14,6 +14,7 @@ import SignInPage2 from '@webapp/pages/auth/sign-in';
 import SignUpPage2 from '@webapp/pages/auth/sign-up';
 import VerificationCodePage2 from '@webapp/pages/auth/verification-code';
 import { CartPage } from '@webapp/pages/cart';
+import PrivacyPolicyPage from '@webapp/pages/privacy_policies';
 import UnderConstructionPage from '@webapp/pages/under-construction';
 import React from 'react';
 import { Navigate } from 'react-router-dom';
@@ -87,6 +88,10 @@ const ProjectRoutes: Route[] = [
   {
     path: '/cart',
     component: <CartPage />,
+  },
+  {
+    path: '/privacy-policy',
+    component: <PrivacyPolicyPage/>,
   },
 ];
 export { ProjectRoutes };
