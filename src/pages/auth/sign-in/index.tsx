@@ -7,6 +7,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import BackgroundVideo from '@webapp/assets/videos/video-login.mp4';
+import AlternateLogin from '@webapp/components/auth/alternate-login';
 import FormWrapper from '@webapp/components/auth/form-wrapper';
 import Button from '@webapp/components/button';
 import InputField from '@webapp/components/form/input';
@@ -74,9 +75,13 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
     navigate('/forgot-password');
   };
 
-  // const handleGoogleSignIn = async () => {
-  //  await signInWithGoogle(navigate);
-  // };
+  async function loginWithGoogle() {
+    window.location.href = "http://127.0.0.1:8000/login/google";
+  }
+
+  const handleGoogleSignIn = async () => {
+   await loginWithGoogle();
+  };
 
   return (
     <section id="SignIn" className={className || ''} aria-labelledby="sign-in-title">
@@ -177,7 +182,7 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
                   {formatMessage({ id: 'AUTH.SIGN_IN.LINK.LABEL' })}
                 </Button>
               </Stack>
-              {/* {<AlternateLogin type="signin" onClick={handleGoogleSignIn} />} */}
+              {<AlternateLogin type="signin" onClick={handleGoogleSignIn} />}
             </Box>
           </FormWrapper>
           {error && <Snackbar open={true} autoHideDuration={6000} message={error} onClose={() => setError(null)} />}

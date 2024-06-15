@@ -6,6 +6,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
 import { styled, useTheme } from '@mui/material/styles';
 import BackgroundVideo from '@webapp/assets/videos/video-login.mp4';
+import AlternateLogin from '@webapp/components/auth/alternate-login';
 import FormWrapper from '@webapp/components/auth/form-wrapper';
 import PasswordRequirements from '@webapp/components/auth/password-requirements';
 import Button from '@webapp/components/button';
@@ -82,6 +83,14 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
 
   const goToLogin = () => {
     navigate('/sign-in');
+  };
+
+  async function loginWithGoogle() {
+    window.location.href = "http://127.0.0.1:8000/login/google";
+  }
+
+  const handleGoogleSignUp = async () => {
+   await loginWithGoogle();
   };
 
   const handleDisabled =
@@ -267,10 +276,10 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                     {formatMessage({ id: 'AUTH.SIGN_UP.LINK.LABEL' })}
                   </Button>
                 </Stack>
-                {/* <AlternateLogin
+                <AlternateLogin
               type="signup"
               onClick={handleGoogleSignUp}
-            /> */}
+            />
               </Box>
             </FormWrapper>
           </Stack>
