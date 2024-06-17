@@ -86,5 +86,14 @@
   "AUTH.VERIFICATION_CODE.RESEND_CODE.LINK.LABEL": "Resend code",
   "AUTH.VERIFICATION_CODE.RESEND_CODE.LINK.SENDING.LABEL": "Sending code...",
   "AUTH.VERIFICATION_CODE.RESEND_CODE.LINK.SENT.LABEL": "Your code has been sent",
-  "AUTH.PASSWORD_CHANGE.SUCCESS": "Password successfully changed"
+  "AUTH.PASSWORD_CHANGE.SUCCESS": "Password successfully changed",
+  "AUTH.CREATE.PASSWORD.TITLE": "Create Password",
+"AUTH.CREATE.PASSWORD.SUBTITLE": "Create a password to secure your account.",
+"AUTH.CREATE.PASSWORD.PASSWORD.LABEL": "Password",
+"AUTH.CREATE.PASSWORD.PASSWORD.ERROR": "The password you entered does not match the security standards.",
+"AUTH.CREATE.PASSWORD.PASSWORD.HELPER_TEXT": "Password must be alphanumeric, at least one uppercase character, and at least eight characters long.",
+"AUTH.CREATE.PASSWORD.CONFIRM.LABEL": "Confirm Password",
+"AUTH.CREATE.PASSWORD.BUTTON.LABEL": "Create Password",
+"AUTH.CREATE.PASSWORD.PASSWORD.CONFIRM.LABEL": "Confirm Password",
+"AUTH.CREATE.PASSWORD.SUCCESS": "Password successfully created"
 }

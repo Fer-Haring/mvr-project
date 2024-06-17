@@ -1,3 +1,4 @@
+// user-store.ts
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -5,7 +6,8 @@ import { persist } from 'zustand/middleware';
 interface UserState {
   isLoggedIn: boolean;
   userInfo: { userId: string; name: string } | null;
-  logIn: (userId: string, name: string) => void;
+  token: string | null;
+  logIn: (userId: string, name: string, token: string) => void;
   logOut: () => void;
 }
 
@@ -16,12 +18,14 @@ export const useUserStore = create(
       // Estado inicial
       isLoggedIn: false,
       userInfo: null,
+      token: null,
 
       // Acción para iniciar sesión
-      logIn: (userId, name) =>
+      logIn: (userId, name, token) =>
         set(() => ({
           isLoggedIn: true,
           userInfo: { userId, name },
+          token: token,
         })),
 
       // Acción para cerrar sesión
@@ -29,6 +33,7 @@ export const useUserStore = create(
         set(() => ({
           isLoggedIn: false,
           userInfo: null,
+          token: null,
         })),
     }),
     {

@@ -4,6 +4,8 @@ import { easing } from '@webapp/components/framer';
 import { useIsTablet } from '@webapp/hooks/is-tablet';
 import { motion } from 'framer-motion';
 import React, { FunctionComponent } from 'react';
+import BackgroundVideo from '@webapp/assets/videos/video-login.mp4';
+import { url } from 'inspector';
 
 /**
  * `HalfAndHalf` is a component that divides the screen into two sections, allowing content
@@ -37,6 +39,7 @@ const HalfAndHalf: FunctionComponent<HalfAndHalfProps> = ({
   mainSection = 'left',
 }) => {
   const isTablet = useIsTablet();
+  console.log('isTablet', isTablet)
   return (
     <Section
       className={`${className || ''} ${mainSection ? `${mainSection}-first` : ''}`}
@@ -56,6 +59,11 @@ const HalfAndHalf: FunctionComponent<HalfAndHalfProps> = ({
         role="region"
         aria-label="Left Section Content"
       >
+        {isTablet && mainSection === 'left' && (
+          <VideoBackground autoPlay loop muted>
+            <source src={BackgroundVideo} type="video/mp4" />
+          </VideoBackground>
+        )}
         <div className={`left-content ${leftOverflow && !isTablet ? 'overflow' : ''}`}>{leftContent}</div>
       </motion.div>
       <motion.div
@@ -143,3 +151,13 @@ const Section = styled('div')(({ theme }) => ({
     overflowY: 'auto',
   },
 }));
+
+const VideoBackground = styled('video')({
+  position: 'absolute', // Posición absoluta para cubrir todo el contenedor
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover', // Esto asegurará que el video cubra todo el espacio disponible sin perder su proporción
+  zIndex: -1, // Coloca el video detrás de todo el contenido
+});

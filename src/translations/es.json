@@ -50,6 +50,20 @@
   "AUTH.SIGN_UP.BUTTON.LABEL": "Registrarse",
   "AUTH.SIGN_UP.LINK.LABEL": "¿Ya tienes una cuenta? Iniciar sesión",
   "AUTH.SIGN_UP.GOOGLE.TITLE": "Registrarse con Google",
+
+  "AUTH.CREATE.PASSWORD.TITLE": "Cree una contraseña",
+  "AUTH.CREATE.PASSWORD.SUBTITLE": "Cree una contraseña segura para su cuenta.",
+  "AUTH.CREATE.PASSWORD.PASSWORD.LABEL": "Contraseña",
+  "AUTH.CREATE.PASSWORD.PASSWORD.ERROR": "La contraseña que ingresó no cumple con los estándares de seguridad.",
+  "AUTH.CREATE.PASSWORD.PASSWORD.HELPER_TEXT": "La contraseña debe ser alfanumérica, con al menos una letra mayúscula y debe tener al menos ocho caracteres de longitud.",
+  "AUTH.CREATE.PASSWORD.CONFIRM.LABEL": "Confirmar contraseña",
+  "AUTH.CREATE.PASSWORD.BUTTON.LABEL": "Guardar contraseña",
+  "AUTH.CREATE.PASSWORD.PASSWORD.CONFIRM.LABEL": "Confirmar contraseña",
+  "AUTH.CREATE.PASSWORD.SUCCESS": "Contraseña creada con éxito",
+
+
+
+
   "AUTH.SECURE_PASSWORD.TITLE": "Cree una contraseña segura",
   "AUTH.SECURE_PASSWORD.LOWERCASE": "1 letra minúscula",
   "AUTH.SECURE_PASSWORD.UPPERCASE": "1 letra MAYÚSCULA",

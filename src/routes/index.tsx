@@ -10,6 +10,7 @@ import {
 import ForgotPasswordPage2 from '@webapp/pages/auth/forgot-password';
 import ForgotPasswordVerifyPage2 from '@webapp/pages/auth/forgot-password-verify';
 import GoogleAuthCallback from '@webapp/pages/auth/google_auth';
+import SetPasswrodPage from '@webapp/pages/auth/set-password';
 // Auth pages
 import SignInPage2 from '@webapp/pages/auth/sign-in';
 import SignUpPage2 from '@webapp/pages/auth/sign-up';
@@ -97,6 +98,10 @@ const ProjectRoutes: Route[] = [
   {
     path: '/google-auth-callback',
     component: <GoogleAuthCallback />,
+  },
+  {
+    path: '/set-password',
+    component: <SetPasswrodPage />,
   }
 ];
 export { ProjectRoutes };

@@ -12,8 +12,10 @@ import FormWrapper from '@webapp/components/auth/form-wrapper';
 import Button from '@webapp/components/button';
 import InputField from '@webapp/components/form/input';
 import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
+import SnackbarUtils from '@webapp/components/snackbar';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { signIn } from '@webapp/sdk/firebase/auth';
+import { useUserSignInMutation } from '@webapp/sdk/mutations/auth/user-sign-in-mutation';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
@@ -27,6 +29,7 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const { formatMessage } = useIntl();
+  const login = useUserSignInMutation(navigate);
 
   const [emailHasAutoFilled, setEmailHasAutoFilled] = useState<boolean>(false);
   const [passwordHasAutoFilled, setPasswordHasAutoFilled] = useState<boolean>(false);
@@ -56,9 +59,25 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
     };
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    signIn(email, password, navigate);
+    // signIn(email, password, navigate);
+    try {
+      await login.mutateAsync({ email, password });
+      // Redirigir a la página principal
+      navigate('/home');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Login failed:', error.message);
+        if (error.message === 'El usuario registrado con Google no tiene contraseña establecida') {
+          localStorage.setItem('email', email);
+          SnackbarUtils.warning('El usuario fue registrado con Google y no tiene contraseña establecida, establezca una contraseña para continuar.');
+          navigate('/set-password');
+        }
+      } else {
+        console.error('Unexpected error:', error);
+      }
+    }
   };
 
   const handleClickShowPassword = () => {
