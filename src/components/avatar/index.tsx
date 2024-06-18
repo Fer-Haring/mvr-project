@@ -6,6 +6,7 @@ import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { alpha, styled, useTheme } from '@mui/material/styles';
 import { logout } from '@webapp/sdk/firebase/auth';
+import { useLogout } from '@webapp/sdk/mutations/auth/user-logout-mutation';
 import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
@@ -81,6 +82,8 @@ const Avatar: FunctionComponent<AvatarProps> = ({ className, active, fullName, i
   const theme = useTheme();
   const navigate = useNavigate();
   const { cleanUserLogout } = useUserData();
+  const mutation = useLogout();
+
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -113,10 +116,17 @@ const Avatar: FunctionComponent<AvatarProps> = ({ className, active, fullName, i
     navigate('/profile');
   };
 
+
   const handleLogout = async () => {
-    await logout();
-    cleanUserLogout();
-    navigate('/sign-in');
+    const token = localStorage.getItem('access_token') || '';
+    try {
+      await mutation.mutateAsync({ token });
+      cleanUserLogout();
+      console.log('Logged out successfully');
+      navigate('/sign-in');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
   };
 
   return (

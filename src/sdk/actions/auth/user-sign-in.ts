@@ -31,7 +31,11 @@ export async function userSignIn(payload: LoginPayload): Promise<LoginResponse> 
         const err = await response.json();
         throw new Error(err.detail);
       }
-      return response.json();
+      const loginResponse: LoginResponse = await response.json();
+      // Store the token and token_type in localStorage
+      localStorage.setItem('access_token', loginResponse.access_token);
+      localStorage.setItem('token_type', loginResponse.token_type);
+      return loginResponse;
     })
     .catch((error) => {
       console.log('error', error);

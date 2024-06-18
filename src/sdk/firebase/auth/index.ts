@@ -46,28 +46,28 @@ export const signUp = async (email: string, password: string) => {
     });
 };
 
-export const signIn = async (email: string, password: string, navigate: NavigateFunction) => {
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    // Signed in
-    const user = userCredential.user;
-    useUserId.getState().setUserId(user.uid);
-    useUserStore.getState().logIn(user.uid, user.email!);
-    navigate('/home'); // Utiliza navigate para redirigir al usuario
-    return user;
-  } catch (error) {
-    if (error instanceof FirebaseError) {
-      const errorMessage = error.code;
-      if (errorMessage === 'auth/invalid-credential') {
-        SnackbarUtils.error('El mail o la contraseña son incorrectos');
-      }
-    } else {
-      // Si no es un error de Firebase, podrías manejarlo de manera diferente o lanzar una excepción
-      console.error(error);
-      SnackbarUtils.error('An unexpected error occurred');
-    }
-  }
-};
+// export const signIn = async (email: string, password: string, navigate: NavigateFunction) => {
+//   try {
+//     const userCredential = await signInWithEmailAndPassword(auth, email, password);
+//     // Signed in
+//     const user = userCredential.user;
+//     useUserId.getState().setUserId(user.uid);
+//     useUserStore.getState().logIn(user.uid, user.email!);
+//     navigate('/home'); // Utiliza navigate para redirigir al usuario
+//     return user;
+//   } catch (error) {
+//     if (error instanceof FirebaseError) {
+//       const errorMessage = error.code;
+//       if (errorMessage === 'auth/invalid-credential') {
+//         SnackbarUtils.error('El mail o la contraseña son incorrectos');
+//       }
+//     } else {
+//       // Si no es un error de Firebase, podrías manejarlo de manera diferente o lanzar una excepción
+//       console.error(error);
+//       SnackbarUtils.error('An unexpected error occurred');
+//     }
+//   }
+// };
 
 export const signInWithGoogle = async (navigate: NavigateFunction) => {
   const provider = new GoogleAuthProvider();
