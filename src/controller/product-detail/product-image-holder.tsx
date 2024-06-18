@@ -3,7 +3,7 @@ import { SxProps, Theme } from '@mui/material/styles';
 import ImageUploader from '@webapp/components/image-uploader';
 import SnackbarUtils from '@webapp/components/snackbar';
 import { uploadProductImage } from '@webapp/sdk/firebase/products';
-import { Products } from '@webapp/sdk/users-types';
+import { Product } from '@webapp/sdk/mutations/products/types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useUserData } from '@webapp/store/users/user-data';
 import { FunctionComponent } from 'react';
@@ -12,7 +12,7 @@ import { useIntl } from 'react-intl';
 interface ProductImageHolderProps {
   className?: string;
   sx?: SxProps<Theme>;
-  product: Products;
+  product: Product;
   id: string;
 }
 
@@ -30,9 +30,9 @@ const ProductImageHolder: FunctionComponent<ProductImageHolderProps> = ({ classN
   };
 
   const handleUpdateAvatar = async (image: File) => {
-    const downloadURL = await uploadProductImage(image, product.productId!);
+    const downloadURL = await uploadProductImage(image, product.id!);
     if (downloadURL) {
-      setProduct({ ...product, productImage: downloadURL });
+      setProduct({ ...product, product_image: downloadURL });
     }
   };
 
@@ -50,7 +50,7 @@ const ProductImageHolder: FunctionComponent<ProductImageHolderProps> = ({ classN
           // setProductImage({ file: undefined, url: undefined });
         }}
         disabled={user?.admin ? false : true}
-        defaultImageUrl={product.productImage}
+        defaultImageUrl={product.product_image}
         admin={user?.admin}
         // aria-label={formatMessage({ id: 'PROFILE.USER_INFO.AVATAR_UPLOAD' })}
       />

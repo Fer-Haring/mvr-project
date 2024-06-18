@@ -10,7 +10,8 @@ import ProductCard from '@webapp/components/product-card';
 import { getCompletedOrders, getDollarValue } from '@webapp/sdk/firebase/admin';
 import { getProducts } from '@webapp/sdk/firebase/products';
 import { getAllUsers } from '@webapp/sdk/firebase/user';
-import { CompletedOrder, Products, User } from '@webapp/sdk/users-types';
+import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
+import { CompletedOrder, User } from '@webapp/sdk/users-types';
 import { useAdminDataStore } from '@webapp/store/admin/admin-data';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
@@ -28,16 +29,12 @@ export const HomePage: FunctionComponent = () => {
   const { setProduct } = useSingleProduct();
   const { setUsers, setProducts, setOrders } = useAdminDataStore();
   const { productList, setProductList } = useProductsListData();
+  const productListArray = useProductListQuery(1, 500);
   const products = Object.values(productList);
   const destacatedProducts = products.filter((product) => product.destacated === 'Si');
 
   useEffect(() => {
-    getProducts().then((products: Products[]) => {
-      if (products) {
-        setProductList(products);
-        setProducts(products);
-      }
-    });
+    setProductList(productListArray.data?.products || []);
     getAllUsers().then((users: User[]) => {
       if (users) {
         setUsers(users);
@@ -131,20 +128,20 @@ export const HomePage: FunctionComponent = () => {
           >
             {formatMessage({ id: 'WELCOME.HOME.DESTACATED.PRODUCTS.TITLE' })}
           </Typography>
-          <StockWrapper key={destacatedProducts.map((product) => product.productId).join('')}>
+          <StockWrapper key={destacatedProducts.map((product) => product.id).join('')}>
             {destacatedProducts.map((product, id) => (
               <ProductCard
                 key={id}
                 id={id}
                 products={[product]}
-                image={product.productImage || ''}
-                name={product.productName}
+                image={product.product_image || ''}
+                name={product.product_name}
                 description={product.description}
-                price={product.salePrice}
-                currency={product.priceCurrency}
+                price={product.sale_price}
+                currency={product.price_currency}
                 onClick={() => {
                   setProduct(product);
-                  navigate(`/productos/${product.productId}`);
+                  navigate(`/productos/${product.id}`);
                 }}
               />
             ))}

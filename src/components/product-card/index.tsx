@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { SxProps, Theme, styled, useTheme } from '@mui/material/styles';
-import { Products } from '@webapp/sdk/users-types';
+import { Product } from '@webapp/sdk/mutations/products/types';
 import React, { FunctionComponent } from 'react';
 
 const Wrapper = styled(Paper)(({ theme }) => ({
@@ -30,7 +30,7 @@ interface ProductCardProps {
   children?: React.ReactNode;
   sx?: SxProps<Theme>;
   onClick?: () => void;
-  products?: Products[];
+  products?: Product[];
   image: string;
   name: string;
   description: string;

@@ -4,7 +4,7 @@ export interface UserLogoutPayload {
 }
 
 export async function userLogout(token: string, tokenType: string): Promise<UserLogoutPayload> {
-  const URL = "http://127.0.0.1:8000";
+  const URL = "https://mvr-backend.onrender.com";
 
   if (tokenType === "google") {
     window.location.href = "https://accounts.google.com/Logout";

@@ -61,30 +61,29 @@ export interface CompletedOrder {
   expandable?: boolean;
 }
 
-export interface Products {
-  productName: string;
-  description: string;
-  productCategory: string;
-  productCode?: string;
-  priceCurrency: string;
-  costPrice: number;
-  salePrice: string;
-  promoPrice: number;
-  actualStock: string;
-  minimumStock: number;
-  stockControl: string;
-  showInCatalog: string;
-  destacated: string;
-  fraction: number;
-  mainProductCategory: string;
-  productId?: string;
-  productImage?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
+// export interface Products {
+//   productName: string;
+//   description: string;
+//   productCategory: string;
+//   productCode?: string;
+//   priceCurrency: string;
+//   costPrice: number;
+//   salePrice: string;
+//   promoPrice: number;
+//   actualStock: string;
+//   minimumStock: number;
+//   stockControl: string;
+//   showInCatalog: string;
+//   destacated: string;
+//   fraction: number;
+//   mainProductCategory: string;
+//   productId?: string;
+//   productImage?: string;
+//   createdAt?: Date;
+//   updatedAt?: Date;
+// }
 
 export interface AdminData {
   users: User[];
-  products: Products[];
   orders: CompletedOrder[];
 }

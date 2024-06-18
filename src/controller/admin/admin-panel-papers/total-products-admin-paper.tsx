@@ -1,7 +1,6 @@
 import { Typography, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import { Products } from '@webapp/sdk/users-types';
 import { useAdminDataStore } from '@webapp/store/admin/admin-data';
 import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
@@ -9,14 +8,15 @@ import UseAnimations from 'react-useanimations';
 import activity from 'react-useanimations/lib/activity';
 
 import { CustomAdminPaper } from './papers-styles';
+import { Product } from '@webapp/sdk/mutations/products/types';
 
 const TotalProductsPaper: FunctionComponent = () => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
   const { products } = useAdminDataStore();
 
-  const totalProductsInStock = Object.values(products).reduce((sum, product: Products) => {
-    return sum + Number(product.actualStock);
+  const totalProductsInStock = Object.values(products).reduce((sum, product: Product) => {
+    return sum + Number(product.actual_stock);
   }, 0);
 
   return (

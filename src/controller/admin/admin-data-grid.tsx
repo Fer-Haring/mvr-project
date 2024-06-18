@@ -1,7 +1,7 @@
 import { Box, CircularProgress, alpha, styled } from '@mui/material';
 import { getProducts } from '@webapp/sdk/firebase/products';
 import { updateProduct } from '@webapp/sdk/firebase/products/update-products';
-import { Products } from '@webapp/sdk/users-types';
+
 import {
   CellEditingStoppedEvent,
   GetRowIdParams,
@@ -17,11 +17,12 @@ import ProductHeaderActions from './table-header-actions';
 import { localeText } from './table-utils/ag-grid-text-locale';
 import { columnDefs } from './table-utils/columns-def';
 import useBulkEditStore from '@webapp/store/admin/bulk-edit-store';
+import { Product } from '@webapp/sdk/mutations/products/types';
 
 interface AdminDataGridProps {}
 
 const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
-  const [rowData, setRowData] = useState<Products[]>([]);
+  const [rowData, setRowData] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const { setProducts, setSelectedProducts, products } = useBulkEditStore();
 
@@ -29,7 +30,7 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
     setLoading(true);
     getProducts().then((products) => {
       if (products && typeof products === 'object') {
-        const productsArray: Products[] = Object.values(products);
+        const productsArray: Product[] = Object.values(products);
         setRowData(productsArray);
         setProducts(productsArray);
       } else {
@@ -49,36 +50,39 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
 
   const onCellEditingStopped = useCallback(async (event: CellEditingStoppedEvent) => {
     const updatedData = event.data;
-    const id = updatedData.productId;
+    const id = updatedData.id;
     if (id) {
-      const productData: Products = {
-        productName: updatedData.productName,
+      const productData: Product = {
+        product_name: updatedData.productName,
         description: updatedData.description,
-        mainProductCategory: updatedData.mainProductCategory,
-        productCategory: updatedData.productCategory,
-        priceCurrency: updatedData.priceCurrency,
-        costPrice: updatedData.costPrice,
-        salePrice: updatedData.salePrice,
-        promoPrice: updatedData.promoPrice,
-        actualStock: updatedData.actualStock,
-        minimumStock: updatedData.minimumStock,
-        stockControl: updatedData.stockControl,
-        showInCatalog: updatedData.showInCatalog,
+        main_product_category: updatedData.main_product_category,
+        product_category: updatedData.product_category,
+        price_currency: updatedData.price_currency,
+        cost_price: updatedData.cost_price,
+        sale_price: updatedData.sale_price,
+        promo_price: updatedData.promo_price,
+        actual_stock: updatedData.actual_stock,
+        minimum_stock: updatedData.minimum_stock,
+        stock_control: updatedData.stock_control,
+        show_in_catalog: updatedData.show_in_catalog,
         destacated: updatedData.destacated,
         fraction: updatedData.fraction,
-        productImage: updatedData.productImage,
-        productId: id,
+        product_image: updatedData.product_image,
+        id: id,
+        tipo_de_moneda: updatedData.tipo_de_moneda,
+        product_id: updatedData.id,
+        product_code: updatedData.product_code,
       };
       await updateProduct(id, productData);
     }
   }, []);
 
   const getRowId = (params: GetRowIdParams) => {
-    return (params.data as Products).productId || '';
+    return (params.data as Product).id || '';
   };
 
   const onSelectionChanged = useCallback((event: SelectionChangedEvent) => {
-    const allSelectedRows: Products[] = event.api.getSelectedRows();
+    const allSelectedRows: Product[] = event.api.getSelectedRows();
     setSelectedProducts(allSelectedRows);
   }, [setSelectedProducts]);
 

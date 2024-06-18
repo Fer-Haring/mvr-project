@@ -2,10 +2,10 @@ import { SelectChangeEvent, SxProps, Theme, Tooltip, alpha, styled } from '@mui/
 import InputField from '@webapp/components/form/input';
 import Select from '@webapp/components/form/select';
 import { updateProduct } from '@webapp/sdk/firebase/products/update-products';
-import { Products } from '@webapp/sdk/users-types';
 import { FunctionComponent, useEffect, useRef, useState } from 'react';
 
 import EllipsisTooltip from './elipsis-tooltip';
+import { Product } from '@webapp/sdk/mutations/products/types';
 
 interface EditableCellProps {
   initialValue: string;
@@ -14,7 +14,7 @@ interface EditableCellProps {
   updateData: (rowIndex: number, columnId: string, value: unknown) => void | undefined;
   valueTypes?: 'text' | 'number' | 'bool' | 'select';
   sx?: SxProps<Theme>;
-  productData: Products;
+  productData: Product;
   options?: { value: string; label: string }[];
 }
 
@@ -33,8 +33,8 @@ const EditableCell: FunctionComponent<EditableCellProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleUpdate = (value: string) => {
-    const { productId } = productData;
-    updateProduct(productId!, { ...productData, [id]: value });
+    const { id } = productData;
+    updateProduct(id!, { ...productData, [id]: value });
   };
   const onBlur = () => {
     updateData(index, id, value);
@@ -58,7 +58,7 @@ const EditableCell: FunctionComponent<EditableCellProps> = ({
           <CustomSelect
             labelId="product-currency-select-label"
             id="currency-select"
-            value={productData.priceCurrency}
+            value={productData.price_currency}
             onChange={(e) => handleSortCriteriaChange(e as SelectChangeEvent<string>)}
             onBlur={onBlur}
             options={options}

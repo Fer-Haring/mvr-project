@@ -15,7 +15,6 @@ import { alpha, styled, useTheme } from '@mui/material/styles';
 import ContentWrapper from '@webapp/components/content-wrapper';
 import InputField from '@webapp/components/form/input';
 import ProductCard from '@webapp/components/product-card';
-import { getProducts } from '@webapp/sdk/firebase/products';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';
 import { FunctionComponent, useEffect, useMemo, useState } from 'react';
@@ -32,6 +31,7 @@ import {
   Slider,
   StockWrapper,
 } from './products';
+import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
 
 interface AutocompleteOption {
   label: string;
@@ -58,17 +58,25 @@ export const ProductsPage: FunctionComponent = () => {
   const [categoriesOptions, setCategoriesOptions] = useState<AutocompleteOption[]>([]);
   const [category, setCategory] = useState<AutocompleteOption | null>(null);
 
+  const { data: productListData, isLoading, isError } = useProductListQuery(1, 500);
+
+  useEffect(() => {
+    if (productListData?.products) {
+      setProductList(productListData.products);
+    }
+  }, [productListData, setProductList]);
+
   useEffect(() => {
     if (mainCategory) {
-      const filteredProducts = Object.values(productList).filter(
-        (product) => product.mainProductCategory === mainCategory
+      const filteredProducts = productList.filter(
+        (product) => product.main_product_category === mainCategory
       );
-      const relatedCategories = filteredProducts.map((product) => product.productCategory);
+      const relatedCategories = filteredProducts.map((product) => product.product_category);
       const uniqueRelatedCategories = Array.from(new Set(relatedCategories));
       const formattedCategories = uniqueRelatedCategories.map((cat) => ({ label: cat, value: cat }));
       setCategoriesOptions(formattedCategories);
     } else {
-      const allCategories = Object.values(productList).map((product) => product.productCategory);
+      const allCategories = productList.map((product) => product.product_category);
       const uniqueCategories = Array.from(new Set(allCategories));
       const formattedCategories = uniqueCategories.map((cat) => ({ label: cat, value: cat }));
       setCategoriesOptions(formattedCategories);
@@ -95,38 +103,35 @@ export const ProductsPage: FunctionComponent = () => {
   };
 
   const filteredAndSortedProducts = useMemo(() => {
-    let result = Object.values(productList);
+    let result = productList;
 
     if (mainCategory) {
-      result = result.filter((product) => product.mainProductCategory === mainCategory);
+      result = result.filter((product) => product.main_product_category === mainCategory);
     }
 
     if (selectedCategory) {
-      result = result.filter((product) => product.productCategory === selectedCategory);
+      result = result.filter((product) => product.product_category === selectedCategory);
     }
 
     if (priceRange[0] !== 1000 || priceRange[1] !== 20000) {
       result = result.filter(
-        (product) => parseInt(product.salePrice) >= priceRange[0] && parseInt(product.salePrice) <= priceRange[1]
+        (product) => parseInt(product.sale_price) >= priceRange[0] && parseInt(product.sale_price) <= priceRange[1]
       );
     }
 
     if (searchTerms) {
-      result = result.filter((product) => product.productName?.toLowerCase().includes(searchTerms.toLowerCase()));
+      result = result.filter((product) => product.product_name?.toLowerCase().includes(searchTerms.toLowerCase()));
     }
 
-    // Ordenamiento basado en sortCriteria
     switch (sortCriteria) {
-      case 'all':
-        break;
       case 'minorPrice':
-        result.sort((a, b) => parseInt(a.salePrice) - parseInt(b.salePrice));
+        result.sort((a, b) => parseInt(a.sale_price) - parseInt(b.sale_price));
         break;
       case 'mayorPrice':
-        result.sort((a, b) => parseInt(b.salePrice) - parseInt(a.salePrice));
+        result.sort((a, b) => parseInt(b.sale_price) - parseInt(a.sale_price));
         break;
       case 'name':
-        result.sort((a, b) => (a.productName || '').localeCompare(b.productName || ''));
+        result.sort((a, b) => (a.product_name || '').localeCompare(b.product_name || ''));
         break;
       default:
         break;
@@ -136,18 +141,9 @@ export const ProductsPage: FunctionComponent = () => {
   }, [mainCategory, priceRange, productList, searchTerms, selectedCategory, sortCriteria]);
 
   const mainCategories = useMemo(() => {
-    const allMainCategories = Object.values(productList).map((product) => product.mainProductCategory);
+    const allMainCategories = productList.map((product) => product.main_product_category);
     return Array.from(new Set(allMainCategories));
   }, [productList]);
-
-  useEffect(() => {
-    getProducts().then((products) => {
-      if (products) {
-        setProductList(products);
-      }
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <ContentWrapper>
@@ -331,7 +327,7 @@ export const ProductsPage: FunctionComponent = () => {
             </>
           )}
           {mainCategory && (
-            <StockWrapper key={filteredAndSortedProducts.map((product) => product.productId).join('')}>
+            <StockWrapper key={filteredAndSortedProducts.map((product) => product.id).join('')}>
               {productList.length === 0 && (
                 <Typography variant="h4" sx={{ color: theme.palette.common.white }}>
                   {formatMessage({ id: 'PRODUCTS.NO_PRODUCTS' })}
@@ -342,14 +338,14 @@ export const ProductsPage: FunctionComponent = () => {
                   key={id}
                   id={id}
                   products={[product]}
-                  image={product.productImage || ''}
-                  name={product.productName}
+                  image={product.product_image || ''}
+                  name={product.product_name}
                   description={product.description}
-                  price={product.salePrice}
-                  currency={product.priceCurrency}
+                  price={product.sale_price}
+                  currency={product.price_currency}
                   onClick={() => {
                     setProduct(product);
-                    navigate(`/productos/${product.productId}`);
+                    navigate(`/productos/${product.id}`);
                   }}
                 />
               ))}

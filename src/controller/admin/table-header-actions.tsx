@@ -5,7 +5,6 @@ import Modal from '@webapp/components/modal';
 import SnackbarUtils from '@webapp/components/snackbar';
 import { addNewProduct } from '@webapp/sdk/firebase/products';
 import { updateProduct } from '@webapp/sdk/firebase/products/update-products';
-import { Products } from '@webapp/sdk/users-types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
@@ -16,11 +15,12 @@ import * as XLSX from 'xlsx';
 import AddProductContent from './modal-components/add-new-product-modal-content';
 import AddProductModal from './modal-components/add-product-modal';
 import BulkEditButton from './table-utils/bulk-edit-button';
+import { Product } from '@webapp/sdk/mutations/products/types';
 
 interface ProductHeaderActionsProps {
   setRowData: (value: React.SetStateAction<any[]>) => void;
   rowData: any[];
-  selectedRows: Products[];
+  selectedRows: Product[];
 }
 
 const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ setRowData, rowData }) => {
@@ -41,7 +41,7 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ setRowData,
   const handleAddProduct = () => {
     addNewProduct(product)
       .then(() => {
-        SnackbarUtils.success(`Producto añadido con éxito, ID: ${product.productName}`);
+        SnackbarUtils.success(`Producto añadido con éxito, ID: ${product.product_name}`);
         setOpenAddProductModal(false);
         resetProduct();
       })
@@ -50,23 +50,23 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ setRowData,
       });
   };
 
-  const formatData = (data: Products[]) => {
+  const formatData = (data: Product[]) => {
     return data.map((item) => ({
-      'Nombre del producto': item.productName,
+      'Nombre del producto': item.product_name,
       Descripción: item.description,
-      'Categoría Principal': item.mainProductCategory,
-      'Categoría del producto': item.productCategory,
-      'Tipo de Moneda': item.priceCurrency,
-      'Precio de costo': item.costPrice,
-      'Precio de venta': item.salePrice,
-      'Precio promocional': item.promoPrice,
-      'Stock actual': item.actualStock,
-      'Stock mínimo': item.minimumStock,
-      'Control de stock': item.stockControl,
-      'Mostrar en catálogo': item.showInCatalog,
+      'Categoría Principal': item.main_product_category,
+      'Categoría del producto': item.product_category,
+      'Tipo de Moneda': item.price_currency,
+      'Precio de costo': item.cost_price,
+      'Precio de venta': item.sale_price,
+      'Precio promocional': item.promo_price,
+      'Stock actual': item.actual_stock,
+      'Stock mínimo': item.minimum_stock,
+      'Control de stock': item.stock_control,
+      'Mostrar en catálogo': item.show_in_catalog,
       Destacado: item.destacated,
       Fracción: item.fraction,
-      productId: item.productId,
+      id: item.id,
     }));
   };
 
@@ -84,12 +84,12 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ setRowData,
           const data = new Uint8Array(e.target?.result as ArrayBuffer);
           const workbook = XLSX.read(data, { type: 'array' });
           const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-          const jsonData = XLSX.utils.sheet_to_json<Products>(worksheet);
+          const jsonData = XLSX.utils.sheet_to_json<Product>(worksheet);
 
           // Update each product in the database
           for (const product of jsonData) {
-            if (product.productId) {
-              await updateProduct(product.productId, product);
+            if (product.id) {
+              await updateProduct(product.id, product);
             }
           }
 
@@ -136,7 +136,7 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ setRowData,
         'Mostrar en catálogo': item.showInCatalog || 'N/A',
         Destacado: item.destacated || 'N/A',
         Fracción: item.fraction || 'N/A',
-        productId: item.productId || 'N/A',
+        id: item.id || 'N/A',
       };
     });
     console.log('dataToExport:', dataToExport);

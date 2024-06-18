@@ -1,10 +1,11 @@
+import { Product } from '@webapp/sdk/mutations/products/types';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Products } from '@webapp/sdk/users-types';
+// import { Products } from '@webapp/sdk/users-types';
 
 type ProductListData = {
-  productList: Products[]; 
-  setProductList: (productList: Products[]) => void;
+  productList: Product[]; 
+  setProductList: (productList: Product[]) => void;
 };
 
 export const useProductsListData = create(

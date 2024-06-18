@@ -35,7 +35,6 @@ import {
 import Select from '@webapp/components/form/select';
 import SnackbarUtils from '@webapp/components/snackbar';
 import { addNewProduct, getProducts } from '@webapp/sdk/firebase/products';
-import { Products } from '@webapp/sdk/users-types';
 import { useAdminDataStore } from '@webapp/store/admin/admin-data';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { debounce } from 'lodash';
@@ -47,6 +46,7 @@ import EditableCell, { CustomInputField } from './editable-cell';
 import AddProductContent from './modal-components/add-new-product-modal-content';
 import AddProductModal from './modal-components/add-product-modal';
 import { CustomButtonGroup, HeadersTypos, TableBox } from './table-styles';
+import { Product } from '@webapp/sdk/mutations/products/types';
 
 declare module '@tanstack/react-table' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -67,7 +67,7 @@ export const AdminTable: FunctionComponent = () => {
   const { products, setProducts } = useAdminDataStore();
   const theme = useTheme();
   const classes = useStyles();
-  const columnHelper = createColumnHelper<Products>();
+  const columnHelper = createColumnHelper<Product>();
   const [openAddProductModal, setOpenAddProductModal] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(() => Object.values(products));
@@ -96,7 +96,7 @@ export const AdminTable: FunctionComponent = () => {
   const handleAddProduct = () => {
     addNewProduct(product)
       .then(() => {
-        SnackbarUtils.success(`Producto añadido con éxito, ID: ${product.productName}`);
+        SnackbarUtils.success(`Producto añadido con éxito, ID: ${product.product_name}`);
         setOpenAddProductModal(false);
         resetProduct();
       })
@@ -123,9 +123,9 @@ export const AdminTable: FunctionComponent = () => {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const columns = React.useMemo<ColumnDef<Products, any>[]>(
+  const columns = React.useMemo<ColumnDef<Product, any>[]>(
     () => [
-      columnHelper.accessor((row) => row.productName, {
+      columnHelper.accessor((row) => row.product_name, {
         id: 'productName',
         size: 120,
         cell: (info) => {
@@ -146,7 +146,7 @@ export const AdminTable: FunctionComponent = () => {
         },
         header: () => (
           <Stack>
-            <HeadersTypos>{formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.HEADER.PRODUCTNAME' })}</HeadersTypos>
+            <HeadersTypos>{formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.HEADER.product_name' })}</HeadersTypos>
           </Stack>
         ),
         footer: (info) => info.column.id,
@@ -177,7 +177,7 @@ export const AdminTable: FunctionComponent = () => {
         },
         footer: (info) => info.column.id,
       }),
-      columnHelper.accessor((row) => row.mainProductCategory, {
+      columnHelper.accessor((row) => row.main_product_category, {
         id: 'mainProductCategory',
         size: 120,
         cell: (info) => {
@@ -205,7 +205,7 @@ export const AdminTable: FunctionComponent = () => {
         ),
         footer: (info) => info.column.id,
       }),
-      columnHelper.accessor((row) => row.productCategory, {
+      columnHelper.accessor((row) => row.product_category, {
         id: 'productCategory',
         header: () => (
           <Stack>
@@ -233,7 +233,7 @@ export const AdminTable: FunctionComponent = () => {
           );
         },
       }),
-      columnHelper.accessor((row) => row.productCode, {
+      columnHelper.accessor((row) => row.product_code, {
         id: 'productCode',
         header: () => (
           <Stack>
@@ -259,7 +259,7 @@ export const AdminTable: FunctionComponent = () => {
         },
         footer: (info) => info.column.id,
       }),
-      columnHelper.accessor((row) => row.priceCurrency, {
+      columnHelper.accessor((row) => row.price_currency, {
         id: 'priceCurrency',
         header: () => (
           <Stack>
@@ -289,7 +289,7 @@ export const AdminTable: FunctionComponent = () => {
         },
         footer: (info) => info.column.id,
       }),
-      columnHelper.accessor((row) => row.costPrice, {
+      columnHelper.accessor((row) => row.cost_price, {
         id: 'costPrice',
         size: 120,
         cell: (info) => {
@@ -315,7 +315,7 @@ export const AdminTable: FunctionComponent = () => {
         ),
         footer: (info) => info.column.id,
       }),
-      columnHelper.accessor((row) => row.salePrice, {
+      columnHelper.accessor((row) => row.sale_price, {
         id: 'salePrice',
         size: 120,
         cell: (info) => {
@@ -341,7 +341,7 @@ export const AdminTable: FunctionComponent = () => {
         ),
         footer: (info) => info.column.id,
       }),
-      columnHelper.accessor((row) => row.promoPrice, {
+      columnHelper.accessor((row) => row.promo_price, {
         id: 'promoPrice',
         header: () => (
           <Stack>
@@ -367,7 +367,7 @@ export const AdminTable: FunctionComponent = () => {
         },
         footer: (info) => info.column.id,
       }),
-      columnHelper.accessor((row) => row.actualStock, {
+      columnHelper.accessor((row) => row.actual_stock, {
         id: 'actualStock',
         header: () => (
           <Stack>
@@ -393,7 +393,7 @@ export const AdminTable: FunctionComponent = () => {
         },
         footer: (info) => info.column.id,
       }),
-      columnHelper.accessor((row) => row.minimumStock, {
+      columnHelper.accessor((row) => row.minimum_stock, {
         id: 'minimumStock',
         header: () => (
           <Stack>
@@ -419,7 +419,7 @@ export const AdminTable: FunctionComponent = () => {
         },
         footer: (info) => info.column.id,
       }),
-      columnHelper.accessor((row) => row.stockControl, {
+      columnHelper.accessor((row) => row.stock_control, {
         id: 'stockControl',
         header: () => (
           <Stack>
@@ -449,7 +449,7 @@ export const AdminTable: FunctionComponent = () => {
         },
         footer: (info) => info.column.id,
       }),
-      columnHelper.accessor((row) => row.showInCatalog, {
+      columnHelper.accessor((row) => row.show_in_catalog, {
         id: 'showInCatalog',
         header: () => (
           <Stack>
@@ -539,7 +539,7 @@ export const AdminTable: FunctionComponent = () => {
     [columnHelper, formatMessage]
   );
 
-  function Filter({ column }: { column: Column<Products, unknown>; table: ReactTable<Products> }) {
+  function Filter({ column }: { column: Column<Product, unknown>; table: ReactTable<Product> }) {
     // const firstValue = table.getPreFilteredRowModel().flatRows[0]?.getValue(column.id);
     const columnFilterValue = column.getFilterValue();
     const [inputValue, setInputValue] = useState(columnFilterValue ?? '');
@@ -569,7 +569,7 @@ export const AdminTable: FunctionComponent = () => {
     );
   }
 
-  const FilterComponent = ({ column, table }: { column: Column<Products, unknown>; table: ReactTable<Products> }) => {
+  const FilterComponent = ({ column, table }: { column: Column<Product, unknown>; table: ReactTable<Product> }) => {
     const filterComponent = useMemo(() => {
       return <Filter column={column} table={table} />;
     }, [column, table]);

@@ -13,7 +13,7 @@ export async function setPassword(payload: SetPasswordPayload): Promise<void> {
     body: JSON.stringify(payload),
   };
 
-  const URL = "http://127.0.0.1:8000";
+  const URL = "https://mvr-backend.onrender.com";
 
   return fetch(`${URL}/identity/set-password`, options)
     .then((response) => {

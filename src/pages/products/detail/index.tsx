@@ -23,16 +23,18 @@ export const ProductDetailPage: FunctionComponent = () => {
   const { formatMessage } = useIntl();
   const { product, setProduct } = useSingleProduct();
   const { productList } = useProductsListData();
-  const stockNumber = parseInt(product.actualStock, 10);
+  const stockNumber = product.actual_stock || 0;
   const [selectedQuantity, setSelectedQuantity] = useState('1');
   const { addToCart } = useCartStore();
+
+  console.log('product', product);
 
   const handleQuantityChange = (event: SelectChangeEvent<string>) => {
     setSelectedQuantity(event.target.value);
   };
 
   useEffect(() => {
-    if (id !== product.productId) {
+    if (id !== product.id) {
       getProductById(id!).then(() => {
         setProduct(product);
       });
@@ -44,16 +46,16 @@ export const ProductDetailPage: FunctionComponent = () => {
     if (!product) return;
 
     const cartItem: CartItem = {
-      productId: product.productId!,
-      productName: product.productName,
-      unitPrice: parseFloat(product.salePrice),
+      productId: product.id!,
+      productName: product.product_name,
+      unitPrice: parseFloat(product.sale_price),
       unitQuantity: parseInt(selectedQuantity, 10),
-      priceCurrency: product.priceCurrency,
-      subTotal: parseFloat(product.salePrice) * parseInt(selectedQuantity, 10),
+      priceCurrency: product.price_currency,
+      subTotal: parseFloat(product.sale_price) * parseInt(selectedQuantity, 10),
     };
 
     addToCart(cartItem, parseInt(selectedQuantity, 10));
-    SnackbarUtils.success(`${selectedQuantity} ${product.productName} agregado(s) al carrito`);
+    SnackbarUtils.success(`${selectedQuantity} ${product.product_name} agregado(s) al carrito`);
   };
 
   const options = [];
@@ -88,7 +90,7 @@ export const ProductDetailPage: FunctionComponent = () => {
           mb: theme.spacing(6),
         }}
       >
-        <ProductImageHolder product={product} id={product.productId!} />
+        <ProductImageHolder product={product} id={product.id!} />
         <Paper sx={{ p: 2, width: '100%', mt: 3, maxWidth: 700, backgroundColor: 'rgba(255,255,255, 0.6)' }}>
           <Stack
             sx={{
@@ -101,7 +103,7 @@ export const ProductDetailPage: FunctionComponent = () => {
             }}
           >
             <Typography variant="h2" fontWeight={600} sx={{ mb: 2, color: theme.palette.grey[900], fontSize: 39 }}>
-              {product.productName}
+              {product.product_name}
             </Typography>
             <Typography variant="h4" fontWeight={400} sx={{ mb: 2, color: theme.palette.grey[700] }}>
               {product.description}
@@ -121,13 +123,13 @@ export const ProductDetailPage: FunctionComponent = () => {
             <Typography variant="body1" fontWeight={400} sx={{ color: theme.palette.grey[800] }}>
               {formatMessage({ id: 'PRODUCT.DETAIL.UNIT.PRICE' })}
             </Typography>
-            {product.priceCurrency === 'USD' ? (
+            {product.price_currency === 'USD' ? (
               <Typography variant="h3" fontWeight={600} sx={{ mb: 2, color: theme.palette.grey[900] }}>
-                ${product.salePrice} USD
+                ${product.sale_price} USD
               </Typography>
             ) : (
               <Typography variant="h3" fontWeight={600} sx={{ mb: 2, color: theme.palette.grey[900] }}>
-                ${product.salePrice} ARS
+                ${product.sale_price} ARS
               </Typography>
             )}
           </Stack>

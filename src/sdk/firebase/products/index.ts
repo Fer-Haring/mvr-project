@@ -1,11 +1,11 @@
 import SnackbarUtils from '@webapp/components/snackbar';
-import { Products } from '@webapp/sdk/users-types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';
 import { get, getDatabase, push, ref, update } from 'firebase/database';
 import { getDownloadURL, ref as storageReference, uploadBytes } from 'firebase/storage';
 
 import { database, storage } from '../firebase';
+import { Product } from '@webapp/sdk/mutations/products/types';
 
 export const uploadProductImage = async (file: File, productId: string) => {
   const storageRef = storageReference(storage, 'Products/' + productId);
@@ -56,7 +56,7 @@ export const getProductById = async (productId: string) => {
   }
 };
 
-export const addNewProduct = async (productData: Products) => {
+export const addNewProduct = async (productData: Product) => {
   const db = getDatabase();
   const productsRef = ref(db, 'Products/');
   try {
