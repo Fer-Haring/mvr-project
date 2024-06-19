@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { userSignIn, LoginResponse } from '@webapp/sdk/actions/auth/user-sign-in';
+import { LoginResponse } from '@webapp/sdk/actions/auth/types';
+import { userSignIn } from '@webapp/sdk/actions/auth/user-sign-in';
 import { useUserStore } from '@webapp/store/auth/session';
 
 interface LoginPayload {

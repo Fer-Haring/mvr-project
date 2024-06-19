@@ -14,7 +14,6 @@ import InputField from '@webapp/components/form/input';
 import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
 import SnackbarUtils from '@webapp/components/snackbar';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { signIn } from '@webapp/sdk/firebase/auth';
 import { useUserSignInMutation } from '@webapp/sdk/mutations/auth/user-sign-in-mutation';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -42,7 +41,7 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
   
   const hasValue = (value: string) => value !== '';
   
-  const isLoginLoading = false;
+  const isLoginLoading = login.isPending;
 
   const makeAnimationStartHandler = (
     stateSetter: (value: boolean) => void
@@ -95,7 +94,7 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
   };
 
   async function loginWithGoogle() {
-    window.location.href = "http://127.0.0.1:8000/login/google";
+    window.location.href = "https://mvr-backend.onrender.com/login/google";
   }
 
   const handleGoogleSignIn = async () => {

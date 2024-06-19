@@ -22,7 +22,7 @@ const AuthGuard: React.FunctionComponent<AuthGuardProps> = ({ children }) => {
     const validateToken = async () => {
       if (token) {
         try {
-          const response = await fetch("http://127.0.0.1:8000/verify-token", {
+          const response = await fetch("https://mvr-backend.onrender.com/verify-token", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

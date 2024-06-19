@@ -43,6 +43,7 @@
   "AUTH.SIGN_UP.FIRST_NAME.LABEL": "First Name",
   "AUTH.SIGN_UP.LAST_NAME.LABEL": "Last Name",
   "AUTH.SIGN_UP.EMAIL.LABEL": "Email",
+  "AUTH.SIGN_UP.USERNAME.LABEL": "Username",
   "AUTH.SIGN_UP.PASSWORD.LABEL": "Password",
   "AUTH.SIGN_UP.PASSWORD.CONFIRM.LABEL": "Confirm Password",
   "AUTH.SIGN_UP.PASSWORD.ERROR": "The password you entered does not match the security standards.",

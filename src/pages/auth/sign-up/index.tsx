@@ -16,6 +16,7 @@ import SnackbarUtils from '@webapp/components/snackbar';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { saveUserInDb, signUp } from '@webapp/sdk/firebase/auth';
 import { auth } from '@webapp/sdk/firebase/firebase';
+import { useSignupMutation } from '@webapp/sdk/mutations/auth/user-sign-up-mutation';
 import { validateEmail } from '@webapp/utils/input-validations';
 import { AnimatePresence } from 'framer-motion';
 import React, { FunctionComponent, useState } from 'react';
@@ -39,18 +40,23 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [email, setEmail] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  const signUpMutation = useSignupMutation(navigate);
 
-  const isSignUpLoading = false;
+  const isSignUpLoading = signUpMutation.isPending;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      await signUp(email, password);
-      const user = auth.currentUser?.uid;
-      saveUserInDb(firstName, lastName, email, '', user);
-      navigate('/sign-in');
+      await signUpMutation.mutateAsync({
+        name: firstName,
+        last_name: lastName,
+        username: username,
+        email: email,
+        password: password,
+      });
     } catch (error) {
       SnackbarUtils.error('An unexpected error occurred');
     }
@@ -86,7 +92,7 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
   };
 
   async function loginWithGoogle() {
-    window.location.href = "http://127.0.0.1:8000/login/google";
+    window.location.href = "https://mvr-backend.onrender.com/login/google";
   }
 
   const handleGoogleSignUp = async () => {
@@ -100,7 +106,8 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
     password !== confirmPassword ||
     !!getConfirmPasswordError() ||
     !firstName ||
-    !lastName;
+    !lastName ||
+    !username;
 
   return (
     <section id="SignUp" className={className || ''} aria-labelledby="sign-up-title">
@@ -152,7 +159,23 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                       aria-label={formatMessage({ id: 'AUTH.SIGN_UP.LAST_NAME.LABEL' })}
                     />
                   </Stack>
-                  <Stack direction={{ sm: 'column', md: 'row' }} spacing={1} rowGap={1}>
+                  <Stack direction={'column'} spacing={0} rowGap={1}>
+                  <InputField
+                      name="username"
+                      required
+                      fullWidth
+                      variant="standard"
+                      id="username"
+                      autoComplete="given-name"
+                      label={formatMessage({ id: 'AUTH.SIGN_UP.USERNAME.LABEL' })}
+                      value={username}
+                      onBlur={() => setTouched({ ...touched, username: true })}
+                      onChange={(ev) => username.length < 30 && setUsername(ev.target.value)}
+                      error={touched.username && !username}
+                      helperText={touched.username && !username ? formatMessage({ id: 'COMMON.REQUIRED' }) : ''}
+                      autoFocus
+                      aria-label={formatMessage({ id: 'AUTH.SIGN_UP.USERNAME.LABEL' })}
+                    />
                     <InputField
                       required
                       fullWidth

@@ -1,14 +1,4 @@
-export interface LoginResponse {
-  access_token: string;
-  token_type: string;
-  user_id: string;
-  user_name: string;
-}
-
-export interface LoginPayload {
-  email: string;
-  password: string;
-}
+import { LoginPayload, LoginResponse } from "./types";
 
 export async function userSignIn(payload: LoginPayload): Promise<LoginResponse> {
   const params = new URLSearchParams();

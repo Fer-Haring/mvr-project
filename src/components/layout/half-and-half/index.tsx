@@ -39,7 +39,6 @@ const HalfAndHalf: FunctionComponent<HalfAndHalfProps> = ({
   mainSection = 'left',
 }) => {
   const isTablet = useIsTablet();
-  console.log('isTablet', isTablet)
   return (
     <Section
       className={`${className || ''} ${mainSection ? `${mainSection}-first` : ''}`}
