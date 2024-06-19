@@ -74,7 +74,7 @@ export interface CompletedOrder {
 //   minimumStock: number;
 //   stockControl: string;
 //   showInCatalog: string;
-//   destacated: string;
+//   featured: string;
 //   fraction: number;
 //   mainProductCategory: string;
 //   productId?: string;

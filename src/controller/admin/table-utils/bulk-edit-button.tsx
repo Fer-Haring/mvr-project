@@ -44,8 +44,8 @@ const BulkEditButton = () => {
       case 'EDIT_ACTUAL_STOCK':
         title = formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BULK_EDIT.EDIT_ACTUAL_STOCK' });
         break;
-      case 'EDIT_DESTACATED':
-        title = formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BULK_EDIT.EDIT_DESTACATED' });
+      case 'EDIT_FEATURED':
+        title = formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BULK_EDIT.EDIT_FEATURED' });
         break;
       case 'EDIT_PROMO_PRICE':
         title = formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BULK_EDIT.EDIT_PROMO_PRICE' });
@@ -106,8 +106,8 @@ const BulkEditButton = () => {
         <StyledMenuItem onClick={() => handleOptionClick('EDIT_ACTUAL_STOCK')}>
           {formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BULK_EDIT.EDIT_ACTUAL_STOCK' })}
         </StyledMenuItem>
-        <StyledMenuItem onClick={() => handleOptionClick('EDIT_DESTACATED')}>
-          {formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BULK_EDIT.EDIT_DESTACATED' })}
+        <StyledMenuItem onClick={() => handleOptionClick('EDIT_FEATURED')}>
+          {formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BULK_EDIT.EDIT_FEATURED' })}
         </StyledMenuItem>
         <StyledMenuItem onClick={() => handleOptionClick('EDIT_PROMO_PRICE')}>
           {formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BULK_EDIT.EDIT_PROMO_PRICE' })}

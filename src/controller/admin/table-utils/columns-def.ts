@@ -57,7 +57,7 @@ export const columnDefs: ColDef[] = [
   { headerName: 'Stock Mínimo', field: 'minimumStock', editable: true, filter: true },
   { headerName: 'Control de Stock', field: 'stockControl', editable: true, filter: true },
   { headerName: 'Mostrar en Catálogo', field: 'showInCatalog', editable: true, filter: true },
-  { headerName: 'Destacado', field: 'destacated', editable: true, filter: true },
+  { headerName: 'Destacado', field: 'featured', editable: true, filter: true },
   { headerName: 'Fracción', field: 'fraction', editable: true, filter: true },
   { headerName: 'Id Producto', field: 'productId', hide: true },
   { headerName: 'Id Producto', field: 'productImage', hide: true },

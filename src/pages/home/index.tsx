@@ -31,7 +31,9 @@ export const HomePage: FunctionComponent = () => {
   const { productList, setProductList } = useProductsListData();
   const productListArray = useProductListQuery(1, 500);
   const products = Object.values(productList);
-  const destacatedProducts = products.filter((product) => product.destacated === 'Si');
+  const featuredProducts = products.filter((product) => product.featured === true);
+
+  console.log('productListArray', products.filter((product) => product.featured));
 
   useEffect(() => {
     setProductList(productListArray.data?.products || []);
@@ -126,10 +128,10 @@ export const HomePage: FunctionComponent = () => {
               letterSpacing: 4,
             }}
           >
-            {formatMessage({ id: 'WELCOME.HOME.DESTACATED.PRODUCTS.TITLE' })}
+            {formatMessage({ id: 'WELCOME.HOME.FEATURED.PRODUCTS.TITLE' })}
           </Typography>
-          <StockWrapper key={destacatedProducts.map((product) => product.id).join('')}>
-            {destacatedProducts.map((product, id) => (
+          <StockWrapper key={featuredProducts.map((product) => product.id).join('')}>
+            {featuredProducts.map((product, id) => (
               <ProductCard
                 key={id}
                 id={id}

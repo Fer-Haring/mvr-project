@@ -65,11 +65,11 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
         minimum_stock: updatedData.minimum_stock,
         stock_control: updatedData.stock_control,
         show_in_catalog: updatedData.show_in_catalog,
-        destacated: updatedData.destacated,
+        featured: updatedData.featured,
         fraction: updatedData.fraction,
         product_image: updatedData.product_image,
         id: id,
-        tipo_de_moneda: updatedData.tipo_de_moneda,
+        currency_type: updatedData.currency_type,
         product_id: updatedData.id,
         product_code: updatedData.product_code,
       };

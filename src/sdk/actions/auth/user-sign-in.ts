@@ -25,6 +25,7 @@ export async function userSignIn(payload: LoginPayload): Promise<LoginResponse> 
       // Store the token and token_type in localStorage
       localStorage.setItem('access_token', loginResponse.access_token);
       localStorage.setItem('token_type', loginResponse.token_type);
+      localStorage.setItem('refresh_token', loginResponse.refresh_token);
       return loginResponse;
     })
     .catch((error) => {

@@ -479,11 +479,11 @@ export const AdminTable: FunctionComponent = () => {
         },
         footer: (info) => info.column.id,
       }),
-      columnHelper.accessor((row) => row.destacated, {
-        id: 'destacated',
+      columnHelper.accessor((row) => row.featured, {
+        id: 'featured',
         header: () => (
           <Stack>
-            <HeadersTypos>{formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.HEADER.DESTACATED' })}</HeadersTypos>
+            <HeadersTypos>{formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.HEADER.FEATURED' })}</HeadersTypos>
           </Stack>
         ),
         size: 120,

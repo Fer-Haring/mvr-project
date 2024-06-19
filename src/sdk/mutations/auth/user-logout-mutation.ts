@@ -1,21 +1,27 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { UserLogoutPayload, userLogout } from '@webapp/sdk/actions/auth/user-logout';
+import { useMutation } from '@tanstack/react-query';
+import { userLogout } from '@webapp/sdk/actions/auth/user-logout';
 import { useUserGoogleStore } from '@webapp/store/auth/google-sessions';
 import { useUserStore } from '@webapp/store/auth/session';
 
 export const useLogout = () => {
-  const queryClient = useQueryClient();
+  const userStore = useUserStore();
+  const googleUserStore = useUserGoogleStore();
 
-  return useMutation<UserLogoutPayload, Error, { token: string }, unknown>({
-    mutationFn: ({ token }) => userLogout(token, 'jwt'),
+  return useMutation({
+    mutationFn: async () => {
+      const token = localStorage.getItem('access_token');
+      const tokenType = localStorage.getItem('token_type');
+      if (!token || !tokenType) {
+        throw new Error('No token available');
+      }
+      await userLogout(token, tokenType);
+    },
     onSuccess: () => {
-      localStorage.removeItem('access_token');
-      useUserStore.getState().logOut();
-      useUserGoogleStore.getState().logOut();
-      queryClient.invalidateQueries({ queryKey: ['user-data'] });
+      userStore.logOut();
+      googleUserStore.logOut();
     },
     onError: (error) => {
-      console.error('Logout failed:', error);
+      console.error("Logout failed:", error);
     },
   });
 };

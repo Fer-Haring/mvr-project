@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-// Define el tipo de la información del usuario y el estado de autenticación
 interface UserGoogleState {
   isLoggedIn: boolean;
   userInfo: { userId: string; name: string } | null;
@@ -10,16 +9,13 @@ interface UserGoogleState {
   logOut: () => void;
 }
 
-// Crea el store con Zustand
 export const useUserGoogleStore = create(
   persist<UserGoogleState>(
     (set) => ({
-      // Estado inicial
       isLoggedIn: false,
       userInfo: null,
       token: null,
 
-      // Acción para iniciar sesión
       logIn: (userId, name, token) =>
         set(() => ({
           isLoggedIn: true,
@@ -27,7 +23,6 @@ export const useUserGoogleStore = create(
           token: token,
         })),
 
-      // Acción para cerrar sesión
       logOut: () =>
         set(() => ({
           isLoggedIn: false,
@@ -36,8 +31,7 @@ export const useUserGoogleStore = create(
         })),
     }),
     {
-      // Configuración de persistencia
-      name: 'userStore',
+      name: 'userGoogleLoggedIn',
       getStorage: () => localStorage,
     }
   )

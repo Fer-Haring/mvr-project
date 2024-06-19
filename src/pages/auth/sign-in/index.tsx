@@ -15,7 +15,7 @@ import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants'
 import SnackbarUtils from '@webapp/components/snackbar';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { useUserSignInMutation } from '@webapp/sdk/mutations/auth/user-sign-in-mutation';
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
@@ -38,10 +38,21 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [isLoginLoading, setIsLoginLoading] = useState<boolean>(false);
   
   const hasValue = (value: string) => value !== '';
   
-  const isLoginLoading = login.isPending;
+  useEffect(() => {
+    if (login.error) {
+      setError(login.error.message);
+    }
+  }, [login.error]);
+
+  useEffect(() => {
+    if (login.isPending) {
+      setIsLoginLoading(true);
+    }
+  }, [login.isPending]);
 
   const makeAnimationStartHandler = (
     stateSetter: (value: boolean) => void

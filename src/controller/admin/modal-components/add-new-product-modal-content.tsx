@@ -30,10 +30,10 @@ const AddProductContent: FunctionComponent<AddProductContentProps> = ({ classNam
     if (products.length > 0) {
       const categoriesMap = new Map();
       products.forEach((product) => {
-        if (!categoriesMap.has(product.productCategory)) {
-          categoriesMap.set(product.productCategory, {
-            value: product.productCategory,
-            label: product.productCategory,
+        if (!categoriesMap.has(product.product_category)) {
+          categoriesMap.set(product.product_category, {
+            value: product.product_category,
+            label: product.product_category,
           });
         }
       });
@@ -50,13 +50,13 @@ const AddProductContent: FunctionComponent<AddProductContentProps> = ({ classNam
   ) => {
     // Caso para manejo de entrada libre (freeSolo)
     if (typeof newValue === 'string') {
-      setProduct({ ...product, productCategory: newValue });
+      setProduct({ ...product, product_category: newValue });
       setCategory({ value: newValue, label: newValue }); // Asume que tienes una forma de crear un AutocompleteOption a partir de una cadena
     }
     // Caso para cuando se selecciona una opción de las existentes
     else if (newValue && !Array.isArray(newValue)) {
       // Verifica que newValue no sea un arreglo
-      setProduct({ ...product, productCategory: newValue.value });
+      setProduct({ ...product, product_category: newValue.value });
       setCategory(newValue);
     }
     // Opcional: Agrega manejo para múltiples selecciones si es necesario
@@ -71,12 +71,12 @@ const AddProductContent: FunctionComponent<AddProductContentProps> = ({ classNam
       <Stack gap={2} sx={{ width: '100%' }}>
         <Box sx={{ display: 'flex', width: '100%', gap: 2, justifyContent: 'space-between', mt: 2 }}>
           <CustomInput
-            name="productName"
-            label="PRODUCTNAME"
-            product={product.productName}
+            name="product_name"
+            label="product_name"
+            product={product.product_name}
             type="text"
-            onChange={(e) => setProduct({ ...product, productName: e.target.value })}
-            autoComplete="productName"
+            onChange={(e) => setProduct({ ...product, product_name: e.target.value })}
+            autoComplete="product_name"
           />
           <CustomInput
             name="description"
@@ -91,24 +91,24 @@ const AddProductContent: FunctionComponent<AddProductContentProps> = ({ classNam
           <CustomInput
             name="costPrice"
             label="COSTPRICE"
-            product={product.costPrice}
-            onChange={(e) => setProduct({ ...product, costPrice: Number(e.target.value) })}
+            product={product.cost_price}
+            onChange={(e) => setProduct({ ...product, cost_price: Number(e.target.value) })}
             type="number"
             autoComplete="number"
           />
           <CustomInput
             name="salePrice"
             label="SALEPRICE"
-            product={product.salePrice}
-            onChange={(e) => setProduct({ ...product, salePrice: e.target.value })}
+            product={product.sale_price}
+            onChange={(e) => setProduct({ ...product, sale_price: e.target.value })}
             type="number"
             autoComplete="number"
           />
           <CustomSelect
             labelId="product-currency-select-label"
             id="currency-select"
-            value={product.priceCurrency}
-            onChange={(e) => setProduct({ ...product, priceCurrency: e.target.value as string })}
+            value={product.price_currency}
+            onChange={(e) => setProduct({ ...product, price_currency: e.target.value as string })}
             variant="outlined"
             options={[
               { value: 'USD', label: 'USD' },
@@ -122,7 +122,7 @@ const AddProductContent: FunctionComponent<AddProductContentProps> = ({ classNam
           <CustomAutoComplete
             size="small"
             id="organization-autocomplete"
-            value={category === null ? product.productCategory : category}
+            value={category === null ? product.product_category : category}
             options={categoriesOptions}
             isOptionEqualToValue={(option, value) => option.value === value.value}
             getOptionLabel={(option) => (typeof option === 'string' ? option : option.label)}
@@ -130,10 +130,10 @@ const AddProductContent: FunctionComponent<AddProductContentProps> = ({ classNam
               <InputField
                 {...params}
                 size="small"
-                label={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.PRODUCTCATEGORY' })}
-                placeholder={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.PRODUCTCATEGORY' })}
+                label={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.product_category' })}
+                placeholder={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.product_category' })}
                 noDefaultHelperText
-                defaultValue={product.productCategory}
+                defaultValue={product.product_category}
               />
             )}
             freeSolo
@@ -145,7 +145,7 @@ const AddProductContent: FunctionComponent<AddProductContentProps> = ({ classNam
               // Aquí puedes llamar a `setProduct` o cualquier función que necesites para guardar el valor.
               // Utiliza `inputValue` ya que este estado contiene el valor actual del input.
               if (inputValue) {
-                setProduct({ ...product, productCategory: inputValue });
+                setProduct({ ...product, product_category: inputValue });
                 // Si necesitas resetear `inputValue` después de guardar, puedes hacerlo aquí.
               }
             }}
@@ -157,15 +157,15 @@ const AddProductContent: FunctionComponent<AddProductContentProps> = ({ classNam
               options.filter((opt) => opt.label.toLowerCase().includes(state.inputValue.toLowerCase()))
             }
             role="combobox"
-            aria-label={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.PRODUCTCATEGORY' })}
+            aria-label={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.product_category' })}
             aria-haspopup="listbox"
           />
           <CustomInput
             name="actualStock"
             label="ACTUALSTOCK"
-            product={product.actualStock}
+            product={product.actual_stock}
             type="number"
-            onChange={(e) => setProduct({ ...product, actualStock: e.target.value })}
+            onChange={(e) => setProduct({ ...product, actual_stock: Number(e.target.value) })}
             autoComplete="actualStock"
           />
         </Box>
@@ -173,17 +173,17 @@ const AddProductContent: FunctionComponent<AddProductContentProps> = ({ classNam
           <CustomInput
             name="minimumStock"
             label="MINIMUMSTOCK"
-            product={product.minimumStock}
+            product={product.minimum_stock}
             type="number"
-            onChange={(e) => setProduct({ ...product, minimumStock: Number(e.target.value) })}
+            onChange={(e) => setProduct({ ...product, minimum_stock: Number(e.target.value) })}
             autoComplete="minimumStock"
           />
           <CustomInput
             name="showInCatalog"
             label="SHOWINCATALOG"
-            product={product.showInCatalog}
+            product={product.show_in_catalog}
             type="text"
-            onChange={(e) => setProduct({ ...product, showInCatalog: e.target.value })}
+            onChange={(e) => setProduct({ ...product, show_in_catalog: e.target.value })}
             autoComplete="showInCatalog"
           />
         </Box>
@@ -191,18 +191,18 @@ const AddProductContent: FunctionComponent<AddProductContentProps> = ({ classNam
           <CustomInput
             name="stockControl"
             label="STOCKCONTROL"
-            product={product.stockControl}
+            product={product.stock_control}
             type="text"
-            onChange={(e) => setProduct({ ...product, stockControl: e.target.value })}
+            onChange={(e) => setProduct({ ...product, stock_control: e.target.value })}
             autoComplete="stockControl"
           />
           <CustomInput
-            name="destacated"
-            label="DESTACATED"
-            product={product.destacated}
+            name="featured"
+            label="FEATURED"
+            product={product.featured}
             type="text"
-            onChange={(e) => setProduct({ ...product, destacated: e.target.value })}
-            autoComplete="destacated"
+            onChange={(e) => setProduct({ ...product, featured: Boolean(e.target.value) })}
+            autoComplete="featured"
           />
         </Box>
         <Box sx={{ display: 'flex', width: '100%', gap: 2, justifyContent: 'space-between', mt: 1 }}>
@@ -211,15 +211,15 @@ const AddProductContent: FunctionComponent<AddProductContentProps> = ({ classNam
             label="FRACTION"
             product={product.fraction}
             type="text"
-            onChange={(e) => setProduct({ ...product, fraction: Number(e.target.value) })}
+            onChange={(e) => setProduct({ ...product, fraction: e.target.value })}
             autoComplete="fraction"
           />
           <CustomInput
             name="promoPrice"
             label="PROMOPRICE"
-            product={product.promoPrice}
+            product={product.promo_price}
             type="text"
-            onChange={(e) => setProduct({ ...product, promoPrice: Number(e.target.value) })}
+            onChange={(e) => setProduct({ ...product, promo_price: e.target.value })}
             autoComplete="promoPrice"
           />
         </Box>

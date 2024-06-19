@@ -7,11 +7,11 @@ export interface ProductsListResponse {
 
 export interface Product {
   id: string;
-  tipo_de_moneda: string;
+  currency_type: string;
   actual_stock: number;
   cost_price: number;
   description: string;
-  destacated: string;
+  featured: boolean;
   fraction: string;
   main_product_category: string;
   minimum_stock: number;
