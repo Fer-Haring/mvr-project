@@ -7,7 +7,7 @@ export interface UserLogoutPayload {
 }
 
 export async function userLogout(token: string, tokenType: string): Promise<void> {
-  const URL = "https://mvr-backend.onrender.com/identity/logout";
+  const URL = "https://mvr-prod.onrender.com/identity/logout";
 
   if (!token || !tokenType) {
     console.error("No token available");

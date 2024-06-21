@@ -3,7 +3,7 @@ import { refreshToken } from "./user-refresh-token";
 
 
 export async function getUserById(userId: string): Promise<User> {
-  const URL = "https://mvr-backend.onrender.com";
+  const URL = "https://mvr-prod.onrender.com";
   // const URL = 'http://127.0.0.1:8000'
   const accessToken = localStorage.getItem('access_token');
 

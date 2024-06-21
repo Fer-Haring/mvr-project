@@ -1,6 +1,6 @@
 // user-refresh-token.ts
 export async function refreshToken(): Promise<string> {
-  const URL = "https://mvr-backend.onrender.com/identity/refresh-token";
+  const URL = "https://mvr-prod.onrender.com/identity/refresh-token";
   const refreshToken = localStorage.getItem('refresh_token');
 
   const options = {

@@ -105,7 +105,7 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
   };
 
   async function loginWithGoogle() {
-    window.location.href = "https://mvr-backend.onrender.com/login/google";
+    window.location.href = "https://mvr-prod.onrender.com/login/google";
   }
 
   const handleGoogleSignIn = async () => {

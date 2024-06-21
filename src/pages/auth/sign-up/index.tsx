@@ -92,7 +92,7 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
   };
 
   async function loginWithGoogle() {
-    window.location.href = "https://mvr-backend.onrender.com/login/google";
+    window.location.href = "https://mvr-prod.onrender.com/login/google";
   }
 
   const handleGoogleSignUp = async () => {

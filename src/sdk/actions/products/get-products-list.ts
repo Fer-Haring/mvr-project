@@ -2,7 +2,7 @@ import { ProductsListResponse } from "@webapp/sdk/mutations/products/types";
 import { refreshToken } from "@webapp/sdk/actions/auth/user-refresh-token";
 
 export async function getProductsList(page: number, limit: number): Promise<ProductsListResponse> {
-  const URL = "https://mvr-backend.onrender.com";
+  const URL = "https://mvr-prod.onrender.com";
   const accessToken = localStorage.getItem('access_token');
   
   const options = {
