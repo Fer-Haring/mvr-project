@@ -98,6 +98,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ className }) => {
       if (userData) {
         setUser(userData.data as User);
       }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData.data]);
 
   return (
