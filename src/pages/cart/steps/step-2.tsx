@@ -6,7 +6,7 @@ import Modal from '@webapp/components/modal';
 import { CartPaymentDetail } from '@webapp/controller/cart/step-2/cart-payment-detail';
 import { saveCompletedOrder } from '@webapp/sdk/firebase/admin';
 import { updateUserInDb } from '@webapp/sdk/firebase/user';
-import { CartItem, Order } from '@webapp/sdk/users-types';
+import { CartItem, Order } from '@webapp/sdk/actions/auth/types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useCartStore } from '@webapp/store/cart/cart';
 import { useUserData } from '@webapp/store/users/user-data';

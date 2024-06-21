@@ -3,8 +3,8 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
+import { User } from '@webapp/sdk/actions/auth/types';
 import { updateUserInDb } from '@webapp/sdk/firebase/user';
-import { User } from '@webapp/sdk/users-types';
 import { useUserData } from '@webapp/store/users/user-data';
 import { useUserId } from '@webapp/store/users/user-id';
 import { FunctionComponent, useState } from 'react';
@@ -21,18 +21,18 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
   const { setUser } = useUserData();
   const theme = useTheme();
 
-  const [selectedPaymentType, setSelectedPaymentType] = useState(userData.paymentMethod || '');
+  const [selectedPaymentType, setSelectedPaymentType] = useState(userData.payment_method || '');
 
   const selectPaymentType = (paymentType: string) => {
     setSelectedPaymentType(paymentType);
     handleOnChange(paymentType);
   };
 
-  const handleOnChange = (selectedDelivery: string) => {
+  const handleOnChange = (selected_delivery: string) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { userId: ignoredUserId, ...restOfUserData } = userData;
-    updateUserInDb({ userId, ...restOfUserData, paymentMethod: selectedDelivery });
-    setUser({ ...userData, paymentMethod: selectedDelivery });
+    const { id: ignoredUserId, ...restOfUserData } = userData;
+    updateUserInDb({ userId, ...restOfUserData, paymentMethod: selected_delivery });
+    setUser({ ...userData, payment_method: selected_delivery });
   };
 
   const buttonStyle = (paymentType: string) => ({

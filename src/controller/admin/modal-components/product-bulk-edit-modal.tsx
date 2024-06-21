@@ -28,7 +28,7 @@ interface BulkEditModalProps {
 }
 
 const style = {
-  position: 'absolute' as 'absolute',
+  position: 'absolute' as const,
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
@@ -66,10 +66,10 @@ const BulkEditModal: React.FC<BulkEditModalProps> = ({ open, handleClose, handle
     if (products.length > 0) {
       const categoriesMap = new Map();
       products.forEach((product) => {
-        if (!categoriesMap.has(product.productCategory)) {
-          categoriesMap.set(product.productCategory, {
-            value: product.productCategory,
-            label: product.productCategory,
+        if (!categoriesMap.has(product.product_category)) {
+          categoriesMap.set(product.product_category, {
+            value: product.product_category,
+            label: product.product_category,
           });
         }
       });
@@ -85,10 +85,10 @@ const BulkEditModal: React.FC<BulkEditModalProps> = ({ open, handleClose, handle
     reason: AutocompleteChangeReason
   ) => {
     if (typeof newValue === 'string') {
-      setProduct({ ...product, productCategory: newValue });
+      setProduct({ ...product, product_category: newValue });
       setCategory({ value: newValue, label: newValue });
     } else if (newValue && !Array.isArray(newValue)) {
-      setProduct({ ...product, productCategory: newValue.value });
+      setProduct({ ...product, product_category: newValue.value });
       setCategory(newValue);
     } else {
       setCategory(null);
@@ -124,7 +124,7 @@ const BulkEditModal: React.FC<BulkEditModalProps> = ({ open, handleClose, handle
         <CustomAutoComplete
             size="small"
             id="organization-autocomplete"
-            value={category === null ? product.productCategory : category}
+            value={category === null ? product.product_category : category}
             options={categoriesOptions}
             isOptionEqualToValue={(option, value) => option.value === value.value}
             getOptionLabel={(option) => (typeof option === 'string' ? option : option.label)}
@@ -132,10 +132,10 @@ const BulkEditModal: React.FC<BulkEditModalProps> = ({ open, handleClose, handle
               <InputField
                 {...params}
                 size="small"
-                label={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.PRODUCTCATEGORY' })}
-                placeholder={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.PRODUCTCATEGORY' })}
+                label={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.product_category' })}
+                placeholder={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.product_category' })}
                 noDefaultHelperText
-                defaultValue={product.productCategory}
+                defaultValue={product.product_category}
               />
             )}
             freeSolo
@@ -147,7 +147,7 @@ const BulkEditModal: React.FC<BulkEditModalProps> = ({ open, handleClose, handle
               // Aquí puedes llamar a `setProduct` o cualquier función que necesites para guardar el valor.
               // Utiliza `inputValue` ya que este estado contiene el valor actual del input.
               if (inputValue) {
-                setProduct({ ...product, productCategory: inputValue });
+                setProduct({ ...product, product_category: inputValue });
                 // Si necesitas resetear `inputValue` después de guardar, puedes hacerlo aquí.
               }
             }}
@@ -159,7 +159,7 @@ const BulkEditModal: React.FC<BulkEditModalProps> = ({ open, handleClose, handle
               options.filter((opt) => opt.label.toLowerCase().includes(state.inputValue.toLowerCase()))
             }
             role="combobox"
-            aria-label={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.PRODUCTCATEGORY' })}
+            aria-label={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.product_category' })}
             aria-haspopup="listbox"
           />
           </Box>

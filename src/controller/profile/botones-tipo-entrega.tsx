@@ -3,8 +3,8 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
+import { User } from '@webapp/sdk/actions/auth/types';
 import { updateUserInDb } from '@webapp/sdk/firebase/user';
-import { User } from '@webapp/sdk/users-types';
 import { useUserData } from '@webapp/store/users/user-data';
 import { useUserId } from '@webapp/store/users/user-id';
 import { FunctionComponent, useState } from 'react';
@@ -20,7 +20,7 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ user
   const theme = useTheme();
   const { userId } = useUserId();
   const { setUser } = useUserData();
-  const [deliveryType, setDeliveryType] = useState(userData.deliveryType);
+  const [deliveryType, setDeliveryType] = useState(userData.delivery_type);
 
   const handleSelectDelivery = () => {
     setDeliveryType('Delivery');
@@ -34,9 +34,9 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ user
 
   const handleOnChange = (selectedDelivery: string) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { userId: ignoredUserId, ...restOfUserData } = userData;
+    const { id: ignoredUserId, ...restOfUserData } = userData;
     updateUserInDb({ userId, ...restOfUserData, deliveryType: selectedDelivery });
-    setUser({ ...userData, deliveryType: selectedDelivery });
+    setUser({ ...userData, delivery_type: selectedDelivery });
   };
 
   return (

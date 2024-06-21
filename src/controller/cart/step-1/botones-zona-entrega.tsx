@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import { updateUserInDb } from '@webapp/sdk/firebase/user';
-import { User } from '@webapp/sdk/users-types';
+import { User } from '@webapp/sdk/actions/auth/types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useUserData } from '@webapp/store/users/user-data';
 import { useUserId } from '@webapp/store/users/user-id';
@@ -21,7 +21,7 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
   const theme = useTheme();
   const { userId } = useUserId();
   const { setUser } = useUserData();
-  const [deliveryType, setDeliveryType] = useState(userData.deliverZone);
+  const [deliveryType, setDeliveryType] = useState(userData.deliver_zone);
   const { setDeliverValue } = useMessageStore();
 
   const handleLBEZones = () => {
@@ -36,9 +36,9 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
 
   const handleOnChange = (selectedDelivery: string) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { userId: ignoredUserId, ...restOfUserData } = userData;
+    const { id: ignoredUserId, ...restOfUserData } = userData;
     updateUserInDb({ userId, ...restOfUserData, deliverZone: selectedDelivery });
-    setUser({ ...userData, deliverZone: selectedDelivery });
+    setUser({ ...userData, deliver_zone: selectedDelivery });
     if (selectedDelivery === 'LBE') {
       setDeliverValue(2500);
     }

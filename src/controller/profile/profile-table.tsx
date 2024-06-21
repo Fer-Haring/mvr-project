@@ -30,7 +30,7 @@ import {
 } from '@tanstack/react-table';
 import arrowDownAnimation from '@webapp/assets/images/animations/downArrow.json';
 import arrowUpAnimation from '@webapp/assets/images/animations/upArrow.json';
-import { CompletedOrder } from '@webapp/sdk/users-types';
+import { CompletedOrder } from '@webapp/sdk/actions/auth/types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent, useState } from 'react';
@@ -59,7 +59,7 @@ export const ProfileTable: FunctionComponent = () => {
   const { user } = useUserData();
   const { dollarValue } = useDollarValue();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [data] = useState(() => (user.completedOrders ? [...user.completedOrders] : []));
+  const [data] = useState(() => (user.completed_orders ? [...user.completed_orders] : []));
   const [sorting, setSorting] = useState<SortingState>([]);
   const columnHelper = createColumnHelper<CompletedOrder>();
   const [expandedRows, setExpandedRows] = useState<ExpandedRowsType>({});

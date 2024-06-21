@@ -8,10 +8,9 @@ import Button from '@webapp/components/button';
 import ContentWrapper from '@webapp/components/content-wrapper';
 import ProductCard from '@webapp/components/product-card';
 import { getCompletedOrders, getDollarValue } from '@webapp/sdk/firebase/admin';
-import { getProducts } from '@webapp/sdk/firebase/products';
 import { getAllUsers } from '@webapp/sdk/firebase/user';
 import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
-import { CompletedOrder, User } from '@webapp/sdk/users-types';
+import { CompletedOrder, User } from '@webapp/sdk/actions/auth/types';
 import { useAdminDataStore } from '@webapp/store/admin/admin-data';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
@@ -27,13 +26,11 @@ export const HomePage: FunctionComponent = () => {
   const theme = useTheme();
   const { setDollarValue } = useDollarValue();
   const { setProduct } = useSingleProduct();
-  const { setUsers, setProducts, setOrders } = useAdminDataStore();
+  const { setUsers, setOrders } = useAdminDataStore();
   const { productList, setProductList } = useProductsListData();
   const productListArray = useProductListQuery(1, 500);
   const products = Object.values(productList);
   const featuredProducts = products.filter((product) => product.featured === true);
-
-  console.log('productListArray', products.filter((product) => product.featured));
 
   useEffect(() => {
     setProductList(productListArray.data?.products || []);
@@ -47,8 +44,7 @@ export const HomePage: FunctionComponent = () => {
         setOrders(orders);
       }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [productListArray.data?.products, setOrders, setProductList, setUsers]);
 
   useEffect(() => {
     const fetchProduct = async () => {

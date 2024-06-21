@@ -58,7 +58,7 @@ export const ProductsPage: FunctionComponent = () => {
   const [categoriesOptions, setCategoriesOptions] = useState<AutocompleteOption[]>([]);
   const [category, setCategory] = useState<AutocompleteOption | null>(null);
 
-  const { data: productListData, isLoading, isError } = useProductListQuery(1, 500);
+  const { data: productListData } = useProductListQuery(1, 500);
 
   useEffect(() => {
     if (productListData?.products) {

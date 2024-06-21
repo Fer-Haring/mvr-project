@@ -14,19 +14,19 @@ const SIGN_IN_PATH = '/sign-in';
 const AuthGuard: React.FunctionComponent<AuthGuardProps> = ({ children }) => {
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
   const isGoogleLoggedIn = useUserGoogleStore((state) => state.isLoggedIn);
-  const token = useUserGoogleStore((state) => state.token);
+  const accessToken = localStorage.getItem('access_token');
   const location = useLocation();
 
   // Validar el token sólo si hay un token presente
   useEffect(() => {
     const validateToken = async () => {
-      if (token) {
+      if (accessToken) {
         try {
           const response = await fetch("https://mvr-backend.onrender.com/verify-token", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`
+              "Authorization": `Bearer ${accessToken}`
             }
           });
 
@@ -44,9 +44,13 @@ const AuthGuard: React.FunctionComponent<AuthGuardProps> = ({ children }) => {
         }
       }
     };
+    if (accessToken === null) {
+      useUserGoogleStore.getState().logOut();
+      useUserStore.getState().logOut();
+    }
 
     validateToken();
-  }, [token]);
+  }, [accessToken]);
 
   // Redirección basada en estado de autenticación
   if (isGoogleLoggedIn || isLoggedIn) {

@@ -1,5 +1,5 @@
 import SnackbarUtils from '@webapp/components/snackbar';
-import { CartItem, CompletedOrder } from '@webapp/sdk/users-types';
+import { CartItem, CompletedOrder } from '@webapp/sdk/actions/auth/types';
 import { useAdminDataStore } from '@webapp/store/admin/admin-data';
 import { useUserData } from '@webapp/store/users/user-data';
 import { get, getDatabase, ref, update } from 'firebase/database';

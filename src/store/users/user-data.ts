@@ -1,4 +1,5 @@
-import { User } from '@webapp/sdk/users-types';
+
+import { User } from '@webapp/sdk/actions/auth/types';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -12,45 +13,45 @@ export const useUserData = create(
   persist<UserData>(
     (set) => ({
       user: {
-        userId: '',
+        id: '',
         name: '',
-        lastName: '',
+        last_name: '',
         email: '',
-        profilePicture: '',
+        profile_picture: '',
         admin: false,
         address: '',
         city: '',
-        deliveryType: '',
-        paymentMethod: '',
-        cartItems: [], // cartItems ahora es un arreglo directamente en User
-        completedOrders: [], // completedOrders ahora es un arreglo directamente en User
+        delivery_type: '',
+        payment_method: '',
+        cart_items: [], // cartItems ahora es un arreglo directamente en User
+        completed_orders: [], // completedOrders ahora es un arreglo directamente en User
         phone: '',
-        deliverZone: '',
-        preferredCurrency: '',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        deliver_zone: '',
+        preferred_currency: '',
+        password: '',
+        username: '',
       },
       setUser: (user) => set({ user }),
       cleanUserLogout: () =>
         set({
           user: {
-            userId: '',
+            id: '',
             name: '',
-            lastName: '',
+            last_name: '',
             email: '',
-            profilePicture: '',
+            profile_picture: '',
             admin: false,
             address: '',
             city: '',
-            deliveryType: '',
-            paymentMethod: '',
-            cartItems: [],
-            completedOrders: [],
+            delivery_type: '',
+            payment_method: '',
+            cart_items: [], // cartItems ahora es un arreglo directamente en User
+            completed_orders: [], // completedOrders ahora es un arreglo directamente en User
             phone: '',
-            deliverZone: '',
-            preferredCurrency: '',
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            deliver_zone: '',
+            preferred_currency: '',
+            password: '',
+            username: '',
           },
         }),
     }),

@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { SxProps, Theme, useTheme } from '@mui/material/styles';
 import ImageUploader from '@webapp/components/image-uploader';
 import { uploadAvatar } from '@webapp/sdk/firebase/user';
-import { User } from '@webapp/sdk/users-types';
+import { User } from '@webapp/sdk/actions/auth/types';
 import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
@@ -35,7 +35,7 @@ const UserImageHolder: FunctionComponent<UserImageHolderProps> = ({ className, u
   const handleUpdateAvatar = async (image: File) => {
     const downloadURL = await uploadAvatar(image);
     if (downloadURL) {
-      setUser({ ...user, profilePicture: downloadURL });
+      setUser({ ...user, profile_picture: downloadURL });
     }
   };
 
@@ -51,7 +51,7 @@ const UserImageHolder: FunctionComponent<UserImageHolderProps> = ({ className, u
         onImageDelete={() => {
           setAvatar({ file: undefined, url: undefined });
         }}
-        defaultImageUrl={user.profilePicture || avatar.url}
+        defaultImageUrl={user.profile_picture || avatar.url}
         aria-label={formatMessage({ id: 'PROFILE.USER_INFO.AVATAR_UPLOAD' })}
       />
       <Stack
@@ -66,7 +66,7 @@ const UserImageHolder: FunctionComponent<UserImageHolderProps> = ({ className, u
         }}
       >
         <Typography variant="h2" fontWeight={600} sx={{ mb: 2, color: theme.palette.grey[900] }}>
-          {user.name + ' ' + user.lastName}
+          {user.name + ' ' + user.last_name}
         </Typography>
         <Typography variant="body1" fontWeight={400} sx={{ mb: 2, color: theme.palette.grey[600] }}>
           {user.email}

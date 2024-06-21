@@ -25,16 +25,86 @@ export interface SignupResponse {
   username: string;
   email: string;
   password: string;
-  address: string | null;
-  admin: boolean | null;
-  city: string | null;
-  completed_orders: string | null;
-  deliver_zone: string | null;
-  delivery_type: string | null;
+  address: string;
+  admin: boolean;
+  city: string;
+  completed_orders: CompletedOrder[];
+  cart_items: CartItem[];
+  deliver_zone: string;
+  delivery_type: string;
   last_name: string;
   name: string;
-  payment_method: string | null;
-  phone: string | null;
-  preferred_currency: string | null;
-  profile_picture: string | null;
+  payment_method: string;
+  phone: string;
+  preferred_currency: string;
+  profile_picture: string;
 }
+
+export interface CompletedOrder {
+  orderId?: string | number;
+  userId?: string;
+  cartItems?: CartItem[];
+  totalProducts?: number;
+  totalOrderAmountUSD?: number;
+  totalOrderAmountARS?: number;
+  status?: string;
+  currencyUsedToPay?: string;
+  paymentMethod?: string;
+  deliveryType?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  totalOrderAmount?: number;
+  expandable?: boolean;
+}
+
+export interface CartItem {
+  productId: string;
+  productName: string;
+  unitQuantity: number;
+  unitPrice: number;
+  priceCurrency: string;
+  subTotal: number;
+}
+
+export interface Order {
+  orderId?: string | number;
+  userId?: string;
+  cartItems?: CartItem[];
+  totalProducts?: number;
+  totalOrderAmountUSD?: number;
+  totalOrderAmountARS?: number;
+  status?: string;
+  currencyUsedToPay?: string;
+  paymentMethod?: string;
+  deliveryType?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  totalOrderAmount?: number;
+  expandable?: boolean;
+}
+
+export interface User {
+  id: string;
+  username: string;
+  email: string;
+  password: string;
+  address: string;
+  admin: boolean;
+  city: string;
+  completed_orders: CompletedOrder[];
+  cart_items: CartItem[];
+  deliver_zone: string;
+  delivery_type: string;
+  last_name: string;
+  name: string;
+  payment_method: string;
+  phone: string;
+  preferred_currency: string;
+  profile_picture: string;
+}
+
+export interface AdminData {
+  users: User[];
+  orders: CompletedOrder[];
+}
+

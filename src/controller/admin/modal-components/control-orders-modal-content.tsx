@@ -6,7 +6,7 @@ import Select from '@webapp/components/form/select';
 import SnackbarUtils from '@webapp/components/snackbar';
 import { updateOrderStatus } from '@webapp/sdk/firebase/admin';
 import { getUser } from '@webapp/sdk/firebase/user';
-import { CompletedOrder, User } from '@webapp/sdk/users-types';
+import { CompletedOrder, User } from '@webapp/sdk/actions/auth/types';
 import { useAdminDataStore } from '@webapp/store/admin/admin-data';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -101,7 +101,7 @@ const ControlOrdersContent: FunctionComponent<ControlOrdersContentProps> = ({ cl
                         fontSize: 18,
                       }}
                     >
-                      {userData?.name} {userData?.lastName} ( {pendingOrders.length} Ordenes pendientes)
+                      {userData?.name} {userData?.last_name} ( {pendingOrders.length} Ordenes pendientes)
                     </AccordionSummary>
                     <AccordionDetails>
                       {orders.map((order) => {

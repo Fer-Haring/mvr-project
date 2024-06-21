@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import InputField from '@webapp/components/form/input';
 import { updateUserInDb } from '@webapp/sdk/firebase/user';
-import { User } from '@webapp/sdk/users-types';
+import { User } from '@webapp/sdk/actions/auth/types';
 import { useUserData } from '@webapp/store/users/user-data';
 import { useUserId } from '@webapp/store/users/user-id';
 import { FunctionComponent, useEffect, useState } from 'react';
@@ -22,7 +22,7 @@ const UserInfoPersonal: FunctionComponent<UserInfoPersonalProps> = ({ className,
   const { userId } = useUserId();
   const { setUser } = useUserData();
   const [name, setName] = useState(userData.name);
-  const [lastName, setLastName] = useState(userData.lastName);
+  const [lastName, setLastName] = useState(userData.last_name);
   const [email, setEmail] = useState(userData.email);
   const [phone, setPhone] = useState(userData.phone);
   const [address, setAdress] = useState(userData.address);
@@ -32,7 +32,7 @@ const UserInfoPersonal: FunctionComponent<UserInfoPersonalProps> = ({ className,
   useEffect(() => {
     const hasChanged =
       name !== userData.name ||
-      lastName !== userData.lastName ||
+      lastName !== userData.last_name ||
       email !== userData.email ||
       phone !== userData.phone ||
       address !== userData.address ||
@@ -44,14 +44,14 @@ const UserInfoPersonal: FunctionComponent<UserInfoPersonalProps> = ({ className,
     const updatedFields: Partial<User> = {};
 
     if (name !== userData.name) updatedFields.name = name;
-    if (lastName !== userData.lastName) updatedFields.lastName = lastName;
+    if (lastName !== userData.last_name) updatedFields.last_name = lastName;
     if (phone !== userData.phone) updatedFields.phone = phone;
     if (address !== userData.address) updatedFields.address = address;
     if (city !== userData.city) updatedFields.city = city;
 
     if (Object.keys(updatedFields).length > 0) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { userId: ignoredUserId, ...restOfUserData } = userData;
+      const { id: ignoredUserId, ...restOfUserData } = userData;
       updateUserInDb({ userId: userId, ...restOfUserData, ...updatedFields });
       setUser({ ...userData, ...updatedFields });
     }

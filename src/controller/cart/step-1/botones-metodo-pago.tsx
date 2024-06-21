@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import { updateUserInDb } from '@webapp/sdk/firebase/user';
-import { User } from '@webapp/sdk/users-types';
+import { User } from '@webapp/sdk/actions/auth/types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useUserData } from '@webapp/store/users/user-data';
 import { useUserId } from '@webapp/store/users/user-id';
@@ -23,7 +23,7 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
   const theme = useTheme();
   const { setOrder, order } = useMessageStore();
 
-  const [selectedPaymentType, setSelectedPaymentType] = useState(userData.paymentMethod || '');
+  const [selectedPaymentType, setSelectedPaymentType] = useState(userData.payment_method || '');
 
   const selectPaymentType = (paymentType: string) => {
     setSelectedPaymentType(paymentType);
@@ -32,9 +32,9 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
 
   const handleOnChange = (selectedDelivery: string) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { userId: ignoredUserId, ...restOfUserData } = userData;
+    const { id: ignoredUserId, ...restOfUserData } = userData;
     updateUserInDb({ userId, ...restOfUserData, paymentMethod: selectedDelivery });
-    setUser({ ...userData, paymentMethod: selectedDelivery });
+    setUser({ ...userData, payment_method: selectedDelivery });
     setOrder({ ...order, paymentMethod: selectedDelivery });
   };
 

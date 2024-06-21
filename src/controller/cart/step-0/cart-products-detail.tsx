@@ -13,7 +13,7 @@ import {
   useTheme,
 } from '@mui/material';
 import Stack from '@mui/system/Stack';
-import { CartItem, Order } from '@webapp/sdk/users-types';
+import { CartItem, Order } from '@webapp/sdk/actions/auth/types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { useCartStore } from '@webapp/store/cart/cart';
 import { FunctionComponent, useEffect } from 'react';

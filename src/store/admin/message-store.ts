@@ -1,4 +1,4 @@
-import { Order } from '@webapp/sdk/users-types';
+import { Order } from '@webapp/sdk/actions/auth/types';
 import {create} from 'zustand';
 import { persist } from 'zustand/middleware';
 

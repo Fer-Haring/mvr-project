@@ -1,5 +1,5 @@
 import SnackbarUtils from '@webapp/components/snackbar';
-import { CompletedOrder } from '@webapp/sdk/users-types';
+import { CompletedOrder } from '@webapp/sdk/actions/auth/types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { useCompletedOrdersStore } from '@webapp/store/orders/get-completed-orders';
 import { get, getDatabase, push, ref, update } from 'firebase/database';
