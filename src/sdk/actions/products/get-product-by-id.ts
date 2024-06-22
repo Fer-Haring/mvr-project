@@ -1,11 +1,9 @@
-import { User } from "../../types/user-types";
-import { refreshToken } from "./user-refresh-token";
+import { refreshToken } from "../auth/user-refresh-token";
 
-
-export async function getUserById(userId: string): Promise<User> {
+export async function getProductById(productId: string) {
   const URL = "https://mvr-prod.onrender.com";
   const accessToken = localStorage.getItem('access_token');
-
+  
   const options = {
     method: 'GET',
     headers: {
@@ -14,12 +12,12 @@ export async function getUserById(userId: string): Promise<User> {
     },
   };
 
-  let response = await fetch(`${URL}/identity/${userId}`, options);
+  let response = await fetch(`${URL}/products/${productId}`, options);
   
   if (response.status === 401) {
     const newAccessToken = await refreshToken();
     options.headers['Authorization'] = `Bearer ${newAccessToken}`;
-    response = await fetch(`${URL}/users/${userId}`, options);
+    response = await fetch(`${URL}/products/${productId}`, options);
   }
 
   if (!response.ok) {
@@ -27,6 +25,7 @@ export async function getUserById(userId: string): Promise<User> {
     throw new Error(err.detail);
   }
 
-  const user = await response.json();
-  return user;
+  const product = await response.json();
+  return product;
+  
 }

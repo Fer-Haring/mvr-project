@@ -1,9 +1,5 @@
 import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded';
-import AdminPanelSettingsRoundedIcon from '@mui/icons-material/AdminPanelSettingsRounded';
-import CallRoundedIcon from '@mui/icons-material/CallRounded';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 // import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
-import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
 import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
 import List from '@mui/material/List';
@@ -16,43 +12,11 @@ import React, { FunctionComponent, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { easing } from '../framer';
-import SidebarItem, { SidebarItemType } from './sidebar-item';
+import SidebarItem from './sidebar-item';
 import { useGetUserByIdMutation } from '@webapp/sdk/mutations/auth/get-user-by-id-mutation';
 import { useUserStore } from '@webapp/store/auth/session';
 import { User } from '@webapp/sdk/types/user-types';
-
-const sidebarItems: SidebarItemType[] = [
-  {
-    icon: <HomeRoundedIcon />,
-    label: 'Home',
-    to: '/home',
-    private: false,
-  },
-  {
-    icon: <Inventory2RoundedIcon />,
-    label: 'Productos',
-    to: '/productos',
-    private: false,
-  },
-  // {
-  //   icon: <InfoRoundedIcon />,
-  //   label: 'Sobre Nosotros',
-  //   to: '/sobre-nosotros',
-  //   private: false,
-  // },
-  {
-    icon: <CallRoundedIcon />,
-    label: 'Contacto',
-    to: '/contacto',
-    private: false,
-  },
-  {
-    icon: <AdminPanelSettingsRoundedIcon />,
-    label: 'Admin',
-    to: '/admin-dashboard',
-    private: true,
-  },
-];
+import { sidebarItems } from './sidebarItems';
 
 /**
  * Props for `<Sidebar />`.

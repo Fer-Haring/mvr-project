@@ -1,23 +1,17 @@
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, CircularProgress, alpha, styled } from '@mui/material';
-import { getProducts } from '@webapp/sdk/firebase/products';
-import { updateProduct } from '@webapp/sdk/firebase/products/update-products';
-
-import {
-  CellEditingStoppedEvent,
-  GetRowIdParams,
-  PaginationNumberFormatterParams,
-  SelectionChangedEvent,
-} from 'ag-grid-community';
+import { CellEditingStoppedEvent, GetRowIdParams, PaginationNumberFormatterParams, SelectionChangedEvent } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { AgGridReact } from 'ag-grid-react';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import ProductHeaderActions from './table-header-actions';
 import { localeText } from './table-utils/ag-grid-text-locale';
 import { columnDefs } from './table-utils/columns-def';
 import useBulkEditStore from '@webapp/store/admin/bulk-edit-store';
 import { Product } from '@webapp/sdk/mutations/products/types';
+import { useUpdateProduct } from '@webapp/sdk/mutations/products/update-product-mutation';
+import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
 
 interface AdminDataGridProps {}
 
@@ -25,20 +19,20 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
   const [rowData, setRowData] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const { setProducts, setSelectedProducts, products } = useBulkEditStore();
+  const productsList = useProductListQuery(1, 500);
+  const { mutate } = useUpdateProduct();
 
   useEffect(() => {
     setLoading(true);
-    getProducts().then((products) => {
-      if (products && typeof products === 'object') {
-        const productsArray: Product[] = Object.values(products);
-        setRowData(productsArray);
-        setProducts(productsArray);
-      } else {
-        console.error('Products data is not an array or an object:', products);
-      }
-      setLoading(false);
-    });
-  }, [setProducts]);
+    if (productsList.data?.products && Array.isArray(productsList.data.products)) {
+      const productsArray: Product[] = productsList.data.products;
+      setRowData(productsArray);
+      setProducts(productsArray);
+    } else {
+      console.error('Products data is not an array:', productsList.data?.products);
+    }
+    setLoading(false);
+  }, [productsList.data?.products, setProducts]);
 
   const paginationPageSizeSelector = useMemo<number[] | boolean>(() => {
     return [200, 500, 1000];
@@ -53,7 +47,7 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
     const id = updatedData.id;
     if (id) {
       const productData: Product = {
-        product_name: updatedData.productName,
+        product_name: updatedData.product_name,
         description: updatedData.description,
         main_product_category: updatedData.main_product_category,
         product_category: updatedData.product_category,
@@ -70,12 +64,12 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
         product_image: updatedData.product_image,
         id: id,
         currency_type: updatedData.currency_type,
-        product_id: updatedData.id,
+        product_id: updatedData.product_id,
         product_code: updatedData.product_code,
       };
-      await updateProduct(id, productData);
+      mutate({ productId: id, productData });
     }
-  }, []);
+  }, [mutate]);
 
   const getRowId = (params: GetRowIdParams) => {
     return (params.data as Product).id || '';

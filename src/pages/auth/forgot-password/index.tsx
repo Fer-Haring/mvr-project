@@ -7,7 +7,6 @@ import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants'
 import { EMAIL_REGEX } from '@webapp/configuration/regex';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
 
-import { recoverPassword } from '@webapp/sdk/firebase/auth';
 import { normalizeUserData } from '@webapp/utils/normalize-user-data';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -32,9 +31,6 @@ const ForgotPasswordPage2: FunctionComponent<ForgotPasswordPage2Props> = ({ clas
 
     const data = new FormData(event.currentTarget);
     const email = normalizeUserData(data.get('email'));
-    recoverPassword(email).then(() => {
-      navigate('/sign-in');
-    });
 
     if (!email || !EMAIL_REGEX.test(email)) {
       return;

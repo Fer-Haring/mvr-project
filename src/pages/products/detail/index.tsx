@@ -8,7 +8,8 @@ import ContentWrapper from '@webapp/components/content-wrapper';
 import SnackbarUtils from '@webapp/components/snackbar';
 import ProductImageHolder from '@webapp/controller/product-detail/product-image-holder';
 import SimilarProducts from '@webapp/controller/product-detail/similar-products';
-import { getProductById } from '@webapp/sdk/firebase/products';
+import { useGetProductById } from '@webapp/sdk/mutations/products/get-product-by-id-query';
+import { Product } from '@webapp/sdk/mutations/products/types';
 import { CartItem } from '@webapp/sdk/types/user-types';
 import { useCartStore } from '@webapp/store/cart/cart';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
@@ -26,18 +27,15 @@ export const ProductDetailPage: FunctionComponent = () => {
   const stockNumber = product.actual_stock || 0;
   const [selectedQuantity, setSelectedQuantity] = useState('1');
   const { addToCart } = useCartStore();
-
-  console.log('product', product);
+  const productById = useGetProductById(id!);
 
   const handleQuantityChange = (event: SelectChangeEvent<string>) => {
     setSelectedQuantity(event.target.value);
   };
 
   useEffect(() => {
-    if (id !== product.id) {
-      getProductById(id!).then(() => {
-        setProduct(product);
-      });
+    if (id !== product.id) {  
+        setProduct(productById?.data as Product);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
