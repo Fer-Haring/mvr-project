@@ -1,5 +1,5 @@
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, alpha, styled } from '@mui/material';
-import { CompletedOrder } from '@webapp/sdk/actions/auth/types';
+import { CompletedOrder } from '@webapp/sdk/types/user-types';
 
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import React, { FunctionComponent } from 'react';

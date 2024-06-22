@@ -3,7 +3,7 @@ import { IconButton, Tooltip, Typography, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Modal from '@webapp/components/modal';
-import { CompletedOrder } from '@webapp/sdk/actions/auth/types';
+import { CompletedOrder } from '@webapp/sdk/types/user-types';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 

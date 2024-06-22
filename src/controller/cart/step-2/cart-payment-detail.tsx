@@ -1,5 +1,5 @@
 import { Box, Divider, Paper, Stack, Typography, alpha, styled, useTheme } from '@mui/material';
-import { CartItem } from '@webapp/sdk/actions/auth/types';
+import { CartItem } from '@webapp/sdk/types/user-types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useCompletedOrdersStore } from '@webapp/store/orders/get-completed-orders';

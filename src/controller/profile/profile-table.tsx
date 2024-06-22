@@ -30,7 +30,7 @@ import {
 } from '@tanstack/react-table';
 import arrowDownAnimation from '@webapp/assets/images/animations/downArrow.json';
 import arrowUpAnimation from '@webapp/assets/images/animations/upArrow.json';
-import { CompletedOrder } from '@webapp/sdk/actions/auth/types';
+import { CompletedOrder } from '@webapp/sdk/types/user-types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent, useState } from 'react';

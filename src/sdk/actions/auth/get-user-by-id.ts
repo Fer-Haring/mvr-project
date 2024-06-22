@@ -1,4 +1,4 @@
-import { User } from "./types";
+import { User } from "../../types/user-types";
 import { refreshToken } from "./user-refresh-token";
 
 

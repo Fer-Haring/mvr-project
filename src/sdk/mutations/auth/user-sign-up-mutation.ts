@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import SnackbarUtils from '@webapp/components/snackbar';
-import { SignupPayload, SignupResponse } from '@webapp/sdk/actions/auth/types';
+import { SignupPayload, SignupResponse } from '@webapp/sdk/types/user-types';
 import { userSignup } from '@webapp/sdk/actions/auth/user-sign-up';
 
 export const useSignupMutation = (navigate: (path: string) => void) => {

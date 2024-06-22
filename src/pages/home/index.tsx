@@ -10,7 +10,7 @@ import ProductCard from '@webapp/components/product-card';
 import { getCompletedOrders, getDollarValue } from '@webapp/sdk/firebase/admin';
 import { getAllUsers } from '@webapp/sdk/firebase/user';
 import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
-import { CompletedOrder, User } from '@webapp/sdk/actions/auth/types';
+import { CompletedOrder, User } from '@webapp/sdk/types/user-types';
 import { useAdminDataStore } from '@webapp/store/admin/admin-data';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';

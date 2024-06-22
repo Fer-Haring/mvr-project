@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import { User } from '@webapp/sdk/actions/auth/types';
+import { User } from '@webapp/sdk/types/user-types';
 import { useUserData } from '@webapp/store/users/user-data';
 import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';

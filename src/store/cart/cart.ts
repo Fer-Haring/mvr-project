@@ -1,4 +1,4 @@
-import { CartItem } from '@webapp/sdk/actions/auth/types';
+import { CartItem } from '@webapp/sdk/types/user-types';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getUserById } from '@webapp/sdk/actions/auth/get-user-by-id';
-import { User } from '@webapp/sdk/actions/auth/types';
+import { User } from '@webapp/sdk/types/user-types';
 
 
 export const useGetUserByIdMutation = (userId: string) => {

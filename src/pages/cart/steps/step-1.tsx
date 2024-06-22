@@ -8,7 +8,7 @@ import InputField from '@webapp/components/form/input';
 import PaymentTypeButtons from '@webapp/controller/cart/step-1/botones-metodo-pago';
 import DeliveryTypeButtons from '@webapp/controller/cart/step-1/botones-tipo-entrega';
 import ZoneDeliverButtons from '@webapp/controller/cart/step-1/botones-zona-entrega';
-import { User } from '@webapp/sdk/actions/auth/types';
+import { User } from '@webapp/sdk/types/user-types';
 import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 

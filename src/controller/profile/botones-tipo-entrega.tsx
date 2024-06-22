@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
-import { User } from '@webapp/sdk/actions/auth/types';
+import { User } from '@webapp/sdk/types/user-types';
 import { updateUserInDb } from '@webapp/sdk/firebase/user';
 import { useUserData } from '@webapp/store/users/user-data';
 import { useUserId } from '@webapp/store/users/user-id';

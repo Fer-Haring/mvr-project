@@ -1,4 +1,4 @@
-import { LoginPayload, LoginResponse } from "./types";
+import { LoginPayload, LoginResponse } from "../../types/user-types";
 
 export async function userSignIn(payload: LoginPayload): Promise<LoginResponse> {
   const params = new URLSearchParams();

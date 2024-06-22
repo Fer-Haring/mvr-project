@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { CartProductsDetail } from '@webapp/controller/cart/step-0/cart-products-detail';
-import { CartItem, Order } from '@webapp/sdk/actions/auth/types';
+import { CartItem, Order } from '@webapp/sdk/types/user-types';
 import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 

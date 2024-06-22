@@ -1,5 +1,5 @@
 
-import { User } from '@webapp/sdk/actions/auth/types';
+import { User } from '@webapp/sdk/types/user-types';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 

@@ -1,4 +1,4 @@
-import { SignupPayload, SignupResponse } from "./types";
+import { SignupPayload, SignupResponse } from "../../types/user-types";
 
 export async function userSignup(payload: SignupPayload): Promise<SignupResponse> {
   const URL = "http://127.0.0.1:8000/identity/signup";

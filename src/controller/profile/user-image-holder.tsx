@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { SxProps, Theme, useTheme } from '@mui/material/styles';
 import ImageUploader from '@webapp/components/image-uploader';
 import { uploadAvatar } from '@webapp/sdk/firebase/user';
-import { User } from '@webapp/sdk/actions/auth/types';
+import { User } from '@webapp/sdk/types/user-types';
 import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';

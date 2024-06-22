@@ -19,7 +19,7 @@ import { easing } from '../framer';
 import SidebarItem, { SidebarItemType } from './sidebar-item';
 import { useGetUserByIdMutation } from '@webapp/sdk/mutations/auth/get-user-by-id-mutation';
 import { useUserStore } from '@webapp/store/auth/session';
-import { User } from '@webapp/sdk/actions/auth/types';
+import { User } from '@webapp/sdk/types/user-types';
 
 const sidebarItems: SidebarItemType[] = [
   {

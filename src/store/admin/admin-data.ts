@@ -1,5 +1,5 @@
 import { Product } from '@webapp/sdk/mutations/products/types';
-import { CompletedOrder, User } from '@webapp/sdk/actions/auth/types';
+import { CompletedOrder, User } from '@webapp/sdk/types/user-types';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 

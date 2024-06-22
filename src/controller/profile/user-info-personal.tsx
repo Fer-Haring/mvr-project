@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import InputField from '@webapp/components/form/input';
 import { updateUserInDb } from '@webapp/sdk/firebase/user';
-import { User } from '@webapp/sdk/actions/auth/types';
+import { User } from '@webapp/sdk/types/user-types';
 import { useUserData } from '@webapp/store/users/user-data';
 import { useUserId } from '@webapp/store/users/user-id';
 import { FunctionComponent, useEffect, useState } from 'react';
