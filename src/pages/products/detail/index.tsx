@@ -9,7 +9,7 @@ import SnackbarUtils from '@webapp/components/snackbar';
 import ProductImageHolder from '@webapp/controller/product-detail/product-image-holder';
 import SimilarProducts from '@webapp/controller/product-detail/similar-products';
 import { useGetProductById } from '@webapp/sdk/mutations/products/get-product-by-id-query';
-import { Product } from '@webapp/sdk/mutations/products/types';
+import { Product } from '@webapp/sdk/types/products-types';
 import { CartItem } from '@webapp/sdk/types/user-types';
 import { useCartStore } from '@webapp/store/cart/cart';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';

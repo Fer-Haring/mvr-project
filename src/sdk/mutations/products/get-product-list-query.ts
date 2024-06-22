@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getProductsList } from "@webapp/sdk/actions/products/get-products-list";
-import { ProductsListResponse } from "./types";
+import { ProductsListResponse } from "../../types/products-types";
 
 
 export const useProductListQuery = (page: number, limit: number) => {

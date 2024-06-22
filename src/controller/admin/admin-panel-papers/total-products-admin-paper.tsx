@@ -8,7 +8,7 @@ import UseAnimations from 'react-useanimations';
 import activity from 'react-useanimations/lib/activity';
 
 import { CustomAdminPaper } from './papers-styles';
-import { Product } from '@webapp/sdk/mutations/products/types';
+import { Product } from '@webapp/sdk/types/products-types';
 
 const TotalProductsPaper: FunctionComponent = () => {
   const { formatMessage } = useIntl();

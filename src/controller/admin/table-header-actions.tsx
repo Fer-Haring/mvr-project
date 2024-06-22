@@ -2,10 +2,8 @@
 import { Stack, useTheme } from '@mui/material';
 import Button from '@webapp/components/button';
 import Modal from '@webapp/components/modal';
-import SnackbarUtils from '@webapp/components/snackbar';
-import { addNewProduct } from '@webapp/sdk/firebase/products';
-import { updateProduct } from '@webapp/sdk/firebase/products/update-products';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
+import SnackbarUtils from '@webapp/components/snackbar';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import React, { useState } from 'react';
@@ -15,7 +13,9 @@ import * as XLSX from 'xlsx';
 import AddProductContent from './modal-components/add-new-product-modal-content';
 import AddProductModal from './modal-components/add-product-modal';
 import BulkEditButton from './table-utils/bulk-edit-button';
-import { Product } from '@webapp/sdk/mutations/products/types';
+import { Product } from '@webapp/sdk/types/products-types';
+import { useUpdateProduct } from '@webapp/sdk/mutations/products/update-product-mutation';
+import { useAddNewProduct } from '@webapp/sdk/mutations/products/add-new-product-mutation';
 
 interface ProductHeaderActionsProps {
   setRowData: (value: React.SetStateAction<any[]>) => void;
@@ -29,6 +29,8 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ setRowData,
   const { product, resetProduct } = useSingleProduct();
   const [openAddProductModal, setOpenAddProductModal] = useState(false);
   const [openExportModal, setOpenExportModal] = useState(false);
+  const {mutate} = useUpdateProduct();
+  const addProduct = useAddNewProduct();
 
   const handleOpenExportModal = () => {
     setOpenExportModal(true);
@@ -39,8 +41,7 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ setRowData,
   };
 
   const handleAddProduct = () => {
-    addNewProduct(product)
-      .then(() => {
+    addProduct.mutateAsync(product).then(() => {
         SnackbarUtils.success(`Producto añadido con éxito, ID: ${product.product_name}`);
         setOpenAddProductModal(false);
         resetProduct();
@@ -89,7 +90,7 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ setRowData,
           // Update each product in the database
           for (const product of jsonData) {
             if (product.id) {
-              await updateProduct(product.id, product);
+              mutate({productId: product.id, productData: product});
             }
           }
 

@@ -1,4 +1,4 @@
-import { ProductsListResponse } from "@webapp/sdk/mutations/products/types";
+import { ProductsListResponse } from "@webapp/sdk/types/products-types";
 import { refreshToken } from "@webapp/sdk/actions/auth/user-refresh-token";
 
 export async function getProductsList(page: number, limit: number): Promise<ProductsListResponse> {

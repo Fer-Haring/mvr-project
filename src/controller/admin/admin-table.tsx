@@ -46,7 +46,7 @@ import EditableCell, { CustomInputField } from './editable-cell';
 import AddProductContent from './modal-components/add-new-product-modal-content';
 import AddProductModal from './modal-components/add-product-modal';
 import { CustomButtonGroup, HeadersTypos, TableBox } from './table-styles';
-import { Product } from '@webapp/sdk/mutations/products/types';
+import { Product } from '@webapp/sdk/types/products-types';
 
 declare module '@tanstack/react-table' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

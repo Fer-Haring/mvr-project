@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { SxProps, Theme, styled, useTheme } from '@mui/material/styles';
-import { Product } from '@webapp/sdk/mutations/products/types';
+import { Product } from '@webapp/sdk/types/products-types';
 import React, { FunctionComponent } from 'react';
 
 const Wrapper = styled(Paper)(({ theme }) => ({

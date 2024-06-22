@@ -1,4 +1,4 @@
-import { Product } from '@webapp/sdk/mutations/products/types';
+import { Product } from '@webapp/sdk/types/products-types';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 

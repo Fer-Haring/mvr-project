@@ -5,7 +5,7 @@ import { get, getDatabase, push, ref, update } from 'firebase/database';
 import { getDownloadURL, ref as storageReference, uploadBytes } from 'firebase/storage';
 
 import { database, storage } from '../firebase';
-import { Product } from '@webapp/sdk/mutations/products/types';
+import { Product } from '@webapp/sdk/types/products-types';
 
 export const uploadProductImage = async (file: File, productId: string) => {
   const storageRef = storageReference(storage, 'Products/' + productId);

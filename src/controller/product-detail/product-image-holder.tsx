@@ -3,7 +3,7 @@ import { SxProps, Theme } from '@mui/material/styles';
 import ImageUploader from '@webapp/components/image-uploader';
 import SnackbarUtils from '@webapp/components/snackbar';
 import { uploadProductImage } from '@webapp/sdk/firebase/products';
-import { Product } from '@webapp/sdk/mutations/products/types';
+import { Product } from '@webapp/sdk/types/products-types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useUserData } from '@webapp/store/users/user-data';
 import { FunctionComponent } from 'react';

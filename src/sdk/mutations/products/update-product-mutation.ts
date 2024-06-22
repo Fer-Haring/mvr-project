@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { Product } from "./types";
+import { Product } from "../../types/products-types";
 import { updateProduct } from "@webapp/sdk/actions/products/update-product";
 
 export const useUpdateProduct = () => {

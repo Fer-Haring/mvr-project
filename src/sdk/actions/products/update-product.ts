@@ -1,7 +1,7 @@
-import { Product } from "@webapp/sdk/mutations/products/types";
+import { Product } from "@webapp/sdk/types/products-types";
 import { refreshToken } from "../auth/user-refresh-token";
 
-export async function updateProduct(productId: string, productData: Product, file: File | null) {
+export async function updateProduct(productId: string, productData: Product, file?: File | null) {
   const URL = "https://mvr-prod.onrender.com";
   const accessToken = localStorage.getItem('access_token');
 
@@ -15,8 +15,6 @@ export async function updateProduct(productId: string, productData: Product, fil
     method: 'PUT',
     headers: {
       'Authorization': `Bearer ${accessToken}`,
-      // No agregues 'Content-Type': 'multipart/form-data' aquí,
-      // ya que fetch automáticamente establece el límite correcto cuando se usa FormData.
     },
     body: formData,
   };

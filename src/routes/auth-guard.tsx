@@ -15,6 +15,7 @@ const AuthGuard: React.FunctionComponent<AuthGuardProps> = ({ children }) => {
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
   const isGoogleLoggedIn = useUserGoogleStore((state) => state.isLoggedIn);
   const accessToken = localStorage.getItem('access_token');
+  const refreshTokenStored = localStorage.getItem('refresh_token');
   const location = useLocation();
 
   // Validar el token sólo si hay un token presente
@@ -44,15 +45,14 @@ const AuthGuard: React.FunctionComponent<AuthGuardProps> = ({ children }) => {
         }
       }
     };
-    if (accessToken === null) {
+    if (accessToken === null || refreshTokenStored === undefined) {
       useUserGoogleStore.getState().logOut();
       useUserStore.getState().logOut();
     }
 
     validateToken();
-  }, [accessToken]);
+  }, [accessToken, refreshTokenStored]);
 
-  // Redirección basada en estado de autenticación
   if (isGoogleLoggedIn || isLoggedIn) {
     if (location.pathname.includes(SIGN_IN_PATH)) {
       return <Navigate to={'/home'} replace />;

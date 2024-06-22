@@ -1,6 +1,6 @@
 import { Box, Divider, Stack, Typography, styled, useTheme } from '@mui/material';
 import ProductCard from '@webapp/components/product-card';
-import { Product } from '@webapp/sdk/mutations/products/types';
+import { Product } from '@webapp/sdk/types/products-types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { motion } from 'framer-motion';
 import { FunctionComponent, useMemo } from 'react';

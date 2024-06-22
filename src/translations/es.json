@@ -280,7 +280,7 @@
 
 
 
-  "ADD.NEWPRODUCT.LABEL.ADDPRODUCT": "Agregar Producto",
+  "ADD.NEWPRODUCT.LABEL.NAME": "Nombre del Producto",
   "ADMIN.DASHBOARD.PRODUCTS.TABLE.BUTTONS.CANCEL": "Cancelar",
   "ADMIN.DOLLAR.VALUE" : "Valor del Dolar",
   "ADMIN.TOTAL.PRODUCTS.INSTOCK" : "Total de Productos en Stock",

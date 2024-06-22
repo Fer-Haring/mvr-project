@@ -36,7 +36,6 @@ export const AdminDashboardPage: FunctionComponent = () => {
         <PendingOrdersPaper orders={orders} />
       </Stack>
       <Paper sx={{ p: 2, width: '100%', mt: 2, backgroundColor: alpha(theme.palette.common.white, 0.7) }}>
-        {/* <AdminTable /> */}
         <AdminDataGrid/>
       </Paper>
     </ContentWrapper>

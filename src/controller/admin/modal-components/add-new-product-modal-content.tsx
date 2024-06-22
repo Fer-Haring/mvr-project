@@ -72,7 +72,7 @@ const AddProductContent: FunctionComponent<AddProductContentProps> = ({ classNam
         <Box sx={{ display: 'flex', width: '100%', gap: 2, justifyContent: 'space-between', mt: 2 }}>
           <CustomInput
             name="product_name"
-            label="product_name"
+            label="PRODUCTNAME"
             product={product.product_name}
             type="text"
             onChange={(e) => setProduct({ ...product, product_name: e.target.value })}
@@ -106,7 +106,7 @@ const AddProductContent: FunctionComponent<AddProductContentProps> = ({ classNam
           />
           <CustomSelect
             labelId="product-currency-select-label"
-            id="currency-select"
+            id="PRICECURRENCY"
             value={product.price_currency}
             onChange={(e) => setProduct({ ...product, price_currency: e.target.value as string })}
             variant="outlined"
@@ -130,8 +130,8 @@ const AddProductContent: FunctionComponent<AddProductContentProps> = ({ classNam
               <InputField
                 {...params}
                 size="small"
-                label={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.product_category' })}
-                placeholder={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.product_category' })}
+                label={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.PRODUCTCATEGORY' })}
+                placeholder={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.PRODUCTCATEGORY' })}
                 noDefaultHelperText
                 defaultValue={product.product_category}
               />
@@ -157,7 +157,7 @@ const AddProductContent: FunctionComponent<AddProductContentProps> = ({ classNam
               options.filter((opt) => opt.label.toLowerCase().includes(state.inputValue.toLowerCase()))
             }
             role="combobox"
-            aria-label={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.product_category' })}
+            aria-label={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.PRODUCTCATEGORY' })}
             aria-haspopup="listbox"
           />
           <CustomInput

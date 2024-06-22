@@ -9,7 +9,7 @@ import ProductHeaderActions from './table-header-actions';
 import { localeText } from './table-utils/ag-grid-text-locale';
 import { columnDefs } from './table-utils/columns-def';
 import useBulkEditStore from '@webapp/store/admin/bulk-edit-store';
-import { Product } from '@webapp/sdk/mutations/products/types';
+import { Product } from '@webapp/sdk/types/products-types';
 import { useUpdateProduct } from '@webapp/sdk/mutations/products/update-product-mutation';
 import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
 
