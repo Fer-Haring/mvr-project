@@ -143,7 +143,7 @@ const BulkEditButton = () => {
 
 export default BulkEditButton;
 
-const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
+const StyledMenuItem = styled(MenuItem)(() => ({
   color: 'black',
   backgroundColor: 'white',
   '&:hover': {

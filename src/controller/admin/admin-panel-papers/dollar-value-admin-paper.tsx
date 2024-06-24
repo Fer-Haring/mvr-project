@@ -1,17 +1,18 @@
 import { Typography, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import InputField from '@webapp/components/form/input';
-import { updateDollarValue } from '@webapp/sdk/firebase/admin';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import { CustomAdminPaper } from './papers-styles';
+import { useUpdateDollarValue } from '@webapp/sdk/mutations/admin/update-dollar-value-mutation';
 
 const DollarValueInputPaper: FunctionComponent = () => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
   const { dollarValue, setDollarValue } = useDollarValue();
+  const{mutate} = useUpdateDollarValue();
 
   const [inputValue, setInputValue] = useState(
     Object.values(dollarValue?.value)[0] ? Object.values(dollarValue?.value)[0] : dollarValue.value
@@ -29,7 +30,7 @@ const DollarValueInputPaper: FunctionComponent = () => {
     const parsedValue = parseFloat(value);
     if (!isNaN(parsedValue)) {
       setDollarValue(parsedValue);
-      await updateDollarValue(parsedValue);
+      mutate({ dollarValue: parsedValue });
     }
   };
 

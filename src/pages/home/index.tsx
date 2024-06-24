@@ -7,8 +7,9 @@ import VapeHomeImage from '@webapp/assets/images/home/liquid-home.png';
 import Button from '@webapp/components/button';
 import ContentWrapper from '@webapp/components/content-wrapper';
 import ProductCard from '@webapp/components/product-card';
-import { getCompletedOrders, getDollarValue } from '@webapp/sdk/firebase/admin';
+import { getCompletedOrders } from '@webapp/sdk/firebase/admin';
 import { getAllUsers } from '@webapp/sdk/firebase/user';
+import { useGetDollarValue } from '@webapp/sdk/mutations/admin/get-dollar-value-query';
 import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
 import { CompletedOrder, User } from '@webapp/sdk/types/user-types';
 import { useAdminDataStore } from '@webapp/store/admin/admin-data';
@@ -31,6 +32,7 @@ export const HomePage: FunctionComponent = () => {
   const productListArray = useProductListQuery(1, 500);
   const products = Object.values(productList);
   const featuredProducts = products.filter((product) => product.featured === true);
+  const getDollar = useGetDollarValue();
 
   useEffect(() => {
     setProductList(productListArray.data?.products || []);
@@ -47,13 +49,10 @@ export const HomePage: FunctionComponent = () => {
   }, [productListArray.data?.products, setOrders, setProductList, setUsers]);
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      const dollarVal = await getDollarValue();
-      setDollarValue(dollarVal?.value);
-    };
-
-    fetchProduct();
-  }, [setDollarValue]);
+    if (getDollar.isSuccess) {
+      setDollarValue(getDollar.data?.dollarValue);
+    }
+  }, [getDollar.data?.dollarValue, getDollar.isSuccess, setDollarValue]);
 
   return (
     <ContentWrapper>

@@ -19,7 +19,8 @@ export async function refreshToken(): Promise<string> {
 
   const response = await fetch(URL, options);
   if (!response.ok) {
-    if(!refreshToken || !accessToken) {
+    const err = await response.json();
+    if(!refreshToken || !accessToken || response.status === 401) {
       localStorage.clear();
       SnackbarUtils.error('La Sesión ha expirado, por favor inicie sesión nuevamente.');
       Navigate({
@@ -27,7 +28,6 @@ export async function refreshToken(): Promise<string> {
         replace: true
       });
     }
-    const err = await response.json();
     throw new Error(err.detail);
   }
 
