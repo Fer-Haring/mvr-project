@@ -1,6 +1,6 @@
 import { Order } from '@webapp/sdk/types/user-types';
 import {create} from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 
 interface MessageStore {
@@ -61,5 +61,5 @@ export const useMessageStore = create(persist<MessageStore>((set) => ({
   } }),
 }), {
   name: 'message-store',
-  getStorage: () => localStorage,
+  storage: createJSONStorage(() => localStorage)
 }));

@@ -11,19 +11,19 @@ import PasswordRequirements from '@webapp/components/auth/password-requirements'
 import Button from '@webapp/components/button';
 import InputField from '@webapp/components/form/input';
 import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
-import SnackbarUtils from '@webapp/components/snackbar';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { setPassword } from '@webapp/sdk/actions/auth/set-password';
+import { useSendNewPasswordMutation } from '@webapp/sdk/mutations/auth/password/send-new-password-mutation';
+import { useRecoveryPasswordData } from '@webapp/store/auth/recovery-password-data';
 import { AnimatePresence } from 'framer-motion';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
-interface SetPasswordPageProps {
+interface ForgotPasswordNewPasswordPage {
   className?: string;
 }
 
-const SetPasswordPage: FunctionComponent<SetPasswordPageProps> = ({ className }) => {
+const ForgotPasswordNewPassword: FunctionComponent<ForgotPasswordNewPasswordPage> = ({ className }) => {
   const theme = useTheme();
   const isMobile = useIsMobile();
   const navigate = useNavigate();
@@ -36,9 +36,10 @@ const SetPasswordPage: FunctionComponent<SetPasswordPageProps> = ({ className })
   const [error, setError] = useState<string | null>(null);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
-  const email = localStorage.getItem('email') || '';
+  const {email} = useRecoveryPasswordData();
+  const { mutate, isPending } = useSendNewPasswordMutation();
 
-  const isSignUpLoading = false;
+  const isLoading = isPending;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -49,9 +50,7 @@ const SetPasswordPage: FunctionComponent<SetPasswordPageProps> = ({ className })
     }
 
     try {
-      await setPassword({ email, new_password: newPassword });
-      navigate('/sign-in');
-      SnackbarUtils.success(formatMessage({ id: 'AUTH.CREATE.PASSWORD.SUCCESS' }));
+      mutate({ email, new_password: newPassword, navigate });
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message);
@@ -202,7 +201,7 @@ const SetPasswordPage: FunctionComponent<SetPasswordPageProps> = ({ className })
                       type="submit"
                       id="sign-up-button"
                       disabled={handleDisabled}
-                      loading={isSignUpLoading}
+                      loading={isLoading}
                       sx={{ width: '100%' }}
                       fullWidth={isMobile}
                       aria-label={formatMessage({ id: 'AUTH.CREATE.PASSWORD.BUTTON.LABEL' })}
@@ -224,7 +223,7 @@ const SetPasswordPage: FunctionComponent<SetPasswordPageProps> = ({ className })
     );
   };
 
-export default SetPasswordPage;
+export default ForgotPasswordNewPassword;
 
 const BackgroundVideoStyle = styled('video')({
   position: 'absolute', // Posición absoluta para cubrir todo el contenedor

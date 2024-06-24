@@ -8,13 +8,14 @@ import {
   ProfilePage,
 } from '@webapp/pages';
 import ForgotPasswordPage2 from '@webapp/pages/auth/forgot-password';
+import ForgotPasswordNewPassword from '@webapp/pages/auth/forgot-password-new-password';
 import ForgotPasswordVerifyPage2 from '@webapp/pages/auth/forgot-password-verify';
 import GoogleAuthCallback from '@webapp/pages/auth/google_auth';
 import SetPasswrodPage from '@webapp/pages/auth/set-password';
 // Auth pages
 import SignInPage2 from '@webapp/pages/auth/sign-in';
 import SignUpPage2 from '@webapp/pages/auth/sign-up';
-import VerificationCodePage2 from '@webapp/pages/auth/verification-code';
+import VerificationCodePage from '@webapp/pages/auth/verification-code';
 import { CartPage } from '@webapp/pages/cart';
 import PrivacyPolicyPage from '@webapp/pages/privacy_policies';
 import UnderConstructionPage from '@webapp/pages/under-construction';
@@ -61,7 +62,11 @@ const ProjectRoutes: Route[] = [
   },
   {
     path: '/verification-code',
-    component: <VerificationCodePage2 />,
+    component: <VerificationCodePage />,
+  },
+  {
+    path: '/forgot-password/new-password',
+    component: <ForgotPasswordNewPassword />,
   },
   {
     path: '/sobre-nosotros',

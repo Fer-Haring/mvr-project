@@ -1,7 +1,7 @@
 import { Product } from '@webapp/sdk/types/products-types';
 import { CompletedOrder, User } from '@webapp/sdk/types/user-types';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface AdminData {
   users: User[];
@@ -27,7 +27,7 @@ export const useAdminDataStore = create(
     }),
     {
       name: 'adminData',
-      getStorage: () => localStorage,
+      storage: createJSONStorage(() => localStorage)
     }
   )
 );

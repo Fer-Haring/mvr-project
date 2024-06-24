@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 export interface DollarValueData {
   value: number;
@@ -19,7 +19,7 @@ export const useDollarValue = create(
     }),
     {
       name: 'dollarValue',
-      getStorage: () => localStorage,
+      storage: createJSONStorage(() => localStorage)
     }
   )
 );

@@ -1,6 +1,6 @@
 import { CompletedOrder } from '@webapp/sdk/types/user-types';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface CompletedOrdersData {
   orders: CompletedOrder[];
@@ -17,7 +17,7 @@ export const useCompletedOrdersStore = create(
     }),
     {
       name: 'completedOrdersData',
-      getStorage: () => localStorage,
+      storage: createJSONStorage(() => localStorage)
     }
   )
 );

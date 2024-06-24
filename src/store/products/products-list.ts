@@ -1,6 +1,6 @@
 import { Product } from '@webapp/sdk/types/products-types';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 // import { Products } from '@webapp/sdk/types/user-types';
 
 type ProductListData = {
@@ -16,7 +16,7 @@ export const useProductsListData = create(
     }),
     {
       name: 'productListData',
-      getStorage: () => localStorage,
+      storage: createJSONStorage(() => localStorage)
     }
   )
 );

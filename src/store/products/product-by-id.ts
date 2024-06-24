@@ -1,6 +1,6 @@
 import { Product } from '@webapp/sdk/types/products-types';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 type ProductData = {
   product: Product;
@@ -13,7 +13,7 @@ const initialState: ProductData = {
     actual_stock: 0,
     cost_price: 0,
     description: '',
-    featured: '',
+    featured: false,
     fraction: '',
     minimum_stock: 0,
     price_currency: '',
@@ -44,7 +44,7 @@ export const useSingleProduct = create(
     }),
     {
       name: 'productData',
-      getStorage: () => localStorage,
+      storage: createJSONStorage(() => localStorage)
     }
   )
 );

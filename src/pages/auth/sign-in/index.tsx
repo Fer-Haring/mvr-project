@@ -84,6 +84,10 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
           SnackbarUtils.warning('El usuario fue registrado con Google y no tiene contraseña establecida, establezca una contraseña para continuar.');
           navigate('/set-password');
         }
+        if (error.message === "La contraseña no es correcta") {
+          SnackbarUtils.error('La contraseña no es correcta');
+          setIsLoginLoading(false);
+        }
       } else {
         console.error('Unexpected error:', error);
       }

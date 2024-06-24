@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface UserGoogleState {
   isLoggedIn: boolean;
@@ -32,7 +32,7 @@ export const useUserGoogleStore = create(
     }),
     {
       name: 'userGoogleLoggedIn',
-      getStorage: () => localStorage,
+      storage: createJSONStorage(() => localStorage)
     }
   )
 );

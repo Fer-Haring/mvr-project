@@ -1,7 +1,7 @@
 
 import { User } from '@webapp/sdk/types/user-types';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 type UserData = {
   user: User;
@@ -58,7 +58,7 @@ export const useUserData = create(
     },
     {
       name: 'userData', // Nombre del store para persistencia
-      getStorage: () => localStorage, // Define localStorage como el método de almacenamiento
+      storage: createJSONStorage(() => localStorage)
     }
   )
 );
