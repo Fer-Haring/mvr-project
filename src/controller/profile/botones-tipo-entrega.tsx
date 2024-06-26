@@ -4,11 +4,10 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import { User } from '@webapp/sdk/types/user-types';
-import { updateUserInDb } from '@webapp/sdk/firebase/user';
 import { useUserData } from '@webapp/store/users/user-data';
-import { useUserId } from '@webapp/store/users/user-id';
 import { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useUpdateUser } from '@webapp/sdk/mutations/auth/user-update-mutation';
 
 interface DeliveryTypeButtonsProps {
   className?: string;
@@ -18,9 +17,9 @@ interface DeliveryTypeButtonsProps {
 const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ userData }) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
-  const { userId } = useUserId();
   const { setUser } = useUserData();
-  const [deliveryType, setDeliveryType] = useState(userData.delivery_type);
+  const [deliveryType, setDeliveryType] = useState(userData?.delivery_type);
+  const {mutate} = useUpdateUser(userData?.id);
 
   const handleSelectDelivery = () => {
     setDeliveryType('Delivery');
@@ -35,7 +34,7 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ user
   const handleOnChange = (selectedDelivery: string) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id: ignoredUserId, ...restOfUserData } = userData;
-    updateUserInDb({ userId, ...restOfUserData, deliveryType: selectedDelivery });
+    mutate({ payload: { ...restOfUserData, delivery_type: selectedDelivery } });
     setUser({ ...userData, delivery_type: selectedDelivery });
   };
 

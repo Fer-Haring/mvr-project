@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { User } from '@webapp/sdk/types/user-types';
-import { useUserData } from '@webapp/store/users/user-data';
 import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 
@@ -14,9 +13,8 @@ interface UserDataProps {
   userData: User;
 }
 
-const UserData: FunctionComponent<UserDataProps> = ({ className }) => {
+const UserData: FunctionComponent<UserDataProps> = ({ className, userData }) => {
   const { formatMessage } = useIntl();
-  const { user } = useUserData();
 
   return (
     <Box
@@ -25,9 +23,9 @@ const UserData: FunctionComponent<UserDataProps> = ({ className }) => {
       aria-label={formatMessage({ id: 'PROFILE.USER_INFO.PANEL' })}
     >
       <Stack gap={4} sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-        <UserInfoPersonal userData={user} />
-        <DeliveryTypeButtons userData={user} />
-        <PaymentTypeButtons userData={user} />
+        <UserInfoPersonal userData={userData} />
+        <DeliveryTypeButtons userData={userData} />
+        <PaymentTypeButtons userData={userData} />
       </Stack>
     </Box>
   );

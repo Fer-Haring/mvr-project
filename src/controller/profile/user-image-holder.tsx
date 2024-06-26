@@ -6,8 +6,9 @@ import ImageUploader from '@webapp/components/image-uploader';
 import { uploadAvatar } from '@webapp/sdk/firebase/user';
 import { User } from '@webapp/sdk/types/user-types';
 import { useUserData } from '@webapp/store/users/user-data';
-import React, { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useUpdateUser } from '@webapp/sdk/mutations/auth/user-update-mutation';
 
 interface UserImageHolderProps {
   className?: string;
@@ -18,8 +19,9 @@ interface UserImageHolderProps {
 const UserImageHolder: FunctionComponent<UserImageHolderProps> = ({ className, user, sx }) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
-  const [avatar, setAvatar] = React.useState<{ file?: File; url?: string }>({});
+  const [avatar, setAvatar] = useState<{ file?: File; url?: string }>({});
   const { setUser } = useUserData();
+  const { mutate } = useUpdateUser(user?.id);
 
   const onAvatarChange = (avatarFile: File | undefined, url?: string) => {
     if (!avatarFile) {
@@ -35,7 +37,9 @@ const UserImageHolder: FunctionComponent<UserImageHolderProps> = ({ className, u
   const handleUpdateAvatar = async (image: File) => {
     const downloadURL = await uploadAvatar(image);
     if (downloadURL) {
-      setUser({ ...user, profile_picture: downloadURL });
+      const updatedUser = { ...user, profile_picture: downloadURL };
+      setUser(updatedUser);
+      mutate({ payload: updatedUser, file: undefined });
     }
   };
 
@@ -46,12 +50,12 @@ const UserImageHolder: FunctionComponent<UserImageHolderProps> = ({ className, u
       aria-label={formatMessage({ id: 'PROFILE.USER_INFO.PANEL' })}
     >
       <ImageUploader
-        sx={{ width: '100%'}}
+        sx={{ width: '100%' }}
         onImageChange={onAvatarChange}
         onImageDelete={() => {
           setAvatar({ file: undefined, url: undefined });
         }}
-        defaultImageUrl={user.profile_picture || avatar.url}
+        defaultImageUrl={user?.profile_picture || avatar.url}
         aria-label={formatMessage({ id: 'PROFILE.USER_INFO.AVATAR_UPLOAD' })}
       />
       <Stack
@@ -66,10 +70,10 @@ const UserImageHolder: FunctionComponent<UserImageHolderProps> = ({ className, u
         }}
       >
         <Typography variant="h2" fontWeight={600} sx={{ mb: 2, color: theme.palette.grey[900] }}>
-          {user.name + ' ' + user.last_name}
+          {user?.name + ' ' + user?.last_name}
         </Typography>
         <Typography variant="body1" fontWeight={400} sx={{ mb: 2, color: theme.palette.grey[600] }}>
-          {user.email}
+          {user?.email}
         </Typography>
       </Stack>
     </Box>

@@ -4,11 +4,10 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import { User } from '@webapp/sdk/types/user-types';
-import { updateUserInDb } from '@webapp/sdk/firebase/user';
 import { useUserData } from '@webapp/store/users/user-data';
-import { useUserId } from '@webapp/store/users/user-id';
 import { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useUpdateUser } from '@webapp/sdk/mutations/auth/user-update-mutation';
 
 interface PaymentTypeButtonsProps {
   className?: string;
@@ -17,11 +16,11 @@ interface PaymentTypeButtonsProps {
 
 const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userData }) => {
   const { formatMessage } = useIntl();
-  const { userId } = useUserId();
   const { setUser } = useUserData();
   const theme = useTheme();
+  const {mutate} = useUpdateUser(userData?.id);
 
-  const [selectedPaymentType, setSelectedPaymentType] = useState(userData.payment_method || '');
+  const [selectedPaymentType, setSelectedPaymentType] = useState(userData?.payment_method || '');
 
   const selectPaymentType = (paymentType: string) => {
     setSelectedPaymentType(paymentType);
@@ -31,7 +30,7 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
   const handleOnChange = (selected_delivery: string) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id: ignoredUserId, ...restOfUserData } = userData;
-    updateUserInDb({ userId, ...restOfUserData, paymentMethod: selected_delivery });
+    mutate({ payload: { ...restOfUserData, payment_method: selected_delivery } });
     setUser({ ...userData, payment_method: selected_delivery });
   };
 

@@ -6,12 +6,25 @@ import ContentWrapper from '@webapp/components/content-wrapper';
 import { ProfileTable } from '@webapp/controller/profile/profile-table';
 import UserData from '@webapp/controller/profile/user-data';
 import UserImageHolder from '@webapp/controller/profile/user-image-holder';
+import { useGetUserByIdMutation } from '@webapp/sdk/mutations/auth/get-user-by-id-mutation';
+import { User } from '@webapp/sdk/types/user-types';
+import { useUserStore } from '@webapp/store/auth/session';
 import { useUserData } from '@webapp/store/users/user-data';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 
 export const ProfilePage: FunctionComponent = () => {
-  const { user } = useUserData();
+  const { user, setUser } = useUserData();
   const theme = useTheme();
+  const userData = useGetUserByIdMutation(useUserStore((state) => state.userInfo?.userId) || '');
+
+
+  console.log(userData.data);
+  useEffect(() => {
+    userData.refetch();
+    setUser(userData.data as User);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setUser]);
+
 
   return (
     <ContentWrapper>

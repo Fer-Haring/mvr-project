@@ -108,3 +108,21 @@ export interface AdminData {
   orders: CompletedOrder[];
 }
 
+export interface UpdateUserPayload {
+  username: string;
+  email: string;
+  password: string;
+  address: string;
+  admin: boolean;
+  city: string;
+  completed_orders: CompletedOrder[];
+  cart_items: CartItem[];
+  deliver_zone: string;
+  delivery_type: string;
+  last_name: string;
+  name: string;
+  payment_method: string;
+  phone: string;
+  preferred_currency: string;
+  profile_picture: string;
+}

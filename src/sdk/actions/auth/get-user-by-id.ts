@@ -19,7 +19,7 @@ export async function getUserById(userId: string): Promise<User> {
   if (response.status === 401) {
     const newAccessToken = await refreshToken();
     options.headers['Authorization'] = `Bearer ${newAccessToken}`;
-    response = await fetch(`${URL}/users/${userId}`, options);
+    response = await fetch(`${URL}/identity/${userId}`, options);
   }
 
   if (!response.ok) {
