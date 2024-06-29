@@ -1,3 +1,4 @@
+/* eslint-disable react/react-in-jsx-scope */
 import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
 import { FormControl, MenuItem, Select, SelectChangeEvent, styled, useTheme } from '@mui/material';
 import Paper from '@mui/material/Paper';
@@ -5,13 +6,12 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import ContentWrapper from '@webapp/components/content-wrapper';
-import SnackbarUtils from '@webapp/components/snackbar';
 import ProductImageHolder from '@webapp/controller/product-detail/product-image-holder';
 import SimilarProducts from '@webapp/controller/product-detail/similar-products';
+import { useAddToCart } from '@webapp/sdk/mutations/cart/add-to-cart-mutation';
 import { useGetProductById } from '@webapp/sdk/mutations/products/get-product-by-id-query';
 import { Product } from '@webapp/sdk/types/products-types';
 import { CartItem } from '@webapp/sdk/types/user-types';
-import { useCartStore } from '@webapp/store/cart/cart';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';
 import { FunctionComponent, useEffect, useState } from 'react';
@@ -26,34 +26,33 @@ export const ProductDetailPage: FunctionComponent = () => {
   const { productList } = useProductsListData();
   const stockNumber = product.actual_stock || 0;
   const [selectedQuantity, setSelectedQuantity] = useState('1');
-  const { addToCart } = useCartStore();
   const productById = useGetProductById(id!);
+  const { mutate: addToCartMutation } = useAddToCart();
 
   const handleQuantityChange = (event: SelectChangeEvent<string>) => {
     setSelectedQuantity(event.target.value);
   };
 
   useEffect(() => {
-    if (id !== product.id) {  
-        setProduct(productById?.data as Product);
+    if (id !== product.id) {
+      setProduct(productById?.data as Product);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleAddToCart = () => {
     if (!product) return;
 
     const cartItem: CartItem = {
-      productId: product.id!,
-      productName: product.product_name,
-      unitPrice: parseFloat(product.sale_price),
-      unitQuantity: parseInt(selectedQuantity, 10),
-      priceCurrency: product.price_currency,
-      subTotal: parseFloat(product.sale_price) * parseInt(selectedQuantity, 10),
+      product_id: product.id!,
+      product_name: product.product_name,
+      unit_price: parseFloat(product.sale_price),
+      unit_quantity: parseInt(selectedQuantity, 10),
+      price_currency: product.price_currency,
+      sub_total: parseFloat(product.sale_price) * parseInt(selectedQuantity, 10),
+      product_image: product.product_image,
+      quantity: parseInt(selectedQuantity, 10),
     };
-
-    addToCart(cartItem, parseInt(selectedQuantity, 10));
-    SnackbarUtils.success(`${selectedQuantity} ${product.product_name} agregado(s) al carrito`);
+    addToCartMutation(cartItem);
   };
 
   const options = [];

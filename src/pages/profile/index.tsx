@@ -17,8 +17,6 @@ export const ProfilePage: FunctionComponent = () => {
   const theme = useTheme();
   const userData = useGetUserByIdMutation(useUserStore((state) => state.userInfo?.userId) || '');
 
-
-  console.log(userData.data);
   useEffect(() => {
     userData.refetch();
     setUser(userData.data as User);

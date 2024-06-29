@@ -1,7 +1,7 @@
 import { Badge, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import cartAnimation from '@webapp/assets/images/animations/cart.json';
-import { useCartStore } from '@webapp/store/cart/cart';
+import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
 import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
@@ -27,7 +27,8 @@ const Navbar: FunctionComponent<NavbarProps> = ({ className }) => {
   const location = useLocation();
   const { user } = useUserData();
   const [paused, setPaused] = React.useState(true);
-  const { cart } = useCartStore();
+
+  const { data: cartData } = useGetUserCart();
 
   const handlePause = () => {
     setPaused(!paused);
@@ -39,7 +40,7 @@ const Navbar: FunctionComponent<NavbarProps> = ({ className }) => {
       <div className="right">
         <div className="forms">
           <Box onClick={handlePause}>
-            <Badge badgeContent={cart.length} color="error">
+            <Badge badgeContent={cartData?.length} color="error">
               <Lottie
                 options={{
                   loop: true,
@@ -58,10 +59,10 @@ const Navbar: FunctionComponent<NavbarProps> = ({ className }) => {
           </Box>
         </div>
         <Avatar
-          fullName={user?.name + ' ' + user?.lastName}
+          fullName={user?.name + ' ' + user?.last_name}
           aria-label={formatMessage({ id: 'NAVBAR.USER_AVATAR.ARIA_LABEL' }, { user: 'Lautaro Tolosa' })}
           active={location.pathname.startsWith('/profile')}
-          imageSrc={user?.profilePicture}
+          imageSrc={user?.profile_picture}
         />
       </div>
     </NavbarContainer>

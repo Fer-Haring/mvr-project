@@ -12,6 +12,7 @@ import { ProjectRoutes } from './routes';
 import AuthGuard from './routes/auth-guard';
 import { firebase } from './sdk/firebase/firebase';
 import { useColorMode } from './context';
+import { useAuth } from './context/auth-context';
 
 const tagManagerArgs = {
   gtmId: import.meta.env.VITE_APP_GTM_ID || '',
@@ -22,6 +23,7 @@ import.meta.env.VITE_APP_STAGE === 'prod' && TagManager.initialize(tagManagerArg
 const App: React.FunctionComponent = (): JSX.Element => {
   const { locale } = useIntl();
   const { mode } = useColorMode(); // Use the hook here
+  useAuth();
 
   const getLocale = () => {
     switch (locale) {

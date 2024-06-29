@@ -13,12 +13,12 @@ export async function setPassword(payload: SetPasswordPayload): Promise<void> {
     body: JSON.stringify(payload),
   };
 
-  const URL = "https://mvr-prod.onrender.com";
+  const URL = 'https://mvr-prod.onrender.com';
 
   return fetch(`${URL}/identity/set-password`, options)
     .then((response) => {
       if (!response.ok) {
-        return response.json().then(err => {
+        return response.json().then((err) => {
           throw new Error(err.detail);
         });
       }

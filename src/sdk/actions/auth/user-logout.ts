@@ -1,5 +1,5 @@
-import { useUserGoogleStore } from "@webapp/store/auth/google-sessions";
-import { useUserStore } from "@webapp/store/auth/session";
+import { useUserGoogleStore } from '@webapp/store/auth/google-sessions';
+import { useUserStore } from '@webapp/store/auth/session';
 
 export interface UserLogoutPayload {
   token: string;
@@ -7,18 +7,18 @@ export interface UserLogoutPayload {
 }
 
 export async function userLogout(token: string, tokenType: string): Promise<void> {
-  const URL = "https://mvr-prod.onrender.com/identity/logout";
+  const URL = 'https://mvr-prod.onrender.com/identity/logout';
 
   if (!token || !tokenType) {
-    console.error("No token available");
-    throw new Error("No token available");
+    console.error('No token available');
+    throw new Error('No token available');
   }
 
   const options = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ token_type: tokenType }),
   };
@@ -34,10 +34,9 @@ export async function userLogout(token: string, tokenType: string): Promise<void
     localStorage.removeItem('access_token');
     localStorage.removeItem('token_type');
     localStorage.removeItem('refresh_token');
-    
+
     useUserStore.getState().logOut();
     useUserGoogleStore.getState().logOut();
-
   } catch (error) {
     console.log('Logout error:', error);
     throw error;

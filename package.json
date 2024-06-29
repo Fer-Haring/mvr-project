@@ -46,6 +46,7 @@
     "jwt-decode": "^4.0.0",
     "lodash": "^4.17.21",
     "loglevel": "^1.7.1",
+    "mitt": "^3.0.1",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.45",
     "mui-nested-menu": "3.2.2",
@@ -84,6 +85,8 @@
   "devDependencies": {
     "@bugsnag/js": "7.21.0",
     "@bugsnag/plugin-react": "7.19.0",
+    "@eslint/compat": "^1.1.0",
+    "@eslint/js": "^9.6.0",
     "@parcel/watcher": "2.3.0",
     "@tanstack/eslint-plugin-query": "5.0.5",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
@@ -100,13 +103,16 @@
     "babel-plugin-import": "1.13.8",
     "customize-cra": "1.0.0",
     "env-cmd": "10.1.0",
-    "eslint": "^8.55.0",
+    "eslint": "^9.6.0",
+    "eslint-plugin-react": "^7.34.3",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "globals": "^15.6.0",
     "graphql": "16.8.1",
     "plugin": "0.3.3",
     "prettier": "^3.2.5",
     "typescript": "^5.2.2",
+    "typescript-eslint": "^7.14.1",
     "vite": "^5.0.8"
   }
 }

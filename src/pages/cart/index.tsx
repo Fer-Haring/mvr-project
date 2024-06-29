@@ -3,7 +3,6 @@ import Paper from '@mui/material/Paper';
 import ContentWrapper from '@webapp/components/content-wrapper';
 import CartEmptyState from '@webapp/controller/cart/empty-cart';
 import { useMessageStore } from '@webapp/store/admin/message-store';
-import { useCartStore } from '@webapp/store/cart/cart';
 import { useCompletedOrdersStore } from '@webapp/store/orders/get-completed-orders';
 import { useUserData } from '@webapp/store/users/user-data';
 import { FunctionComponent, useEffect, useState } from 'react';
@@ -13,19 +12,33 @@ import { Step0 } from './steps/step-0';
 import { Step1 } from './steps/step-1';
 import { Step2 } from './steps/step-2';
 import { Step3 } from './steps/step-3';
+import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
+import { useGetUserByIdMutation } from '@webapp/sdk/mutations/auth/get-user-by-id-mutation';
+import { useUserStore } from '@webapp/store/auth/session';
+import { User } from '@webapp/sdk/types/user-types';
 
 // import { useNavigate } from 'react-router-dom';
 
 export const CartPage: FunctionComponent = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { cart } = useCartStore();
+  // const { cart } = useCartStore();
   const [step, setStep] = useState(0);
-  const { user } = useUserData();
+  const [user, setUser] = useState(useUserData().user);
   const [address, setAddress] = useState(user.address);
   const [city, setCity] = useState(user.city);
   const [checked, setChecked] = useState(false);
   const { setOrders } = useCompletedOrdersStore();
+  const {data: cart} = useGetUserCart();
+  const userData = useGetUserByIdMutation(useUserStore((state) => state.userInfo?.userId) || '');
+
+  useEffect(() => {
+    userData.refetch();
+    setUser(userData.data as User);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setUser]);
+
+  console.log('cart', cart);
   const {
     order,
     setOrder,
@@ -52,18 +65,18 @@ export const CartPage: FunctionComponent = () => {
 
   useEffect(() => {
     setName(user.name);
-    setLastName(user.lastName);
+    setLastName(user.last_name);
     setMsgAddress(address);
     setMsgCity(city);
     setOrder({
       ...order,
       orderId: Math.floor(Math.random() * 100000000),
-      userId: user.userId,
+      userId: user.id,
       cartItems: cart,
-      currencyUsedToPay: user.preferredCurrency,
-      deliveryType: user.deliveryType,
-      paymentMethod: user.paymentMethod,
-      totalProducts: cart.length,
+      currencyUsedToPay: user.preferred_currency,
+      deliveryType: user.delivery_type,
+      paymentMethod: user.payment_method,
+      totalProducts: cart?.length,
       status: 'Pending',
     });
     setOrders([order]);
@@ -82,7 +95,7 @@ export const CartPage: FunctionComponent = () => {
   Datos de pago: ${order.currencyUsedToPay === 'ARS' ? 'Pagaré en pesos argentinos' : 'Pagaré en dólares'}.
 
   Mi pedido es:
-  ${order?.cartItems?.map((product) => `${product.unitQuantity} ${product.productName}`).join('\n  ')}.
+  ${order?.cartItems?.map((product) => `${product.unit_quantity} ${product.product_name}`).join('\n  ')}.
 
   El total es: $${order.currencyUsedToPay === 'ARS' ? order.totalOrderAmountARS : order.totalOrderAmountUSD}.
 
@@ -90,7 +103,7 @@ export const CartPage: FunctionComponent = () => {
 
   return (
     <ContentWrapper>
-      {cart.length === 0 ? (
+      {cart?.length === 0 ? (
         <CartEmptyState />
       ) : (
         <Paper
@@ -106,7 +119,7 @@ export const CartPage: FunctionComponent = () => {
             gap: 2,
           }}
         >
-          {step === 0 && <Step0 handleNextStep={handleNextStep} cart={cart} order={order} setOrder={setOrder} />}
+          {step === 0 && <Step0 handleNextStep={handleNextStep} cart={cart!} order={order} setOrder={setOrder} />}
           {step === 1 && (
             <Step1
               user={user}
@@ -124,7 +137,7 @@ export const CartPage: FunctionComponent = () => {
           {step === 2 && (
             <Step2
               step={step}
-              cart={cart}
+              cart={cart!}
               fullMessage={fullMessage}
               handleNextStep={handleNextStep}
               handlePreviousStep={handlePreviousStep}

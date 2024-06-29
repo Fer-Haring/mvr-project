@@ -1,4 +1,4 @@
-import { LoginPayload, LoginResponse } from "../../types/user-types";
+import { LoginPayload, LoginResponse } from '../../types/user-types';
 
 export async function userSignIn(payload: LoginPayload): Promise<LoginResponse> {
   const params = new URLSearchParams();
@@ -13,7 +13,7 @@ export async function userSignIn(payload: LoginPayload): Promise<LoginResponse> 
     body: params.toString(),
   };
 
-  const URL = "https://mvr-prod.onrender.com";
+  const URL = 'https://mvr-prod.onrender.com';
 
   return fetch(`${URL}/identity/login`, options)
     .then(async (response) => {
@@ -33,4 +33,3 @@ export async function userSignIn(payload: LoginPayload): Promise<LoginResponse> 
       throw error;
     });
 }
-

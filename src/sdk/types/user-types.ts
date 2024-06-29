@@ -58,12 +58,14 @@ export interface CompletedOrder {
 }
 
 export interface CartItem {
-  productId: string;
-  productName: string;
-  unitQuantity: number;
-  unitPrice: number;
-  priceCurrency: string;
-  subTotal: number;
+  product_id: string;
+  product_name: string;
+  unit_quantity: number;
+  unit_price: number;
+  price_currency: string;
+  sub_total: number;
+  quantity?: number;
+  product_image?: string;
 }
 
 export interface Order {

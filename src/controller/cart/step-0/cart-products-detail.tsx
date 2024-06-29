@@ -78,8 +78,8 @@ export const CartProductsDetail: FunctionComponent<CartProductsDetailProps> = ({
           <Box sx={{ height: 30 }} />
           <TableBody>
             {cartProducts?.map((cartProduct) => (
-              <TableRow key={cartProduct.productId}>
-                <TableCell>{cartProduct.productName}</TableCell>
+              <TableRow key={cartProduct.product_id}>
+                <TableCell>{cartProduct.product_name}</TableCell>
                 <TableCell>
                   <Stack
                     direction={'row'}
@@ -88,12 +88,12 @@ export const CartProductsDetail: FunctionComponent<CartProductsDetailProps> = ({
                   >
                     <IconButton
                       size="small"
-                      onClick={() => removeFromCart(cartProduct.productId)}
+                      onClick={() => removeFromCart(cartProduct.product_id)}
                       aria-label="Disminuir cantidad"
                     >
                       <RemoveCircleOutlineRoundedIcon sx={{ width: 18, height: 18, color: theme.palette.grey[800] }} />
                     </IconButton>
-                    {cartProduct.unitQuantity}
+                    {cartProduct.unit_quantity}
                     <IconButton
                       size="small"
                       onClick={() => {
@@ -105,9 +105,9 @@ export const CartProductsDetail: FunctionComponent<CartProductsDetailProps> = ({
                     </IconButton>
                   </Stack>
                 </TableCell>
-                <TableCell>{unitValue(cartProduct.unitPrice, cartProduct.priceCurrency)}</TableCell>
+                <TableCell>{unitValue(cartProduct.unit_price, cartProduct.price_currency)}</TableCell>
                 <TableCell>
-                  {subTotalValue(cartProduct.unitPrice * cartProduct.unitQuantity, cartProduct.priceCurrency)}
+                  {subTotalValue(cartProduct.unit_price * cartProduct.unit_quantity, cartProduct.price_currency)}
                 </TableCell>
               </TableRow>
             ))}

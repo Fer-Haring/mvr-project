@@ -1,5 +1,6 @@
+/* eslint-disable react/react-in-jsx-scope */
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import { styled, useTheme } from '@mui/material';
+import { CircularProgress, styled, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -125,24 +126,33 @@ export const HomePage: FunctionComponent = () => {
           >
             {formatMessage({ id: 'WELCOME.HOME.FEATURED.PRODUCTS.TITLE' })}
           </Typography>
-          <StockWrapper key={featuredProducts.map((product) => product.id).join('')}>
-            {featuredProducts.map((product, id) => (
-              <ProductCard
-                key={id}
-                id={id}
-                products={[product]}
-                image={product.product_image || ''}
-                name={product.product_name}
-                description={product.description}
-                price={product.sale_price}
-                currency={product.price_currency}
-                onClick={() => {
-                  setProduct(product);
-                  navigate(`/productos/${product.id}`);
-                }}
-              />
-            ))}
-          </StockWrapper>
+          {productListArray.isLoading ? (
+            <CircularProgress
+              size={60}
+              sx={{
+                color: theme.palette.primary.main,
+              }}
+            />
+          ) : (
+            <StockWrapper key={featuredProducts.map((product) => product.id).join('')}>
+              {featuredProducts.map((product, id) => (
+                <ProductCard
+                  key={id}
+                  id={id}
+                  products={[product]}
+                  image={product.product_image || ''}
+                  name={product.product_name}
+                  description={product.description}
+                  price={product.sale_price}
+                  currency={product.price_currency}
+                  onClick={() => {
+                    setProduct(product);
+                    navigate(`/productos/${product.id}`);
+                  }}
+                />
+              ))}
+            </StockWrapper>
+          )}
         </Box>
       </Stack>
       <Box
