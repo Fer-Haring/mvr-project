@@ -1,11 +1,9 @@
-import SnackbarUtils from '@webapp/components/snackbar';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';
-import { get, getDatabase, push, ref, update } from 'firebase/database';
+import { get, ref, update } from 'firebase/database';
 import { getDownloadURL, ref as storageReference, uploadBytes } from 'firebase/storage';
 
 import { database, storage } from '../firebase';
-import { Product } from '@webapp/sdk/types/products-types';
 
 export const uploadProductImage = async (file: File, productId: string) => {
   const storageRef = storageReference(storage, 'Products/' + productId);
@@ -53,24 +51,5 @@ export const getProductById = async (productId: string) => {
     }
   } catch (error) {
     return null;
-  }
-};
-
-export const addNewProduct = async (productData: Product) => {
-  const db = getDatabase();
-  const productsRef = ref(db, 'Products/');
-  try {
-    // Añade el producto a la base de datos y genera un ID único
-    const newProductRef = await push(productsRef, productData);
-    SnackbarUtils.success(`Producto añadido con ID: ${newProductRef.key}`);
-
-    // Actualiza el producto recién añadido con su propio ID generado
-    await update(ref(db, `Products/${newProductRef.key}`), { productId: newProductRef.key });
-
-    SnackbarUtils.success('Producto actualizado con su propio ID');
-    return newProductRef.key; // Retorna el ID único del nuevo producto
-  } catch (error) {
-    console.error('Error añadiendo o actualizando el producto:', error);
-    throw error; // O maneja el error como prefieras
   }
 };

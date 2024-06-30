@@ -6,9 +6,11 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import ContentWrapper from '@webapp/components/content-wrapper';
+import SnackbarUtils from '@webapp/components/snackbar';
 import ProductImageHolder from '@webapp/controller/product-detail/product-image-holder';
 import SimilarProducts from '@webapp/controller/product-detail/similar-products';
 import { useAddToCart } from '@webapp/sdk/mutations/cart/add-to-cart-mutation';
+import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
 import { useGetProductById } from '@webapp/sdk/mutations/products/get-product-by-id-query';
 import { Product } from '@webapp/sdk/types/products-types';
 import { CartItem } from '@webapp/sdk/types/user-types';
@@ -20,39 +22,44 @@ import { useParams } from 'react-router-dom';
 
 export const ProductDetailPage: FunctionComponent = () => {
   const theme = useTheme();
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const { formatMessage } = useIntl();
   const { product, setProduct } = useSingleProduct();
   const { productList } = useProductsListData();
-  const stockNumber = product.actual_stock || 0;
+  const stockNumber = product?.actual_stock || 0;
   const [selectedQuantity, setSelectedQuantity] = useState('1');
-  const productById = useGetProductById(id!);
-  const { mutate: addToCartMutation } = useAddToCart();
+  const { data: productById, isLoading } = useGetProductById(id!);
+  const { mutateAsync: addToCartMutation, isPending } = useAddToCart();
+  const getCart = useGetUserCart();
 
   const handleQuantityChange = (event: SelectChangeEvent<string>) => {
     setSelectedQuantity(event.target.value);
   };
 
   useEffect(() => {
-    if (id !== product.id) {
-      setProduct(productById?.data as Product);
+    if (id && !isLoading && productById) {
+      if (id !== product?.id) {
+        setProduct(productById as Product);
+      }
     }
-  }, []);
+  }, [id, isLoading, productById, product, setProduct]);
 
   const handleAddToCart = () => {
     if (!product) return;
 
     const cartItem: CartItem = {
-      product_id: product.id!,
-      product_name: product.product_name,
-      unit_price: parseFloat(product.sale_price),
-      unit_quantity: parseInt(selectedQuantity, 10),
-      price_currency: product.price_currency,
-      sub_total: parseFloat(product.sale_price) * parseInt(selectedQuantity, 10),
-      product_image: product.product_image,
+      product_id: product?.id,
+      product_name: product?.product_name,
+      unit_price: parseFloat(product?.sale_price),
+      price_currency: product?.price_currency,
+      sub_total: parseFloat(product?.sale_price) * parseInt(selectedQuantity, 10),
+      product_image: product?.product_image,
       quantity: parseInt(selectedQuantity, 10),
     };
-    addToCartMutation(cartItem);
+    addToCartMutation(cartItem).then(() => {
+      getCart.refetch();
+      SnackbarUtils.success(formatMessage({ id: 'PRODUCT.ADD.TO.CART.SUCCESS' }));
+    });
   };
 
   const options = [];
@@ -87,7 +94,7 @@ export const ProductDetailPage: FunctionComponent = () => {
           mb: theme.spacing(6),
         }}
       >
-        <ProductImageHolder product={product} id={product.id!} />
+        <ProductImageHolder product={product} id={product?.id} />
         <Paper sx={{ p: 2, width: '100%', mt: 3, maxWidth: 700, backgroundColor: 'rgba(255,255,255, 0.6)' }}>
           <Stack
             sx={{
@@ -100,10 +107,10 @@ export const ProductDetailPage: FunctionComponent = () => {
             }}
           >
             <Typography variant="h2" fontWeight={600} sx={{ mb: 2, color: theme.palette.grey[900], fontSize: 39 }}>
-              {product.product_name}
+              {product?.product_name}
             </Typography>
             <Typography variant="h4" fontWeight={400} sx={{ mb: 2, color: theme.palette.grey[700] }}>
-              {product.description}
+              {product?.description}
             </Typography>
           </Stack>
 
@@ -120,13 +127,13 @@ export const ProductDetailPage: FunctionComponent = () => {
             <Typography variant="body1" fontWeight={400} sx={{ color: theme.palette.grey[800] }}>
               {formatMessage({ id: 'PRODUCT.DETAIL.UNIT.PRICE' })}
             </Typography>
-            {product.price_currency === 'USD' ? (
+            {product?.price_currency === 'USD' ? (
               <Typography variant="h3" fontWeight={600} sx={{ mb: 2, color: theme.palette.grey[900] }}>
-                ${product.sale_price} USD
+                ${product?.sale_price} USD
               </Typography>
             ) : (
               <Typography variant="h3" fontWeight={600} sx={{ mb: 2, color: theme.palette.grey[900] }}>
-                ${product.sale_price} ARS
+                ${product?.sale_price} ARS
               </Typography>
             )}
           </Stack>
@@ -176,6 +183,7 @@ export const ProductDetailPage: FunctionComponent = () => {
             <Button
               variant="contained"
               color="primary"
+              loading={isPending}
               startIcon={<ShoppingCartRoundedIcon />}
               sx={{
                 ml: 2,

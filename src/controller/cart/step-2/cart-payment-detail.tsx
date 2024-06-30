@@ -3,8 +3,10 @@ import { CartItem } from '@webapp/sdk/types/user-types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useCompletedOrdersStore } from '@webapp/store/orders/get-completed-orders';
+import React from 'react';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
+
 
 interface CartProductsDetailProps {
   className?: string;
@@ -24,8 +26,8 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
   useEffect(() => {
     const calculateTotal = (): number => {
       return cartProducts.reduce((acc, product) => {
-        const conversionRate = product.priceCurrency === 'USD' ? dollarValue.value : 1;
-        const convertedValue = product.subTotal * Number(conversionRate);
+        const conversionRate = product.price_currency === 'USD' ? dollarValue.value : 1;
+        const convertedValue = product.sub_total * Number(conversionRate);
         const roundedResult = Math.round(convertedValue * 100) / 100;
         return roundedResult + acc;
       }, 0);
@@ -33,25 +35,23 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
     const totalCartValue = calculateTotal() + deliverValue;
     setTotalCartValue(totalCartValue);
     setSubTotal(calculateTotal());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cartProducts, dollarValue, deliverValue]);
 
   useEffect(() => {
     const totalUSD = totalCartValue / dollarValue.value;
     setOrder({
       ...order,
-      totalOrderAmountARS: totalCartValue,
-      totalOrderAmountUSD: Math.round(totalUSD * 100) / 100,
+      total_order_amount_ars: totalCartValue,
+      total_order_amount_usd: Math.round(totalUSD * 100) / 100,
     });
     setOrders([
       {
         ...order,
-        totalOrderAmount: totalCartValue,
-        totalOrderAmountARS: totalCartValue,
-        totalOrderAmountUSD: Math.round(totalUSD * 100) / 100,
+        total_order_amount: totalCartValue,
+        total_order_amount_ars: totalCartValue,
+        total_order_amount_usd: Math.round(totalUSD * 100) / 100,
       },
     ]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCartValue]);
 
   return (
@@ -88,19 +88,19 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
           </TextsContainer>
           <TextsContainer>
             <CustomTypography variant="h5">{formatMessage({ id: 'CART.PAYMENT.DETAILS.PAYMENT' })}</CustomTypography>
-            <CustomTypography variant="subtitle1">{order.paymentMethod}</CustomTypography>
+            <CustomTypography variant="subtitle1">{order.payment_method}</CustomTypography>
           </TextsContainer>
           <TextsContainer>
             <CustomTypography variant="h5">
               {formatMessage({ id: 'CART.PAYMENT.DETAILS.DELIVER.TYPE' })}
             </CustomTypography>
-            <CustomTypography variant="subtitle1">{order.deliveryType}</CustomTypography>
+            <CustomTypography variant="subtitle1">{order.delivery_type}</CustomTypography>
           </TextsContainer>
           <TextsContainer>
             <CustomTypography variant="h5">
               {formatMessage({ id: 'CART.PAYMENT.DETAILS.SLECTED.CURRENCY' })}
             </CustomTypography>
-            {order.currencyUsedToPay === 'USD' ? (
+            {order.currency_used_to_pay === 'USD' ? (
               <CustomTypography variant="subtitle1">{formatMessage({ id: 'CART.PAYMENT.USD' })}</CustomTypography>
             ) : (
               <CustomTypography variant="subtitle1">{formatMessage({ id: 'CART.PAYMENT.ARS' })}</CustomTypography>
@@ -128,7 +128,7 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
                 {formatMessage({ id: 'CART.PAYMENT.DETAILS.TOTAL' })}
               </CustomTypography>
               <StyledDivider orientation="horizontal" flexItem />
-              {order.currencyUsedToPay === 'USD' ? (
+              {order.currency_used_to_pay === 'USD' ? (
                 <CustomTypography sx={{ fontSize: 24, fontWeight: 'bold' }} variant="subtitle1">
                   $ {totalCartValue / dollarValue.value}
                 </CustomTypography>

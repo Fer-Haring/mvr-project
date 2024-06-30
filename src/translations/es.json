@@ -332,6 +332,7 @@
   "CART.HEADER.QUANTITY" : "Cantidad",
   "CART.HEADER.PRICE" : "Precio Unitario",
   "CART.HEADER.SUBTOTAL" : "SubTotal",
+  "CART.TOOLTIP.PRODUCT.NAME" : "Ver Detalles del Producto",
   "CART.PAYMENT.SUBTOTAL" : "Subtotal",
   "CART.PAYMENT.DELIVERY" : "Entrega",
   "CART.PAYMENT.TOTAL" : "Total",
@@ -347,6 +348,10 @@
   "CART.PAYMENT.DELIVER.ZONE.SELECTOR" : "Seleccionar Zona de Entrega",
   "CART.PAYMENT.DELIVER.ZONE.1" : "La plata, Berisso, Ensenada",
   "CART.PAYMENT.DELIVER.ZONE.2" : "Otras Zonas",
+  "PRODUCT.ADD.TO.CART.SUCCESS": "Producto agregado al carrito",
+  "CART.PRODUCT.REMOVED": "Producto eliminado del carrito",
+  "CART.PRODUCT.QUANTITY.INCREASED": "Cantidad del producto aumentada",
+  "CART.PRODUCT.QUANTITY.DECREASED": "Cantidad del producto disminuida",
 
 
   

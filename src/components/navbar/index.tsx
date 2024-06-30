@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import cartAnimation from '@webapp/assets/images/animations/cart.json';
 import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
 import { useUserData } from '@webapp/store/users/user-data';
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import Lottie from 'react-lottie';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -34,6 +34,10 @@ const Navbar: FunctionComponent<NavbarProps> = ({ className }) => {
     setPaused(!paused);
     navigate('/cart');
   };
+
+  useEffect(() => {
+    cartData?.length;
+  }, [cartData]);
 
   return (
     <NavbarContainer className={className || ''}>

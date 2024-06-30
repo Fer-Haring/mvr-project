@@ -1,6 +1,7 @@
 import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import React from 'react';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import { updateUserInDb } from '@webapp/sdk/firebase/user';
@@ -39,7 +40,7 @@ const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({ 
     const { id: ignoredUserId, ...restOfUserData } = userData;
     updateUserInDb({ userId, ...restOfUserData, preferredCurrency: selectedCurrency });
     setUser({ ...userData, preferred_currency: selectedCurrency });
-    setOrder({ ...order, currencyUsedToPay: selectedCurrency });
+    setOrder({ ...order, currency_used_to_pay: selectedCurrency });
   };
 
   return (

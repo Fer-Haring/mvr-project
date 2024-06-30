@@ -1,8 +1,13 @@
+/* eslint-disable react/react-in-jsx-scope */
 import { alpha, useTheme } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import ContentWrapper from '@webapp/components/content-wrapper';
 import CartEmptyState from '@webapp/controller/cart/empty-cart';
+import { useGetUserByIdMutation } from '@webapp/sdk/mutations/auth/get-user-by-id-mutation';
+import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
+import { User } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
+import { useUserStore } from '@webapp/store/auth/session';
 import { useCompletedOrdersStore } from '@webapp/store/orders/get-completed-orders';
 import { useUserData } from '@webapp/store/users/user-data';
 import { FunctionComponent, useEffect, useState } from 'react';
@@ -12,12 +17,6 @@ import { Step0 } from './steps/step-0';
 import { Step1 } from './steps/step-1';
 import { Step2 } from './steps/step-2';
 import { Step3 } from './steps/step-3';
-import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
-import { useGetUserByIdMutation } from '@webapp/sdk/mutations/auth/get-user-by-id-mutation';
-import { useUserStore } from '@webapp/store/auth/session';
-import { User } from '@webapp/sdk/types/user-types';
-
-// import { useNavigate } from 'react-router-dom';
 
 export const CartPage: FunctionComponent = () => {
   const theme = useTheme();
@@ -25,20 +24,18 @@ export const CartPage: FunctionComponent = () => {
   // const { cart } = useCartStore();
   const [step, setStep] = useState(0);
   const [user, setUser] = useState(useUserData().user);
-  const [address, setAddress] = useState(user.address);
-  const [city, setCity] = useState(user.city);
+  const [address, setAddress] = useState(user?.address);
+  const [city, setCity] = useState(user?.city);
   const [checked, setChecked] = useState(false);
   const { setOrders } = useCompletedOrdersStore();
-  const {data: cart} = useGetUserCart();
+  const { data: cart } = useGetUserCart();
   const userData = useGetUserByIdMutation(useUserStore((state) => state.userInfo?.userId) || '');
 
   useEffect(() => {
     userData.refetch();
     setUser(userData.data as User);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setUser]);
 
-  console.log('cart', cart);
   const {
     order,
     setOrder,
@@ -64,23 +61,22 @@ export const CartPage: FunctionComponent = () => {
   const handleCreateMessage = () => {};
 
   useEffect(() => {
-    setName(user.name);
-    setLastName(user.last_name);
+    setName(user?.name);
+    setLastName(user?.last_name);
     setMsgAddress(address);
     setMsgCity(city);
     setOrder({
       ...order,
-      orderId: Math.floor(Math.random() * 100000000),
-      userId: user.id,
-      cartItems: cart,
-      currencyUsedToPay: user.preferred_currency,
-      deliveryType: user.delivery_type,
-      paymentMethod: user.payment_method,
-      totalProducts: cart?.length,
+      order_id: Math.floor(Math.random() * 100000000),
+      user_id: user?.id,
+      cart_items: cart,
+      currency_used_to_pay: user?.preferred_currency,
+      delivery_type: user?.delivery_type,
+      payment_method: user?.payment_method,
+      total_products: cart?.length,
       status: 'Pending',
     });
     setOrders([order]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, setName, setLastName, setOrder, address, setMsgAddress]);
 
   const fullMessage = `
@@ -90,14 +86,14 @@ export const CartPage: FunctionComponent = () => {
 
   Mi dirección es: ${msgAddress}, ${msgCity}  \n
   
-  Datos de envío: ${order.deliveryType === 'Delivery' ? 'Envío a domicilio' : 'Retiraré en el local'}.
+  Datos de envío: ${order.delivery_type === 'Delivery' ? 'Envío a domicilio' : 'Retiraré en el local'}.
 
-  Datos de pago: ${order.currencyUsedToPay === 'ARS' ? 'Pagaré en pesos argentinos' : 'Pagaré en dólares'}.
+  Datos de pago: ${order.currency_used_to_pay === 'ARS' ? 'Pagaré en pesos argentinos' : 'Pagaré en dólares'}.
 
   Mi pedido es:
-  ${order?.cartItems?.map((product) => `${product.unit_quantity} ${product.product_name}`).join('\n  ')}.
+  ${order?.cart_items?.map((product) => `${product.quantity} ${product.product_name}`).join('\n  ')}.
 
-  El total es: $${order.currencyUsedToPay === 'ARS' ? order.totalOrderAmountARS : order.totalOrderAmountUSD}.
+  El total es: $${order.currency_used_to_pay === 'ARS' ? order.total_order_amount_ars : order.total_order_amount_usd}.
 
   Gracias!`;
 

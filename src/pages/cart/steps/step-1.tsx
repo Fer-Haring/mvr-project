@@ -9,6 +9,7 @@ import PaymentTypeButtons from '@webapp/controller/cart/step-1/botones-metodo-pa
 import DeliveryTypeButtons from '@webapp/controller/cart/step-1/botones-tipo-entrega';
 import ZoneDeliverButtons from '@webapp/controller/cart/step-1/botones-zona-entrega';
 import { User } from '@webapp/sdk/types/user-types';
+import React from 'react';
 import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 
@@ -65,7 +66,7 @@ export const Step1: FunctionComponent<Step1Props> = ({
       >
         <PaymentTypeButtons userData={user} />
         <DeliveryTypeButtons userData={user} />
-        {user.deliveryType === 'Delivery' && (
+        {user?.delivery_type === 'Delivery' && (
           <Box sx={{ width: '33%' }}>
             <Typography
               variant="h4"
@@ -118,6 +119,16 @@ export const Step1: FunctionComponent<Step1Props> = ({
         )}
       </Box>
       <Stack direction={'column'} gap={4} width={'100%'} justifyContent={'center'} alignItems={'center'}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+          <Checkbox
+            checked={checked}
+            onChange={(e) => setChecked(e.target.checked)}
+            sx={{ color: theme.palette.grey[800] }}
+          />
+          <Typography variant="body1" fontWeight={400} sx={{ color: theme.palette.grey[800], textAlign: 'center' }}>
+            {formatMessage({ id: 'CART.PAYMENT.CONFIRMATION' })}
+          </Typography>
+        </Box>
         <Button
           variant="contained"
           onClick={handleNextStep}
@@ -132,16 +143,6 @@ export const Step1: FunctionComponent<Step1Props> = ({
         >
           {formatMessage({ id: 'CART.PAYMENT.NEXT' })}
         </Button>
-        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-          <Checkbox
-            checked={checked}
-            onChange={(e) => setChecked(e.target.checked)}
-            sx={{ color: theme.palette.grey[800] }}
-          />
-          <Typography variant="body1" fontWeight={400} sx={{ color: theme.palette.grey[800], textAlign: 'center' }}>
-            {formatMessage({ id: 'CART.PAYMENT.CONFIRMATION' })}
-          </Typography>
-        </Box>
       </Stack>
     </Stack>
   );

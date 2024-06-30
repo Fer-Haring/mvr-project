@@ -1,5 +1,6 @@
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import { Accordion, AccordionDetails, AccordionSummary, Typography, alpha, styled, useTheme } from '@mui/material';
+import React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Select from '@webapp/components/form/select';
@@ -44,7 +45,7 @@ const ControlOrdersContent: FunctionComponent<ControlOrdersContentProps> = ({ cl
         SnackbarUtils.success('Estado actualizado con éxito');
 
         const updatedOrders = ordersArray.map((order) => {
-          if (order.orderId === orderId) {
+          if (order.order_id === orderId) {
             return { ...order, status: newStatus };
           }
           return order;
@@ -62,7 +63,7 @@ const ControlOrdersContent: FunctionComponent<ControlOrdersContentProps> = ({ cl
       const ordersByUser: UserOrders = {};
 
       for (const order of ordersArray) {
-        const userId = order.userId;
+        const userId = order.user_id;
         if (!ordersByUser[userId!]) {
           ordersByUser[userId!] = {
             orders: [],
@@ -76,7 +77,6 @@ const ControlOrdersContent: FunctionComponent<ControlOrdersContentProps> = ({ cl
     };
 
     loadUserData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -108,19 +108,19 @@ const ControlOrdersContent: FunctionComponent<ControlOrdersContentProps> = ({ cl
                         if (order.status === 'Pending') {
                           return (
                             <Box
-                              key={order.orderId}
+                              key={order.order_id}
                               sx={{ marginBottom: theme.spacing(2), display: 'flex', justifyContent: 'space-between' }}
                             >
-                              <Typography variant="body1" key={order.orderId} sx={{ color: theme.palette.grey[800] }}>
-                                Orden con {order.totalProducts} Producto/s - Total: {order.totalOrderAmount}{' '}
-                                {order.currencyUsedToPay}
+                              <Typography variant="body1" key={order.order_id} sx={{ color: theme.palette.grey[800] }}>
+                                Orden con {order.total_products} Producto/s - Total: {order.total_order_amount}{' '}
+                                {order.currency_used_to_pay}
                               </Typography>
                               <CustomSelect
-                                key={order.orderId}
-                                id={order.orderId + 'status'}
+                                key={order.order_id}
+                                id={order.order_id + 'status'}
                                 label={formatMessage({ id: 'ADMIN.ORDERS.STATUS' })}
-                                value={ordersStatus[order.orderId!] || order.status}
-                                onChange={(e) => handleStatusChange(order.orderId, e.target.value as string)}
+                                value={ordersStatus[order.order_id!] || order.status}
+                                onChange={(e) => handleStatusChange(order.order_id, e.target.value as string)}
                                 options={[
                                   {
                                     value: 'Pending',

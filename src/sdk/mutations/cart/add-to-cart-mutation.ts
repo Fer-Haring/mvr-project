@@ -10,7 +10,7 @@ export function useAddToCart() {
     mutationFn: (cartItem: CartItem) => addToCart(cartItem),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });
-      SnackbarUtils.success(`Producto añadido con éxito`);
+      // SnackbarUtils.success(`Producto añadido con éxito`);
     },
     onError: () => {
       SnackbarUtils.error(`Error al añadir el producto`);

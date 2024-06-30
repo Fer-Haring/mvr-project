@@ -58,7 +58,6 @@ export const ProfileTable: FunctionComponent = () => {
   const classes = useStyles();
   const { user } = useUserData();
   const { dollarValue } = useDollarValue();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data] = useState(() => (user.completed_orders ? [...user.completed_orders] : []));
   const [sorting, setSorting] = useState<SortingState>([]);
   const columnHelper = createColumnHelper<CompletedOrder>();
@@ -92,7 +91,7 @@ export const ProfileTable: FunctionComponent = () => {
         header: () => <></>,
         footer: (info) => info.column.id,
       }),
-      columnHelper.accessor((row) => row.orderId, {
+      columnHelper.accessor((row) => row.order_id, {
         id: 'orderId',
         cell: (info) => {
           return <EllipsisTooltip value={info.getValue()} sx={{ width: '100%' }} />;
@@ -100,7 +99,7 @@ export const ProfileTable: FunctionComponent = () => {
         header: () => <Stack>{formatMessage({ id: 'PROFILE.USER.TABLE.HEADER.ORDER.NUMBER' })}</Stack>,
         footer: (info) => info.column.id,
       }),
-      columnHelper.accessor((row) => row.cartItems?.map((cart) => cart.productName), {
+      columnHelper.accessor((row) => row.cart_items?.map((cart) => cart.product_name), {
         id: 'productName',
         header: () => (
           <Stack>
@@ -112,7 +111,7 @@ export const ProfileTable: FunctionComponent = () => {
         },
         footer: (info) => info.column.id,
       }),
-      columnHelper.accessor((row) => row.totalProducts, {
+      columnHelper.accessor((row) => row.total_products, {
         id: 'totalProducts',
         cell: (info) => {
           return <EllipsisTooltip value={info.getValue()} sx={{ width: '100%' }} />;
@@ -155,12 +154,12 @@ export const ProfileTable: FunctionComponent = () => {
         footer: (info) => info.column.id,
         cell: (info) => {
           const data = info.row.original; // Asumiendo que `original` contiene el objeto de datos completo
-          const priceCurrency = data.currencyUsedToPay; // Asegúrate de que este camino de acceso sea correcto
+          const priceCurrency = data.currency_used_to_pay; // Asegúrate de que este camino de acceso sea correcto
           const price = info.getValue();
           return <CellsTypos>{convertedPrice(price, priceCurrency!)}</CellsTypos>;
         },
       }),
-      columnHelper.accessor((row) => row.createdAt, {
+      columnHelper.accessor((row) => row.create_at, {
         id: 'createdAt',
         header: () => (
           <Stack>
@@ -184,7 +183,6 @@ export const ProfileTable: FunctionComponent = () => {
         footer: (info) => info.column.id,
       }),
     ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [columnHelper, formatMessage]
   );
 
@@ -274,7 +272,7 @@ export const ProfileTable: FunctionComponent = () => {
                 <TableRow sx={{ border: 0 }}>
                   {row.getVisibleCells().map((cell) => {
                     if (cell.column.id === 'expandable') {
-                      const isExpanded = expandedRows[row.original.orderId!];
+                      const isExpanded = expandedRows[row.original.order_id!];
                       return (
                         <TableCell key={cell.id}>
                           <Tooltip
@@ -295,7 +293,7 @@ export const ProfileTable: FunctionComponent = () => {
                                 height: 32,
                                 minWidth: 24,
                               }}
-                              onClick={() => handleExpandClick(row.original.orderId! as string)}
+                              onClick={() => handleExpandClick(row.original.order_id! as string)}
                             >
                               {isExpanded ? (
                                 <KeyboardArrowUpRoundedIcon
@@ -322,9 +320,9 @@ export const ProfileTable: FunctionComponent = () => {
                     );
                   })}
                 </TableRow>
-                {expandedRows[row.original.orderId!] && (
+                {expandedRows[row.original.order_id!] && (
                   <TableRow>
-                    <TableCell colSpan={table.getAllColumns().length} key={row.original.orderId}>
+                    <TableCell colSpan={table.getAllColumns().length} key={row.original.order_id}>
                       <ExpandableTableContent row={row.original} />
                     </TableCell>
                   </TableRow>

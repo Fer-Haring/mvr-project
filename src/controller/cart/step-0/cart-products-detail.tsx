@@ -2,6 +2,7 @@ import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRou
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import {
   Box,
+  CircularProgress,
   IconButton,
   Table,
   TableBody,
@@ -9,15 +10,20 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   styled,
   useTheme,
 } from '@mui/material';
 import Stack from '@mui/system/Stack';
+import SnackbarUtils from '@webapp/components/snackbar';
+import { useAddToCart } from '@webapp/sdk/mutations/cart/add-to-cart-mutation';
+import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
 import { CartItem, Order } from '@webapp/sdk/types/user-types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
-import { useCartStore } from '@webapp/store/cart/cart';
-import { FunctionComponent, useEffect } from 'react';
+import React from 'react';
+import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useNavigate } from 'react-router-dom';
 
 import { TableBox } from '../table-styles';
 
@@ -30,11 +36,15 @@ interface CartProductsDetailProps {
   setOrder: (order: Order) => void;
 }
 
-export const CartProductsDetail: FunctionComponent<CartProductsDetailProps> = ({ cartProducts, order, setOrder }) => {
+export const CartProductsDetail: FunctionComponent<CartProductsDetailProps> = ({ cartProducts }) => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const { formatMessage } = useIntl();
   const { dollarValue } = useDollarValue();
-  const { addToCart, removeFromCart } = useCartStore();
+  const { mutateAsync, isPending } = useAddToCart();
+  const getCart = useGetUserCart();
+  const [localCartProducts, setLocalCartProducts] = useState<CartItem[]>(cartProducts || []);
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const subTotalValue = (price: number, priceCurrency: string) => {
     if (priceCurrency === 'ARS') {
@@ -54,14 +64,67 @@ export const CartProductsDetail: FunctionComponent<CartProductsDetailProps> = ({
   };
 
   useEffect(() => {
-    if (!cartProducts || cartProducts.length === 0) {
-      setOrder({
-        ...order,
-        totalProducts: order?.totalProducts ? order.totalProducts : 0,
-      });
+    if (cartProducts) {
+      setLocalCartProducts(cartProducts);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cartProducts, dollarValue.value, setOrder]);
+  }, [cartProducts]);
+
+  const updateQuantity = (cartProduct: CartItem, quantityChange: number) => {
+    const updatedCartProducts = localCartProducts.map((item) =>
+      item.product_id === cartProduct.product_id
+        ? {
+            ...item,
+            quantity: Math.max(item.quantity + quantityChange, 0),
+            sub_total: item.unit_price * Math.max(item.quantity + quantityChange, 0),
+          }
+        : item
+    );
+
+    if (cartProduct.quantity === 1 && quantityChange === -1) {
+      // Si la cantidad es 1 y se está disminuyendo, eliminar el producto del carrito
+      const filteredCartProducts = localCartProducts.filter((item) => item.product_id !== cartProduct.product_id);
+      setLocalCartProducts(filteredCartProducts);
+      SnackbarUtils.info(formatMessage({ id: 'CART.PRODUCT.REMOVED' }));
+    } else {
+      setLocalCartProducts(updatedCartProducts);
+
+      // Mostrar el snack adecuado para aumento o disminución
+      if (quantityChange > 0) {
+        SnackbarUtils.success(formatMessage({ id: 'CART.PRODUCT.QUANTITY.INCREASED' }));
+      } else if (quantityChange < 0) {
+        SnackbarUtils.success(formatMessage({ id: 'CART.PRODUCT.QUANTITY.DECREASED' }));
+      }
+    }
+
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+
+    debounceTimeout.current = setTimeout(() => {
+      const updatedCartProduct = updatedCartProducts.find((item) => item.product_id === cartProduct.product_id);
+      if (updatedCartProduct) {
+        mutateAsync({
+          product_id: updatedCartProduct.product_id!,
+          product_name: updatedCartProduct.product_name,
+          unit_price: updatedCartProduct.unit_price,
+          price_currency: updatedCartProduct.price_currency,
+          sub_total: updatedCartProduct.sub_total,
+          product_image: updatedCartProduct.product_image,
+          quantity: updatedCartProduct.quantity,
+        }).then(() => {
+          getCart.refetch();
+        });
+      }
+    }, 500);
+  };
+
+  const increaseQuantity = (cartProduct: CartItem) => {
+    updateQuantity(cartProduct, 1);
+  };
+
+  const decreaseQuantity = (cartProduct: CartItem) => {
+    updateQuantity(cartProduct, -1);
+  };
 
   return (
     <Stack direction={'column'} gap={2} width={'100%'}>
@@ -77,40 +140,74 @@ export const CartProductsDetail: FunctionComponent<CartProductsDetailProps> = ({
           </TableHead>
           <Box sx={{ height: 30 }} />
           <TableBody>
-            {cartProducts?.map((cartProduct) => (
-              <TableRow key={cartProduct.product_id}>
-                <TableCell>{cartProduct.product_name}</TableCell>
-                <TableCell>
-                  <Stack
-                    direction={'row'}
-                    gap={1}
-                    sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                  >
-                    <IconButton
-                      size="small"
-                      onClick={() => removeFromCart(cartProduct.product_id)}
-                      aria-label="Disminuir cantidad"
-                    >
-                      <RemoveCircleOutlineRoundedIcon sx={{ width: 18, height: 18, color: theme.palette.grey[800] }} />
-                    </IconButton>
-                    {cartProduct.unit_quantity}
-                    <IconButton
-                      size="small"
-                      onClick={() => {
-                        addToCart(cartProduct, 1);
+            {localCartProducts.map((cartProduct) => {
+              return (
+                <TableRow key={cartProduct.product_id}>
+                  <Tooltip title={formatMessage({ id: 'CART.TOOLTIP.PRODUCT.NAME' })} placement="top" arrow>
+                    <TableCell
+                      sx={{
+                        cursor: 'pointer',
+                        fontWeight: 'bold',
+                        ':hover': {
+                          color: theme.palette.grey[800],
+                          fontSize: 16,
+                        },
                       }}
-                      aria-label="Aumentar cantidad"
+                      onClick={() => {
+                        navigate(`/productos/${cartProduct.product_id}`);
+                      }}
                     >
-                      <AddCircleOutlineRoundedIcon sx={{ width: 18, height: 18, color: theme.palette.grey[800] }} />
-                    </IconButton>
-                  </Stack>
-                </TableCell>
-                <TableCell>{unitValue(cartProduct.unit_price, cartProduct.price_currency)}</TableCell>
-                <TableCell>
-                  {subTotalValue(cartProduct.unit_price * cartProduct.unit_quantity, cartProduct.price_currency)}
-                </TableCell>
-              </TableRow>
-            ))}
+                      {cartProduct.product_name}
+                    </TableCell>
+                  </Tooltip>
+                  <TableCell>
+                    <Stack
+                      direction={'row'}
+                      gap={1}
+                      sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                    >
+                      <IconButton
+                        size="small"
+                        disabled={isPending}
+                        onClick={() => {
+                          decreaseQuantity(cartProduct);
+                        }}
+                        aria-label="Disminuir cantidad"
+                      >
+                        <RemoveCircleOutlineRoundedIcon
+                          sx={{
+                            width: 18,
+                            height: 18,
+                            color: isPending ? theme.palette.grey[200] : theme.palette.grey[800],
+                          }}
+                        />
+                      </IconButton>
+                      {isPending ? <CircularProgress size={15} /> : cartProduct.quantity}
+                      <IconButton
+                        size="small"
+                        disabled={isPending}
+                        onClick={() => {
+                          increaseQuantity(cartProduct);
+                        }}
+                        aria-label="Aumentar cantidad"
+                      >
+                        <AddCircleOutlineRoundedIcon
+                          sx={{
+                            width: 18,
+                            height: 18,
+                            color: isPending ? theme.palette.grey[200] : theme.palette.grey[800],
+                          }}
+                        />
+                      </IconButton>
+                    </Stack>
+                  </TableCell>
+                  <TableCell>{unitValue(cartProduct.unit_price, cartProduct.price_currency)}</TableCell>
+                  <TableCell>
+                    {subTotalValue(cartProduct.unit_price * cartProduct.quantity, cartProduct.price_currency)}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>

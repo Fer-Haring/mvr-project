@@ -1,19 +1,34 @@
+// Ajusta esto según tus tipos reales
+import { refreshToken } from '@webapp/sdk/actions/auth/user-refresh-token';
+import { CartResponse } from '@webapp/sdk/types/cart-types';
 
+export async function getUserCart(): Promise<CartResponse[]> {
+  const URL = 'http://127.0.0.1:8000/cart';
+  const accessToken = localStorage.getItem('access_token');
 
-export async function getUserCart (token: string) {
-  const URL = "http://127.0.0.1:8000/cart";
-
-  const response = await fetch(`${URL}/get_cart`, {
+  const options = {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${accessToken}`,
     },
-  });
+  };
 
-  if (!response.ok) {
-    throw new Error('Failed to get cart');
+  let response = await fetch(`${URL}/get_cart`, options);
+
+  // Si la respuesta es 401 (no autorizado), intenta refrescar el token y vuelve a hacer la solicitud
+  if (response.status === 401) {
+    const newAccessToken = await refreshToken();
+    localStorage.setItem('access_token', newAccessToken); // Guarda el nuevo token en localStorage
+    options.headers['Authorization'] = `Bearer ${newAccessToken}`;
+    response = await fetch(`${URL}/get_cart`, options);
   }
 
-  return response.json();
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.detail || 'Failed to get cart');
+  }
+
+  const cart = await response.json();
+  return cart;
 }

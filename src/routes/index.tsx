@@ -18,7 +18,7 @@ import SignUpPage2 from '@webapp/pages/auth/sign-up';
 import VerificationCodePage from '@webapp/pages/auth/verification-code';
 import { CartPage } from '@webapp/pages/cart';
 import PrivacyPolicyPage from '@webapp/pages/privacy_policies';
-import UnderConstructionPage from '@webapp/pages/under-construction';
+// import UnderConstructionPage from '@webapp/pages/under-construction';
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 
@@ -38,12 +38,12 @@ const ProjectRoutes: Route[] = [
   // },
   {
     path: '/',
-    component: <Navigate to="/under-construction" />,
+    component: <Navigate to="/sign-in" />,
   },
-  {
-    path: '/under-construction',
-    component: <UnderConstructionPage />,
-  },
+  // {
+  //   path: '/under-construction',
+  //   component: <UnderConstructionPage />,
+  // },
   {
     path: '/sign-in',
     component: <SignInPage2 />,
@@ -98,7 +98,7 @@ const ProjectRoutes: Route[] = [
   },
   {
     path: '/privacy-policy',
-    component: <PrivacyPolicyPage/>,
+    component: <PrivacyPolicyPage />,
   },
   {
     path: '/google-auth-callback',
@@ -107,6 +107,6 @@ const ProjectRoutes: Route[] = [
   {
     path: '/set-password',
     component: <SetPasswrodPage />,
-  }
+  },
 ];
 export { ProjectRoutes };

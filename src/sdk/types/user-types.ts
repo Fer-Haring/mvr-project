@@ -11,7 +11,6 @@ export interface LoginPayload {
   password: string;
 }
 
-
 export interface SignupPayload {
   name: string;
   last_name: string;
@@ -41,47 +40,46 @@ export interface SignupResponse {
 }
 
 export interface CompletedOrder {
-  orderId?: string | number;
-  userId?: string;
-  cartItems?: CartItem[];
-  totalProducts?: number;
-  totalOrderAmountUSD?: number;
-  totalOrderAmountARS?: number;
+  order_id?: string | number;
+  user_id?: string;
+  cart_items?: CartItem[];
+  total_products?: number;
+  total_order_amount_usd?: number;
+  total_order_amount_ars?: number;
   status?: string;
-  currencyUsedToPay?: string;
-  paymentMethod?: string;
-  deliveryType?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-  totalOrderAmount?: number;
+  currency_used_to_pay?: string;
+  payment_method?: string;
+  delivery_type?: string;
+  create_at?: Date;
+  updated_at?: Date;
+  total_order_amount?: number;
   expandable?: boolean;
 }
 
 export interface CartItem {
   product_id: string;
   product_name: string;
-  unit_quantity: number;
   unit_price: number;
   price_currency: string;
   sub_total: number;
-  quantity?: number;
+  quantity: number;
   product_image?: string;
 }
 
 export interface Order {
-  orderId?: string | number;
-  userId?: string;
-  cartItems?: CartItem[];
-  totalProducts?: number;
-  totalOrderAmountUSD?: number;
-  totalOrderAmountARS?: number;
+  order_id?: string | number;
+  user_id?: string;
+  cart_items?: CartItem[];
+  total_products?: number;
+  total_order_amount_usd?: number;
+  total_order_amount_ars?: number;
   status?: string;
-  currencyUsedToPay?: string;
-  paymentMethod?: string;
-  deliveryType?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-  totalOrderAmount?: number;
+  currency_used_to_pay?: string;
+  payment_method?: string;
+  delivery_type?: string;
+  create_at?: Date;
+  updated_at?: Date;
+  total_order_amount?: number;
   expandable?: boolean;
 }
 
