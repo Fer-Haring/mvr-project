@@ -58,6 +58,7 @@ const ControlOrdersContent: FunctionComponent<ControlOrdersContentProps> = ({ cl
         // Opcional: Mostrar notificación de error
       });
   };
+  
   useEffect(() => {
     const loadUserData = async () => {
       const ordersByUser: UserOrders = {};

@@ -5,15 +5,17 @@ import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { CartProductsDetail } from '@webapp/controller/cart/step-0/cart-products-detail';
-import { CartItem, Order } from '@webapp/sdk/types/user-types';
+import { OrderRequest } from '@webapp/sdk/types/orders-types';
+import { CartItem } from '@webapp/sdk/types/user-types';
 import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
+
 
 interface Step0Props {
   handleNextStep: () => void;
   cart: CartItem[];
-  order: Order;
-  setOrder: (order: Order) => void;
+  order: OrderRequest;
+  setOrder: (order: OrderRequest) => void;
 }
 
 export const Step0: FunctionComponent<Step0Props> = ({ handleNextStep, cart, order, setOrder }) => {

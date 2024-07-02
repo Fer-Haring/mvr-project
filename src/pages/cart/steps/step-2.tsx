@@ -7,7 +7,8 @@ import { CartPaymentDetail } from '@webapp/controller/cart/step-2/cart-payment-d
 import { useClearCart } from '@webapp/sdk/mutations/cart/delete-cart-mutation';
 import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
 import { useCreateOrder } from '@webapp/sdk/mutations/orders/save-new-order-mutation';
-import { CartItem, Order } from '@webapp/sdk/types/user-types';
+import { OrderRequest } from '@webapp/sdk/types/orders-types';
+import { CartItem } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useCartStore } from '@webapp/store/cart/cart';
 import React from 'react';
@@ -21,7 +22,7 @@ interface Step2Props {
   fullMessage: string;
   handleNextStep: () => void;
   handlePreviousStep: () => void;
-  order: Order;
+  order: OrderRequest;
 }
 
 export const Step2: FunctionComponent<Step2Props> = ({
@@ -39,7 +40,6 @@ export const Step2: FunctionComponent<Step2Props> = ({
   const { clearCart } = useCartStore();
   const [openModal, setOpenModal] = useState(false);
   const { mutateAsync: saveOrder } = useCreateOrder();
-  // const { user } = useUserData();
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -49,15 +49,7 @@ export const Step2: FunctionComponent<Step2Props> = ({
     setOpenModal(false);
   };
 
-
-
-  console.log('order', order);
   const handleLastStep = async () => {
-    // updateUserInDb({
-    //   userId: user.id,
-    //   completedOrders: [...user.completed_orders, order],
-    // });
-    // await saveCompletedOrder(order, order.orderId as number);
     await saveOrder(order);
     clearCart();
     mutateAsync().then(() => {

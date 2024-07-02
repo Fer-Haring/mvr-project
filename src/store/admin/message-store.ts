@@ -1,4 +1,4 @@
-import { Order } from '@webapp/sdk/types/user-types';
+import { OrderRequest } from '@webapp/sdk/types/orders-types';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
@@ -13,8 +13,8 @@ interface MessageStore {
   setLastName: (lastName: string) => void;
   deliverValue: number;
   setDeliverValue: (deliverValue: number) => void;
-  order: Order;
-  setOrder: (order: Order) => void;
+  order: OrderRequest;
+  setOrder: (order: OrderRequest) => void;
   deleteMessageStore: () => void;
 }
 
@@ -32,8 +32,6 @@ export const useMessageStore = create(
       deliverValue: 0,
       setDeliverValue: (deliverValue: number) => set({ deliverValue }),
       order: {
-        order_id: '',
-        user_id: '',
         cart_items: [],
         total_products: 0,
         total_order_amount_usd: 0,
@@ -44,17 +42,33 @@ export const useMessageStore = create(
         delivery_type: '',
         create_at: new Date(),
         updated_at: new Date(),
+        user: {
+          id: '',
+          username: '',
+          email: '',
+          password: '',
+          address: '',
+          admin: false,
+          city: '',
+          deliver_zone: '',
+          delivery_type: '',
+          last_name: '',
+          name: '',
+          payment_method: '',
+          phone: '',
+          preferred_currency: '',
+          profile_picture: '',
+        },
       },
-      setOrder: (order: Order) => set({ order }),
+      setOrder: (order: OrderRequest) => set({ order }),
       deleteMessageStore: () =>
         set({
           address: '',
+          msgCity: '',
           name: '',
           lastName: '',
-          msgCity: '',
+          deliverValue: 0,
           order: {
-            order_id: '',
-            user_id: '',
             cart_items: [],
             total_products: 0,
             total_order_amount_usd: 0,
@@ -65,6 +79,23 @@ export const useMessageStore = create(
             delivery_type: '',
             create_at: new Date(),
             updated_at: new Date(),
+            user: {
+              id: '',
+              username: '',
+              email: '',
+              password: '',
+              address: '',
+              admin: false,
+              city: '',
+              deliver_zone: '',
+              delivery_type: '',
+              last_name: '',
+              name: '',
+              payment_method: '',
+              phone: '',
+              preferred_currency: '',
+              profile_picture: '',
+            },
           },
         }),
     }),

@@ -7,7 +7,6 @@ import React from 'react';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-
 interface CartProductsDetailProps {
   className?: string;
   cartProducts: CartItem[];
@@ -130,7 +129,7 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
               <StyledDivider orientation="horizontal" flexItem />
               {order.currency_used_to_pay === 'USD' ? (
                 <CustomTypography sx={{ fontSize: 24, fontWeight: 'bold' }} variant="subtitle1">
-                  $ {totalCartValue / dollarValue.value}
+                  $ {(totalCartValue / dollarValue.value).toFixed(2)}
                 </CustomTypography>
               ) : (
                 <CustomTypography sx={{ fontSize: 24, fontWeight: 'bold' }} variant="subtitle1">

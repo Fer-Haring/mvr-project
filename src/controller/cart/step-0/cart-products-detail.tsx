@@ -1,39 +1,30 @@
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
-import {
-  Box,
-  CircularProgress,
-  IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Tooltip,
-  styled,
-  useTheme,
-} from '@mui/material';
+import { Box, CircularProgress, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, styled, useTheme } from '@mui/material';
 import Stack from '@mui/system/Stack';
 import SnackbarUtils from '@webapp/components/snackbar';
 import { useAddToCart } from '@webapp/sdk/mutations/cart/add-to-cart-mutation';
 import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
-import { CartItem, Order } from '@webapp/sdk/types/user-types';
+import { OrderRequest } from '@webapp/sdk/types/orders-types';
+import { CartItem } from '@webapp/sdk/types/user-types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import React from 'react';
 import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
+
+
 import { TableBox } from '../table-styles';
+
 
 // import { useNavigate } from 'react-router-dom';
 
 interface CartProductsDetailProps {
   className?: string;
   cartProducts?: CartItem[];
-  order?: Order;
-  setOrder: (order: Order) => void;
+  order?: OrderRequest;
+  setOrder: (order: OrderRequest) => void;
 }
 
 export const CartProductsDetail: FunctionComponent<CartProductsDetailProps> = ({ cartProducts }) => {

@@ -1,21 +1,30 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Box, CircularProgress, alpha, styled } from '@mui/material';
-import { CellEditingStoppedEvent, GetRowIdParams, PaginationNumberFormatterParams, SelectionChangedEvent } from 'ag-grid-community';
+
+import { Box, CircularProgress, Typography, alpha, styled, useTheme } from '@mui/material';
+import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
+import { useUpdateProduct } from '@webapp/sdk/mutations/products/update-product-mutation';
+import { Product } from '@webapp/sdk/types/products-types';
+import useBulkEditStore from '@webapp/store/admin/bulk-edit-store';
+import {
+  CellEditingStoppedEvent,
+  GetRowIdParams,
+  PaginationNumberFormatterParams,
+  SelectionChangedEvent,
+} from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { AgGridReact } from 'ag-grid-react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useIntl } from 'react-intl';
 
 import ProductHeaderActions from './table-header-actions';
 import { localeText } from './table-utils/ag-grid-text-locale';
 import { columnDefs } from './table-utils/columns-def';
-import useBulkEditStore from '@webapp/store/admin/bulk-edit-store';
-import { Product } from '@webapp/sdk/types/products-types';
-import { useUpdateProduct } from '@webapp/sdk/mutations/products/update-product-mutation';
-import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
 
 interface AdminDataGridProps {}
 
 const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
+  const theme = useTheme();
+  const { formatMessage } = useIntl();
   const [rowData, setRowData] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const { setProducts, setSelectedProducts, products } = useBulkEditStore();
@@ -42,46 +51,55 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
     return '[' + params.value.toLocaleString() + ']';
   }, []);
 
-  const onCellEditingStopped = useCallback(async (event: CellEditingStoppedEvent) => {
-    const updatedData = event.data;
-    const id = updatedData.id;
-    if (id) {
-      const productData: Product = {
-        product_name: updatedData.product_name,
-        description: updatedData.description,
-        main_product_category: updatedData.main_product_category,
-        product_category: updatedData.product_category,
-        price_currency: updatedData.price_currency,
-        cost_price: updatedData.cost_price,
-        sale_price: updatedData.sale_price,
-        promo_price: updatedData.promo_price,
-        actual_stock: updatedData.actual_stock,
-        minimum_stock: updatedData.minimum_stock,
-        stock_control: updatedData.stock_control,
-        show_in_catalog: updatedData.show_in_catalog,
-        featured: updatedData.featured,
-        fraction: updatedData.fraction,
-        product_image: updatedData.product_image,
-        id: id,
-        currency_type: updatedData.currency_type,
-        product_id: updatedData.product_id,
-        product_code: updatedData.product_code,
-      };
-      mutate({ productId: id, productData });
-    }
-  }, [mutate]);
+  const onCellEditingStopped = useCallback(
+    async (event: CellEditingStoppedEvent) => {
+      const updatedData = event.data;
+      const id = updatedData.id;
+      if (id) {
+        const productData: Product = {
+          product_name: updatedData.product_name,
+          description: updatedData.description,
+          main_product_category: updatedData.main_product_category,
+          product_category: updatedData.product_category,
+          price_currency: updatedData.price_currency,
+          cost_price: updatedData.cost_price,
+          sale_price: updatedData.sale_price,
+          promo_price: updatedData.promo_price,
+          actual_stock: updatedData.actual_stock,
+          minimum_stock: updatedData.minimum_stock,
+          stock_control: updatedData.stock_control,
+          show_in_catalog: updatedData.show_in_catalog,
+          featured: updatedData.featured,
+          fraction: updatedData.fraction,
+          product_image: updatedData.product_image,
+          id: id,
+          currency_type: updatedData.currency_type,
+          product_id: updatedData.product_id,
+          product_code: updatedData.product_code,
+        };
+        mutate({ productId: id, productData });
+      }
+    },
+    [mutate]
+  );
 
   const getRowId = (params: GetRowIdParams) => {
     return (params.data as Product).id || '';
   };
 
-  const onSelectionChanged = useCallback((event: SelectionChangedEvent) => {
-    const allSelectedRows: Product[] = event.api.getSelectedRows();
-    setSelectedProducts(allSelectedRows);
-  }, [setSelectedProducts]);
+  const onSelectionChanged = useCallback(
+    (event: SelectionChangedEvent) => {
+      const allSelectedRows: Product[] = event.api.getSelectedRows();
+      setSelectedProducts(allSelectedRows);
+    },
+    [setSelectedProducts]
+  );
 
   return (
     <div>
+      <Typography variant="h5" sx={{ color: theme.palette.grey[800], fontWeight: 'bold', textAlign: 'center', mb: 5 }}>
+        {formatMessage({ id: 'ADMIN.PRODUCTS.LIST.TITLE' })}
+      </Typography>
       <ProductHeaderActions rowData={rowData} setRowData={setRowData} selectedRows={products} />
       <div className="ag-theme-quartz" style={{ height: 400, width: '100%', marginTop: 25 }}>
         {loading ? (

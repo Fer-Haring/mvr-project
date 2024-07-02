@@ -21,7 +21,6 @@ import { Step3 } from './steps/step-3';
 export const CartPage: FunctionComponent = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  // const { cart } = useCartStore();
   const [step, setStep] = useState(0);
   const [user, setUser] = useState(useUserData().user);
   const [address, setAddress] = useState(user?.address);
@@ -67,14 +66,13 @@ export const CartPage: FunctionComponent = () => {
     setMsgCity(city);
     setOrder({
       ...order,
-      order_id: Math.floor(Math.random() * 100000000),
-      user_id: user?.id,
       cart_items: cart,
       currency_used_to_pay: user?.preferred_currency,
       delivery_type: user?.delivery_type,
       payment_method: user?.payment_method,
       total_products: cart?.length,
       status: 'Pending',
+      user: user!,
     });
     setOrders([order]);
   }, [user, setName, setLastName, setOrder, address, setMsgAddress]);

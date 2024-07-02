@@ -4,11 +4,14 @@ import { alpha, styled } from '@mui/material/styles';
 import { ThemeOptions } from '@mui/material/styles/createTheme';
 import { MaterialDesignContent } from 'notistack';
 
+
+
 // Custom theme configuration
 import { button } from './button';
 import { colors } from './colors';
 import { sizes } from './sizes';
 import { typography } from './typography';
+
 
 // Extend the Material-UI palette to include custom colors
 declare module '@mui/material/styles' {
@@ -529,7 +532,7 @@ export const CustomThemeOptions = (mode: PaletteMode): Partial<ThemeOptions> => 
           outline: 'none',
           background: 'transparent',
           '& label': {
-            color: mode === 'dark' ? darkModePalette[0].primaryText : lightModePalette[0].primaryText,
+            color: mode === 'dark' ? '#000000' : '#000000',
           },
         },
       },
