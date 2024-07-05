@@ -40,8 +40,6 @@ const VerificationCodePage: FunctionComponent<VerificationCodePageProps> = ({ cl
   const [code, setCode] = useState(params.get('code') || '');
   const [resentCode, setResentCode] = useState<boolean>(false);
 
-  console.log(params.get('code'));
-
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!username || !code) {

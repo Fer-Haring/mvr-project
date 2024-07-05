@@ -14,8 +14,6 @@ const DollarValueInputPaper: FunctionComponent = () => {
   const { dollarValue } = useDollarValue();
   // const { mutate } = useUpdateDollarValue();
 
-  console.log(dollarValue);
-
   const [inputValue, setInputValue] = useState(
     Object.values(dollarValue?.value)[0] ? Object.values(dollarValue?.value)[0] : dollarValue.value
   );

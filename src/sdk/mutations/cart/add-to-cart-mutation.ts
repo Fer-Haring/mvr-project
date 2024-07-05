@@ -1,5 +1,5 @@
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import { CartItem } from "@webapp/sdk/types/user-types";
+import { CartItem } from "@webapp/sdk/types/cart-types";
 import { addToCart } from "@webapp/sdk/actions/cart/add-to-cart";
 import SnackbarUtils from '@webapp/components/snackbar';
 

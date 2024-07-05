@@ -19,7 +19,6 @@ const GoogleAuthCallback: React.FC = () => {
       try {
         // Decode the JWT token to extract the user information
         const userInfo: { sub: string; name: string } = jwtDecode<{ sub: string; name: string }>(accessToken);
-        console.log("User Info:", userInfo);
 
         logIn(userInfo.sub, userInfo.name, accessToken);
         // Optionally store googleToken in case you need it for future use

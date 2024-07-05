@@ -6,7 +6,7 @@ import { uploadProductImage } from '@webapp/sdk/firebase/products';
 import { Product } from '@webapp/sdk/types/products-types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useUserData } from '@webapp/store/users/user-data';
-import { FunctionComponent } from 'react';
+import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 
 interface ProductImageHolderProps {

@@ -140,7 +140,6 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ setRowData,
         id: item.id || 'N/A',
       };
     });
-    console.log('dataToExport:', dataToExport);
     handleExportToExcel(dataToExport, 'Lista de Productos');
     setOpenExportModal(false);
   };

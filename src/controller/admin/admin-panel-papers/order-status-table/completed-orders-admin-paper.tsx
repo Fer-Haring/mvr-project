@@ -1,33 +1,32 @@
-import { ISelectCellEditorParams } from '@ag-grid-community/core';
-import { alpha, styled } from '@mui/material';
+import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
+import { CircularProgress, IconButton, alpha, styled } from '@mui/material';
+import SnackbarUtils from '@webapp/components/snackbar';
+import { useDownloadOrderPdf } from '@webapp/sdk/mutations/admin/create-bill-mutation';
 import { useGetPendingOrders } from '@webapp/sdk/mutations/orders/get-pending-orders-query';
 import { useUpdateOrderStatus } from '@webapp/sdk/mutations/orders/update-order-status-mutation';
 import { OrderResponse } from '@webapp/sdk/types/orders-types';
-import { CellEditingStoppedEvent, ColDef, GetRowIdParams } from 'ag-grid-community';
+import { CellEditingStoppedEvent, ColDef, GetRowIdParams, ICellRendererParams } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgGridReact } from 'ag-grid-react';
 import { format } from 'date-fns';
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react';
-import { useIntl } from 'react-intl';
 
-interface PendingOrdersPaperProps {
+interface DownloadCellRendererProps extends ICellRendererParams {
+  data: OrderResponse;
+}
+
+interface CompletedOrdersPaperProps {
   orders: OrderResponse[];
 }
-const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders }) => {
-  const { formatMessage } = useIntl();
+const CompletedOrdersPaper: FunctionComponent<CompletedOrdersPaperProps> = ({ orders }) => {
   const [rowData, setRowData] = useState<OrderResponse[]>([]);
   const { mutateAsync } = useUpdateOrderStatus();
   const getPendingOrders = useGetPendingOrders();
+  // const { mutateAsync: createBillMutation, isPending } = useDownloadOrderPdf();
   const getRowId = (params: GetRowIdParams) => {
     return (params.data as OrderResponse).order_id || '';
   };
-
-  const languages = [
-    formatMessage({ id: 'ADMIN.ORDER.STATUS.PENDING' }),
-    formatMessage({ id: 'ADMIN.ORDER.STATUS.COMPLETED' }),
-    formatMessage({ id: 'ADMIN.ORDER.STATUS.CANCELLED' }),
-  ];
 
   useEffect(() => {
     setRowData(orders);
@@ -38,21 +37,47 @@ const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders
     return format(date, 'dd/MM/yyyy');
   };
 
+  const DownloadCellRenderer: React.FC<DownloadCellRendererProps> = (props) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const { mutateAsync: createBillMutation } = useDownloadOrderPdf();
+
+    const handleDownload = async () => {
+      if (isLoading) return;
+
+      setIsLoading(true);
+      try {
+        await createBillMutation(props.data.order_id!).then(() => {
+          SnackbarUtils.success('Recibo Descargado con Éxito');
+        });
+      } catch (error) {
+        SnackbarUtils.error(`Error Descargando el Recibo: ${error} `);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    return (
+      <IconButton onClick={handleDownload} size="small" disabled={isLoading}>
+        {isLoading ? <CircularProgress size={20} /> : <DownloadRoundedIcon sx={{ color: '#000000' }} />}
+      </IconButton>
+    );
+  };
+
   const columnDefs: ColDef[] = [
+    {
+      headerName: 'Recibo',
+      field: 'download',
+      cellRenderer: DownloadCellRenderer,
+      width: 100,
+      cellStyle: { display: 'flex', justifyContent: 'center', alignItems: 'center' },
+    },
     { headerName: 'Order ID', field: 'order_id', sort: 'desc' },
     { headerName: 'User ID', field: 'user_id', hide: true },
     { headerName: 'User Name', field: 'user.name' },
     { headerName: 'Total Productos', field: 'total_products' },
     { headerName: 'Total USD', field: 'total_order_amount_usd' },
     { headerName: 'Total ARS', field: 'total_order_amount_ars' },
-    {
-      headerName: 'Select Editor',
-      field: 'status',
-      cellEditor: 'agSelectCellEditor',
-      cellEditorParams: {
-        values: languages,
-      } as ISelectCellEditorParams,
-    },
+    { headerName: 'Select Editor', field: 'status' },
     { headerName: 'Moneda de Pago', field: 'currency_used_to_pay' },
     { headerName: 'Metodo de Pago', field: 'payment_method' },
     { headerName: 'Tipo de Entrega', field: 'delivery_type' },
@@ -122,7 +147,7 @@ const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders
     </div>
   );
 };
-export default PendingOrdersPaper;
+export default CompletedOrdersPaper;
 const StyledAgGridReact = styled(AgGridReact)(({ theme }) => ({
   height: theme.spacing(5),
   borderRadius: theme.spacing(0.5),
