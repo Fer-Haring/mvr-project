@@ -15,8 +15,6 @@ const TotalProductsPaper: FunctionComponent = () => {
   const theme = useTheme();
   const getProducts = useProductListQuery(1, 500);
 
-  console.log(getProducts?.data?.products);
-
   const totalProductsInStock = Object.values(getProducts?.data?.products ?? {}).reduce((sum, product: Product) => {
     return sum + Number(product.actual_stock);
   }, 0);

@@ -13,7 +13,7 @@ import { useAddToCart } from '@webapp/sdk/mutations/cart/add-to-cart-mutation';
 import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
 import { useGetProductById } from '@webapp/sdk/mutations/products/get-product-by-id-query';
 import { Product } from '@webapp/sdk/types/products-types';
-import { CartItem } from '@webapp/sdk/types/user-types';
+import { CartItem } from '@webapp/sdk/types/cart-types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';
 import { FunctionComponent, useEffect, useState } from 'react';
@@ -52,6 +52,8 @@ export const ProductDetailPage: FunctionComponent = () => {
       product_name: product?.product_name,
       unit_price: parseFloat(product?.sale_price),
       price_currency: product?.price_currency,
+      product_category: product?.product_category,
+      product_description: product?.description,
       sub_total: parseFloat(product?.sale_price) * parseInt(selectedQuantity, 10),
       product_image: product?.product_image,
       quantity: parseInt(selectedQuantity, 10),

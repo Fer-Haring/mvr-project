@@ -1,5 +1,5 @@
 export interface OrderResponse {
-  order_id: string;
+  order_id?: string;
   user_id?: string;
   cart_items?: CartItem[];
   total_products?: number;
@@ -20,6 +20,8 @@ export interface CartItem {
   product_id: string;
   product_name: string;
   unit_price: number;
+  product_category: string;
+  product_description: string;
   price_currency: string;
   sub_total: number;
   quantity: number;
@@ -45,7 +47,7 @@ export interface User {
 }
 
 export interface OrderRequest {
-  cart_items?: CartItem[];
+  cart_items: CartItem[];
   total_products?: number;
   total_order_amount_usd?: number;
   total_order_amount_ars?: number;

@@ -5,11 +5,10 @@ import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { CartProductsDetail } from '@webapp/controller/cart/step-0/cart-products-detail';
+import { CartItem } from '@webapp/sdk/types/cart-types';
 import { OrderRequest } from '@webapp/sdk/types/orders-types';
-import { CartItem } from '@webapp/sdk/types/user-types';
 import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
-
 
 interface Step0Props {
   handleNextStep: () => void;

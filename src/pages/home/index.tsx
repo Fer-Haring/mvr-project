@@ -35,6 +35,8 @@ export const HomePage: FunctionComponent = () => {
   const featuredProducts = products.filter((product) => product.featured === true);
   const getDollar = useGetDollarValue();
 
+  console.log(getDollar);
+
   useEffect(() => {
     setProductList(productListArray.data?.products || []);
     getAllUsers().then((users: User[]) => {
@@ -51,9 +53,9 @@ export const HomePage: FunctionComponent = () => {
 
   useEffect(() => {
     if (getDollar.isSuccess) {
-      setDollarValue(getDollar.data?.dollarValue);
+      setDollarValue(getDollar.data?.venta || 0);
     }
-  }, [getDollar.data?.dollarValue, getDollar.isSuccess, setDollarValue]);
+  }, [getDollar.data?.venta, getDollar.isSuccess, setDollarValue]);
 
   return (
     <ContentWrapper>

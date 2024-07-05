@@ -1,3 +1,5 @@
+import { CartItem } from "./cart-types";
+
 export interface LoginResponse {
   access_token: string;
   token_type: string;
@@ -54,16 +56,6 @@ export interface CompletedOrder {
   updated_at?: Date;
   total_order_amount?: number;
   expandable?: boolean;
-}
-
-export interface CartItem {
-  product_id: string;
-  product_name: string;
-  unit_price: number;
-  price_currency: string;
-  sub_total: number;
-  quantity: number;
-  product_image?: string;
 }
 
 export interface Order {

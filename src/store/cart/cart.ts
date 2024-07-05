@@ -1,4 +1,4 @@
-import { CartItem } from '@webapp/sdk/types/user-types';
+import { CartItem } from '@webapp/sdk/types/cart-types';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
@@ -69,7 +69,7 @@ export const useCartStore = create(
     }),
     {
       name: 'cart',
-      storage: createJSONStorage(() => localStorage)
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );

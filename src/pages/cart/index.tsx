@@ -66,7 +66,7 @@ export const CartPage: FunctionComponent = () => {
     setMsgCity(city);
     setOrder({
       ...order,
-      cart_items: cart,
+      cart_items: cart || [],
       currency_used_to_pay: user?.preferred_currency,
       delivery_type: user?.delivery_type,
       payment_method: user?.payment_method,
@@ -89,7 +89,7 @@ export const CartPage: FunctionComponent = () => {
   Datos de pago: ${order.currency_used_to_pay === 'ARS' ? 'Pagaré en pesos argentinos' : 'Pagaré en dólares'}.
 
   Mi pedido es:
-  ${order?.cart_items?.map((product) => `${product.quantity} ${product.product_name}`).join('\n  ')}.
+  ${order?.cart_items?.map((product) => `${product.quantity} ${product.product_name} de ${product.product_category}`).join('\n  ')}.
 
   El total es: $${order.currency_used_to_pay === 'ARS' ? order.total_order_amount_ars : order.total_order_amount_usd}.
 

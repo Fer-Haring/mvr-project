@@ -1,4 +1,4 @@
-import { CartItem } from '@webapp/sdk/types/user-types';
+import { CartItem } from '@webapp/sdk/types/cart-types';
 
 export async function addToCart(cartItem: CartItem) {
   const token = localStorage.getItem('access_token');

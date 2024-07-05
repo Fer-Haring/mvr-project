@@ -7,8 +7,8 @@ import { CartPaymentDetail } from '@webapp/controller/cart/step-2/cart-payment-d
 import { useClearCart } from '@webapp/sdk/mutations/cart/delete-cart-mutation';
 import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
 import { useCreateOrder } from '@webapp/sdk/mutations/orders/save-new-order-mutation';
+import { CartItem } from '@webapp/sdk/types/cart-types';
 import { OrderRequest } from '@webapp/sdk/types/orders-types';
-import { CartItem } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useCartStore } from '@webapp/store/cart/cart';
 import React from 'react';
