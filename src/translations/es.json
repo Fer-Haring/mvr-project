@@ -192,6 +192,8 @@
   "PRODUCT.FILTER.ALL" : "Todos",
   "PRODUCT.FILTER.CATEGORY" : "Categoría",
   "PRODUCT.FILTER.CATEGORY.ALL" : "Todas las Categorías",
+  "PRODUCTS.FILTER.BUTTON" : "Mostrar / Ocultar Filtros",
+  "PRODUCTS.ADJUST.PRICE.RANGE" : "Ajustar el Rango de Precio",
   "PRODUCT.ORDER.BY.PRICE" : "Precio",
   "PRODUCT.ORDER.BY.NAME" : "Nombre",
   "PRODUCT.ORDER.BY.DESC" : "Mayor Precio",

@@ -4,7 +4,6 @@ import Stack from '@mui/material/Stack';
 import ContentWrapper from '@webapp/components/content-wrapper';
 import AdminDataGrid from '@webapp/controller/admin/admin-data-grid';
 import DollarValueInputPaper from '@webapp/controller/admin/admin-panel-papers/dollar-value-admin-paper';
-// import DonutChartPaper from '@webapp/controller/admin/admin-panel-papers/donut-chart-admin-paper';
 import CompletedOrdersPaper from '@webapp/controller/admin/admin-panel-papers/order-status-table/completed-orders-admin-paper';
 import PendingOrdersPaper from '@webapp/controller/admin/admin-panel-papers/order-status-table/pending-orders-admin-paper';
 import TotalOrdersPaper from '@webapp/controller/admin/admin-panel-papers/total-orders-admin-paper';
@@ -12,7 +11,9 @@ import TotalProductsPaper from '@webapp/controller/admin/admin-panel-papers/tota
 import TotalSalesPaper from '@webapp/controller/admin/admin-panel-papers/total-sales-admin-paper';
 import { useGetAllOrders } from '@webapp/sdk/mutations/orders/get-all-orders-query';
 import { useGetPendingOrders } from '@webapp/sdk/mutations/orders/get-pending-orders-query';
-import React, { FunctionComponent, useState } from 'react';
+import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
+import { useProductsListData } from '@webapp/store/products/products-list';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 export const AdminDashboardPage: FunctionComponent = () => {
@@ -24,6 +25,12 @@ export const AdminDashboardPage: FunctionComponent = () => {
     ? getCompletedOrders.data?.filter((order) => order.status === 'completed')
     : [];
   const [activeTable, setActiveTable] = useState<'pending' | 'completed'>('pending');
+  const { setProductList } = useProductsListData();
+  const productListArray = useProductListQuery(1, 500);
+
+  useEffect(() => {
+    setProductList(productListArray.data?.products || []);
+  }, [productListArray.data?.products, setProductList]);
 
   const handleTableChange = (table: 'pending' | 'completed') => {
     setActiveTable(table);

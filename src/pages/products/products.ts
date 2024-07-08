@@ -3,15 +3,15 @@ import { Autocomplete, Button, Paper, Select, TextField } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
 
+
 export const StockWrapper = styled(motion.ul)(({ theme }) => ({
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(min(19.75rem, 100%), 1fr))',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(min(15.75rem, 100%), 1fr))',
   gridGap: theme.spacing(4),
   width: '100%',
   listStyle: 'none',
   padding: 0,
   margin: 0,
-
 }));
 
 export const Slider = styled(BaseSlider)(
@@ -192,17 +192,18 @@ export const CustomInputSearch = styled(TextField)(({ theme }) => ({
 
 export const FiltersHolder = styled(Paper)(({ theme }) => ({
   width: '100%',
-  maxWidth: '320px',
   height: 'auto',
   display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'flex-start',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
   position: 'sticky',
-  top: theme.spacing(0.1),
-  gap: theme.spacing(4),
-  padding: theme.spacing(2),
-  paddingTop: theme.spacing(4),
-  backgroundColor: alpha(theme.palette.common.white, 1),
+  gap: theme.spacing(2),
+  paddingTop: theme.spacing(0.5),
+  paddingBottom: theme.spacing(0.5),
+  paddingRight: theme.spacing(2),
+  paddingLeft: theme.spacing(2),
+  backgroundColor: alpha(theme.palette.common.white, 0.7),
 }));
 
 // Main category button
@@ -213,7 +214,7 @@ export const CategoryButtonWrapper = styled(motion.ul)(({ theme }) => ({
   gridGap: theme.spacing(4),
   width: '100%',
   listStyle: 'none',
-  padding: 0,
+  padding: theme.spacing(5),
   margin: 0,
 }));
 

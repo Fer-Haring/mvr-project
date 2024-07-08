@@ -14,7 +14,7 @@ const Wrapper = styled(Paper)(({ theme }) => ({
   justifyContent: 'space-between',
   gap: theme.spacing(2),
   border: 0,
-  maxWidth: 700,
+  maxWidth: 500,
   minWidth: 200,
   width: '100%',
   backgroundColor: 'rgba(230, 235, 241, 0.9)',
@@ -83,6 +83,7 @@ const ProductCard: FunctionComponent<ProductCardProps> = ({
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
+            mt: theme.spacing(8),
             gap: theme.spacing(2),
           }}
         >

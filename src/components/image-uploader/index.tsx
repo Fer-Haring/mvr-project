@@ -137,7 +137,7 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
   const [imageUrl, setImageUrl] = useState<string | undefined>(defaultImageUrl);
 
   const options: DropzoneOptions = {
-    accept: { 'image/jpeg': [], 'image/png': [], 'image/gif': [] },
+    accept: { 'image/jpeg': [], 'image/png': [], 'image/gif': [], 'image/webp': [] },
     maxFiles: 1,
     // maxSize: 4194304,
     multiple: false,
@@ -192,24 +192,6 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
         return 'COMMON.IMAGE_UPLOAD.TITLE';
     }
   };
-
-  // const showSubtitle = () => {
-  //   if (status === LOADING_STATUS) {
-  //     return (
-  //       <Typography variant="caption" lineHeight="12px">
-  //         {intl.formatMessage({ id: 'COMMON.IMAGE_UPLOAD.UPLOADING.SUBTITLE' })}
-  //       </Typography>
-  //     );
-  //   } else if (status === DONE_STATUS) {
-  //     return;
-  //   } else {
-  //     return (
-  //       <Typography variant="caption" lineHeight="12px">
-  //         {intl.formatMessage({ id: 'COMMON.IMAGE_UPLOAD.SUBTITLE' })}
-  //       </Typography>
-  //     );
-  //   }
-  // };
 
   const handleDeleteImage = (ev: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
     if (disabled) {
