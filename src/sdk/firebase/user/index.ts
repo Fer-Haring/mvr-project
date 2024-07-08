@@ -1,8 +1,7 @@
 import SnackbarUtils from '@webapp/components/snackbar';
-import { CartItem, CompletedOrder } from '@webapp/sdk/types/user-types';
-import { useAdminDataStore } from '@webapp/store/admin/admin-data';
-import { useUserData } from '@webapp/store/users/user-data';
-import { get, getDatabase, ref, update } from 'firebase/database';
+import { CartItem } from '@webapp/sdk/types/cart-types';
+import { CompletedOrder } from '@webapp/sdk/types/user-types';
+import { ref, update } from 'firebase/database';
 import { getDownloadURL, ref as storageReference, uploadBytes } from 'firebase/storage';
 
 import { auth, database, storage } from '../firebase';
@@ -52,25 +51,6 @@ export async function updateUserInDb({
   }
 }
 
-export const getUser = async (userId: string, updateGlobalState = true) => {
-  const db = getDatabase();
-  const starCountRef = ref(db, 'Users/' + userId);
-  try {
-    const snapshot = await get(starCountRef);
-    if (snapshot.exists()) {
-      const data = snapshot.val();
-      if (updateGlobalState) {
-        useUserData.getState().setUser(data);
-      }
-      return data; // Retorna los datos si la captura es exitosa y existe.
-    } else {
-      return null; // O maneja según sea necesario si no hay datos disponibles.
-    }
-  } catch (error) {
-    return null; // O maneja el error según sea necesario.
-  }
-};
-
 export const uploadAvatar = async (file: File) => {
   const userId = auth.currentUser?.uid;
   const storageRef = storageReference(storage, 'Avatars/' + userId);
@@ -86,21 +66,4 @@ export const uploadAvatar = async (file: File) => {
   await update(userRef, { profilePicture: downloadURL });
 
   return downloadURL as string;
-};
-
-export const getAllUsers = async () => {
-  const db = getDatabase();
-  const starCountRef = ref(db, 'Users/');
-  try {
-    const snapshot = await get(starCountRef);
-    if (snapshot.exists()) {
-      const data = snapshot.val();
-      useAdminDataStore.getState().setUsers(data);
-      return data;
-    } else {
-      return null;
-    }
-  } catch (error) {
-    return null;
-  }
 };

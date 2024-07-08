@@ -61,7 +61,7 @@ const ProductCard: FunctionComponent<ProductCardProps> = ({
 
   return (
     <Wrapper className={className || ''} sx={{ ...sx }} role="region" onClick={onClick} key={id}>
-      {image && image !== 'nan' && (
+      {image && image !== '' && (
         <img
           src={image}
           alt="Product"
@@ -73,7 +73,7 @@ const ProductCard: FunctionComponent<ProductCardProps> = ({
         />
       )}
 
-      {image === 'nan' && (
+      {image === '' && (
         <Box
           sx={{
             width: '100%',

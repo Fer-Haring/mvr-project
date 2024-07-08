@@ -8,10 +8,8 @@ import VapeHomeImage from '@webapp/assets/images/home/liquid-home.png';
 import Button from '@webapp/components/button';
 import ContentWrapper from '@webapp/components/content-wrapper';
 import ProductCard from '@webapp/components/product-card';
-import { getAllUsers } from '@webapp/sdk/firebase/user';
 import { useGetDollarValue } from '@webapp/sdk/mutations/admin/get-dollar-value-query';
 import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
-import { User } from '@webapp/sdk/types/user-types';
 import { useAdminDataStore } from '@webapp/store/admin/admin-data';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
@@ -36,11 +34,6 @@ export const HomePage: FunctionComponent = () => {
 
   useEffect(() => {
     setProductList(productListArray.data?.products || []);
-    getAllUsers().then((users: User[]) => {
-      if (users) {
-        setUsers(users);
-      }
-    });
   }, [productListArray.data?.products, setOrders, setProductList, setUsers]);
 
   useEffect(() => {
