@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import ContentWrapper from '@webapp/components/content-wrapper';
 import AdminDataGrid from '@webapp/controller/admin/admin-data-grid';
 import DollarValueInputPaper from '@webapp/controller/admin/admin-panel-papers/dollar-value-admin-paper';
-import DonutChartPaper from '@webapp/controller/admin/admin-panel-papers/donut-chart-admin-paper';
+// import DonutChartPaper from '@webapp/controller/admin/admin-panel-papers/donut-chart-admin-paper';
 import CompletedOrdersPaper from '@webapp/controller/admin/admin-panel-papers/order-status-table/completed-orders-admin-paper';
 import PendingOrdersPaper from '@webapp/controller/admin/admin-panel-papers/order-status-table/pending-orders-admin-paper';
 import TotalOrdersPaper from '@webapp/controller/admin/admin-panel-papers/total-orders-admin-paper';
@@ -43,7 +43,7 @@ export const AdminDashboardPage: FunctionComponent = () => {
         <TotalProductsPaper />
         <TotalOrdersPaper />
         <TotalSalesPaper />
-        <DonutChartPaper />
+        {/* <DonutChartPaper /> */}
       </Stack>
       <Paper sx={{ p: 2, width: '100%', mt: 2, backgroundColor: alpha(theme.palette.common.white, 0.7) }}>
         <ButtonGroup variant="contained" aria-label="order table selection">
@@ -66,7 +66,16 @@ export const AdminDashboardPage: FunctionComponent = () => {
           {formatMessage({ id: 'ADMIN.ORDERS.CONTROL' })}
         </Typography>
         {activeTable === 'pending' ? (
-          <PendingOrdersPaper orders={pendingOrders.data ? pendingOrders.data : []} />
+          pendingOrders.data?.length !== 0 ? (
+            <PendingOrdersPaper orders={pendingOrders.data ? pendingOrders.data : []} />
+          ) : (
+            <Typography
+              variant="body1"
+              sx={{ color: theme.palette.grey[800], fontWeight: 'bold', textAlign: 'center', mt: 4 }}
+            >
+              {formatMessage({ id: 'ADMIN.ORDERS.NO_PENDING_ORDERS' })}
+            </Typography>
+          )
         ) : (
           <CompletedOrdersPaper orders={completedOrders} />
         )}

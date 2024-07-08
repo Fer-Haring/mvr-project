@@ -3,7 +3,7 @@ import ProductCard from '@webapp/components/product-card';
 import { Product } from '@webapp/sdk/types/products-types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { motion } from 'framer-motion';
-import { FunctionComponent, useMemo } from 'react';
+import React, { FunctionComponent, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,8 +22,7 @@ const SimilarProducts: FunctionComponent<SimilarProductsProps> = ({ productList,
     // Filtra productos por la misma categoría, excluyendo el producto actual
     const filteredProducts = Object.values(productList).filter(
       (product) =>
-        product.main_product_category === selectedProduct.main_product_category &&
-        product.id !== selectedProduct.id
+        product.main_product_category === selectedProduct.main_product_category && product.id !== selectedProduct.id
     );
     const shuffledProducts = filteredProducts.sort(() => 0.5 - Math.random());
     return shuffledProducts.slice(0, 4);

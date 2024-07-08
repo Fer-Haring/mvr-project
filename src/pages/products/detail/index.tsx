@@ -1,6 +1,5 @@
-/* eslint-disable react/react-in-jsx-scope */
 import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
-import { FormControl, MenuItem, Select, SelectChangeEvent, styled, useTheme } from '@mui/material';
+import { FormControl, MenuItem, Select, SelectChangeEvent, alpha, styled, useTheme } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -12,11 +11,11 @@ import SimilarProducts from '@webapp/controller/product-detail/similar-products'
 import { useAddToCart } from '@webapp/sdk/mutations/cart/add-to-cart-mutation';
 import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
 import { useGetProductById } from '@webapp/sdk/mutations/products/get-product-by-id-query';
-import { Product } from '@webapp/sdk/types/products-types';
 import { CartItem } from '@webapp/sdk/types/cart-types';
+import { Product } from '@webapp/sdk/types/products-types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';
-import { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
 
@@ -91,13 +90,30 @@ export const ProductDetailPage: FunctionComponent = () => {
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'flex-start',
-          alignItems: 'flex-start',
+          alignItems: 'center',
           gap: theme.spacing(1),
           mb: theme.spacing(6),
         }}
       >
         <ProductImageHolder product={product} id={product?.id} />
-        <Paper sx={{ p: 2, width: '100%', mt: 3, maxWidth: 700, backgroundColor: 'rgba(255,255,255, 0.6)' }}>
+        <Paper
+          sx={{
+            p: 2,
+            width: '100%',
+            mt: 3,
+            maxWidth: 700,
+            backgroundColor: alpha(theme.palette.common.white, 0.6),
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          {stockNumber === 0 && (
+            <OutOfStockOverlay>
+              <Typography variant="h3" fontWeight={600} sx={{ color: theme.palette.error.main }}>
+                {formatMessage({ id: 'PRODUCT.DETAIL.NO.STOCK' })}
+              </Typography>
+            </OutOfStockOverlay>
+          )}
           <Stack
             sx={{
               mt: 1,
@@ -247,4 +263,18 @@ const CustomSelect = styled(Select)(({ theme }) => ({
   '& .MuiSelect-select.MuiSelect-select': {
     color: theme.palette.grey[800],
   },
+}));
+
+const OutOfStockOverlay = styled('div')(({ theme }) => ({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: alpha(theme.palette.common.white, 0.6),
+  zIndex: 1,
+  borderRadius: theme.shape.borderRadius,
 }));

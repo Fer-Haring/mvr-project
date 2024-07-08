@@ -1,15 +1,17 @@
-import { Typography } from '@mui/material';
+import CameraAltRoundedIcon from '@mui/icons-material/CameraAltRounded';
+import { Box, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { SxProps, Theme, styled, useTheme } from '@mui/material/styles';
 import { Product } from '@webapp/sdk/types/products-types';
 import React, { FunctionComponent } from 'react';
+import { useIntl } from 'react-intl';
 
 const Wrapper = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(3),
+  padding: theme.spacing(2),
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  justifyContent: 'center',
+  justifyContent: 'space-between',
   gap: theme.spacing(2),
   border: 0,
   maxWidth: 700,
@@ -51,6 +53,7 @@ const ProductCard: FunctionComponent<ProductCardProps> = ({
   id,
 }) => {
   const theme = useTheme();
+  const { formatMessage } = useIntl();
 
   const strings = description;
 
@@ -58,18 +61,51 @@ const ProductCard: FunctionComponent<ProductCardProps> = ({
 
   return (
     <Wrapper className={className || ''} sx={{ ...sx }} role="region" onClick={onClick} key={id}>
-      {image ? (
+      {image && image !== 'nan' && (
         <img
           src={image}
           alt="Product"
           style={{
             width: '100%',
-            maxWidth: 300,
             height: 'auto',
             borderRadius: 16,
           }}
         />
-      ) : null}
+      )}
+
+      {image === 'nan' && (
+        <Box
+          sx={{
+            width: '100%',
+            height: 'auto',
+            borderRadius: 16,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: theme.spacing(2),
+          }}
+        >
+          <CameraAltRoundedIcon
+            sx={{
+              fontSize: 100,
+              color: theme.palette.grey[500],
+            }}
+          />
+          <Typography
+            sx={{
+              textAlign: 'center',
+              color: theme.palette.grey[500],
+              fontWeight: 'bold',
+              fontSize: 24,
+            }}
+            variant="h6"
+          >
+            {formatMessage({ id: 'PRODUCT.CARD.PRODUCTS.NO_IMAGE' })}
+          </Typography>
+        </Box>
+      )}
+
       <Typography
         sx={{
           textAlign: 'center',

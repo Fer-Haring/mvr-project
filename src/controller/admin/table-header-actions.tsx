@@ -1,36 +1,36 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Stack, useTheme } from '@mui/material';
 import Button from '@webapp/components/button';
 import Modal from '@webapp/components/modal';
-import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import SnackbarUtils from '@webapp/components/snackbar';
+import { useExportCsvExcel } from '@webapp/sdk/mutations/admin/export-csv-excel-query';
+import { useImportXlsxCsv } from '@webapp/sdk/mutations/admin/import-xlsx-csv-mutation';
+import { useAddNewProduct } from '@webapp/sdk/mutations/products/add-new-product-mutation';
+import { Product } from '@webapp/sdk/types/products-types';
+import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
-import * as XLSX from 'xlsx';
 
 import AddProductContent from './modal-components/add-new-product-modal-content';
 import AddProductModal from './modal-components/add-product-modal';
 import BulkEditButton from './table-utils/bulk-edit-button';
-import { Product } from '@webapp/sdk/types/products-types';
-import { useUpdateProduct } from '@webapp/sdk/mutations/products/update-product-mutation';
-import { useAddNewProduct } from '@webapp/sdk/mutations/products/add-new-product-mutation';
 
 interface ProductHeaderActionsProps {
-  setRowData: (value: React.SetStateAction<any[]>) => void;
-  rowData: any[];
   selectedRows: Product[];
 }
 
-const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ setRowData, rowData }) => {
+const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = () => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
   const { product, resetProduct } = useSingleProduct();
   const [openAddProductModal, setOpenAddProductModal] = useState(false);
   const [openExportModal, setOpenExportModal] = useState(false);
-  const {mutate} = useUpdateProduct();
   const addProduct = useAddNewProduct();
+  const [fileType, setFileType] = useState<string>('xlsx');
+  const exportCsvExcel = useExportCsvExcel();
+  const importXlsx = useImportXlsxCsv();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleOpenExportModal = () => {
     setOpenExportModal(true);
@@ -41,7 +41,9 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ setRowData,
   };
 
   const handleAddProduct = () => {
-    addProduct.mutateAsync(product).then(() => {
+    addProduct
+      .mutateAsync(product)
+      .then(() => {
         SnackbarUtils.success(`Producto añadido con éxito, ID: ${product.product_name}`);
         setOpenAddProductModal(false);
         resetProduct();
@@ -51,102 +53,56 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ setRowData,
       });
   };
 
-  const formatData = (data: Product[]) => {
-    return data.map((item) => ({
-      'Nombre del producto': item.product_name,
-      Descripción: item.description,
-      'Categoría Principal': item.main_product_category,
-      'Categoría del producto': item.product_category,
-      'Tipo de Moneda': item.price_currency,
-      'Precio de costo': item.cost_price,
-      'Precio de venta': item.sale_price,
-      'Precio promocional': item.promo_price,
-      'Stock actual': item.actual_stock,
-      'Stock mínimo': item.minimum_stock,
-      'Control de stock': item.stock_control,
-      'Mostrar en catálogo': item.show_in_catalog,
-      Destacado: item.featured,
-      Fracción: item.fraction,
-      id: item.id,
-    }));
-  };
-
   const handleFileUploadAndUpdate = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.xlsx, .xls';
-
-    input.onchange = (event: Event) => {
-      const target = event.target as HTMLInputElement;
-      const file = target.files?.[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-          const data = new Uint8Array(e.target?.result as ArrayBuffer);
-          const workbook = XLSX.read(data, { type: 'array' });
-          const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-          const jsonData = XLSX.utils.sheet_to_json<Product>(worksheet);
-
-          // Update each product in the database
-          for (const product of jsonData) {
-            if (product.id) {
-              mutate({productId: product.id, productData: product});
-            }
-          }
-
-          // Update the local state
-          if (Array.isArray(jsonData)) {
-            setRowData(formatData(jsonData));
-          } else {
-            console.error('jsonData is not an array:', jsonData);
-          }
-        };
-        reader.readAsArrayBuffer(file);
-      }
-    };
-
-    input.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
-  const handleExportToExcel = (data: any[], fileName: string) => {
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    XLSX.writeFile(workbook, `${fileName}.xlsx`);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      importXlsx
+        .mutateAsync(file)
+        .then((result) => {
+          console.log('Importación exitosa:', result);
+          // Aquí puedes manejar la respuesta del servidor si es necesario
+          SnackbarUtils.success('Productos importados con éxito');
+          // Si el servidor devuelve los datos actualizados, puedes actualizar el estado aquí
+          // setRowData(result);
+        })
+        .catch((error) => {
+          console.error('Error en la importación:', error);
+          SnackbarUtils.error(`Error al importar productos: ${error.message}`);
+        });
+    }
   };
 
   const exportToExcel = () => {
-    if (!Array.isArray(rowData)) {
-      console.error('rowData is not an array:', rowData);
-      return;
-    }
-
-    const dataToExport = rowData.map((item: any) => {
-      return {
-        'Nombre del producto': item.productName || 'N/A',
-        Descripción: item.description || 'N/A',
-        'Categoría Principal': item.mainProductCategory || 'N/A',
-        'Categoría del producto': item.productCategory || 'N/A',
-        'Tipo de Moneda': item.priceCurrency || 'N/A',
-        'Precio de costo': item.costPrice || 'N/A',
-        'Precio de venta': item.salePrice || 'N/A',
-        'Precio promocional': item.promoPrice || 'N/A',
-        'Stock actual': item.actualStock || 'N/A',
-        'Stock mínimo': item.minimumStock || 'N/A',
-        'Control de stock': item.stockControl || 'N/A',
-        'Mostrar en catálogo': item.showInCatalog || 'N/A',
-        Destacado: item.featured || 'N/A',
-        Fracción: item.fraction || 'N/A',
-        id: item.id || 'N/A',
-      };
-    });
-    handleExportToExcel(dataToExport, 'Lista de Productos');
-    setOpenExportModal(false);
+    setFileType('xlsx');
+    exportCsvExcel
+      .mutateAsync({
+        fileFormat: fileType,
+      })
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `Lista de Productos.${fileType}`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        setOpenExportModal(false);
+      })
+      .catch((error) => {
+        console.error('Error al exportar:', error);
+      });
   };
 
   return (
     <Stack spacing={2} direction="row" justifyContent="flex-end">
-      <BulkEditButton/>
+      <BulkEditButton />
       <Button
         variant="contained"
         color="primary"
@@ -169,6 +125,7 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ setRowData,
         variant="contained"
         color="primary"
         onClick={handleFileUploadAndUpdate}
+        loading={importXlsx.isPending}
         sx={{
           height: 32,
           width: 'auto',
@@ -183,6 +140,13 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ setRowData,
       >
         {formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BUTTONS.IMPORT.ECXEL' })}
       </Button>
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        accept=".xlsx, .xls"
+        onChange={handleFileChange}
+      />
       <Button
         variant="contained"
         color="primary"

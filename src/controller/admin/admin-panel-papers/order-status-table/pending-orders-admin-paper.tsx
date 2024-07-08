@@ -1,5 +1,6 @@
 import { ISelectCellEditorParams } from '@ag-grid-community/core';
 import { alpha, styled } from '@mui/material';
+import { useGetAllOrders } from '@webapp/sdk/mutations/orders/get-all-orders-query';
 import { useGetPendingOrders } from '@webapp/sdk/mutations/orders/get-pending-orders-query';
 import { useUpdateOrderStatus } from '@webapp/sdk/mutations/orders/update-order-status-mutation';
 import { OrderResponse } from '@webapp/sdk/types/orders-types';
@@ -19,6 +20,7 @@ const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders
   const [rowData, setRowData] = useState<OrderResponse[]>([]);
   const { mutateAsync } = useUpdateOrderStatus();
   const getPendingOrders = useGetPendingOrders();
+  const getCompletedOrders = useGetAllOrders();
   const getRowId = (params: GetRowIdParams) => {
     return (params.data as OrderResponse).order_id || '';
   };
@@ -96,6 +98,7 @@ const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders
       if (id) {
         mutateAsync({ id: id, status: status }).then(() => {
           getPendingOrders.refetch();
+          getCompletedOrders.refetch();
         });
       }
     },

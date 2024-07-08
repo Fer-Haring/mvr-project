@@ -1,4 +1,3 @@
-
 import { Box, CircularProgress, Typography, alpha, styled, useTheme } from '@mui/material';
 import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
 import { useUpdateProduct } from '@webapp/sdk/mutations/products/update-product-mutation';
@@ -15,6 +14,7 @@ import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { AgGridReact } from 'ag-grid-react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useNavigate } from 'react-router-dom';
 
 import ProductHeaderActions from './table-header-actions';
 import { localeText } from './table-utils/ag-grid-text-locale';
@@ -24,12 +24,14 @@ interface AdminDataGridProps {}
 
 const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const { formatMessage } = useIntl();
   const [rowData, setRowData] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const { setProducts, setSelectedProducts, products } = useBulkEditStore();
   const productsList = useProductListQuery(1, 500);
   const { mutate } = useUpdateProduct();
+  const columns = React.useMemo(() => columnDefs(navigate), [navigate]);
 
   useEffect(() => {
     setLoading(true);
@@ -100,7 +102,7 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
       <Typography variant="h5" sx={{ color: theme.palette.grey[800], fontWeight: 'bold', textAlign: 'center', mb: 5 }}>
         {formatMessage({ id: 'ADMIN.PRODUCTS.LIST.TITLE' })}
       </Typography>
-      <ProductHeaderActions rowData={rowData} setRowData={setRowData} selectedRows={products} />
+      <ProductHeaderActions selectedRows={products} />
       <div className="ag-theme-quartz" style={{ height: 400, width: '100%', marginTop: 25 }}>
         {loading ? (
           <Box display="flex" justifyContent="center" alignItems="center" height="100%">
@@ -109,7 +111,7 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
         ) : (
           <StyledAgGridReact
             rowData={rowData}
-            columnDefs={columnDefs}
+            columnDefs={columns}
             pagination={true}
             enterNavigatesVertically={true}
             enterNavigatesVerticallyAfterEdit={true}
@@ -124,7 +126,7 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
             suppressServerSideFullWidthLoadingRow={true}
             gridOptions={{
               rowSelection: 'multiple',
-              rowMultiSelectWithClick: true,
+              rowMultiSelectWithClick: false,
             }}
           />
         )}
@@ -178,6 +180,14 @@ const StyledAgGridReact = styled(AgGridReact)(({ theme }) => ({
     textAlign: 'center',
     borderRadius: theme.spacing(2),
     border: 'none',
+  },
+  '& .product-name-cell': {
+    cursor: 'pointer',
+    '&:hover': {
+      color: theme.palette.primary.main,
+      fontWeight: theme.typography.fontWeightBold,
+      fontSize: 18,
+    },
   },
   '& .ag-header-container': {
     backgroundColor: theme.palette.grey[200],
