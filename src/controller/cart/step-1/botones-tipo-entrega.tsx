@@ -3,25 +3,26 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
-import { updateUserInDb } from '@webapp/sdk/firebase/user';
 import { User } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useUserData } from '@webapp/store/users/user-data';
-import { useUserId } from '@webapp/store/users/user-id';
-import { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 
+
+
 import CurrencySelectButtons from './botones-moneda-pago';
+
 
 interface DeliveryTypeButtonsProps {
   className?: string;
   userData: User;
+  onValidChange?: (isValid: boolean) => void;
 }
 
-const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ userData }) => {
+const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ userData, onValidChange }) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
-  const { userId } = useUserId();
   const { setUser } = useUserData();
   const [deliveryType, setDeliveryType] = useState(userData.delivery_type);
   const { setOrder, order } = useMessageStore();
@@ -37,12 +38,20 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ user
   };
 
   const handleOnChange = (selectedDelivery: string) => {
+    if (onValidChange) {
+      onValidChange(true);
+    }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id: ignoredUserId, ...restOfUserData } = userData;
-    updateUserInDb({ userId, ...restOfUserData, deliveryType: selectedDelivery });
     setUser({ ...userData, delivery_type: selectedDelivery });
-    setOrder({ ...order, deliveryType: selectedDelivery });
+    setOrder({ ...order, delivery_type: selectedDelivery });
   };
+
+    React.useEffect(() => {
+      if (onValidChange) {
+        onValidChange(!!userData.delivery_type);
+      }
+    }, []);
 
   return (
     <Stack gap={2} sx={{ width: '33%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

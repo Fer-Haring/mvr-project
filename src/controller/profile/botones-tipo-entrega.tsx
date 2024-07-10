@@ -3,11 +3,11 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
+import { useUpdateUser } from '@webapp/sdk/mutations/auth/user-update-mutation';
 import { User } from '@webapp/sdk/types/user-types';
 import { useUserData } from '@webapp/store/users/user-data';
-import { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { useUpdateUser } from '@webapp/sdk/mutations/auth/user-update-mutation';
 
 interface DeliveryTypeButtonsProps {
   className?: string;
@@ -19,7 +19,7 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ user
   const theme = useTheme();
   const { setUser } = useUserData();
   const [deliveryType, setDeliveryType] = useState(userData?.delivery_type);
-  const {mutate} = useUpdateUser(userData?.id);
+  const { mutate } = useUpdateUser(userData?.id);
 
   const handleSelectDelivery = () => {
     setDeliveryType('Delivery');

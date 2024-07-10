@@ -4,6 +4,7 @@ import Paper from '@mui/material/Paper';
 import ContentWrapper from '@webapp/components/content-wrapper';
 import CartEmptyState from '@webapp/controller/cart/empty-cart';
 import { useGetUserByIdMutation } from '@webapp/sdk/mutations/auth/get-user-by-id-mutation';
+import { useUpdateUser } from '@webapp/sdk/mutations/auth/user-update-mutation';
 import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
 import { User } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
@@ -13,10 +14,13 @@ import { useUserData } from '@webapp/store/users/user-data';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+
+
 import { Step0 } from './steps/step-0';
 import { Step1 } from './steps/step-1';
 import { Step2 } from './steps/step-2';
 import { Step3 } from './steps/step-3';
+
 
 export const CartPage: FunctionComponent = () => {
   const theme = useTheme();
@@ -29,6 +33,8 @@ export const CartPage: FunctionComponent = () => {
   const { setOrders } = useCompletedOrdersStore();
   const { data: cart } = useGetUserCart();
   const userData = useGetUserByIdMutation(useUserStore((state) => state.userInfo?.userId) || '');
+  const userId = useUserStore((state) => state.userInfo?.userId);
+  const updateUser = useUpdateUser(userId || '');
 
   useEffect(() => {
     userData.refetch();
@@ -48,9 +54,31 @@ export const CartPage: FunctionComponent = () => {
     lastName: msgLastName,
   } = useMessageStore();
 
+  console.log('user', user);
+
   const handleNextStep = () => {
     handleCreateMessage();
     setStep((prevStep) => prevStep + 1);
+  };
+
+  const handle2NextStep = async () => {
+    if (checked && userId) {
+      try {
+        await updateUser.mutateAsync({
+          payload: {
+            address,
+            city,
+            payment_method: order.payment_method,
+            delivery_type: order.delivery_type,
+            deliver_zone: order.currency_used_to_pay,
+          },
+        });
+        handleCreateMessage();
+        setStep((prevStep) => prevStep + 1);
+      } catch (error) {
+        console.error('Failed to update user data:', error);
+      }
+    }
   };
 
   const handlePreviousStep = () => {
@@ -71,11 +99,14 @@ export const CartPage: FunctionComponent = () => {
       delivery_type: user?.delivery_type,
       payment_method: user?.payment_method,
       total_products: cart?.length,
+      deliver_zone: user?.deliver_zone,
       status: 'Pending',
       user: user!,
     });
     setOrders([order]);
   }, [user, setName, setLastName, setOrder, address, setMsgAddress]);
+
+  console.log(order?.delivery_type);
 
   const fullMessage = `
   Hola, quiero hacer un pedido.\n
@@ -117,8 +148,9 @@ export const CartPage: FunctionComponent = () => {
           {step === 1 && (
             <Step1
               user={user}
+              order={order}
               handlePreviousStep={handlePreviousStep}
-              handleNextStep={handleNextStep}
+              handleNextStep={handle2NextStep}
               city={city}
               setCity={setCity}
               address={address}

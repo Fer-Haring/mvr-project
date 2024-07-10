@@ -39,7 +39,7 @@ const SimilarProducts: FunctionComponent<SimilarProductsProps> = ({ productList,
           <ProductCard
             key={id}
             id={id}
-            image={''}
+            image={product.product_image}
             name={product.product_name}
             description={product.description}
             price={product.sale_price}
@@ -59,7 +59,7 @@ export default SimilarProducts;
 
 const Wrapper = styled(motion.ul)(({ theme }) => ({
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(min(19.75rem, 100%), 1fr))',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(min(13.75rem, 100%), 1fr))',
   gridGap: theme.spacing(4),
   width: '100%',
   listStyle: 'none',

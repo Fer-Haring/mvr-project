@@ -8,22 +8,24 @@ import { User } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useUserData } from '@webapp/store/users/user-data';
 import { useUserId } from '@webapp/store/users/user-id';
-import { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
+
 
 interface PaymentTypeButtonsProps {
   className?: string;
   userData: User;
+  onValidChange?: (isValid: boolean) => void;
 }
 
-const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userData }) => {
+const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userData, onValidChange }) => {
   const { formatMessage } = useIntl();
   const { userId } = useUserId();
   const { setUser } = useUserData();
   const theme = useTheme();
   const { setOrder, order } = useMessageStore();
 
-  const [selectedPaymentType, setSelectedPaymentType] = useState(userData.payment_method || '');
+  const [selectedPaymentType, setSelectedPaymentType] = useState(userData?.payment_method || '');
 
   const selectPaymentType = (paymentType: string) => {
     setSelectedPaymentType(paymentType);
@@ -31,12 +33,21 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
   };
 
   const handleOnChange = (selectedDelivery: string) => {
+    if (onValidChange) {
+      onValidChange(true);
+    }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id: ignoredUserId, ...restOfUserData } = userData;
     updateUserInDb({ userId, ...restOfUserData, paymentMethod: selectedDelivery });
     setUser({ ...userData, payment_method: selectedDelivery });
-    setOrder({ ...order, paymentMethod: selectedDelivery });
+    setOrder({ ...order, payment_method: selectedDelivery });
   };
+
+  React.useEffect(() => {
+    if (onValidChange) {
+      onValidChange(!!userData?.payment_method);
+    }
+  }, []);
 
   const buttonStyle = (paymentType: string) => ({
     width: '100%',

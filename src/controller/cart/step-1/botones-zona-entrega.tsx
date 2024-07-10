@@ -8,15 +8,17 @@ import { User } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useUserData } from '@webapp/store/users/user-data';
 import { useUserId } from '@webapp/store/users/user-id';
-import { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
+
 
 interface ZoneDeliverButtonsProps {
   className?: string;
   userData: User;
+  onValidChange?: (isValid: boolean) => void;
 }
 
-const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userData }) => {
+const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userData, onValidChange }) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
   const { userId } = useUserId();
@@ -35,6 +37,9 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
   };
 
   const handleOnChange = (selectedDelivery: string) => {
+    if (onValidChange) {
+      onValidChange(true);
+    }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id: ignoredUserId, ...restOfUserData } = userData;
     updateUserInDb({ userId, ...restOfUserData, deliverZone: selectedDelivery });
@@ -46,6 +51,12 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
       setDeliverValue(3500);
     }
   };
+
+  React.useEffect(() => {
+    if (onValidChange) {
+      onValidChange(!!userData.deliver_zone);
+    }
+  }, []);
 
   return (
     <Stack gap={2} sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 4 }}>

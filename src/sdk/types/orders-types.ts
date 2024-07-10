@@ -51,6 +51,7 @@ export interface OrderRequest {
   total_products?: number;
   total_order_amount_usd?: number;
   total_order_amount_ars?: number;
+  deliver_zone?: string;
   status?: string;
   currency_used_to_pay?: string;
   payment_method?: string;

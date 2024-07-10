@@ -8,8 +8,9 @@ import InputField from '@webapp/components/form/input';
 import PaymentTypeButtons from '@webapp/controller/cart/step-1/botones-metodo-pago';
 import DeliveryTypeButtons from '@webapp/controller/cart/step-1/botones-tipo-entrega';
 import ZoneDeliverButtons from '@webapp/controller/cart/step-1/botones-zona-entrega';
+import { OrderRequest } from '@webapp/sdk/types/orders-types';
 import { User } from '@webapp/sdk/types/user-types';
-import React from 'react';
+import React, { useState } from 'react';
 import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 
@@ -23,6 +24,7 @@ interface Step1Props {
   setAddress: (address: string) => void;
   checked: boolean;
   setChecked: (checked: boolean) => void;
+  order: OrderRequest;
 }
 
 export const Step1: FunctionComponent<Step1Props> = ({
@@ -35,9 +37,46 @@ export const Step1: FunctionComponent<Step1Props> = ({
   setAddress,
   checked,
   setChecked,
+  order,
 }) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
+  const [isPaymentTypeValid, setIsPaymentTypeValid] = useState(false);
+  const [isDeliveryTypeValid, setIsDeliveryTypeValid] = useState(false);
+  const [isZoneDeliveryValid, setIsZoneDeliveryValid] = useState(false);
+  const [isAddressValid, setIsAddressValid] = useState(false);
+  const [isCityValid, setIsCityValid] = useState(false);
+
+  const isValidField = (value: string | undefined): boolean => {
+    return !!value && value.trim() !== '';
+  };
+
+  const areAllFieldsValid = () => {
+    if (user?.delivery_type === 'Delivery') {
+      return isPaymentTypeValid && isDeliveryTypeValid && isZoneDeliveryValid && isAddressValid && isCityValid;
+    } else {
+      return isPaymentTypeValid && isDeliveryTypeValid;
+    }
+  };
+
+  React.useEffect(() => {
+    setIsAddressValid(isValidField(user?.address));
+    setIsCityValid(isValidField(user?.city));
+    setIsPaymentTypeValid(!!user?.payment_method);
+    setIsDeliveryTypeValid(!!user?.delivery_type);
+    setIsZoneDeliveryValid(!!user?.deliver_zone);
+  }, [user]);
+
+  console.log(
+    'Step1Props',
+    isPaymentTypeValid,
+    isDeliveryTypeValid,
+    isZoneDeliveryValid,
+    isAddressValid,
+    isCityValid,
+    areAllFieldsValid()
+  );
+
   return (
     <Stack direction={'column'} gap={2} width={'100%'} justifyContent={'center'} alignItems={'center'}>
       <Button
@@ -64,9 +103,10 @@ export const Step1: FunctionComponent<Step1Props> = ({
           gap: 1,
         }}
       >
-        <PaymentTypeButtons userData={user} />
-        <DeliveryTypeButtons userData={user} />
-        {user?.delivery_type === 'Delivery' && (
+        <PaymentTypeButtons userData={user} onValidChange={setIsPaymentTypeValid} />
+        <DeliveryTypeButtons userData={user} onValidChange={setIsDeliveryTypeValid} />
+
+        {order?.delivery_type === 'Delivery' && (
           <Box sx={{ width: '33%' }}>
             <Typography
               variant="h4"
@@ -90,7 +130,10 @@ export const Step1: FunctionComponent<Step1Props> = ({
               name="address"
               label={formatMessage({ id: 'COMMON.ADRESS' })}
               value={address}
-              onChange={(e) => setAddress(e.target.value)}
+              onChange={(e) => {
+                setAddress(e.target.value);
+                setIsAddressValid(isValidField(e.target.value));
+              }}
               type="text"
               fullWidth
               size="small"
@@ -104,7 +147,10 @@ export const Step1: FunctionComponent<Step1Props> = ({
               name="city"
               label={formatMessage({ id: 'COMMON.CITY' })}
               value={city}
-              onChange={(e) => setCity(e.target.value)}
+              onChange={(e) => {
+                setCity(e.target.value);
+                setIsCityValid(isValidField(e.target.value));
+              }}
               type="text"
               fullWidth
               size="small"
@@ -114,7 +160,7 @@ export const Step1: FunctionComponent<Step1Props> = ({
               aria-hidden="true"
               sx={{ width: '100%' }}
             />
-            <ZoneDeliverButtons userData={user} />
+            <ZoneDeliverButtons userData={user} onValidChange={setIsZoneDeliveryValid} />
           </Box>
         )}
       </Box>
@@ -123,6 +169,7 @@ export const Step1: FunctionComponent<Step1Props> = ({
           <Checkbox
             checked={checked}
             onChange={(e) => setChecked(e.target.checked)}
+            disabled={!areAllFieldsValid()}
             sx={{ color: theme.palette.grey[800] }}
           />
           <Typography variant="body1" fontWeight={400} sx={{ color: theme.palette.grey[800], textAlign: 'center' }}>
