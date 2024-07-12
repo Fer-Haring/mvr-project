@@ -14,7 +14,6 @@ export async function userSignIn(payload: LoginPayload): Promise<LoginResponse> 
   };
 
   const URL = 'https://mvr-prod.onrender.com';
-  // const URL = 'http://127.0.0.1:8000';
 
   return fetch(`${URL}/identity/login`, options)
     .then(async (response) => {

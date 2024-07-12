@@ -4,7 +4,7 @@ import { OrderResponse } from '@webapp/sdk/types/orders-types';
 
 
 export async function getPendingOrders(): Promise<OrderResponse[]> {
-  const URL = 'http://127.0.0.1:8000/orders';
+  const URL = 'https://mvr-prod.onrender.com/orders';
   const accessToken = localStorage.getItem('access_token');
 
   const options = {

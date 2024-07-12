@@ -9,7 +9,7 @@ export interface OrderResponse {
   currency_used_to_pay?: string;
   payment_method?: string;
   delivery_type?: string;
-  create_at?: Date;
+  created_at?: Date;
   updated_at?: Date;
   total_order_amount?: number;
   expandable?: boolean;
@@ -56,7 +56,7 @@ export interface OrderRequest {
   currency_used_to_pay?: string;
   payment_method?: string;
   delivery_type?: string;
-  create_at?: Date;
+  created_at?: Date;
   updated_at?: Date;
   total_order_amount?: number;
   expandable?: boolean;

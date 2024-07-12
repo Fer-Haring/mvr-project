@@ -40,7 +40,7 @@ export const useMessageStore = create(
         currency_used_to_pay: '',
         payment_method: '',
         delivery_type: '',
-        create_at: new Date(),
+        created_at: new Date(),
         updated_at: new Date(),
         user: {
           id: '',
@@ -77,7 +77,7 @@ export const useMessageStore = create(
             currency_used_to_pay: '',
             payment_method: '',
             delivery_type: '',
-            create_at: new Date(),
+            created_at: new Date(),
             updated_at: new Date(),
             user: {
               id: '',

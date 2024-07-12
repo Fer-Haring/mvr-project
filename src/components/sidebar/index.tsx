@@ -62,7 +62,6 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ className }) => {
       if (userData) {
         setUser(userData.data as User);
       }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData.data]);
 
   return (
@@ -93,7 +92,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ className }) => {
       <div className="content">
         <List>
           {sidebarItems
-            // .filter((item) => !item.private || (item.private && user.admin ))
+            .filter((item) => !item.private || (item.private && user?.admin ))
             .filter((item) => !item.private || (item.private ))
             .map((item) => (
               <SidebarItem

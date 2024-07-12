@@ -1,6 +1,7 @@
-import { Button, ButtonGroup, Typography, alpha, useTheme } from '@mui/material';
+import { ButtonGroup, Typography, alpha, useTheme } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
+import Button from '@webapp/components/button';
 import ContentWrapper from '@webapp/components/content-wrapper';
 import AdminDataGrid from '@webapp/controller/admin/admin-data-grid';
 import DollarValueInputPaper from '@webapp/controller/admin/admin-panel-papers/dollar-value-admin-paper';
@@ -56,6 +57,7 @@ export const AdminDashboardPage: FunctionComponent = () => {
         <ButtonGroup variant="contained" aria-label="order table selection">
           <Button
             size="small"
+            color="primary"
             onClick={() => handleTableChange('pending')}
             variant={activeTable === 'pending' ? 'contained' : 'outlined'}
           >
@@ -63,6 +65,7 @@ export const AdminDashboardPage: FunctionComponent = () => {
           </Button>
           <Button
             size="small"
+            color="primary"
             onClick={() => handleTableChange('completed')}
             variant={activeTable === 'completed' ? 'contained' : 'outlined'}
           >

@@ -1,5 +1,3 @@
-import { FunctionComponent } from 'react';
-
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -7,6 +5,7 @@ import { default as MuiModal, ModalProps as MuiModalProps } from '@mui/material/
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
+import React, { FunctionComponent } from 'react';
 
 import Button, { ButtonColors } from '../button';
 
@@ -61,7 +60,6 @@ const Modal: FunctionComponent<ModalProps> = ({
   handleClose,
   ...props
 }) => {
-
   return (
     <StyledMuiModal
       className={className || ''}

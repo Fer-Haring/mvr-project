@@ -1,6 +1,5 @@
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
-import FilterAltRoundedIcon from '@mui/icons-material/FilterAltRounded';
-import { Box, IconButton, SelectChangeEvent, Tooltip, Typography } from '@mui/material';
+import { Box, IconButton, SelectChangeEvent, Typography } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
 import ContentWrapper from '@webapp/components/content-wrapper';
@@ -35,7 +34,7 @@ export const ProductsPage: FunctionComponent = () => {
   const [mainCategory, setMainCategory] = useState<string>('');
   const [categoriesOptions, setCategoriesOptions] = useState<AutocompleteOption[]>([]);
   const [category, setCategory] = useState<AutocompleteOption | null>(null);
-  const [showHideFilters, setShowHideFilters] = useState<boolean>(false);
+  const showHideFilters = useState<boolean>(true);
 
   const { data: productListData } = useProductListQuery(1, 500);
 
@@ -145,17 +144,17 @@ export const ProductsPage: FunctionComponent = () => {
                 </Typography>
               </Box>
               <Box sx={{ width: 48 }} />
-              <Tooltip title={formatMessage({ id: 'PRODUCTS.FILTER.BUTTON' })}>
+              {/* <Tooltip title={formatMessage({ id: 'PRODUCTS.FILTER.BUTTON' })}>
                 <IconButton
                   sx={{ color: theme.palette.common.white, zIndex: 1 }}
                   onClick={() => setShowHideFilters(!showHideFilters)}
                 >
                   <FilterAltRoundedIcon sx={{ width: 32, height: 32 }} />
                 </IconButton>
-              </Tooltip>
+              </Tooltip> */}
             </Box>
           )}
-          {mainCategory && showHideFilters && (
+          {mainCategory && (
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: showHideFilters ? 1 : 0, y: showHideFilters ? 0 : -20 }}

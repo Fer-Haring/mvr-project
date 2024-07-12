@@ -1,9 +1,9 @@
 import { refreshToken } from '../auth/user-refresh-token';
 
-
-export async function exportCsvExcel(fileFormat: string) {
-  const URL = 'https://mvr-prod.onrender.com/products';
+export async function getOrderById(orderId: string) {
+  const URL = 'https://mvr-prod.onrender.com';
   const accessToken = localStorage.getItem('access_token');
+
   const options = {
     method: 'GET',
     headers: {
@@ -11,17 +11,20 @@ export async function exportCsvExcel(fileFormat: string) {
       Authorization: `Bearer ${accessToken}`,
     },
   };
-  const queryParam = `?file_format=${fileFormat}`;
-  let response = await fetch(`${URL}/export_product_list${queryParam}`, options);
+
+  let response = await fetch(`${URL}/orders/get_order/${orderId}`, options);
+
   if (response.status === 401) {
     const newAccessToken = await refreshToken();
-    localStorage.setItem('access_token', newAccessToken);
     options.headers['Authorization'] = `Bearer ${newAccessToken}`;
-    response = await fetch(`${URL}/export_product_list${queryParam}`, options);
+    response = await fetch(`${URL}/orders/get_order/${orderId}`, options);
   }
+
   if (!response.ok) {
     const err = await response.json();
-    throw new Error(err.detail || 'Failed to export File');
+    throw new Error(err.detail);
   }
-  return response.blob();
+
+  const order = await response.json();
+  return order;
 }

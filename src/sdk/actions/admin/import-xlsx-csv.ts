@@ -3,7 +3,7 @@ import { refreshToken } from '../auth/user-refresh-token';
 
 
 export async function importXlsx(file: File) {
-  const URL = 'http://127.0.0.1:8000/products/import_product_list';
+  const URL = 'https://mvr-prod.onrender.com/products/import_product_list';
   const accessToken = localStorage.getItem('access_token');
 
   const formData = new FormData();

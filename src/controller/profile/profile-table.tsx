@@ -159,7 +159,7 @@ export const ProfileTable: FunctionComponent = () => {
           return <CellsTypos>{convertedPrice(price, priceCurrency!)}</CellsTypos>;
         },
       }),
-      columnHelper.accessor((row) => row.create_at, {
+      columnHelper.accessor((row) => row.created_at, {
         id: 'createdAt',
         header: () => (
           <Stack>

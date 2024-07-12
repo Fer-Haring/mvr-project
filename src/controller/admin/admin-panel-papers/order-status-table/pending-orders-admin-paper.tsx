@@ -4,6 +4,7 @@ import { useGetAllOrders } from '@webapp/sdk/mutations/orders/get-all-orders-que
 import { useGetPendingOrders } from '@webapp/sdk/mutations/orders/get-pending-orders-query';
 import { useUpdateOrderStatus } from '@webapp/sdk/mutations/orders/update-order-status-mutation';
 import { OrderResponse } from '@webapp/sdk/types/orders-types';
+import { useEditingOrderStore } from '@webapp/store/orders/editing-order-store';
 import { CellEditingStoppedEvent, ColDef, GetRowIdParams } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -11,13 +12,16 @@ import { AgGridReact } from 'ag-grid-react';
 import { format } from 'date-fns';
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useNavigate } from 'react-router-dom';
 
 interface PendingOrdersPaperProps {
   orders: OrderResponse[];
 }
 const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders }) => {
   const { formatMessage } = useIntl();
+  const navigate = useNavigate();
   const [rowData, setRowData] = useState<OrderResponse[]>([]);
+  const { setOrders } = useEditingOrderStore();
   const { mutateAsync } = useUpdateOrderStatus();
   const getPendingOrders = useGetPendingOrders();
   const getCompletedOrders = useGetAllOrders();
@@ -40,8 +44,17 @@ const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders
     return format(date, 'dd/MM/yyyy');
   };
 
-  const columnDefs: ColDef[] = [
-    { headerName: 'Order ID', field: 'order_id', sort: 'desc' },
+  const columnDefs = (navigate: (path: string) => void): ColDef[] => [
+    {
+      headerName: 'Order ID',
+      field: 'order_id',
+      sort: 'desc',
+      onCellClicked(event) {
+        navigate(`/admin-dashboard/editar-orden-pendiente/${event.data.order_id}`);
+        setOrders([event.data]);
+      },
+      cellClass: 'order-id-cell',
+    },
     { headerName: 'User ID', field: 'user_id', hide: true },
     { headerName: 'User Name', field: 'user.name' },
     { headerName: 'Total Productos', field: 'total_products' },
@@ -61,6 +74,8 @@ const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders
     { headerName: 'Fecha de Pedido', field: 'created_at', valueFormatter: (params) => formatDate(params.value) },
     { headerName: 'Updated At', field: 'updated_at', hide: true, cellDataType: 'date' },
   ];
+
+  const columns = React.useMemo(() => columnDefs(navigate), [navigate]);
 
   const defaultColDef = useMemo<ColDef>(() => {
     return {
@@ -109,7 +124,7 @@ const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders
     <div className="ag-theme-quartz" style={{ height: 300, width: '100%', marginTop: 25 }}>
       <StyledAgGridReact
         rowData={rowData}
-        columnDefs={columnDefs}
+        columnDefs={columns}
         pagination={false}
         defaultColDef={defaultColDef}
         getRowId={getRowId}
@@ -179,6 +194,14 @@ const StyledAgGridReact = styled(AgGridReact)(({ theme }) => ({
     borderRadius: theme.spacing(2),
     '& .ag-header-cell': {
       border: 0,
+    },
+  },
+  '& .order-id-cell': {
+    cursor: 'pointer',
+    '&:hover': {
+      color: theme.palette.primary.main,
+      fontWeight: theme.typography.fontWeightBold,
+      fontSize: 18,
     },
   },
 }));

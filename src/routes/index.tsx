@@ -2,6 +2,7 @@ import {
   AboutUsPage,
   AdminDashboardPage,
   ContactPage,
+  EditPendingOrdersPage,
   HomePage,
   ProductDetailPage,
   ProductsPage,
@@ -91,6 +92,10 @@ const ProjectRoutes: Route[] = [
   {
     path: '/productos/:id?',
     component: <ProductDetailPage />,
+  },
+  {
+    path: '/admin-dashboard/editar-orden-pendiente/:id?',
+    component: <EditPendingOrdersPage />,
   },
   {
     path: '/cart',

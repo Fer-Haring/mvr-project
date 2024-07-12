@@ -54,7 +54,6 @@ const Autocomplete: FunctionComponent<AutocompleteProps<AutocompleteOption>> = (
   className,
   label,
   inputName,
-  startIcon,
   error = false,
   noDefaultHelperText,
   ...props

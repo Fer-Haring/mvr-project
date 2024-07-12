@@ -1,7 +1,6 @@
 export async function downloadOrderPdf(orderId: string): Promise<{ blob: Blob; filename: string }> {
   const token = localStorage.getItem('access_token');
   const URL = 'https://mvr-prod.onrender.com/orders';
-  // const URL = 'http://127.0.0.1:8000/orders';
 
   const response = await fetch(`${URL}/generate_bill/${orderId}`, {
     method: 'POST',
