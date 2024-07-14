@@ -54,8 +54,6 @@ export const CartPage: FunctionComponent = () => {
     lastName: msgLastName,
   } = useMessageStore();
 
-  console.log('user', user);
-
   const handleNextStep = () => {
     handleCreateMessage();
     setStep((prevStep) => prevStep + 1);
@@ -105,8 +103,6 @@ export const CartPage: FunctionComponent = () => {
     });
     setOrders([order]);
   }, [user, setName, setLastName, setOrder, address, setMsgAddress]);
-
-  console.log(order?.delivery_type);
 
   const fullMessage = `
   Hola, quiero hacer un pedido.\n

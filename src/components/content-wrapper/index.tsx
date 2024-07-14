@@ -4,6 +4,7 @@ import BackgroundImage from '@webapp/assets/images/content/background.jpg';
 import { easing } from '@webapp/components/framer';
 import Navbar from '@webapp/components/navbar';
 import Sidebar, { NAVBAR_HEIGHT } from '@webapp/components/sidebar';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { motion } from 'framer-motion';
 import React, { FunctionComponent } from 'react';
 
@@ -15,9 +16,10 @@ interface ContentWrapperProps {
   loading?: boolean;
 }
 const ContentWrapper: FunctionComponent<ContentWrapperProps> = ({ className, children, loading }) => {
+  const isMobile = useIsMobile();
   return (
     <Wrapper className={className || ''}>
-      <Sidebar />
+      {!isMobile && <Sidebar />}
       <InsideContent>
         <Navbar />
         <motion.div

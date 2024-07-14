@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { updateUserInDb } from '@webapp/sdk/firebase/user';
 import { User } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
@@ -10,6 +11,7 @@ import { useUserData } from '@webapp/store/users/user-data';
 import { useUserId } from '@webapp/store/users/user-id';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
+
 
 interface ZoneDeliverButtonsProps {
   className?: string;
@@ -20,9 +22,10 @@ interface ZoneDeliverButtonsProps {
 const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userData, onValidChange }) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
+  const isMobile = useIsMobile();
   const { userId } = useUserId();
   const { setUser } = useUserData();
-  const [deliveryType, setDeliveryType] = useState(userData.deliver_zone);
+  const [deliveryType, setDeliveryType] = useState(userData?.deliver_zone);
   const { setDeliverValue } = useMessageStore();
 
   const handleLBEZones = () => {
@@ -63,7 +66,7 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
         variant="h4"
         fontWeight={600}
         textAlign="center"
-        fontSize={'1.6vw'}
+        fontSize={isMobile ? '3vw' : '1.6vw'}
         sx={{ mb: 0, color: theme.palette.grey[900] }}
       >
         {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.SELECTOR' })}

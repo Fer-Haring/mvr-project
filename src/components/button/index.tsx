@@ -1,5 +1,6 @@
 import { default as MuiLoadingButton, LoadingButtonProps as MuiLoadingButtonProps } from '@mui/lab/LoadingButton';
 import { styled } from '@mui/material';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
 import React, { FunctionComponent } from 'react';
 
 // Extender los colores de los botones
@@ -28,11 +29,13 @@ interface ButtonProps extends Omit<MuiLoadingButtonProps, 'color'> {
 }
 
 const Button: FunctionComponent<ButtonProps> = ({ className, children, hasBorder, color = 'primary', ...props }) => {
+  const isMobile = useIsMobile();
   return (
     <CustomButtonStyled
       className={`${className || ''} ${hasBorder ? 'border' : ''}`}
       variant={props.variant ? props.variant : 'contained'}
       color={color}
+      isMobile={isMobile}
       {...props}
       onKeyDown={(e) => {
         // This is to allow the user to press the space bar or enter key to click the button.
@@ -55,10 +58,11 @@ export default Button;
 
 const CustomButtonStyled = styled(MuiLoadingButton, { shouldForwardProp: (prop) => prop !== 'color' })<{
   color: ButtonColors;
-}>(({ theme, color }) => ({
+  isMobile: boolean;
+}>(({ theme, color, isMobile }) => ({
   width: '100%',
   maxWidth: '350px',
-  fontSize: '1vw',
+  fontSize: !isMobile ? '1vw' : '2.5vw',
   fontWeight: 600,
   color: theme.palette.common.black,
   cursor: color === 'disabled' ? 'not-allowed' : 'pointer',

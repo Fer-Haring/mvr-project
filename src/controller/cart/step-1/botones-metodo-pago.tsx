@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { updateUserInDb } from '@webapp/sdk/firebase/user';
 import { User } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
@@ -19,6 +20,7 @@ interface PaymentTypeButtonsProps {
 
 const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userData, onValidChange }) => {
   const { formatMessage } = useIntl();
+  const isMobile = useIsMobile();
   const { userId } = useUserId();
   const { setUser } = useUserData();
   const theme = useTheme();
@@ -55,7 +57,7 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
         variant="h4"
         fontWeight={600}
         textAlign="center"
-        fontSize={'1.6vw'}
+        fontSize={isMobile ? '3vw' : '1.6vw'}
         sx={{ mb: 2, color: theme.palette.grey[900] }}
       >
         {formatMessage({ id: 'PROFILE.USER_INFO.SELECTED.PAYMENT' })}
@@ -65,7 +67,7 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          flexDirection: 'row',
+          flexDirection: isMobile ? 'column' : 'row',
           gap: 2,
           width: '100%',
         }}

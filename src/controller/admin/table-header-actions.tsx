@@ -64,8 +64,7 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = () => {
     if (file) {
       importXlsx
         .mutateAsync(file)
-        .then((result) => {
-          console.log('Importación exitosa:', result);
+        .then(() => {
           // Aquí puedes manejar la respuesta del servidor si es necesario
           SnackbarUtils.success('Productos importados con éxito');
           // Si el servidor devuelve los datos actualizados, puedes actualizar el estado aquí

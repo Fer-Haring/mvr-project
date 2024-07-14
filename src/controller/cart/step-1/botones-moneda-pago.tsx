@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { updateUserInDb } from '@webapp/sdk/firebase/user';
 import { User } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
@@ -21,9 +22,10 @@ interface CurrencySelectButtonsProps {
 const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({ userData }) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
+  const isMobile = useIsMobile();
   const { userId } = useUserId();
   const { setUser } = useUserData();
-  const [preferredCurrency, setPreferredCurrency] = useState(userData.preferred_currency);
+  const [preferredCurrency, setPreferredCurrency] = useState(userData?.preferred_currency);
   const { setOrder, order } = useMessageStore();
 
   const handleSelectDollar = () => {
@@ -50,7 +52,7 @@ const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({ 
         variant="h4"
         fontWeight={600}
         textAlign="center"
-        fontSize={'1.6vw'}
+        fontSize={isMobile ? '3vw' : '1.6vw'}
         sx={{ mb: 0, color: theme.palette.grey[900] }}
       >
         {formatMessage({ id: 'CART.PAYMENT.SELECT.CURRENCY' })}

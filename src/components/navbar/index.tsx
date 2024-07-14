@@ -1,6 +1,8 @@
 import { Badge, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import cartAnimation from '@webapp/assets/images/animations/cart.json';
+import DrawerNavbar from '@webapp/controller/drawer-navbar';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
 import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent, useEffect } from 'react';
@@ -23,6 +25,7 @@ interface NavbarProps {
  */
 const Navbar: FunctionComponent<NavbarProps> = ({ className }) => {
   const { formatMessage } = useIntl();
+  const isMobile = useIsMobile();
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useUserData();
@@ -40,7 +43,12 @@ const Navbar: FunctionComponent<NavbarProps> = ({ className }) => {
   }, [cartData]);
 
   return (
-    <NavbarContainer className={className || ''}>
+    <NavbarContainer className={className || ''} isMobile={isMobile}>
+      {isMobile && (
+        <div className="right">
+          <DrawerNavbar />
+        </div>
+      )}
       <div className="right">
         <div className="forms">
           <Box onClick={handlePause}>
@@ -75,16 +83,24 @@ const Navbar: FunctionComponent<NavbarProps> = ({ className }) => {
 
 export default Navbar;
 
-const NavbarContainer = styled('nav')(({ theme }) => ({
+const NavbarContainer = styled('nav')<{
+  isMobile: boolean;
+}>(({ theme, isMobile }) => ({
   height: NAVBAR_HEIGHT,
   width: '100%',
   background: theme.palette.background.default,
   borderBottom: `1px solid ${theme.palette.divider}`,
   position: 'relative',
   display: 'flex',
-  justifyContent: 'flex-end',
+  justifyContent: isMobile ? 'space-between' : 'flex-end',
   alignItems: 'center',
   padding: theme.spacing(0.5, 2),
+  '.left': {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    gap: theme.spacing(3),
+  },
   '.right': {
     display: 'flex',
     justifyContent: 'flex-end',

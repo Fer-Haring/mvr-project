@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { User } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useUserData } from '@webapp/store/users/user-data';
@@ -20,8 +21,9 @@ interface DeliveryTypeButtonsProps {
 const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ userData, onValidChange }) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
+  const isMobile = useIsMobile();
   const { setUser } = useUserData();
-  const [deliveryType, setDeliveryType] = useState(userData.delivery_type);
+  const [deliveryType, setDeliveryType] = useState(userData?.delivery_type);
   const { setOrder, order } = useMessageStore();
 
   const handleSelectDelivery = () => {
@@ -53,14 +55,20 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ user
   return (
     <Stack
       gap={2}
-      sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', flexDirection: 'row' }}
+      sx={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        flexDirection: isMobile ? 'column' : 'row',
+      }}
     >
       <Stack gap={2} sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Typography
           variant="h4"
           fontWeight={600}
           textAlign="center"
-          fontSize={'1.6vw'}
+          fontSize={isMobile ? '3vw' : '1.6vw'}
           sx={{ mb: 0, color: theme.palette.grey[900] }}
         >
           {formatMessage({ id: 'PROFILE.USER_INFO.SELECTED.DELIVERY' })}

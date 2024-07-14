@@ -42,7 +42,6 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ className }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { user, setUser } = useUserData();
   const [collapsed, setCollapsed] = React.useState<boolean>(localStorage.getItem('sidebarCollapsed') === 'true');
   const userData = useGetUserByIdMutation(useUserStore((state) => state.userInfo?.userId) || '');

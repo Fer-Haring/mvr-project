@@ -2,6 +2,7 @@ import { Stack, styled, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import InputField from '@webapp/components/form/input';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { User } from '@webapp/sdk/types/user-types';
 import React from 'react';
 import { useIntl } from 'react-intl';
@@ -32,19 +33,26 @@ const DeliveryData: React.FunctionComponent<DeliveryDataProps> = ({
   isValidField,
 }) => {
   const { formatMessage } = useIntl();
+  const isMobile = useIsMobile();
   const theme = useTheme();
   return (
     <Stack
       spacing={2}
-      sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
+      sx={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: isMobile ? 'column' : 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
     >
       <ZoneDeliverButtons userData={user} onValidChange={setIsZoneDeliveryValid} />
-      <Box sx={{ width: '80%', display: 'flex', flexDirection: 'column', alignItems: 'center', pr: 5 }}>
+      <Box sx={{ width: '80%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Typography
           variant="h4"
           fontWeight={600}
           textAlign="center"
-          fontSize={'1.6vw'}
+          fontSize={isMobile ? '3vw' : '1.6vw'}
           sx={{ mb: 1, color: theme.palette.grey[900] }}
         >
           {formatMessage({ id: 'CART.PAYMENT.ADRESS.TITLE' })}
@@ -53,7 +61,7 @@ const DeliveryData: React.FunctionComponent<DeliveryDataProps> = ({
           variant="h4"
           fontWeight={600}
           textAlign="center"
-          fontSize={'1.2vw'}
+          fontSize={isMobile ? '2.5vw' : '1.6vw'}
           sx={{ mb: 4, color: theme.palette.grey[500] }}
         >
           {formatMessage({ id: 'CART.PAYMENT.ADDRESS.DESCRIPTION.WARNING' })}
