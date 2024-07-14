@@ -2,8 +2,8 @@
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import { useTheme } from '@mui/material';
 import { Box } from '@mui/material';
-import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
+import Button from '@webapp/components/button';
 import { CartProductsDetail } from '@webapp/controller/cart/step-0/cart-products-detail';
 import { CartItem } from '@webapp/sdk/types/cart-types';
 import { OrderRequest } from '@webapp/sdk/types/orders-types';
@@ -40,14 +40,8 @@ export const Step0: FunctionComponent<Step0Props> = ({ handleNextStep, cart, ord
         <CartProductsDetail cartProducts={cart} order={order} setOrder={setOrder} />
       </Box>
       <Button
-        variant="contained"
         onClick={handleNextStep}
-        sx={{
-          maxWidth: 300,
-          ': hover': {
-            color: theme.palette.grey[200],
-          },
-        }}
+        color='primary'
         endIcon={<ArrowForwardIosRoundedIcon />}
       >
         {formatMessage({ id: 'CART.PAYMENT.CHECKOUT' })}

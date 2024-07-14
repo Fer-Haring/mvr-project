@@ -20,12 +20,11 @@ const AddProductModalContainer: React.FC<AddProductModalContainerProps> = ({ set
   const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
   const { orders, setOrders } = useEditingOrderStore();
 
-  // Reset selectedProduct when modal opens
+  const filteredProducts = productListData?.products.filter((product) => product.actual_stock > 0) || [];
+
   React.useEffect(() => {
     setSelectedProduct(null);
   }, []);
-
-  console.log(selectedProduct);
 
   const addProductToOrder = () => {
     if (!selectedProduct || !orderId) return;
@@ -97,7 +96,7 @@ const AddProductModalContainer: React.FC<AddProductModalContainerProps> = ({ set
         {formatMessage({ id: 'ADMIN.EDIT.PENDING.ORDERS.PAGE.MODAL.SEARCH.PRODUCT' })}
       </Typography>
       <Autocomplete
-        options={productListData?.products || []}
+        options={filteredProducts || []}
         getOptionLabel={(option: Product) => option.product_name + ' - ' + option.product_category}
         renderInput={(params) => (
           <TextField

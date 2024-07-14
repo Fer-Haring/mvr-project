@@ -47,7 +47,9 @@ export interface User {
 }
 
 export interface OrderRequest {
-  cart_items: CartItem[];
+  order_id?: string;
+  user_id?: string;
+  cart_items?: CartItem[];
   total_products?: number;
   total_order_amount_usd?: number;
   total_order_amount_ars?: number;
@@ -60,5 +62,5 @@ export interface OrderRequest {
   updated_at?: Date;
   total_order_amount?: number;
   expandable?: boolean;
-  user: User;
+  user?: User;
 }

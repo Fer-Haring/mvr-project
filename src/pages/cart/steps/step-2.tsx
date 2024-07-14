@@ -1,7 +1,7 @@
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import { useTheme } from '@mui/material';
-import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
+import Button from '@webapp/components/button';
 import Modal from '@webapp/components/modal';
 import { CartPaymentDetail } from '@webapp/controller/cart/step-2/cart-payment-detail';
 import { useClearCart } from '@webapp/sdk/mutations/cart/delete-cart-mutation';

@@ -1,13 +1,12 @@
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
-import { styled, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material';
 import { Box, Checkbox, Typography } from '@mui/material';
-import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import InputField from '@webapp/components/form/input';
+import Button from '@webapp/components/button';
 import PaymentTypeButtons from '@webapp/controller/cart/step-1/botones-metodo-pago';
 import DeliveryTypeButtons from '@webapp/controller/cart/step-1/botones-tipo-entrega';
-import ZoneDeliverButtons from '@webapp/controller/cart/step-1/botones-zona-entrega';
+import DeliveryData from '@webapp/controller/cart/step-1/delivery-data';
 import { OrderRequest } from '@webapp/sdk/types/orders-types';
 import { User } from '@webapp/sdk/types/user-types';
 import React, { useState } from 'react';
@@ -74,7 +73,8 @@ export const Step1: FunctionComponent<Step1Props> = ({
     isZoneDeliveryValid,
     isAddressValid,
     isCityValid,
-    areAllFieldsValid()
+    areAllFieldsValid(),
+    user?.delivery_type === 'Delivery'
   );
 
   return (
@@ -83,87 +83,28 @@ export const Step1: FunctionComponent<Step1Props> = ({
         variant="contained"
         onClick={handlePreviousStep}
         startIcon={<ArrowBackIosNewRoundedIcon />}
-        sx={{
-          maxWidth: 300,
-          ': hover': {
-            color: theme.palette.grey[200],
-          },
-        }}
+        color="primary"
+        sx={{ mb: 2 }}
       >
         {formatMessage({ id: 'CART.PAYMENT.BACK' })}
       </Button>
-      <Box
-        sx={{
-          p: 2,
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-evenly',
-          gap: 1,
-        }}
-      >
-        <PaymentTypeButtons userData={user} onValidChange={setIsPaymentTypeValid} />
-        <DeliveryTypeButtons userData={user} onValidChange={setIsDeliveryTypeValid} />
 
-        {order?.delivery_type === 'Delivery' && (
-          <Box sx={{ width: '33%' }}>
-            <Typography
-              variant="h4"
-              fontWeight={600}
-              textAlign="center"
-              fontSize={24}
-              sx={{ mb: 1, color: theme.palette.grey[900] }}
-            >
-              {formatMessage({ id: 'CART.PAYMENT.ADRESS.TITLE' })}
-            </Typography>
-            <Typography
-              variant="h4"
-              fontWeight={600}
-              textAlign="center"
-              fontSize={16}
-              sx={{ mb: 4, color: theme.palette.grey[500] }}
-            >
-              {formatMessage({ id: 'CART.PAYMENT.ADDRESS.DESCRIPTION.WARNING' })}
-            </Typography>
-            <CustomInputField
-              name="address"
-              label={formatMessage({ id: 'COMMON.ADRESS' })}
-              value={address}
-              onChange={(e) => {
-                setAddress(e.target.value);
-                setIsAddressValid(isValidField(e.target.value));
-              }}
-              type="text"
-              fullWidth
-              size="small"
-              aria-label={formatMessage({ id: 'COMMON.ADRESS' })}
-              autoComplete="address"
-              hidden
-              aria-hidden="true"
-              sx={{ width: '100%' }}
-            />
-            <CustomInputField
-              name="city"
-              label={formatMessage({ id: 'COMMON.CITY' })}
-              value={city}
-              onChange={(e) => {
-                setCity(e.target.value);
-                setIsCityValid(isValidField(e.target.value));
-              }}
-              type="text"
-              fullWidth
-              size="small"
-              aria-label={formatMessage({ id: 'COMMON.CITY' })}
-              autoComplete="city"
-              hidden
-              aria-hidden="true"
-              sx={{ width: '100%' }}
-            />
-            <ZoneDeliverButtons userData={user} onValidChange={setIsZoneDeliveryValid} />
-          </Box>
-        )}
-      </Box>
+      <PaymentTypeButtons userData={user} onValidChange={setIsPaymentTypeValid} />
+      <DeliveryTypeButtons userData={user} onValidChange={setIsDeliveryTypeValid} />
+
+      {order?.delivery_type === 'Delivery' && (
+        <DeliveryData
+          user={user}
+          address={address}
+          setAddress={setAddress}
+          city={city}
+          setCity={setCity}
+          setIsAddressValid={setIsAddressValid}
+          setIsCityValid={setIsCityValid}
+          setIsZoneDeliveryValid={setIsZoneDeliveryValid}
+          isValidField={isValidField}
+        />
+      )}
       <Stack direction={'column'} gap={4} width={'100%'} justifyContent={'center'} alignItems={'center'}>
         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
           <Checkbox
@@ -172,19 +113,14 @@ export const Step1: FunctionComponent<Step1Props> = ({
             disabled={!areAllFieldsValid()}
             sx={{ color: theme.palette.grey[800] }}
           />
-          <Typography variant="body1" fontWeight={400} sx={{ color: theme.palette.grey[800], textAlign: 'center' }}>
+          <Typography variant="body1" fontWeight={400} sx={{ color: theme.palette.grey[800], textAlign: 'center', fontSize: '1.1vw' }}>
             {formatMessage({ id: 'CART.PAYMENT.CONFIRMATION' })}
           </Typography>
         </Box>
         <Button
           variant="contained"
           onClick={handleNextStep}
-          sx={{
-            maxWidth: 300,
-            ': hover': {
-              color: theme.palette.grey[200],
-            },
-          }}
+          color={!checked ? 'disabled' : 'primary'}
           disabled={!checked}
           endIcon={<ArrowForwardIosRoundedIcon />}
         >
@@ -194,19 +130,3 @@ export const Step1: FunctionComponent<Step1Props> = ({
     </Stack>
   );
 };
-
-const CustomInputField = styled(InputField)(({ theme }) => ({
-  width: '100%',
-  '& .MuiOutlinedInput-root': {
-    borderColor: theme.palette.grey[700],
-    backgroundColor: theme.palette.grey[200],
-  },
-  '& .MuiOutlinedInput-notchedOutline': {
-    borderColor: theme.palette.grey[500],
-  },
-  '& input': {
-    color: theme.palette.grey[800],
-    fontWeight: 'bold',
-    paddingRight: '0px',
-  },
-}));

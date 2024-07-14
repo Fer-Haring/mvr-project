@@ -1,7 +1,6 @@
 import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import React from 'react';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import { updateUserInDb } from '@webapp/sdk/firebase/user';
@@ -9,8 +8,10 @@ import { User } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useUserData } from '@webapp/store/users/user-data';
 import { useUserId } from '@webapp/store/users/user-id';
+import React from 'react';
 import { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
+
 
 interface CurrencySelectButtonsProps {
   className?: string;
@@ -49,7 +50,7 @@ const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({ 
         variant="h4"
         fontWeight={600}
         textAlign="center"
-        fontSize={24}
+        fontSize={'1.6vw'}
         sx={{ mb: 0, color: theme.palette.grey[900] }}
       >
         {formatMessage({ id: 'CART.PAYMENT.SELECT.CURRENCY' })}
@@ -61,23 +62,13 @@ const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({ 
           gap: 2,
           justifyContent: 'space-evenly',
           alignItems: 'center',
-          flexDirection: 'column',
+          flexDirection: 'row',
         }}
       >
         <Button
           onClick={handleSelectDollar}
           onSelect={() => handleOnChange('USD')}
-          sx={{
-            width: '100%',
-            maxWidth: '236px',
-            height: '48px',
-            backgroundColor: preferredCurrency === 'USD' ? theme.palette.primary.main : theme.palette.grey[200],
-            border: preferredCurrency === 'USD' ? 'none' : `1px solid ${theme.palette.divider}`,
-            '&:hover': {
-              backgroundColor: preferredCurrency === 'USD' ? theme.palette.primary.main : theme.palette.grey[300],
-              border: preferredCurrency === 'USD' ? 'none' : `1px solid ${theme.palette.divider}`,
-            },
-          }}
+          color={preferredCurrency === 'USD' ? 'primary' : 'unselected'}
           aria-label={formatMessage({ id: 'CART.PAYMENT.USD' })}
         >
           {formatMessage({ id: 'CART.PAYMENT.USD' })}
@@ -85,17 +76,7 @@ const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({ 
         <Button
           onClick={handleSelectArs}
           onSelect={() => handleOnChange('ARS')}
-          sx={{
-            width: '100%',
-            maxWidth: '236px',
-            height: '48px',
-            backgroundColor: preferredCurrency === 'ARS' ? theme.palette.primary.main : theme.palette.grey[200],
-            border: preferredCurrency === 'ARS' ? 'none' : `1px solid ${theme.palette.divider}`,
-            '&:hover': {
-              backgroundColor: preferredCurrency === 'ARS' ? theme.palette.primary.main : theme.palette.grey[300],
-              border: preferredCurrency === 'ARS' ? 'none' : `1px solid ${theme.palette.divider}`,
-            },
-          }}
+          color={preferredCurrency === 'ARS' ? 'primary' : 'unselected'}
           aria-label={formatMessage({ id: 'CART.PAYMENT.ARS' })}
         >
           {formatMessage({ id: 'CART.PAYMENT.ARS' })}

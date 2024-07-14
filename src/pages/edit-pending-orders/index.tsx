@@ -3,20 +3,37 @@ import Button from '@webapp/components/button';
 import ContentWrapper from '@webapp/components/content-wrapper';
 import OrderData from '@webapp/controller/admin/edit-pending-orders/order-data';
 import UserData from '@webapp/controller/admin/edit-pending-orders/user-data';
+import { useGetPendingOrders } from '@webapp/sdk/mutations/orders/get-pending-orders-query';
+import { useUpdatePendingOrder } from '@webapp/sdk/mutations/orders/update-pending-order-mutation';
+import { OrderResponse } from '@webapp/sdk/types/orders-types';
 import { useEditingOrderStore } from '@webapp/store/orders/editing-order-store';
 import React from 'react';
 import { useIntl } from 'react-intl';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface EditPendingOrdersPageProps {
   className?: string;
 }
 
 export const EditPendingOrdersPage: React.FC<EditPendingOrdersPageProps> = () => {
+  const orderId = useParams<{ id: string }>().id;
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
   const { orders, resetStore } = useEditingOrderStore();
+  const saveOrder = useUpdatePendingOrder();
+  const pendingOrders = useGetPendingOrders();
 
+  const handleSaveOrder = async () => {
+    if (!orders[0]) return;
+
+    const order = orders[0];
+    console.log(orderId, order);
+
+    await saveOrder.mutateAsync({ id: orderId!, order: order as OrderResponse });
+    await pendingOrders.refetch();
+    navigate('/admin-dashboard');
+    resetStore();
+  };
 
   return (
     <ContentWrapper>
@@ -42,6 +59,7 @@ export const EditPendingOrdersPage: React.FC<EditPendingOrdersPageProps> = () =>
             variant="contained"
             color="error"
             sx={{ mt: 5, maxWidth: '20vw' }}
+            disabled={saveOrder.isPending}
             onClick={() => {
               navigate('/admin-dashboard');
               resetStore();
@@ -53,13 +71,13 @@ export const EditPendingOrdersPage: React.FC<EditPendingOrdersPageProps> = () =>
             variant="contained"
             color="primary"
             sx={{ mt: 5, maxWidth: '20vw' }}
-            onClick={() => console.log('Save order')}
+            loading={saveOrder.isPending}
+            onClick={handleSaveOrder}
           >
             {formatMessage({ id: 'ADMIN.EDIT.PENDING.ORDERS.PAGE.SAVE.ORDER' })}
           </Button>
         </Box>
       </Stack>
-      
     </ContentWrapper>
   );
 };

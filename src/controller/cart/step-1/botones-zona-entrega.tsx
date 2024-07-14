@@ -11,7 +11,6 @@ import { useUserId } from '@webapp/store/users/user-id';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-
 interface ZoneDeliverButtonsProps {
   className?: string;
   userData: User;
@@ -64,7 +63,7 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
         variant="h4"
         fontWeight={600}
         textAlign="center"
-        fontSize={24}
+        fontSize={'1.6vw'}
         sx={{ mb: 0, color: theme.palette.grey[900] }}
       >
         {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.SELECTOR' })}
@@ -83,17 +82,7 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
         <Button
           onClick={handleLBEZones}
           onSelect={() => handleOnChange('LBE')}
-          sx={{
-            width: '100%',
-            maxWidth: '236px',
-            height: '48px',
-            backgroundColor: deliveryType === 'LBE' ? theme.palette.primary.main : theme.palette.grey[200],
-            border: deliveryType === 'LBE' ? 'none' : `1px solid ${theme.palette.divider}`,
-            '&:hover': {
-              backgroundColor: deliveryType === 'LBE' ? theme.palette.primary.main : theme.palette.grey[300],
-              border: deliveryType === 'LBE' ? 'none' : `1px solid ${theme.palette.divider}`,
-            },
-          }}
+          color={deliveryType === 'LBE' ? 'primary' : 'unselected'}
           aria-label={formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.1' })}
         >
           {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.1' })}
@@ -101,17 +90,7 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
         <Button
           onClick={handleOZZones}
           onSelect={() => handleOnChange('OZ')}
-          sx={{
-            width: '100%',
-            maxWidth: '236px',
-            height: '48px',
-            backgroundColor: deliveryType === 'OZ' ? theme.palette.primary.main : theme.palette.grey[200],
-            border: deliveryType === 'OZ' ? 'none' : `1px solid ${theme.palette.divider}`,
-            '&:hover': {
-              backgroundColor: deliveryType === 'OZ' ? theme.palette.primary.main : theme.palette.grey[300],
-              border: deliveryType === 'OZ' ? 'none' : `1px solid ${theme.palette.divider}`,
-            },
-          }}
+          color={deliveryType === 'OZ' ? 'primary' : 'unselected'}
           aria-label={formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.2' })}
         >
           {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.2' })}

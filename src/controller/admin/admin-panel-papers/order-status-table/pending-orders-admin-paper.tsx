@@ -44,6 +44,10 @@ const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders
     return format(date, 'dd/MM/yyyy');
   };
 
+  const formatNumber = (number: number) => {
+    return `$ ${number.toFixed(2)}`;
+  };
+
   const columnDefs = (navigate: (path: string) => void): ColDef[] => [
     {
       headerName: 'Order ID',
@@ -58,8 +62,16 @@ const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders
     { headerName: 'User ID', field: 'user_id', hide: true },
     { headerName: 'User Name', field: 'user.name' },
     { headerName: 'Total Productos', field: 'total_products' },
-    { headerName: 'Total USD', field: 'total_order_amount_usd' },
-    { headerName: 'Total ARS', field: 'total_order_amount_ars' },
+    {
+      headerName: 'Total USD',
+      field: 'total_order_amount_usd',
+      valueFormatter: (params) => formatNumber(params.value),
+    },
+    {
+      headerName: 'Total ARS',
+      field: 'total_order_amount_ars',
+      valueFormatter: (params) => formatNumber(params.value),
+    },
     {
       headerName: 'Select Editor',
       field: 'status',

@@ -3,11 +3,11 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
+import { useUpdateUser } from '@webapp/sdk/mutations/auth/user-update-mutation';
 import { User } from '@webapp/sdk/types/user-types';
 import { useUserData } from '@webapp/store/users/user-data';
-import { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { useUpdateUser } from '@webapp/sdk/mutations/auth/user-update-mutation';
 
 interface PaymentTypeButtonsProps {
   className?: string;
@@ -18,7 +18,7 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
   const { formatMessage } = useIntl();
   const { setUser } = useUserData();
   const theme = useTheme();
-  const {mutate} = useUpdateUser(userData?.id);
+  const { mutate } = useUpdateUser(userData?.id);
 
   const [selectedPaymentType, setSelectedPaymentType] = useState(userData?.payment_method || '');
 
@@ -33,18 +33,6 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
     mutate({ payload: { ...restOfUserData, payment_method: selected_delivery } });
     setUser({ ...userData, payment_method: selected_delivery });
   };
-
-  const buttonStyle = (paymentType: string) => ({
-    width: '100%',
-    maxWidth: '236px',
-    height: '48px',
-    backgroundColor: selectedPaymentType === paymentType ? theme.palette.primary.main : theme.palette.grey[200],
-    border: selectedPaymentType === paymentType ? 'none' : `1px solid ${theme.palette.divider}`,
-    '&:hover': {
-      backgroundColor: selectedPaymentType === paymentType ? theme.palette.primary.main : theme.palette.grey[300],
-      border: selectedPaymentType === paymentType ? 'none' : `1px solid ${theme.palette.divider}`,
-    },
-  });
 
   return (
     <Stack gap={2} sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -79,14 +67,14 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
         >
           <Button
             onClick={() => selectPaymentType('Efectivo')}
-            sx={buttonStyle('Efectivo')}
+            color={selectedPaymentType === 'Efectivo' ? 'primary' : 'unselected'}
             aria-label={formatMessage({ id: 'COMMON.SELECTED.PAYMENT.CASH' })}
           >
             {formatMessage({ id: 'COMMON.SELECTED.PAYMENT.CASH' })}
           </Button>
           <Button
             onClick={() => selectPaymentType('Tarjeta de crédito')}
-            sx={buttonStyle('Tarjeta de crédito')}
+            color={selectedPaymentType === 'Tarjeta de crédito' ? 'primary' : 'unselected'}
             aria-label={formatMessage({ id: 'COMMON.SELECTED.PAYMENT.CREDIT_CARD' })}
           >
             {formatMessage({ id: 'COMMON.SELECTED.PAYMENT.CREDIT_CARD' })}
@@ -105,14 +93,14 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
         >
           <Button
             onClick={() => selectPaymentType('Transferencia bancaria')}
-            sx={buttonStyle('Transferencia bancaria')}
+            color={selectedPaymentType === 'Transferencia bancaria' ? 'primary' : 'unselected'}
             aria-label={formatMessage({ id: 'COMMON.SELECTED.PAYMENT.BANK_TRANSFER' })}
           >
             {formatMessage({ id: 'COMMON.SELECTED.PAYMENT.BANK_TRANSFER' })}
           </Button>
           <Button
             onClick={() => selectPaymentType('Pago contra entrega')}
-            sx={buttonStyle('Pago contra entrega')}
+            color={selectedPaymentType === 'Pago contra entrega' ? 'primary' : 'unselected'}
             aria-label={formatMessage({ id: 'COMMON.SELECTED.PAYMENT.DELIVERY_PAY' })}
           >
             {formatMessage({ id: 'COMMON.SELECTED.PAYMENT.DELIVERY_PAY' })}
@@ -133,7 +121,7 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
       >
         <Button
           onClick={() => selectPaymentType('Pago con Crypto')}
-          sx={buttonStyle('Pago con Crypto')}
+          color={selectedPaymentType === 'Pago con Crypto' ? 'primary' : 'unselected'}
           aria-label={formatMessage({ id: 'COMMON.SELECTED.PAYMENT.CRYPTO' })}
         >
           {formatMessage({ id: 'COMMON.SELECTED.PAYMENT.CRYPTO' })}

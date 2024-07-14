@@ -66,17 +66,7 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ user
           <Button
             onClick={handleSelectDelivery}
             onSelect={() => handleOnChange('Delivery')}
-            sx={{
-              width: '100%',
-              maxWidth: '236px',
-              height: '48px',
-              backgroundColor: deliveryType === 'Delivery' ? theme.palette.primary.main : theme.palette.grey[200],
-              border: deliveryType === 'Delivery' ? 'none' : `1px solid ${theme.palette.divider}`,
-              '&:hover': {
-                backgroundColor: deliveryType === 'Delivery' ? theme.palette.primary.main : theme.palette.grey[300],
-                border: deliveryType === 'Delivery' ? 'none' : `1px solid ${theme.palette.divider}`,
-              },
-            }}
+            color={deliveryType === 'Delivery' ? 'primary' : 'unselected'}
             aria-label={formatMessage({ id: 'COMMON.SELECTED.DELIVERY.DELIVERY' })}
           >
             {formatMessage({ id: 'COMMON.SELECTED.DELIVERY.DELIVERY' })}
@@ -84,19 +74,7 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ user
           <Button
             onClick={handleSelectLocalPickup}
             onSelect={() => handleOnChange('Retiro en local')}
-            sx={{
-              width: '100%',
-              maxWidth: '236px',
-              height: '48px',
-              backgroundColor:
-                deliveryType === 'Retiro en local' ? theme.palette.primary.main : theme.palette.grey[200],
-              border: deliveryType === 'Retiro en local' ? 'none' : `1px solid ${theme.palette.divider}`,
-              '&:hover': {
-                backgroundColor:
-                  deliveryType === 'Retiro en local' ? theme.palette.primary.main : theme.palette.grey[300],
-                border: deliveryType === 'Retiro en local' ? 'none' : `1px solid ${theme.palette.divider}`,
-              },
-            }}
+            color={deliveryType === 'Retiro en local' ? 'primary' : 'unselected'}
             aria-label={formatMessage({ id: 'COMMON.SELECTED.DELIVERY.LOCAL_PICKUP' })}
           >
             {formatMessage({ id: 'COMMON.SELECTED.DELIVERY.LOCAL_PICKUP' })}

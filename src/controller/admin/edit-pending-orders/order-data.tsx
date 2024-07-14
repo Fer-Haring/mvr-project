@@ -144,7 +144,7 @@ const OrderData: React.FC<OrderDataProps> = ({ order }) => {
           variant="contained"
           size="small"
           color="primary"
-          sx={{ maxWidth: '15vw', color: '#FFFFFF' }}
+          sx={{ maxWidth: '15vw', color: '#FFFFFF', fontSize: '0.9vw' }}
           onClick={() => {
             setAddProductModal(true);
           }}
