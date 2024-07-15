@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -9,24 +10,26 @@ import { User } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useUserData } from '@webapp/store/users/user-data';
 import { useUserId } from '@webapp/store/users/user-id';
+import { set } from 'lodash';
 import React from 'react';
 import { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-
 interface CurrencySelectButtonsProps {
   className?: string;
   userData: User;
+  setIsCurrencyPayValid: (isValid: boolean) => void;
 }
 
-const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({ userData }) => {
+const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({ userData, setIsCurrencyPayValid }) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
   const isMobile = useIsMobile();
-  const { userId } = useUserId();
-  const { setUser } = useUserData();
+  // const { setUser, user } = useUserData();
   const [preferredCurrency, setPreferredCurrency] = useState(userData?.preferred_currency);
-  const { setOrder, order } = useMessageStore();
+  const setUser = useUserData((state) => state.setUser);
+  const setOrder = useMessageStore((state) => state.setOrder);
+  const order = useMessageStore((state) => state.order);
 
   const handleSelectDollar = () => {
     setPreferredCurrency('USD');
@@ -38,13 +41,18 @@ const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({ 
     handleOnChange('ARS');
   };
 
-  const handleOnChange = (selectedCurrency: string) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleOnChange = async (selectedCurrency: string) => {
     const { id: ignoredUserId, ...restOfUserData } = userData;
-    updateUserInDb({ userId, ...restOfUserData, preferredCurrency: selectedCurrency });
+    setIsCurrencyPayValid(true);
     setUser({ ...userData, preferred_currency: selectedCurrency });
     setOrder({ ...order, currency_used_to_pay: selectedCurrency });
   };
+
+  React.useEffect(() => {
+    if (userData?.preferred_currency) {
+      setIsCurrencyPayValid(true);
+    }
+  }, [userData?.preferred_currency]);
 
   return (
     <Stack gap={2} sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -69,7 +77,6 @@ const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({ 
       >
         <Button
           onClick={handleSelectDollar}
-          onSelect={() => handleOnChange('USD')}
           color={preferredCurrency === 'USD' ? 'primary' : 'unselected'}
           aria-label={formatMessage({ id: 'CART.PAYMENT.USD' })}
         >
@@ -77,7 +84,6 @@ const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({ 
         </Button>
         <Button
           onClick={handleSelectArs}
-          onSelect={() => handleOnChange('ARS')}
           color={preferredCurrency === 'ARS' ? 'primary' : 'unselected'}
           aria-label={formatMessage({ id: 'CART.PAYMENT.ARS' })}
         >

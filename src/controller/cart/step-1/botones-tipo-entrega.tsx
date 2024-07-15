@@ -10,20 +10,28 @@ import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 
+
+
 import CurrencySelectButtons from './botones-moneda-pago';
+
 
 interface DeliveryTypeButtonsProps {
   className?: string;
   userData: User;
   onValidChange?: (isValid: boolean) => void;
+  setIsCurrencyPayValid: (isValid: boolean) => void;
 }
 
-const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ userData, onValidChange }) => {
+const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({
+  userData,
+  onValidChange,
+  setIsCurrencyPayValid,
+}) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
   const isMobile = useIsMobile();
   const { setUser } = useUserData();
-  const [deliveryType, setDeliveryType] = useState(userData?.delivery_type);
+  const [deliveryType, setDeliveryType] = useState('');
   const { setOrder, order } = useMessageStore();
 
   const handleSelectDelivery = () => {
@@ -48,7 +56,7 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ user
 
   React.useEffect(() => {
     if (onValidChange) {
-      onValidChange(!!userData.delivery_type);
+      onValidChange(!!userData?.delivery_type);
     }
   }, []);
 
@@ -102,7 +110,7 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ user
           </Button>
         </Box>
       </Stack>
-      <CurrencySelectButtons userData={userData} />
+      <CurrencySelectButtons userData={userData} setIsCurrencyPayValid={setIsCurrencyPayValid} />
     </Stack>
   );
 };

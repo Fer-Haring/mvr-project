@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import InputField from '@webapp/components/form/input';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { User } from '@webapp/sdk/types/user-types';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 
 import ZoneDeliverButtons from './botones-zona-entrega';
@@ -35,6 +35,12 @@ const DeliveryData: React.FunctionComponent<DeliveryDataProps> = ({
   const { formatMessage } = useIntl();
   const isMobile = useIsMobile();
   const theme = useTheme();
+
+  useEffect(() => {
+    setAddress(user?.address || '');
+    setCity(user?.city || '');
+  }, [user, setAddress, setCity]);
+
   return (
     <Stack
       spacing={2}
@@ -79,8 +85,6 @@ const DeliveryData: React.FunctionComponent<DeliveryDataProps> = ({
           size="small"
           aria-label={formatMessage({ id: 'COMMON.ADRESS' })}
           autoComplete="address"
-          hidden
-          aria-hidden="true"
           sx={{ width: '100%' }}
         />
         <CustomInputField
@@ -96,8 +100,6 @@ const DeliveryData: React.FunctionComponent<DeliveryDataProps> = ({
           size="small"
           aria-label={formatMessage({ id: 'COMMON.CITY' })}
           autoComplete="city"
-          hidden
-          aria-hidden="true"
           sx={{ width: '100%' }}
         />
       </Box>

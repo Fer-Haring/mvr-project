@@ -15,20 +15,18 @@ import {
   useTheme,
 } from '@mui/material';
 import Stack from '@mui/system/Stack';
+import NoImageProd from '@webapp/assets/images/prod-no-image.png';
 import SnackbarUtils from '@webapp/components/snackbar';
 import { useAddToCart } from '@webapp/sdk/mutations/cart/add-to-cart-mutation';
 import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
 import { CartItem } from '@webapp/sdk/types/cart-types';
 import { OrderRequest } from '@webapp/sdk/types/orders-types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
-import React from 'react';
-import { FunctionComponent, useEffect, useRef, useState } from 'react';
+import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
 import { TableBox } from '../table-styles';
-
-// import { useNavigate } from 'react-router-dom';
 
 interface CartProductsDetailProps {
   className?: string;
@@ -112,6 +110,8 @@ export const CartProductsDetail: FunctionComponent<CartProductsDetailProps> = ({
           sub_total: updatedCartProduct.sub_total,
           product_image: updatedCartProduct.product_image,
           quantity: updatedCartProduct.quantity,
+          product_category: updatedCartProduct.product_category,
+          product_description: updatedCartProduct.product_description,
         }).then(() => {
           getCart.refetch();
         });
@@ -133,6 +133,7 @@ export const CartProductsDetail: FunctionComponent<CartProductsDetailProps> = ({
         <Table sx={{ width: '100%', border: 'none' }}>
           <TableHead>
             <TableRow>
+              <CustomTableHeaderImageCell />
               <CustomTableHeaderCell>{formatMessage({ id: 'CART.HEADER.NAME' })}</CustomTableHeaderCell>
               <CustomTableHeaderCell>{formatMessage({ id: 'CART.HEADER.QUANTITY' })}</CustomTableHeaderCell>
               <CustomTableHeaderCell>{formatMessage({ id: 'CART.HEADER.PRICE' })}</CustomTableHeaderCell>
@@ -144,15 +145,49 @@ export const CartProductsDetail: FunctionComponent<CartProductsDetailProps> = ({
             {localCartProducts.map((cartProduct) => {
               return (
                 <TableRow key={cartProduct.product_id}>
+                  <TableCell
+                    sx={{
+                      width: 60, // Ajusta el ancho de la columna de imagen
+                      padding: 0,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: 60,
+                        height: 60,
+                        borderRadius: 16,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <img
+                        src={cartProduct.product_image === '' ? NoImageProd : cartProduct.product_image}
+                        alt={cartProduct.product_name}
+                        style={{
+                          maxWidth: '100%',
+                          maxHeight: '100%',
+                          objectFit: 'cover',
+                          aspectRatio: '1/1',
+                          borderRadius: 16,
+                        }}
+                      />
+                    </Box>
+                  </TableCell>
                   <Tooltip title={formatMessage({ id: 'CART.TOOLTIP.PRODUCT.NAME' })} placement="top" arrow>
                     <TableCell
                       sx={{
                         cursor: 'pointer',
                         fontWeight: 'bold',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'flex-start',
+                        height: '92px',
                         ':hover': {
                           color: theme.palette.grey[800],
                           fontSize: 16,
                         },
+                        width: '30%', // Ajusta el ancho de la segunda columna
                       }}
                       onClick={() => {
                         navigate(`/productos/${cartProduct.product_id}`);
@@ -225,7 +260,13 @@ const CustomTableHeaderCell = styled(TableCell)(({ theme }) => ({
   padding: 10,
   textWrap: 'nowrap',
   textAlign: 'center',
-  '&:first-of-type': {
+  '&:nth-of-type(2)': {
     textAlign: 'left',
   },
+}));
+
+const CustomTableHeaderImageCell = styled(TableCell)(() => ({
+  maxWidth: 50,
+  width: 50,
+  padding: 10,
 }));

@@ -14,21 +14,18 @@ import { useUserData } from '@webapp/store/users/user-data';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-
-
 import { Step0 } from './steps/step-0';
 import { Step1 } from './steps/step-1';
 import { Step2 } from './steps/step-2';
 import { Step3 } from './steps/step-3';
-
 
 export const CartPage: FunctionComponent = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [user, setUser] = useState(useUserData().user);
-  const [address, setAddress] = useState(user?.address);
-  const [city, setCity] = useState(user?.city);
+  const [address, setAddress] = useState(user?.address || '');
+  const [city, setCity] = useState(user?.city || '');
   const [checked, setChecked] = useState(false);
   const { setOrders } = useCompletedOrdersStore();
   const { data: cart } = useGetUserCart();
@@ -37,9 +34,12 @@ export const CartPage: FunctionComponent = () => {
   const updateUser = useUpdateUser(userId || '');
 
   useEffect(() => {
-    userData.refetch();
-    setUser(userData.data as User);
-  }, [setUser]);
+    if (userData.data) {
+      setUser(userData.data as User);
+      setAddress(userData.data.address || '');
+      setCity(userData.data.city || '');
+    }
+  }, [userData.data]);
 
   const {
     order,
@@ -90,7 +90,7 @@ export const CartPage: FunctionComponent = () => {
     setLastName(user?.last_name);
     setMsgAddress(address);
     setMsgCity(city);
-    setOrder({
+    setOrder(({
       ...order,
       cart_items: cart || [],
       currency_used_to_pay: user?.preferred_currency,
@@ -100,9 +100,9 @@ export const CartPage: FunctionComponent = () => {
       deliver_zone: user?.deliver_zone,
       status: 'Pending',
       user: user!,
-    });
+    }));
     setOrders([order]);
-  }, [user, setName, setLastName, setOrder, address, setMsgAddress]);
+  }, [user, setName, setLastName, setOrder, address, setMsgAddress, cart, city]);
 
   const fullMessage = `
   Hola, quiero hacer un pedido.\n

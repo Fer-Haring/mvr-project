@@ -4,7 +4,8 @@ import { useTheme } from '@mui/material';
 import { Box } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Button from '@webapp/components/button';
-import { CartProductsDetail } from '@webapp/controller/cart/step-0/cart-products-detail';
+// import { CartProductsDetail } from '@webapp/controller/cart/step-0/cart-products-detail';
+import { CartProductsDetailV2 } from '@webapp/controller/cart/step-0/cart-products-detail-V2';
 import { CartItem } from '@webapp/sdk/types/cart-types';
 import { OrderRequest } from '@webapp/sdk/types/orders-types';
 import { FunctionComponent } from 'react';
@@ -37,7 +38,7 @@ export const Step0: FunctionComponent<Step0Props> = ({ handleNextStep, cart, ord
           },
         }}
       >
-        <CartProductsDetail cartProducts={cart} order={order} setOrder={setOrder} />
+        <CartProductsDetailV2 cartProducts={cart} order={order} setOrder={setOrder} />
       </Box>
       <Button
         onClick={handleNextStep}
