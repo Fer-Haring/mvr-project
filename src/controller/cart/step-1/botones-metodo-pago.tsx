@@ -7,7 +7,6 @@ import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { updateUserInDb } from '@webapp/sdk/firebase/user';
 import { User } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
-import { useUserData } from '@webapp/store/users/user-data';
 import { useUserId } from '@webapp/store/users/user-id';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -15,14 +14,14 @@ import { useIntl } from 'react-intl';
 interface PaymentTypeButtonsProps {
   className?: string;
   userData: User;
+  setUser: (user: User) => void;
   onValidChange?: (isValid: boolean) => void;
 }
 
-const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userData, onValidChange }) => {
+const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userData, onValidChange, setUser }) => {
   const { formatMessage } = useIntl();
   const isMobile = useIsMobile();
   const { userId } = useUserId();
-  const { setUser } = useUserData();
   const theme = useTheme();
   const { setOrder, order } = useMessageStore();
 
@@ -49,7 +48,7 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
     if (onValidChange) {
       onValidChange(!!userData?.payment_method);
     }
-  }, []);
+  }, [userData, ]);
 
   return (
     <Stack gap={2} sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>

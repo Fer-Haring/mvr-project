@@ -11,6 +11,7 @@ import ZoneDeliverButtons from './botones-zona-entrega';
 
 interface DeliveryDataProps {
   user: User;
+  setUser: (user: User) => void;
   address: string;
   setAddress: (address: string) => void;
   city: string;
@@ -24,6 +25,7 @@ interface DeliveryDataProps {
 const DeliveryData: React.FunctionComponent<DeliveryDataProps> = ({
   user,
   address,
+  setUser,
   setAddress,
   city,
   setCity,
@@ -52,7 +54,7 @@ const DeliveryData: React.FunctionComponent<DeliveryDataProps> = ({
         alignItems: 'center',
       }}
     >
-      <ZoneDeliverButtons userData={user} onValidChange={setIsZoneDeliveryValid} />
+      <ZoneDeliverButtons userData={user} setUser={setUser} onValidChange={setIsZoneDeliveryValid} />
       <Box sx={{ width: '80%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Typography
           variant="h4"

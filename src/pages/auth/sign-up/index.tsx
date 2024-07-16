@@ -14,8 +14,6 @@ import InputField from '@webapp/components/form/input';
 import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
 import SnackbarUtils from '@webapp/components/snackbar';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { saveUserInDb, signUp } from '@webapp/sdk/firebase/auth';
-import { auth } from '@webapp/sdk/firebase/firebase';
 import { useSignupMutation } from '@webapp/sdk/mutations/auth/user-sign-up-mutation';
 import { validateEmail } from '@webapp/utils/input-validations';
 import { AnimatePresence } from 'framer-motion';

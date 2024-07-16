@@ -1,4 +1,4 @@
-import { CartItem } from "./cart-types";
+import { CartItem } from './cart-types';
 
 export interface LoginResponse {
   access_token: string;
@@ -31,7 +31,7 @@ export interface SignupResponse {
   city: string;
   completed_orders: CompletedOrder[];
   cart_items: CartItem[];
-  deliver_zone: string;
+  delivery_zone: string;
   delivery_type: string;
   last_name: string;
   name: string;
@@ -85,7 +85,7 @@ export interface User {
   city: string;
   completed_orders: CompletedOrder[];
   cart_items: CartItem[];
-  deliver_zone: string;
+  delivery_zone: string;
   delivery_type: string;
   last_name: string;
   name: string;
@@ -109,7 +109,7 @@ export interface UpdateUserPayload {
   city?: string;
   completed_orders?: CompletedOrder[];
   cart_items?: CartItem[];
-  deliver_zone?: string;
+  delivery_zone?: string;
   delivery_type?: string;
   last_name?: string;
   name?: string;

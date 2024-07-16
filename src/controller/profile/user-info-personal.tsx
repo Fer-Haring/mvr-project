@@ -7,7 +7,7 @@ import InputField from '@webapp/components/form/input';
 import { useUpdateUser } from '@webapp/sdk/mutations/auth/user-update-mutation';
 import { UpdateUserPayload, User } from '@webapp/sdk/types/user-types';
 import { useUserData } from '@webapp/store/users/user-data';
-import { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 interface UserInfoPersonalProps {
@@ -44,17 +44,17 @@ const UserInfoPersonal: FunctionComponent<UserInfoPersonalProps> = ({ className,
       username: userData?.username,
       email: userData?.email,
       password: userData?.password,
-      address: address || "",
+      address: address || '',
       admin: userData?.admin,
-      city: city || "",
+      city: city || '',
       completed_orders: userData?.completed_orders,
       cart_items: userData?.cart_items,
-      deliver_zone: userData?.deliver_zone,
+      delivery_zone: userData?.delivery_zone,
       delivery_type: userData?.delivery_type,
-      last_name: lastName || "",
-      name: name || "",
+      last_name: lastName || '',
+      name: name || '',
       payment_method: userData?.payment_method,
-      phone: phone || "",
+      phone: phone || '',
       preferred_currency: userData?.preferred_currency,
       profile_picture: userData?.profile_picture,
     };
@@ -62,7 +62,6 @@ const UserInfoPersonal: FunctionComponent<UserInfoPersonalProps> = ({ className,
     mutate({ payload: updatedFields as UpdateUserPayload });
     setUser({ ...userData, ...updatedFields });
   };
-
 
   return (
     <Box className={className || ''}>

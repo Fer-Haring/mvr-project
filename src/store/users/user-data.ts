@@ -1,4 +1,3 @@
-
 import { User } from '@webapp/sdk/types/user-types';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
@@ -12,7 +11,7 @@ type UserData = {
 export const useUserData = create(
   persist<UserData>(
     (set) => {
-      return ({
+      return {
         user: {
           id: '',
           name: '',
@@ -27,38 +26,39 @@ export const useUserData = create(
           cart_items: [], // cartItems ahora es un arreglo directamente en User
           completed_orders: [], // completedOrders ahora es un arreglo directamente en User
           phone: '',
-          deliver_zone: '',
+          delivery_zone: '', // Aquí aseguramos que se usa la clave correcta
           preferred_currency: '',
           password: '',
           username: '',
         },
         setUser: (user) => set({ user }),
-        cleanUserLogout: () => set({
-          user: {
-            id: '',
-            name: '',
-            last_name: '',
-            email: '',
-            profile_picture: '',
-            admin: false,
-            address: '',
-            city: '',
-            delivery_type: '',
-            payment_method: '',
-            cart_items: [], // cartItems ahora es un arreglo directamente en User
-            completed_orders: [], // completedOrders ahora es un arreglo directamente en User
-            phone: '',
-            deliver_zone: '',
-            preferred_currency: '',
-            password: '',
-            username: '',
-          },
-        }),
-      });
+        cleanUserLogout: () =>
+          set({
+            user: {
+              id: '',
+              name: '',
+              last_name: '',
+              email: '',
+              profile_picture: '',
+              admin: false,
+              address: '',
+              city: '',
+              delivery_type: '',
+              payment_method: '',
+              cart_items: [], // cartItems ahora es un arreglo directamente en User
+              completed_orders: [], // completedOrders ahora es un arreglo directamente en User
+              phone: '',
+              delivery_zone: '', // Aquí aseguramos que se usa la clave correcta
+              preferred_currency: '',
+              password: '',
+              username: '',
+            },
+          }),
+      };
     },
     {
       name: 'userData', // Nombre del store para persistencia
-      storage: createJSONStorage(() => localStorage)
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );

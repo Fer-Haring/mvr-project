@@ -5,11 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { alpha, styled, useTheme } from '@mui/material/styles';
-import { logout } from '@webapp/sdk/firebase/auth';
 import { useLogout } from '@webapp/sdk/mutations/auth/user-logout-mutation';
-import { useUserGoogleStore } from '@webapp/store/auth/google-sessions';
-import { useUserStore } from '@webapp/store/auth/session';
-import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
@@ -83,9 +79,7 @@ const Avatar: FunctionComponent<AvatarProps> = ({ className, active, fullName, i
   const intl = useIntl();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { cleanUserLogout } = useUserData();
   const logoutMutation = useLogout();
-
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -118,7 +112,6 @@ const Avatar: FunctionComponent<AvatarProps> = ({ className, active, fullName, i
     navigate('/profile');
   };
 
-
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem('access_token');
@@ -133,7 +126,6 @@ const Avatar: FunctionComponent<AvatarProps> = ({ className, active, fullName, i
     }
   };
 
-  
   return (
     <AvatarWrapper className={className || ''} data-highlight={active}>
       <IconButton
@@ -165,7 +157,7 @@ const Avatar: FunctionComponent<AvatarProps> = ({ className, active, fullName, i
         open={open}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: 'top',
+          vertical: 'bottom',
           horizontal: getAvatarSizeWithMargin(),
         }}
         sx={{

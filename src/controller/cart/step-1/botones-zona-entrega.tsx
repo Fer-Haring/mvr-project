@@ -4,61 +4,46 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { updateUserInDb } from '@webapp/sdk/firebase/user';
 import { User } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useUserData } from '@webapp/store/users/user-data';
-import { useUserId } from '@webapp/store/users/user-id';
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
-
 
 interface ZoneDeliverButtonsProps {
   className?: string;
   userData: User;
+  setUser: (user: User) => void;
   onValidChange?: (isValid: boolean) => void;
 }
 
-const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userData, onValidChange }) => {
+const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userData, onValidChange, setUser }) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
   const isMobile = useIsMobile();
-  const { userId } = useUserId();
-  const { setUser } = useUserData();
-  const [deliveryType, setDeliveryType] = useState(userData?.deliver_zone);
+  const { setUser: setUserData } = useUserData();
   const { setDeliverValue } = useMessageStore();
 
-  const handleLBEZones = () => {
-    setDeliveryType('LBE');
-    handleOnChange('LBE');
-  };
-
-  const handleOZZones = () => {
-    setDeliveryType('OZ');
-    handleOnChange('OZ');
-  };
-
-  const handleOnChange = (selectedDelivery: string) => {
+  const handleOnChange = async (selectedDelivery: string) => {
     if (onValidChange) {
       onValidChange(true);
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id: ignoredUserId, ...restOfUserData } = userData;
-    updateUserInDb({ userId, ...restOfUserData, deliverZone: selectedDelivery });
-    setUser({ ...userData, deliver_zone: selectedDelivery });
+
+    setUser({ ...userData, delivery_zone: selectedDelivery });
+    setUserData({ ...userData, delivery_zone: selectedDelivery });
+
     if (selectedDelivery === 'LBE') {
       setDeliverValue(2500);
-    }
-    if (selectedDelivery === 'OZ') {
+    } else if (selectedDelivery === 'OZ') {
       setDeliverValue(3500);
     }
   };
 
   React.useEffect(() => {
     if (onValidChange) {
-      onValidChange(!!userData.deliver_zone);
+      onValidChange(!!userData.delivery_zone);
     }
-  }, []);
+  }, [userData, onValidChange]);
 
   return (
     <Stack gap={2} sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 4 }}>
@@ -83,17 +68,15 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
         }}
       >
         <Button
-          onClick={handleLBEZones}
-          onSelect={() => handleOnChange('LBE')}
-          color={deliveryType === 'LBE' ? 'primary' : 'unselected'}
+          onClick={() => handleOnChange('LBE')}
+          color={userData.delivery_zone === 'LBE' ? 'primary' : 'unselected'}
           aria-label={formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.1' })}
         >
           {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.1' })}
         </Button>
         <Button
-          onClick={handleOZZones}
-          onSelect={() => handleOnChange('OZ')}
-          color={deliveryType === 'OZ' ? 'primary' : 'unselected'}
+          onClick={() => handleOnChange('OZ')}
+          color={userData.delivery_zone === 'OZ' ? 'primary' : 'unselected'}
           aria-label={formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.2' })}
         >
           {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.2' })}

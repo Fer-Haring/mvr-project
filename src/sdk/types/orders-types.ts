@@ -36,7 +36,7 @@ export interface User {
   address: string;
   admin: boolean;
   city: string;
-  deliver_zone: string;
+  delivery_zone: string;
   delivery_type: string;
   last_name: string;
   name: string;
@@ -53,7 +53,7 @@ export interface OrderRequest {
   total_products?: number;
   total_order_amount_usd?: number;
   total_order_amount_ars?: number;
-  deliver_zone?: string;
+  delivery_zone?: string;
   status?: string;
   currency_used_to_pay?: string;
   payment_method?: string;

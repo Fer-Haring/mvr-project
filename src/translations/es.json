@@ -446,6 +446,8 @@
   "CART.PAYMENT.CONFIRM": "Confirmar Pedido",
   "CART.PAYMENT.CONFIRMATION.MESSAGE": "Enviar Pedido Por Whatsapp",
   "CART.PAYMENT.CONFIRMATION": "Marque esta casilla para confirmar que los datos ingresados son correctos",
+  "CART.PAYMENT.CONFIRMATION.WARNING.MISSING.PHONE.ADVICE": "Su perfil no cuenta con Numero de Teléfono, por favor complete su perfil para poder continuar, haciendo click ",
+  "CART.PAYMENT.CONFIRMATION.WARNING.MISSING.PHONE.LINK": "aquí",
   "CART.PAYMENT.CONFIRMATION.WARNING.ADVICE": "Recuerde verificar todos los datos para poder continuar con el pedido, todos los botones selectores o campos adicionales son OBLIGATORIOS!",
   "CART.PAYMENT.CONFIRMATION.ERROR": "Por favor, confirme que los datos ingresados son correctos",
   "CART.PAYMENT.CONFIRMATION.TITLE": "Confirmación",

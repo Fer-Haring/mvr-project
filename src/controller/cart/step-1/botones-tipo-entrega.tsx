@@ -6,32 +6,29 @@ import Button from '@webapp/components/button';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { User } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
-import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-
-
 import CurrencySelectButtons from './botones-moneda-pago';
-
 
 interface DeliveryTypeButtonsProps {
   className?: string;
   userData: User;
+  setUser: (user: User) => void;
   onValidChange?: (isValid: boolean) => void;
   setIsCurrencyPayValid: (isValid: boolean) => void;
 }
 
 const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({
   userData,
+  setUser,
   onValidChange,
   setIsCurrencyPayValid,
 }) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
   const isMobile = useIsMobile();
-  const { setUser } = useUserData();
-  const [deliveryType, setDeliveryType] = useState('');
+  const [deliveryType, setDeliveryType] = useState<string>(userData?.delivery_type || '');
   const { setOrder, order } = useMessageStore();
 
   const handleSelectDelivery = () => {
@@ -48,8 +45,6 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({
     if (onValidChange) {
       onValidChange(true);
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id: ignoredUserId, ...restOfUserData } = userData;
     setUser({ ...userData, delivery_type: selectedDelivery });
     setOrder({ ...order, delivery_type: selectedDelivery });
   };
@@ -58,7 +53,7 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({
     if (onValidChange) {
       onValidChange(!!userData?.delivery_type);
     }
-  }, []);
+  }, [userData, onValidChange]);
 
   return (
     <Stack
@@ -94,7 +89,6 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({
         >
           <Button
             onClick={handleSelectDelivery}
-            onSelect={() => handleOnChange('Delivery')}
             color={deliveryType === 'Delivery' ? 'primary' : 'unselected'}
             aria-label={formatMessage({ id: 'COMMON.SELECTED.DELIVERY.DELIVERY' })}
           >
@@ -102,7 +96,6 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({
           </Button>
           <Button
             onClick={handleSelectLocalPickup}
-            onSelect={() => handleOnChange('Retiro en local')}
             color={deliveryType === 'Retiro en local' ? 'primary' : 'unselected'}
             aria-label={formatMessage({ id: 'COMMON.SELECTED.DELIVERY.LOCAL_PICKUP' })}
           >

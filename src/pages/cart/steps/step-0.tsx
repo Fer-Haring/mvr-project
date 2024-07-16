@@ -6,10 +6,13 @@ import Stack from '@mui/material/Stack';
 import Button from '@webapp/components/button';
 // import { CartProductsDetail } from '@webapp/controller/cart/step-0/cart-products-detail';
 import { CartProductsDetailV2 } from '@webapp/controller/cart/step-0/cart-products-detail-V2';
+import { CartProductsDetailV2Mobile } from '@webapp/controller/cart/step-0/cart-products-detail-V2-mobile';
 import { CartItem } from '@webapp/sdk/types/cart-types';
 import { OrderRequest } from '@webapp/sdk/types/orders-types';
 import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
+
+import { useIsMobile } from '../../../hooks/is-mobile';
 
 interface Step0Props {
   handleNextStep: () => void;
@@ -20,6 +23,7 @@ interface Step0Props {
 
 export const Step0: FunctionComponent<Step0Props> = ({ handleNextStep, cart, order, setOrder }) => {
   const { formatMessage } = useIntl();
+  const isMobile = useIsMobile();
   const theme = useTheme();
   return (
     <Stack direction={'column'} gap={2} width={'100%'} justifyContent={'center'} alignItems={'center'}>
@@ -38,13 +42,13 @@ export const Step0: FunctionComponent<Step0Props> = ({ handleNextStep, cart, ord
           },
         }}
       >
-        <CartProductsDetailV2 cartProducts={cart} order={order} setOrder={setOrder} />
+        {isMobile ? (
+          <CartProductsDetailV2Mobile cartProducts={cart} order={order} setOrder={setOrder} />
+        ) : (
+          <CartProductsDetailV2 cartProducts={cart} order={order} setOrder={setOrder} />
+        )}
       </Box>
-      <Button
-        onClick={handleNextStep}
-        color='primary'
-        endIcon={<ArrowForwardIosRoundedIcon />}
-      >
+      <Button onClick={handleNextStep} color="primary" endIcon={<ArrowForwardIosRoundedIcon />}>
         {formatMessage({ id: 'CART.PAYMENT.CHECKOUT' })}
       </Button>
     </Stack>

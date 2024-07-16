@@ -10,7 +10,7 @@ import { useGetUserByIdMutation } from '@webapp/sdk/mutations/auth/get-user-by-i
 import { User } from '@webapp/sdk/types/user-types';
 import { useUserStore } from '@webapp/store/auth/session';
 import { useUserData } from '@webapp/store/users/user-data';
-import { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 
 export const ProfilePage: FunctionComponent = () => {
   const { user, setUser } = useUserData();
@@ -20,9 +20,7 @@ export const ProfilePage: FunctionComponent = () => {
   useEffect(() => {
     userData.refetch();
     setUser(userData.data as User);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setUser]);
-
 
   return (
     <ContentWrapper>

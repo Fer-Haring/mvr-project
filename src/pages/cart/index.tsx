@@ -62,15 +62,19 @@ export const CartPage: FunctionComponent = () => {
   const handle2NextStep = async () => {
     if (checked && userId) {
       try {
-        await updateUser.mutateAsync({
-          payload: {
-            address,
-            city,
-            payment_method: order.payment_method,
-            delivery_type: order.delivery_type,
-            deliver_zone: order.currency_used_to_pay,
-          },
-        });
+        await updateUser
+          .mutateAsync({
+            payload: {
+              address,
+              city,
+              payment_method: order.payment_method,
+              delivery_type: order.delivery_type,
+              delivery_zone: order.currency_used_to_pay,
+            },
+          })
+          .then(() => {
+            userData.refetch();
+          });
         handleCreateMessage();
         setStep((prevStep) => prevStep + 1);
       } catch (error) {
@@ -90,17 +94,17 @@ export const CartPage: FunctionComponent = () => {
     setLastName(user?.last_name);
     setMsgAddress(address);
     setMsgCity(city);
-    setOrder(({
+    setOrder({
       ...order,
       cart_items: cart || [],
       currency_used_to_pay: user?.preferred_currency,
       delivery_type: user?.delivery_type,
       payment_method: user?.payment_method,
       total_products: cart?.length,
-      deliver_zone: user?.deliver_zone,
+      delivery_zone: user?.delivery_zone,
       status: 'Pending',
       user: user!,
-    }));
+    });
     setOrders([order]);
   }, [user, setName, setLastName, setOrder, address, setMsgAddress, cart, city]);
 
@@ -121,6 +125,8 @@ export const CartPage: FunctionComponent = () => {
   El total es: $${order.currency_used_to_pay === 'ARS' ? order.total_order_amount_ars : order.total_order_amount_usd}.
 
   Gracias!`;
+
+  console.log('User', user);
 
   return (
     <ContentWrapper>
@@ -144,6 +150,7 @@ export const CartPage: FunctionComponent = () => {
           {step === 1 && (
             <Step1
               user={user}
+              setUser={setUser}
               order={order}
               handlePreviousStep={handlePreviousStep}
               handleNextStep={handle2NextStep}
