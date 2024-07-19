@@ -8,6 +8,7 @@ import ContentWrapper from '@webapp/components/content-wrapper';
 import SnackbarUtils from '@webapp/components/snackbar';
 import ProductImageHolder from '@webapp/controller/product-detail/product-image-holder';
 import SimilarProducts from '@webapp/controller/product-detail/similar-products';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { useAddToCart } from '@webapp/sdk/mutations/cart/add-to-cart-mutation';
 import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
 import { useGetProductById } from '@webapp/sdk/mutations/products/get-product-by-id-query';
@@ -23,6 +24,7 @@ export const ProductDetailPage: FunctionComponent = () => {
   const theme = useTheme();
   const { id } = useParams<{ id: string }>();
   const { formatMessage } = useIntl();
+  const isMobile = useIsMobile();
   const { product, setProduct } = useSingleProduct();
   const { productList } = useProductsListData();
   const stockNumber = product?.actual_stock || 0;
@@ -88,7 +90,7 @@ export const ProductDetailPage: FunctionComponent = () => {
           mt: 3,
           width: '100%',
           display: 'flex',
-          flexDirection: 'row',
+          flexDirection: isMobile ? 'column' : 'row',
           justifyContent: 'flex-start',
           alignItems: 'center',
           gap: theme.spacing(1),

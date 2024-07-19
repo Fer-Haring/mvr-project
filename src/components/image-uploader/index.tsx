@@ -64,8 +64,8 @@ const Wrapper = styled(Box)<{ isMobile: boolean }>(({ theme, isMobile }) => ({
 
   '& .upload-image-img': {
     backgroundColor: theme.palette.grey[300],
-    width: '100%',
-    height: isMobile ? '40vw' : '20vw',
+    width: isMobile ? '50vw' : '100%',
+    height: isMobile ? '50vw' : '20vw',
     '& img': {
       objectFit: 'cover',
     },
