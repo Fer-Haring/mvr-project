@@ -13,7 +13,7 @@ import { useIntl } from 'react-intl';
 
 import MailForm from './mail-form';
 
-const ContactPage: FunctionComponent = () => {
+export const ContactPage: FunctionComponent = () => {
   const theme = useTheme();
   const { formatMessage } = useIntl();
   const isMobile = useIsMobile();
@@ -132,5 +132,3 @@ const StyledDivider = styled(Divider)({
   margin: '10px 10px',
   marginTop: '60px',
 });
-
-export default ContactPage;

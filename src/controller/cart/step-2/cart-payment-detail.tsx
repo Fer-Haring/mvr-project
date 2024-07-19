@@ -37,7 +37,7 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
   }, [cartProducts, dollarValue, deliverValue]);
 
   useEffect(() => {
-    const totalUSD = totalCartValue / dollarValue.value;
+    const totalUSD = totalCartValue / Number(dollarValue.value);
     setOrder({
       ...order,
       total_order_amount_ars: totalCartValue,
@@ -129,7 +129,7 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
               <StyledDivider orientation="horizontal" flexItem />
               {order.currency_used_to_pay === 'USD' ? (
                 <CustomTypography sx={{ fontSize: 24, fontWeight: 'bold' }} variant="subtitle1">
-                  $ {(totalCartValue / dollarValue.value).toFixed(2)}
+                  $ {(totalCartValue / Number(dollarValue.value)).toFixed(2)}
                 </CustomTypography>
               ) : (
                 <CustomTypography sx={{ fontSize: 24, fontWeight: 'bold' }} variant="subtitle1">
