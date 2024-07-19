@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { SxProps, Theme, alpha, styled } from '@mui/material/styles';
 import Button from '@webapp/components/button';
 import GoogleLogo from '@webapp/components/icons/google';
-import { FunctionComponent } from 'react';
+import React from 'react';
 import { useIntl } from 'react-intl';
 
 interface AlternateLoginProps {
@@ -14,7 +14,7 @@ interface AlternateLoginProps {
   onClick?: () => void;
 }
 
-const AlternateLogin: FunctionComponent<AlternateLoginProps> = ({ className, type, sx, onClick }) => {
+const AlternateLogin: React.FunctionComponent<AlternateLoginProps> = ({ className, type, sx, onClick }) => {
   const { formatMessage } = useIntl();
   return (
     <Wrapper className={className || ''} sx={{ ...sx }}>
@@ -25,7 +25,7 @@ const AlternateLogin: FunctionComponent<AlternateLoginProps> = ({ className, typ
         </Typography>
         <Divider />
       </div>
-      <Button className="or-button" variant="outlined" fullWidth color="info" onClick={onClick}>
+      <Button className="or-button" variant="outlined" fullWidth color="white" onClick={onClick}>
         <GoogleLogo className="or-google-logo" isPlain={false} />
         {formatMessage({ id: type === 'signin' ? 'AUTH.SIGN_IN.GOOGLE.TITLE' : 'AUTH.SIGN_UP.GOOGLE.TITLE' })}
       </Button>

@@ -105,7 +105,7 @@ const Modal: FunctionComponent<ModalProps> = ({
             }}
             spacing={2}
             alignItems="center"
-            justifyContent="flex-end"
+            justifyContent={primaryButtonText ? 'center' : 'flex-end'}
           >
             {secondaryButtonText && (
               <Button

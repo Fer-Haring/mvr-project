@@ -39,12 +39,17 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ user
   };
 
   return (
-    <Stack gap={2} sx={{ mt: 4, width: '100%', display: 'flex' }}>
-      <Typography variant="h4" fontWeight={600} fontSize={22} sx={{ mb: 0, color: theme.palette.grey[900] }}>
+    <Stack gap={2} sx={{ mt: 2, width: '100%', display: 'flex' }}>
+      <Typography
+        variant="h4"
+        fontWeight={600}
+        fontSize={22}
+        sx={{ mb: 0, color: theme.palette.grey[900], textAlign: 'center' }}
+      >
         {formatMessage({ id: 'PROFILE.USER_INFO.SELECTED.OPTIONS' })}
       </Typography>
-      <Divider sx={{ mb: 2 }} />
-      <Stack gap={2} sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <Divider sx={{ mb: 1 }} color="#000000" orientation="horizontal" />
+      <Stack gap={2} sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 2 }}>
         <Typography
           variant="h4"
           fontWeight={600}

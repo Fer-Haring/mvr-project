@@ -103,7 +103,7 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({
           </Button>
         </Box>
       </Stack>
-      <CurrencySelectButtons userData={userData} setIsCurrencyPayValid={setIsCurrencyPayValid} />
+      <CurrencySelectButtons userData={userData} setIsCurrencyPayValid={setIsCurrencyPayValid} setUser={setUser}/>
     </Stack>
   );
 };

@@ -1,6 +1,16 @@
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, alpha, styled } from '@mui/material';
+import {
+  Box,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  alpha,
+  styled,
+} from '@mui/material';
 import { CompletedOrder } from '@webapp/sdk/types/user-types';
-
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
@@ -19,7 +29,7 @@ const ExpandableTableContent: FunctionComponent<ExpandableTableContentProps> = (
     if (priceCurrency === 'ARS') {
       return price;
     } else if (priceCurrency === 'USD') {
-      return `${price} USD = $${(price * dollarValue.value).toFixed(2)} ARS`;
+      return `${price} USD = $${(price * Number(dollarValue.value)).toFixed(2)} ARS`;
     }
   };
 
@@ -42,13 +52,13 @@ const ExpandableTableContent: FunctionComponent<ExpandableTableContentProps> = (
           }}
         />
         <TableBody>
-          {row.cartItems?.map((item) => (
-            <React.Fragment key={item.productId}>
+          {row.cart_items?.map((item) => (
+            <React.Fragment key={item.product_id}>
               <TableRow>
-                <TableCell>{item.productName}</TableCell>
-                <TableCell>{item.unitQuantity}</TableCell>
-                <TableCell>{convertedPrice(item.unitPrice, item.priceCurrency)}</TableCell>
-                <TableCell>{convertedPrice(item.subTotal, item.priceCurrency)}</TableCell>
+                <TableCell>{item.product_name}</TableCell>
+                <TableCell>{item.quantity}</TableCell>
+                <TableCell>{convertedPrice(item.unit_price, item.price_currency)}</TableCell>
+                <TableCell>{convertedPrice(item.sub_total, item.price_currency)}</TableCell>
               </TableRow>
             </React.Fragment>
           ))}

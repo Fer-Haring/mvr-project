@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import { AutocompleteOption } from '@webapp/components/form/autocomplete';
 import InputField from '@webapp/components/form/input';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { CustomAutoComplete, CustomSelect, FiltersHolder, Slider } from '@webapp/pages/products/products';
 import React from 'react';
 import { useIntl } from 'react-intl';
@@ -52,9 +53,10 @@ const ProductFilterPanel: React.FunctionComponent<ProductFilterPanelProps> = ({
   handlePriceRangeChange,
 }) => {
   const { formatMessage } = useIntl();
+  const isMobile = useIsMobile();
   const theme = useTheme();
   return (
-    <FiltersHolder>
+    <FiltersHolder isMobile={isMobile}>
       <FormControl fullWidth>
         <CustomInputSearch
           size="small"

@@ -10,7 +10,7 @@ import DeliveryData from '@webapp/controller/cart/step-1/delivery-data';
 import { useUpdateUser } from '@webapp/sdk/mutations/auth/user-update-mutation';
 import { OrderRequest } from '@webapp/sdk/types/orders-types';
 import { User } from '@webapp/sdk/types/user-types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 
@@ -71,7 +71,7 @@ export const Step1: FunctionComponent<Step1Props> = ({
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     setIsAddressValid(isValidField(user?.address));
     setIsCityValid(isValidField(user?.city));
     setIsPaymentTypeValid(!!user?.payment_method);
@@ -81,7 +81,7 @@ export const Step1: FunctionComponent<Step1Props> = ({
     setPhoneNumber(user?.phone || '');
   }, [user]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Asegúrate de actualizar las validaciones cuando se cambien los estados locales
     setIsAddressValid(isValidField(address));
     setIsCityValid(isValidField(city));
@@ -151,7 +151,7 @@ export const Step1: FunctionComponent<Step1Props> = ({
             <Checkbox
               checked={checked}
               onChange={(e) => setChecked(e.target.checked)}
-              disabled={!areAllFieldsValid() && !phoneNumber}
+              disabled={!areAllFieldsValid() || !phoneNumber}
               sx={{ color: theme.palette.grey[800] }}
             />
             <Typography variant="body1" sx={{ color: theme.palette.grey[800], textAlign: 'center', fontSize: '1.1vw' }}>
@@ -163,7 +163,7 @@ export const Step1: FunctionComponent<Step1Props> = ({
           variant="contained"
           onClick={handleNextStep}
           color={!checked ? 'disabled' : 'primary'}
-          disabled={!checked}
+          disabled={!checked || !phoneNumber}
           loading={updateUser.isPending}
           endIcon={<ArrowForwardIosRoundedIcon />}
         >

@@ -8,14 +8,11 @@ import MvpLogo from '@webapp/assets/images/content/logo.png';
 import ImageLogo from '@webapp/assets/images/content/name-image.png';
 import { useUserData } from '@webapp/store/users/user-data';
 import { motion, useReducedMotion } from 'framer-motion';
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { easing } from '../framer';
 import SidebarItem from './sidebar-item';
-import { useGetUserByIdMutation } from '@webapp/sdk/mutations/auth/get-user-by-id-mutation';
-import { useUserStore } from '@webapp/store/auth/session';
-import { User } from '@webapp/sdk/types/user-types';
 import { sidebarItems } from './sidebarItems';
 
 /**
@@ -42,9 +39,8 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ className }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, setUser } = useUserData();
+  const { user } = useUserData();
   const [collapsed, setCollapsed] = React.useState<boolean>(localStorage.getItem('sidebarCollapsed') === 'true');
-  const userData = useGetUserByIdMutation(useUserStore((state) => state.userInfo?.userId) || '');
 
   const shouldReduceMotion = useReducedMotion();
 
@@ -56,12 +52,6 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ className }) => {
   const handleNavigate = (to: string) => {
     navigate(to);
   };
-
-  useEffect(() => {
-      if (userData) {
-        setUser(userData.data as User);
-      }
-  }, [userData.data]);
 
   return (
     <SidebarContainer
@@ -91,8 +81,8 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ className }) => {
       <div className="content">
         <List>
           {sidebarItems
-            .filter((item) => !item.private || (item.private && user?.admin ))
-            .filter((item) => !item.private || (item.private ))
+            .filter((item) => !item.private || (item.private && user?.admin))
+            .filter((item) => !item.private || item.private)
             .map((item) => (
               <SidebarItem
                 key={item.to}

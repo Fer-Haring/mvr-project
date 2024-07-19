@@ -7,12 +7,13 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { SxProps, Theme, alpha, styled } from '@mui/material/styles';
 import { easing } from '@webapp/components/framer';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { motion } from 'framer-motion';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { DropzoneOptions, useDropzone } from 'react-dropzone';
 import { useIntl } from 'react-intl';
 
-const Wrapper = styled(Box)(({ theme }) => ({
+const Wrapper = styled(Box)<{ isMobile: boolean }>(({ theme, isMobile }) => ({
   minWidth: '245px',
   position: 'relative',
   // backgroundColor: theme.palette.background.default,
@@ -24,7 +25,7 @@ const Wrapper = styled(Box)(({ theme }) => ({
   cursor: 'pointer',
   height: '100%',
   minHeight: '400px',
-  padding: theme.spacing(3),
+  padding: theme.spacing(2),
   [theme.breakpoints.between('xs', 'sm')]: {
     minHeight: '200px',
   },
@@ -64,12 +65,9 @@ const Wrapper = styled(Box)(({ theme }) => ({
   '& .upload-image-img': {
     backgroundColor: theme.palette.grey[300],
     width: '100%',
-    height: theme.spacing(40),
+    height: isMobile ? '40vw' : '20vw',
     '& img': {
       objectFit: 'cover',
-    },
-    [theme.breakpoints.between('xs', 'sm')]: {
-      height: theme.spacing(25),
     },
   },
 
@@ -121,6 +119,7 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
   admin,
 }) => {
   const intl = useIntl();
+  const isMobile = useIsMobile();
 
   const IDLE_STATUS = 'COMMON.IMAGE_UPLOAD.STATUS.IDLE';
   const LOADING_STATUS = 'COMMON.IMAGE_UPLOAD.STATUS.LOADING';
@@ -222,6 +221,7 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
       transition={disabled ? {} : { ...easing }}
     >
       <Wrapper
+        isMobile={isMobile}
         className={`${isDragActive || status === DONE_STATUS ? 'active' : ''} ${
           status === ERROR_STATUS ? 'error' : ''
         } ${disabled ? 'disabled' : ''}`}

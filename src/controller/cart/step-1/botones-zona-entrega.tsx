@@ -25,12 +25,13 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
   const { setDeliverValue } = useMessageStore();
 
   const handleOnChange = async (selectedDelivery: string) => {
+    const updatedUserData = { ...userData, delivery_zone: selectedDelivery };
     if (onValidChange) {
       onValidChange(true);
     }
 
-    setUser({ ...userData, delivery_zone: selectedDelivery });
-    setUserData({ ...userData, delivery_zone: selectedDelivery });
+    setUser(updatedUserData);
+    setUserData(updatedUserData);
 
     if (selectedDelivery === 'LBE') {
       setDeliverValue(2500);
@@ -38,6 +39,8 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
       setDeliverValue(3500);
     }
   };
+
+  console.log(userData);
 
   React.useEffect(() => {
     if (onValidChange) {

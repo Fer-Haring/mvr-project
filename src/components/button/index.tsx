@@ -8,6 +8,8 @@ declare module '@mui/material/Button' {
   interface ButtonPropsColorOverrides {
     disabled: true;
     unselected: true;
+    text: true;
+    white: true;
   }
 }
 
@@ -19,7 +21,9 @@ export type ButtonColors =
   | 'info'
   | 'warning'
   | 'disabled'
-  | 'unselected';
+  | 'unselected'
+  | 'text'
+  | 'white';
 
 interface ButtonProps extends Omit<MuiLoadingButtonProps, 'color'> {
   className?: string;
@@ -28,12 +32,19 @@ interface ButtonProps extends Omit<MuiLoadingButtonProps, 'color'> {
   color?: ButtonColors;
 }
 
-const Button: FunctionComponent<ButtonProps> = ({ className, children, hasBorder, color = 'primary', ...props }) => {
+const Button: FunctionComponent<ButtonProps> = ({
+  className,
+  children,
+  hasBorder,
+  color = 'primary',
+  variant = 'contained',
+  ...props
+}) => {
   const isMobile = useIsMobile();
   return (
     <CustomButtonStyled
       className={`${className || ''} ${hasBorder ? 'border' : ''}`}
-      variant={props.variant ? props.variant : 'contained'}
+      variant={variant}
       color={color}
       isMobile={isMobile}
       {...props}
@@ -59,12 +70,11 @@ export default Button;
 const CustomButtonStyled = styled(MuiLoadingButton, { shouldForwardProp: (prop) => prop !== 'color' })<{
   color: ButtonColors;
   isMobile: boolean;
-}>(({ theme, color, isMobile }) => ({
+}>(({ color, isMobile }) => ({
   width: '100%',
   maxWidth: '350px',
   fontSize: !isMobile ? '1vw' : '2.5vw',
   fontWeight: 600,
-  color: theme.palette.common.black,
   cursor: color === 'disabled' ? 'not-allowed' : 'pointer',
   textAlign: 'center',
   border: 'none',
@@ -81,6 +91,8 @@ const CustomButtonStyled = styled(MuiLoadingButton, { shouldForwardProp: (prop) 
     warning: 'linear-gradient(to right, #ffc107, #ffca85, #ffc107, #ffca85)',
     disabled: 'linear-gradient(to right, #e0e0e0, #bdbdbd, #9e9e9e, #757575)',
     unselected: 'linear-gradient(to right, #e0e0e0, #bdbdbd, #9e9e9e, #757575)',
+    text: 'none',
+    white: 'linear-gradient(to right, #ffffff, #ffffff, #ffffff, #ffffff)',
   }[color],
   boxShadow: {
     primary: '0 4px 15px 0 rgba(65, 132, 234, 0.75)',
@@ -91,6 +103,8 @@ const CustomButtonStyled = styled(MuiLoadingButton, { shouldForwardProp: (prop) 
     warning: '0 4px 15px 0 rgba(255, 193, 7, 0.75)',
     disabled: '0 4px 15px 0 rgba(158, 158, 158, 0.75)',
     unselected: '0 4px 15px 0 rgba(158, 158, 158, 0.75)',
+    text: 'none',
+    white: '0 4px 15px 0 rgba(255, 255, 255, 0.75)',
   }[color],
 
   '&:hover': {

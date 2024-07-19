@@ -35,7 +35,7 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
   };
 
   return (
-    <Stack gap={2} sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Stack gap={2} sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 2 }}>
       <Typography
         variant="h4"
         fontWeight={600}

@@ -4,10 +4,8 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { updateUserInDb } from '@webapp/sdk/firebase/user';
 import { User } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
-import { useUserId } from '@webapp/store/users/user-id';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 
@@ -21,7 +19,6 @@ interface PaymentTypeButtonsProps {
 const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userData, onValidChange, setUser }) => {
   const { formatMessage } = useIntl();
   const isMobile = useIsMobile();
-  const { userId } = useUserId();
   const theme = useTheme();
   const { setOrder, order } = useMessageStore();
 
@@ -37,9 +34,6 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
       onValidChange(true);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id: ignoredUserId, ...restOfUserData } = userData;
-    updateUserInDb({ userId, ...restOfUserData, paymentMethod: selectedDelivery });
     setUser({ ...userData, payment_method: selectedDelivery });
     setOrder({ ...order, payment_method: selectedDelivery });
   };

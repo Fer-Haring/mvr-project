@@ -6,19 +6,18 @@ import Button from '@webapp/components/button';
 import InputField from '@webapp/components/form/input';
 import { useUpdateUser } from '@webapp/sdk/mutations/auth/user-update-mutation';
 import { UpdateUserPayload, User } from '@webapp/sdk/types/user-types';
-import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 interface UserInfoPersonalProps {
   className?: string;
   userData: User;
+  setUser: (user: User) => void;
 }
 
-const UserInfoPersonal: FunctionComponent<UserInfoPersonalProps> = ({ className, userData }) => {
+const UserInfoPersonal: FunctionComponent<UserInfoPersonalProps> = ({ className, userData, setUser }) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
-  const { setUser } = useUserData();
   const [name, setName] = useState(userData?.name);
   const [lastName, setLastName] = useState(userData?.last_name);
   const [email, setEmail] = useState(userData?.email);
@@ -65,12 +64,17 @@ const UserInfoPersonal: FunctionComponent<UserInfoPersonalProps> = ({ className,
 
   return (
     <Box className={className || ''}>
-      <Typography variant="h4" fontWeight={600} fontSize={28} sx={{ mb: 0, color: theme.palette.grey[900] }}>
+      <Typography
+        variant="h4"
+        fontWeight={600}
+        fontSize={26}
+        sx={{ mt: 4, color: theme.palette.grey[900], textAlign: 'center' }}
+      >
         {formatMessage({ id: 'PROFILE.USER_INFO.PANEL' })}
       </Typography>
       <Divider sx={{ mb: 4 }} />
-      <Stack gap={4} sx={{ width: '100%' }}>
-        <Box sx={{ display: 'flex', width: '100%', gap: 2, justifyContent: 'space-between', mt: 4 }}>
+      <Stack gap={3} sx={{ width: '100%', paddingX: 4 }}>
+        <Box sx={{ display: 'flex', width: '100%', gap: 2, justifyContent: 'space-between', mt: 2 }}>
           <CustomInputField
             name="name"
             label={formatMessage({ id: 'COMMON.FIRST_NAME' })}

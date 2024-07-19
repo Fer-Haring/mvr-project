@@ -8,6 +8,7 @@ import VapeHomeImage from '@webapp/assets/images/home/liquid-home.png';
 import Button from '@webapp/components/button';
 import ContentWrapper from '@webapp/components/content-wrapper';
 import ProductCard from '@webapp/components/product-card';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { useGetDollarValue } from '@webapp/sdk/mutations/admin/get-dollar-value-query';
 import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
 import { useAdminDataStore } from '@webapp/store/admin/admin-data';
@@ -23,6 +24,7 @@ export const HomePage: FunctionComponent = () => {
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
   const theme = useTheme();
+  const isMobile = useIsMobile();
   const { setDollarValue } = useDollarValue();
   const { setProduct } = useSingleProduct();
   const { setUsers, setOrders } = useAdminDataStore();
@@ -51,14 +53,15 @@ export const HomePage: FunctionComponent = () => {
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'space-between',
+            alignItems: 'center',
           }}
         >
-          <Stack direction={'column'} gap={2} height={'45vh'}>
+          <Stack direction={'column'} gap={2} height={isMobile ? '30vh' : '40vh'}>
             <Typography
               variant="h1"
               sx={{
                 fontFamily: 'WordMean',
-                fontSize: '65px',
+                fontSize: isMobile ? '8vw' : '65px',
               }}
             >
               {formatMessage({ id: 'WELCOME.HOME.MESSAGE' })}
@@ -68,7 +71,8 @@ export const HomePage: FunctionComponent = () => {
               sx={{
                 textWrap: 'wrap',
                 textOverflow: 'ellipsis',
-                width: '50%',
+                width: isMobile ? '80vw' : '50%',
+                fontSize: isMobile ? '4vw' : '24px',
               }}
             >
               {formatMessage({ id: 'WELCOME.HOME.DESCRIPTION' })}
@@ -79,12 +83,10 @@ export const HomePage: FunctionComponent = () => {
               color="primary"
               onClick={() => navigate('/productos')}
               sx={{
-                width: '150px',
+                width: isMobile ? '75vw' : '150px',
                 marginTop: theme.spacing(4),
                 marginLeft: theme.spacing(4),
-                ':hover': {
-                  color: theme.palette.grey[200],
-                },
+                fontSize: 16,
               }}
             >
               {formatMessage({ id: 'WELCOME.HOME.BUTTON' })}
@@ -106,7 +108,7 @@ export const HomePage: FunctionComponent = () => {
             sx={{
               marginBottom: theme.spacing(4),
               textDecoration: 'underline',
-              fontSize: 36,
+              fontSize: isMobile ? '5vw' : 36,
               fontFamily: 'WordMean',
               letterSpacing: 4,
             }}
@@ -142,22 +144,24 @@ export const HomePage: FunctionComponent = () => {
           )}
         </Box>
       </Stack>
-      <Box
-        sx={{
-          position: 'absolute',
-          right: 10,
-          zIndex: 0,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <img
-          src={VapeHomeImage}
-          alt="Vape Home"
-          style={{ width: '100%', height: '100%', filter: 'drop-shadow(20px 10px 24px #000000)' }}
-        />
-      </Box>
+      {!isMobile && (
+        <Box
+          sx={{
+            position: 'absolute',
+            right: 10,
+            zIndex: 0,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <img
+            src={VapeHomeImage}
+            alt="Vape Home"
+            style={{ width: '100%', height: '100%', filter: 'drop-shadow(20px 10px 24px #000000)' }}
+          />
+        </Box>
+      )}
     </ContentWrapper>
   );
 };

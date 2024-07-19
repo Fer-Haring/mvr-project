@@ -1,16 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { updateUserInDb } from '@webapp/sdk/firebase/user';
 import { User } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
-import { useUserData } from '@webapp/store/users/user-data';
-import { useUserId } from '@webapp/store/users/user-id';
-import { set } from 'lodash';
 import React from 'react';
 import { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -18,16 +13,19 @@ import { useIntl } from 'react-intl';
 interface CurrencySelectButtonsProps {
   className?: string;
   userData: User;
+  setUser: (user: User) => void;
   setIsCurrencyPayValid: (isValid: boolean) => void;
 }
 
-const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({ userData, setIsCurrencyPayValid }) => {
+const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({
+  userData,
+  setIsCurrencyPayValid,
+  setUser,
+}) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
   const isMobile = useIsMobile();
-  // const { setUser, user } = useUserData();
   const [preferredCurrency, setPreferredCurrency] = useState(userData?.preferred_currency);
-  const setUser = useUserData((state) => state.setUser);
   const setOrder = useMessageStore((state) => state.setOrder);
   const order = useMessageStore((state) => state.order);
 
@@ -42,9 +40,9 @@ const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({ 
   };
 
   const handleOnChange = async (selectedCurrency: string) => {
-    const { id: ignoredUserId, ...restOfUserData } = userData;
+    const updatedUserData = { ...userData, preferred_currency: selectedCurrency };
     setIsCurrencyPayValid(true);
-    setUser({ ...userData, preferred_currency: selectedCurrency });
+    setUser(updatedUserData);
     setOrder({ ...order, currency_used_to_pay: selectedCurrency });
   };
 

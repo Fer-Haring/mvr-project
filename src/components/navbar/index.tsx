@@ -3,7 +3,10 @@ import { styled } from '@mui/material/styles';
 import cartAnimation from '@webapp/assets/images/animations/cart.json';
 import DrawerNavbar from '@webapp/controller/drawer-navbar';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
+import { useGetUserByIdMutation } from '@webapp/sdk/mutations/auth/get-user-by-id-mutation';
 import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
+import { User } from '@webapp/sdk/types/user-types';
+import { useUserStore } from '@webapp/store/auth/session';
 import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent, useEffect } from 'react';
 import { useIntl } from 'react-intl';
@@ -28,10 +31,17 @@ const Navbar: FunctionComponent<NavbarProps> = ({ className }) => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useUserData();
+  const { user, setUser } = useUserData();
+  const userData = useGetUserByIdMutation(useUserStore((state) => state.userInfo?.userId) || '');
   const [paused, setPaused] = React.useState(true);
 
   const { data: cartData } = useGetUserCart();
+
+  useEffect(() => {
+    if (userData) {
+      setUser(userData.data as User);
+    }
+  }, [userData.data]);
 
   const handlePause = () => {
     setPaused(!paused);

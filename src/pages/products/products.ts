@@ -190,20 +190,21 @@ export const CustomInputSearch = styled(TextField)(({ theme }) => ({
   },
 }));
 
-export const FiltersHolder = styled(Paper)(({ theme }) => ({
+export const FiltersHolder = styled(Paper)<{ isMobile: boolean }>(({ theme, isMobile }) => ({
   width: '100%',
   height: 'auto',
   display: 'flex',
-  flexDirection: 'row',
+  flexDirection: isMobile ? 'column' : 'row',
   justifyContent: 'center',
   alignItems: 'center',
   position: 'sticky',
   gap: theme.spacing(2),
-  paddingTop: theme.spacing(0.5),
+  paddingTop: isMobile ? theme.spacing(2) : theme.spacing(0.5),
   paddingBottom: theme.spacing(0.5),
   paddingRight: theme.spacing(2),
   paddingLeft: theme.spacing(2),
   backgroundColor: alpha(theme.palette.common.white, 0.7),
+  marginBottom: theme.spacing(2),
 }));
 
 // Main category button
