@@ -90,11 +90,11 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
   };
 
   async function loginWithGoogle() {
-    window.location.href = "https://mvr-prod.onrender.com/login/google";
+    window.location.href = 'https://mvr-prod.onrender.com/login/google';
   }
 
   const handleGoogleSignUp = async () => {
-   await loginWithGoogle();
+    await loginWithGoogle();
   };
 
   const handleDisabled =
@@ -158,7 +158,7 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                     />
                   </Stack>
                   <Stack direction={'column'} spacing={0} rowGap={1}>
-                  <InputField
+                    <InputField
                       name="username"
                       required
                       fullWidth
@@ -289,18 +289,16 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                   </Button>
                   <Button
                     variant="text"
+                    color="text"
                     onClick={goToLogin}
                     fullWidth={isMobile}
-                    sx={{ flexShrink: 0 }}
+                    sx={{ flexShrink: 0, fontSize: '1rem' }}
                     aria-label={formatMessage({ id: 'AUTH.SIGN_UP.LINK.LABEL' })}
                   >
                     {formatMessage({ id: 'AUTH.SIGN_UP.LINK.LABEL' })}
                   </Button>
                 </Stack>
-                <AlternateLogin
-              type="signup"
-              onClick={handleGoogleSignUp}
-            />
+                <AlternateLogin type="signup" onClick={handleGoogleSignUp} />
               </Box>
             </FormWrapper>
           </Stack>

@@ -25,7 +25,14 @@ const AlternateLogin: React.FunctionComponent<AlternateLoginProps> = ({ classNam
         </Typography>
         <Divider />
       </div>
-      <Button className="or-button" variant="outlined" fullWidth color="white" onClick={onClick}>
+      <Button
+        className="or-button"
+        variant="outlined"
+        fullWidth
+        color="white"
+        onClick={onClick}
+        sx={{ fontSize: '1rem', fontWeight: 100 }}
+      >
         <GoogleLogo className="or-google-logo" isPlain={false} />
         {formatMessage({ id: type === 'signin' ? 'AUTH.SIGN_IN.GOOGLE.TITLE' : 'AUTH.SIGN_UP.GOOGLE.TITLE' })}
       </Button>

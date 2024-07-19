@@ -217,7 +217,7 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
                     onClick={goToRegister}
                     fullWidth={isMobile}
                     aria-label={formatMessage({ id: 'AUTH.SIGN_IN.LINK.LABEL' })}
-                    sx={{ textWrap: 'balance', width: '100%' }}
+                    sx={{ textWrap: 'balance', width: '100%', fontSize: '1rem' }}
                   >
                     {formatMessage({ id: 'AUTH.SIGN_IN.LINK.LABEL' })}
                   </Button>
