@@ -1,5 +1,5 @@
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
-import { useTheme } from '@mui/material';
+import { Typography, useTheme } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Button from '@webapp/components/button';
 import Modal from '@webapp/components/modal';
@@ -25,18 +25,12 @@ interface Step2Props {
   order: OrderRequest;
 }
 
-export const Step2: FunctionComponent<Step2Props> = ({
-  cart,
-  fullMessage,
-  handleNextStep,
-  handlePreviousStep,
-  order,
-}) => {
+export const Step2: FunctionComponent<Step2Props> = ({ cart, fullMessage, handleNextStep, handlePreviousStep }) => {
   const { mutateAsync } = useClearCart();
   const getCart = useGetUserCart();
   const { formatMessage } = useIntl();
   const theme = useTheme();
-  const { deleteMessageStore } = useMessageStore();
+  const { deleteMessageStore, order } = useMessageStore();
   const { clearCart } = useCartStore();
   const [openModal, setOpenModal] = useState(false);
   const { mutateAsync: saveOrder } = useCreateOrder();
@@ -58,6 +52,8 @@ export const Step2: FunctionComponent<Step2Props> = ({
     deleteMessageStore();
     handleNextStep();
   };
+
+  console.log('Step2', order);
 
   const WhatsappButton: FunctionComponent = () => {
     return (
@@ -108,6 +104,8 @@ export const Step2: FunctionComponent<Step2Props> = ({
     );
   };
 
+  console.log(order.currency_used_to_pay === null);
+
   return (
     <Stack direction={'column'} gap={2} width={'100%'} justifyContent={'center'} alignItems={'center'}>
       <Button
@@ -124,9 +122,13 @@ export const Step2: FunctionComponent<Step2Props> = ({
         {formatMessage({ id: 'CART.PAYMENT.BACK' })}
       </Button>
       <CartPaymentDetail cartProducts={cart} />
+      {order.currency_used_to_pay === null && (
+        <Typography color={'error'}>{formatMessage({ id: 'CART.PAYMENT.MISSING.DATA' })}</Typography>
+      )}
       <Button
         variant="contained"
         onClick={handleOpenModal}
+        disabled={order.currency_used_to_pay === null || order.payment_method === ''}
         sx={{
           maxWidth: 300,
           color: theme.palette.grey[800],

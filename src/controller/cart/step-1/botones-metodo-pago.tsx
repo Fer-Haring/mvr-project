@@ -9,6 +9,7 @@ import { useMessageStore } from '@webapp/store/admin/message-store';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 
+
 interface PaymentTypeButtonsProps {
   className?: string;
   userData: User;
@@ -43,6 +44,8 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
       onValidChange(!!userData?.payment_method);
     }
   }, [userData, ]);
+
+    console.log('Boton Pago', order);
 
   return (
     <Stack gap={2} sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>

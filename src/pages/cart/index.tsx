@@ -126,8 +126,6 @@ export const CartPage: FunctionComponent = () => {
 
   Gracias!`;
 
-  console.log('User', user);
-
   return (
     <ContentWrapper>
       {cart?.length === 0 ? (

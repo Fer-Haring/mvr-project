@@ -2,7 +2,6 @@
 import { refreshToken } from '@webapp/sdk/actions/auth/user-refresh-token';
 import { CartResponse } from '@webapp/sdk/types/cart-types';
 
-
 export async function getUserCart(): Promise<CartResponse[]> {
   const URL = 'https://mvr-prod.onrender.com/cart';
   const accessToken = localStorage.getItem('access_token');

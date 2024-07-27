@@ -10,9 +10,12 @@ import DeliveryData from '@webapp/controller/cart/step-1/delivery-data';
 import { useUpdateUser } from '@webapp/sdk/mutations/auth/user-update-mutation';
 import { OrderRequest } from '@webapp/sdk/types/orders-types';
 import { User } from '@webapp/sdk/types/user-types';
+import { useMessageStore } from '@webapp/store/admin/message-store';
+import { set } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
+
 
 interface Step1Props {
   user: User;
@@ -43,11 +46,13 @@ export const Step1: FunctionComponent<Step1Props> = ({
 }) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
+  const { order } = useMessageStore();
   const [isPaymentTypeValid, setIsPaymentTypeValid] = useState<boolean>(false);
   const [isDeliveryTypeValid, setIsDeliveryTypeValid] = useState(false);
   const [isCurrencyPayValid, setIsCurrencyPayValid] = useState(false);
   const [isZoneDeliveryValid, setIsZoneDeliveryValid] = useState(false);
   const [isAddressValid, setIsAddressValid] = useState(false);
+  const [isCurrencyUsedToPayValid, setIsCurrencyUsedToPayValid] = useState(false);
   const [isCityValid, setIsCityValid] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const updateUser = useUpdateUser(user.id);
@@ -64,6 +69,7 @@ export const Step1: FunctionComponent<Step1Props> = ({
         isZoneDeliveryValid &&
         isAddressValid &&
         isCityValid &&
+        isCurrencyUsedToPayValid &&
         isCurrencyPayValid
       );
     } else {
@@ -78,6 +84,7 @@ export const Step1: FunctionComponent<Step1Props> = ({
     setIsDeliveryTypeValid(!!user?.delivery_type);
     setIsZoneDeliveryValid(!!user?.delivery_zone);
     setIsCurrencyPayValid(!!user?.preferred_currency);
+    setIsCurrencyUsedToPayValid(!!order?.currency_used_to_pay);
     setPhoneNumber(user?.phone || '');
   }, [user]);
 

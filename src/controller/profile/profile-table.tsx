@@ -58,7 +58,6 @@ export const ProfileTable: React.FunctionComponent = () => {
 
   const handleRowClick = (order: CompletedOrder) => {
     setSelectedOrder(order);
-    console.log('Selected Order:', order);
     setOpenDetailModal(true);
   };
 

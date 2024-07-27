@@ -40,8 +40,6 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
     }
   };
 
-  console.log(userData);
-
   React.useEffect(() => {
     if (onValidChange) {
       onValidChange(!!userData.delivery_zone);

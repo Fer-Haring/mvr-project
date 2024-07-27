@@ -450,6 +450,7 @@
   "CART.EMPTY.STATE.SUBTITLE" : "Agrega productos a tu carrito para continuar",
   "CART.PAYMENT.BACK": "Paso Anterior",
   "CART.PAYMENT.CONFIRM": "Confirmar Pedido",
+  "CART.PAYMENT.MISSING.DATA": "Hubo un error al colectar los datos del pedido, por favor vuelva atras y complete los datos faltantes",
   "CART.PAYMENT.CONFIRMATION.MESSAGE": "Enviar Pedido Por Whatsapp",
   "CART.PAYMENT.CONFIRMATION": "Marque esta casilla para confirmar que los datos ingresados son correctos",
   "CART.PAYMENT.CONFIRMATION.WARNING.MISSING.PHONE.ADVICE": "Su perfil no cuenta con Numero de Teléfono, por favor complete su perfil para poder continuar, haciendo click ",
