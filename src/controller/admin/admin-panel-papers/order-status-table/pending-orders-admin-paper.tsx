@@ -32,7 +32,7 @@ const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders
   const languages = [
     formatMessage({ id: 'ADMIN.ORDER.STATUS.PENDING' }),
     formatMessage({ id: 'ADMIN.ORDER.STATUS.COMPLETED' }),
-    formatMessage({ id: 'ADMIN.ORDER.STATUS.CANCELLED' }),
+    formatMessage({ id: 'ADMIN.ORDER.STATUS.CANCELED' }),
   ];
 
   useEffect(() => {
@@ -115,8 +115,8 @@ const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders
           break;
         case 'cancelado':
         case 'Cancelado':
-        case 'cancelled':
-          status = 'cancelled';
+        case 'canceled':
+          status = 'canceled';
           break;
         default:
           break;

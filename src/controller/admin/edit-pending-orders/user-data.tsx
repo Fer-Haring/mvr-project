@@ -20,9 +20,9 @@ const UserData: React.FC<UserDataProps> = ({ order }) => {
       case 'pending':
       case 'Pending':
         return formatMessage({ id: 'ADMIN.EDIT.PENDING.ORDERS.PAGE.ORDER.STATUS.PENDING' });
-      case 'cancelled':
-      case 'Cancelled':
-        return formatMessage({ id: 'ADMIN.EDIT.PENDING.ORDERS.PAGE.ORDER.STATUS.CANCELLED' });
+      case 'canceled':
+      case 'Canceled':
+        return formatMessage({ id: 'ADMIN.EDIT.PENDING.ORDERS.PAGE.ORDER.STATUS.CANCELED' });
       case 'completed':
       case 'Completed':
         return formatMessage({ id: 'ADMIN.EDIT.PENDING.ORDERS.PAGE.ORDER.STATUS.COMPLETED' });

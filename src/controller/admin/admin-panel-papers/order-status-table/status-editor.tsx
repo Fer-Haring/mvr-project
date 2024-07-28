@@ -14,7 +14,7 @@ const StatusEditor = (props: ICellEditorParams) => {
     <StyledSelect value={value} onChange={(e) => handleChange(e as SelectChangeEvent<string>)}>
       <StyledMenuItem value="pending">Pendiente</StyledMenuItem>
       <StyledMenuItem value="completed">Completado</StyledMenuItem>
-      <StyledMenuItem value="cancelled">Cancelado</StyledMenuItem>
+      <StyledMenuItem value="canceled">Cancelado</StyledMenuItem>
     </StyledSelect>
   );
 };

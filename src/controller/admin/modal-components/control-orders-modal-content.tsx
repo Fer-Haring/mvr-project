@@ -58,7 +58,7 @@
 //         // Opcional: Mostrar notificación de error
 //       });
 //   };
-  
+
 //   useEffect(() => {
 //     const loadUserData = async () => {
 //       const ordersByUser: UserOrders = {};
@@ -133,7 +133,7 @@
 //                                   },
 //                                   {
 //                                     value: 'Canceled',
-//                                     label: formatMessage({ id: 'ADMIN.MODAL.ORDERS.CANCELLED.STATE' }),
+//                                     label: formatMessage({ id: 'ADMIN.MODAL.ORDERS.CANCELED.STATE' }),
 //                                   },
 //                                 ]}
 //                               />

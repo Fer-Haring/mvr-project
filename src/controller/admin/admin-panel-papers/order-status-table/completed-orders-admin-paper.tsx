@@ -111,8 +111,8 @@ const CompletedOrdersPaper: FunctionComponent<CompletedOrdersPaperProps> = ({ or
           break;
         case 'cancelado':
         case 'Cancelado':
-        case 'cancelled':
-          status = 'cancelled';
+        case 'canceled':
+          status = 'canceled';
           break;
         default:
           break;
