@@ -25,12 +25,19 @@ interface Step2Props {
   order: OrderRequest;
 }
 
-export const Step2: FunctionComponent<Step2Props> = ({ cart, fullMessage, handleNextStep, handlePreviousStep }) => {
+export const Step2: FunctionComponent<Step2Props> = ({
+  cart,
+  fullMessage,
+  handleNextStep,
+  handlePreviousStep,
+  order,
+}) => {
   const { mutateAsync } = useClearCart();
   const getCart = useGetUserCart();
+
   const { formatMessage } = useIntl();
   const theme = useTheme();
-  const { deleteMessageStore, order } = useMessageStore();
+  const { deleteMessageStore } = useMessageStore();
   const { clearCart } = useCartStore();
   const [openModal, setOpenModal] = useState(false);
   const { mutateAsync: saveOrder } = useCreateOrder();
@@ -52,8 +59,6 @@ export const Step2: FunctionComponent<Step2Props> = ({ cart, fullMessage, handle
     deleteMessageStore();
     handleNextStep();
   };
-
-  console.log('Step2', order);
 
   const WhatsappButton: FunctionComponent = () => {
     return (
@@ -103,8 +108,6 @@ export const Step2: FunctionComponent<Step2Props> = ({ cart, fullMessage, handle
       </Stack>
     );
   };
-
-  console.log(order.currency_used_to_pay === null);
 
   return (
     <Stack direction={'column'} gap={2} width={'100%'} justifyContent={'center'} alignItems={'center'}>

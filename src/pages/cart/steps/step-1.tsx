@@ -5,8 +5,10 @@ import { Box, Checkbox, Typography } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Button from '@webapp/components/button';
 import PaymentTypeButtons from '@webapp/controller/cart/step-1/botones-metodo-pago';
+import CurrencySelectButtons from '@webapp/controller/cart/step-1/botones-moneda-pago';
 import DeliveryTypeButtons from '@webapp/controller/cart/step-1/botones-tipo-entrega';
 import DeliveryData from '@webapp/controller/cart/step-1/delivery-data';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { useUpdateUser } from '@webapp/sdk/mutations/auth/user-update-mutation';
 import { OrderRequest } from '@webapp/sdk/types/orders-types';
 import { User } from '@webapp/sdk/types/user-types';
@@ -15,7 +17,6 @@ import { set } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
-
 
 interface Step1Props {
   user: User;
@@ -29,6 +30,7 @@ interface Step1Props {
   checked: boolean;
   setChecked: (checked: boolean) => void;
   order: OrderRequest;
+  updatingUserLoading: boolean;
 }
 
 export const Step1: FunctionComponent<Step1Props> = ({
@@ -42,9 +44,10 @@ export const Step1: FunctionComponent<Step1Props> = ({
   setAddress,
   checked,
   setChecked,
-  // order,
+  updatingUserLoading,
 }) => {
   const { formatMessage } = useIntl();
+  const isMobile = useIsMobile();
   const theme = useTheme();
   const { order } = useMessageStore();
   const [isPaymentTypeValid, setIsPaymentTypeValid] = useState<boolean>(false);
@@ -107,13 +110,25 @@ export const Step1: FunctionComponent<Step1Props> = ({
       </Button>
 
       <PaymentTypeButtons userData={user} setUser={setUser} onValidChange={setIsPaymentTypeValid} />
-      <DeliveryTypeButtons
-        userData={user}
-        setUser={setUser}
-        onValidChange={setIsDeliveryTypeValid}
-        setIsCurrencyPayValid={setIsCurrencyPayValid}
-      />
 
+      <Stack
+        gap={2}
+        sx={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'flex-start',
+          flexDirection: isMobile ? 'column' : 'row',
+        }}
+      >
+        <DeliveryTypeButtons
+          userData={user}
+          setUser={setUser}
+          onValidChange={setIsDeliveryTypeValid}
+          setIsCurrencyPayValid={setIsCurrencyPayValid}
+        />
+        <CurrencySelectButtons userData={user} setIsCurrencyPayValid={setIsCurrencyPayValid} setUser={setUser} />
+      </Stack>
       {user.delivery_type === 'Delivery' && (
         <DeliveryData
           user={user}
@@ -161,7 +176,10 @@ export const Step1: FunctionComponent<Step1Props> = ({
               disabled={!areAllFieldsValid() || !phoneNumber}
               sx={{ color: theme.palette.grey[800] }}
             />
-            <Typography variant="body1" sx={{ color: theme.palette.grey[800], textAlign: 'center', fontSize: '1.1vw' }}>
+            <Typography
+              variant="body1"
+              sx={{ color: theme.palette.grey[800], textAlign: 'center', fontSize: '0.8rem', maxLines: '2' }}
+            >
               {formatMessage({ id: 'CART.PAYMENT.CONFIRMATION' })}
             </Typography>
           </Box>
@@ -171,7 +189,7 @@ export const Step1: FunctionComponent<Step1Props> = ({
           onClick={handleNextStep}
           color={!checked ? 'disabled' : 'primary'}
           disabled={!checked || !phoneNumber}
-          loading={updateUser.isPending}
+          loading={updateUser.isPending || updatingUserLoading}
           endIcon={<ArrowForwardIosRoundedIcon />}
         >
           {formatMessage({ id: 'CART.PAYMENT.NEXT' })}

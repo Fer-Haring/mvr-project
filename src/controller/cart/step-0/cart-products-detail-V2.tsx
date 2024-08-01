@@ -134,7 +134,8 @@ export const CartProductsDetailV2: React.FunctionComponent<CartProductsDetailV2P
               ) : (
                 <ImageContainer key={cartProduct.product_id} src={cartProduct.product_image} />
               )}
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}>
+
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%', paddingLeft: 2 }}>
                 <Typography
                   variant={'h5'}
                   onClick={() => {
@@ -176,16 +177,25 @@ export const CartProductsDetailV2: React.FunctionComponent<CartProductsDetailV2P
                 <Box
                   sx={{
                     display: 'flex',
-                    flexDirection: 'row',
+                    flexDirection: 'column',
                     gap: theme.spacing(2),
                     justifyContent: 'space-between',
                     color: theme.palette.common.black,
                   }}
                 >
+                  <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, alignItems: 'center', justifyContent:'space-between' }}>
+                    <Typography variant={'body1'} fontWeight={600} sx={{ fontSize: '0.9vw' }}>
+                      {formatMessage({ id: 'CART.HEADER.SUBTOTAL' })}
+                    </Typography>
+                    <Typography variant={'body1'} sx={{ fontSize: '0.9vw' }}>
+                      {subTotalValue(cartProduct.sub_total, cartProduct.price_currency)}
+                    </Typography>
+                  </Box>
+
                   <Stack
                     direction={'row'}
                     gap={1}
-                    sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                    sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}
                   >
                     <Typography variant={'body1'} fontWeight={600} sx={{ fontSize: '0.9vw' }}>
                       {formatMessage({ id: 'CART.HEADER.QUANTITY' })}
@@ -224,15 +234,6 @@ export const CartProductsDetailV2: React.FunctionComponent<CartProductsDetailV2P
                       />
                     </IconButton>
                   </Stack>
-
-                  <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
-                    <Typography variant={'body1'} fontWeight={600} sx={{ fontSize: '0.9vw' }}>
-                      {formatMessage({ id: 'CART.HEADER.SUBTOTAL' })}
-                    </Typography>
-                    <Typography variant={'body1'} sx={{ fontSize: '0.9vw' }}>
-                      {subTotalValue(cartProduct.sub_total, cartProduct.price_currency)}
-                    </Typography>
-                  </Box>
                 </Box>
               </Box>
             </ProductDetailContainer>

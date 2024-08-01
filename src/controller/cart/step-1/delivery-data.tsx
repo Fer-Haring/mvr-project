@@ -52,6 +52,7 @@ const DeliveryData: React.FunctionComponent<DeliveryDataProps> = ({
         flexDirection: isMobile ? 'column' : 'row',
         justifyContent: 'center',
         alignItems: 'center',
+        gap: 3,
       }}
     >
       <ZoneDeliverButtons userData={user} setUser={setUser} onValidChange={setIsZoneDeliveryValid} />

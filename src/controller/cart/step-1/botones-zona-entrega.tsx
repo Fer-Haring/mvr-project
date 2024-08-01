@@ -33,10 +33,14 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
     setUser(updatedUserData);
     setUserData(updatedUserData);
 
-    if (selectedDelivery === 'LBE') {
-      setDeliverValue(2500);
-    } else if (selectedDelivery === 'OZ') {
-      setDeliverValue(3500);
+    if (selectedDelivery === 'BSSO') {
+      setDeliverValue(1400);
+    } else if (selectedDelivery === 'CASCO') {
+      setDeliverValue(2800);
+    } else if (selectedDelivery === 'OUTCASCO') {
+      setDeliverValue(4000);
+    } else if (selectedDelivery === 'LEJOS') {
+      setDeliverValue(4500);
     }
   };
 
@@ -57,32 +61,73 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
       >
         {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.SELECTOR' })}
       </Typography>
-      <Box
+      <Stack
+        gap={isMobile ? 0 : 2}
         sx={{
-          display: 'flex',
           width: '100%',
-          gap: 2,
-          mb: 3,
-          justifyContent: 'space-evenly',
+          display: 'flex',
+          justifyContent: 'center',
           alignItems: 'center',
-          flexDirection: 'column',
+          flexDirection: isMobile ? 'column' : 'row',
         }}
       >
-        <Button
-          onClick={() => handleOnChange('LBE')}
-          color={userData.delivery_zone === 'LBE' ? 'primary' : 'unselected'}
-          aria-label={formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.1' })}
+        <Box
+          sx={{
+            display: 'flex',
+            width: isMobile ? '100%' : '50%',
+            gap: 2,
+            mb: 3,
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+            flexDirection: 'column',
+          }}
         >
-          {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.1' })}
-        </Button>
-        <Button
-          onClick={() => handleOnChange('OZ')}
-          color={userData.delivery_zone === 'OZ' ? 'primary' : 'unselected'}
-          aria-label={formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.2' })}
+          <Button
+            onClick={() => handleOnChange('BSSO')}
+            color={userData.delivery_zone === 'BSSO' ? 'primary' : 'unselected'}
+            aria-label={formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.1' })}
+            sx={{ fontSize: isMobile ? '2vw' : '1vw' }}
+          >
+            {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.1' })}
+          </Button>
+          <Button
+            onClick={() => handleOnChange('CASCO')}
+            color={userData.delivery_zone === 'CASCO' ? 'primary' : 'unselected'}
+            aria-label={formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.2' })}
+            sx={{ fontSize: isMobile ? '2vw' : '1vw' }}
+          >
+            {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.2' })}
+          </Button>
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            width: isMobile ? '100%' : '50%',
+            gap: 2,
+            mb: 3,
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+            flexDirection: 'column',
+          }}
         >
-          {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.2' })}
-        </Button>
-      </Box>
+          <Button
+            onClick={() => handleOnChange('OUTCASCO')}
+            color={userData.delivery_zone === 'OUTCASCO' ? 'primary' : 'unselected'}
+            aria-label={formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.3' })}
+            sx={{ fontSize: isMobile ? '2vw' : '1vw' }}
+          >
+            {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.3' })}
+          </Button>
+          <Button
+            onClick={() => handleOnChange('LEJOS')}
+            color={userData.delivery_zone === 'LEJOS' ? 'primary' : 'unselected'}
+            aria-label={formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.4' })}
+            sx={{ fontSize: isMobile ? '2vw' : '1vw' }}
+          >
+            {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.4' })}
+          </Button>
+        </Box>
+      </Stack>
     </Stack>
   );
 };

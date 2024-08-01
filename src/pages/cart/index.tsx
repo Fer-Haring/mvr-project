@@ -11,6 +11,7 @@ import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useUserStore } from '@webapp/store/auth/session';
 import { useCompletedOrdersStore } from '@webapp/store/orders/get-completed-orders';
 import { useUserData } from '@webapp/store/users/user-data';
+import { set } from 'lodash';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -27,6 +28,7 @@ export const CartPage: FunctionComponent = () => {
   const [address, setAddress] = useState(user?.address || '');
   const [city, setCity] = useState(user?.city || '');
   const [checked, setChecked] = useState(false);
+  const [updatingUserLoading, setUpdatingUserLoading] = useState(false);
   const { setOrders } = useCompletedOrdersStore();
   const { data: cart } = useGetUserCart();
   const userData = useGetUserByIdMutation(useUserStore((state) => state.userInfo?.userId) || '');
@@ -61,19 +63,22 @@ export const CartPage: FunctionComponent = () => {
 
   const handle2NextStep = async () => {
     if (checked && userId) {
+      setUpdatingUserLoading(true);
       try {
         await updateUser
           .mutateAsync({
             payload: {
               address,
               city,
-              payment_method: order.payment_method,
+              payment_method: order.payment_method || user?.payment_method,
+              preferred_currency: order.currency_used_to_pay,
               delivery_type: order.delivery_type,
-              delivery_zone: order.currency_used_to_pay,
+              delivery_zone: order.delivery_zone,
             },
           })
           .then(() => {
             userData.refetch();
+            setUpdatingUserLoading(false);
           });
         handleCreateMessage();
         setStep((prevStep) => prevStep + 1);
@@ -97,7 +102,7 @@ export const CartPage: FunctionComponent = () => {
     setOrder({
       ...order,
       cart_items: cart || [],
-      currency_used_to_pay: user?.preferred_currency,
+      currency_used_to_pay: user?.preferred_currency || order.currency_used_to_pay,
       delivery_type: user?.delivery_type,
       payment_method: user?.payment_method,
       total_products: cart?.length,
@@ -144,13 +149,14 @@ export const CartPage: FunctionComponent = () => {
             gap: 2,
           }}
         >
-          {step === 0 && <Step0 handleNextStep={handleNextStep} cart={cart!} order={order} setOrder={setOrder} />}
-          {step === 1 && (
+          {step === 1 && <Step0 handleNextStep={handleNextStep} cart={cart!} order={order} setOrder={setOrder} />}
+          {step === 0 && (
             <Step1
               user={user}
               setUser={setUser}
               order={order}
               handlePreviousStep={handlePreviousStep}
+              updatingUserLoading={updatingUserLoading}
               handleNextStep={handle2NextStep}
               city={city}
               setCity={setCity}

@@ -35,11 +35,7 @@ export const Step0: FunctionComponent<Step0Props> = ({ handleNextStep, cart, ord
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
-          gap: 10,
-          [theme.breakpoints.down(1440)]: {
-            flexDirection: 'column',
-            alignItems: 'center',
-          },
+          gap: 3,
         }}
       >
         {isMobile ? (

@@ -1,4 +1,5 @@
 import { Box, Divider, Paper, Stack, Typography, alpha, styled, useTheme } from '@mui/material';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { CartItem } from '@webapp/sdk/types/cart-types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { useMessageStore } from '@webapp/store/admin/message-store';
@@ -14,6 +15,7 @@ interface CartProductsDetailProps {
 
 export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ cartProducts }) => {
   const theme = useTheme();
+  const isMobile = useIsMobile();
   const { formatMessage } = useIntl();
   const { dollarValue } = useDollarValue();
   const [totalCartValue, setTotalCartValue] = useState(0);
@@ -70,7 +72,7 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
       <Box
         sx={{
           display: 'flex',
-          flexDirection: 'row',
+          flexDirection: isMobile ? 'column' : 'row',
           gap: 4,
           width: '100%',
           pt: 4,
@@ -79,32 +81,36 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
         }}
       >
         <Stack direction={'column'} gap={4} width={'100%'}>
-          <TextsContainer>
-            <CustomTypography variant="h5">{formatMessage({ id: 'CART.PAYMENT.DETAILS.ADDRESS' })}</CustomTypography>
-            <CustomTypography variant="subtitle1">
-              {address}, {msgCity}
-            </CustomTypography>
-          </TextsContainer>
-          <TextsContainer>
-            <CustomTypography variant="h5">{formatMessage({ id: 'CART.PAYMENT.DETAILS.PAYMENT' })}</CustomTypography>
-            <CustomTypography variant="subtitle1">{order.payment_method}</CustomTypography>
-          </TextsContainer>
-          <TextsContainer>
-            <CustomTypography variant="h5">
-              {formatMessage({ id: 'CART.PAYMENT.DETAILS.DELIVER.TYPE' })}
-            </CustomTypography>
-            <CustomTypography variant="subtitle1">{order.delivery_type}</CustomTypography>
-          </TextsContainer>
-          <TextsContainer>
-            <CustomTypography variant="h5">
-              {formatMessage({ id: 'CART.PAYMENT.DETAILS.SLECTED.CURRENCY' })}
-            </CustomTypography>
-            {order.currency_used_to_pay === 'USD' ? (
-              <CustomTypography variant="subtitle1">{formatMessage({ id: 'CART.PAYMENT.USD' })}</CustomTypography>
-            ) : (
-              <CustomTypography variant="subtitle1">{formatMessage({ id: 'CART.PAYMENT.ARS' })}</CustomTypography>
-            )}
-          </TextsContainer>
+          <Stack direction={isMobile ? 'row' : 'column'} gap={2} width={'100%'}>
+            <TextsContainer>
+              <CustomTypography variant="h5">{formatMessage({ id: 'CART.PAYMENT.DETAILS.ADDRESS' })}</CustomTypography>
+              <CustomTypography variant="subtitle1">
+                {address}, {msgCity}
+              </CustomTypography>
+            </TextsContainer>
+            <TextsContainer>
+              <CustomTypography variant="h5">{formatMessage({ id: 'CART.PAYMENT.DETAILS.PAYMENT' })}</CustomTypography>
+              <CustomTypography variant="subtitle1">{order.payment_method}</CustomTypography>
+            </TextsContainer>
+          </Stack>
+          <Stack direction={isMobile ? 'row' : 'column'} gap={2} width={'100%'}>
+            <TextsContainer>
+              <CustomTypography variant="h5">
+                {formatMessage({ id: 'CART.PAYMENT.DETAILS.DELIVER.TYPE' })}
+              </CustomTypography>
+              <CustomTypography variant="subtitle1">{order.delivery_type}</CustomTypography>
+            </TextsContainer>
+            <TextsContainer>
+              <CustomTypography variant="h5">
+                {formatMessage({ id: 'CART.PAYMENT.DETAILS.SLECTED.CURRENCY' })}
+              </CustomTypography>
+              {order.currency_used_to_pay === 'USD' ? (
+                <CustomTypography variant="subtitle1">{formatMessage({ id: 'CART.PAYMENT.USD' })}</CustomTypography>
+              ) : (
+                <CustomTypography variant="subtitle1">{formatMessage({ id: 'CART.PAYMENT.ARS' })}</CustomTypography>
+              )}
+            </TextsContainer>
+          </Stack>
         </Stack>
 
         <Stack direction={'column'} gap={4} width={'100%'}>
