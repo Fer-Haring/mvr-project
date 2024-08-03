@@ -16,8 +16,6 @@ import { useIntl } from 'react-intl';
 
 import AddProductModalContainer from './add-product-modal-container';
 
-// Asumiendo que este hook existe
-
 interface OrderDataProps {
   order: OrderResponse | undefined;
 }
@@ -62,12 +60,19 @@ const OrderData: React.FC<OrderDataProps> = ({ order }) => {
       }
     });
 
+    // Añadir el costo de entrega del campo `delivery_cost`
+    const deliveryCostARS = order.delivery_cost || 0;
+    totalARS += deliveryCostARS;
+    totalUSD += convertCurrency(deliveryCostARS, 'ARS', 'USD');
+
     return {
       total_order_amount_usd: currencyUsedToPay === 'USD' ? totalUSD : convertCurrency(totalARS, 'ARS', 'USD'),
       total_order_amount_ars: currencyUsedToPay === 'ARS' ? totalARS : convertCurrency(totalUSD, 'USD', 'ARS'),
       total_products: updatedCartItems.length,
     };
   };
+
+  console.log(order)
 
   const updateQuantity = (productId: string, newQuantity: number) => {
     if (order && order.cart_items) {
@@ -224,7 +229,7 @@ const OrderData: React.FC<OrderDataProps> = ({ order }) => {
         open={addProductModal}
         onClose={() => setAddProductModal(false)}
         title={formatMessage({ id: 'ADMIN.EDIT.PENDING.ORDERS.PAGE.ADD.PRODUCT.TO.ORDER' })}
-        customContent={<AddProductModalContainer setAddProductModal={setAddProductModal}/>}
+        customContent={<AddProductModalContainer setAddProductModal={setAddProductModal} />}
       />
     </CustomAdminPaper>
   );

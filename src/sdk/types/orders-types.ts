@@ -9,6 +9,7 @@ export interface OrderResponse {
   currency_used_to_pay?: string;
   payment_method?: string;
   delivery_type?: string;
+  delivery_cost?: number;
   created_at?: Date;
   updated_at?: Date;
   total_order_amount?: number;
@@ -38,6 +39,7 @@ export interface User {
   city: string;
   delivery_zone: string;
   delivery_type: string;
+  delivery_cost: number;
   last_name: string;
   name: string;
   payment_method: string;
@@ -54,6 +56,7 @@ export interface OrderRequest {
   total_order_amount_usd?: number;
   total_order_amount_ars?: number;
   delivery_zone?: string;
+  delivery_cost?: number;
   status?: string;
   currency_used_to_pay?: string;
   payment_method?: string;

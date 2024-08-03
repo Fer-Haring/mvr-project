@@ -22,26 +22,38 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
   const theme = useTheme();
   const isMobile = useIsMobile();
   const { setUser: setUserData } = useUserData();
-  const { setDeliverValue } = useMessageStore();
+  const { setDeliverValue, setOrder, order } = useMessageStore();
 
   const handleOnChange = async (selectedDelivery: string) => {
-    const updatedUserData = { ...userData, delivery_zone: selectedDelivery };
+    let deliveryCost = 0;
+
+    if (selectedDelivery === 'BSSO') {
+      deliveryCost = 1400;
+    } else if (selectedDelivery === 'CASCO') {
+      deliveryCost = 2800;
+    } else if (selectedDelivery === 'OUTCASCO') {
+      deliveryCost = 4000;
+    } else if (selectedDelivery === 'LEJOS') {
+      deliveryCost = 4500;
+    }
+
+    const updatedUserData = {
+      ...userData,
+      delivery_zone: selectedDelivery,
+      delivery_cost: deliveryCost,
+    };
+
     if (onValidChange) {
       onValidChange(true);
     }
 
     setUser(updatedUserData);
     setUserData(updatedUserData);
-
-    if (selectedDelivery === 'BSSO') {
-      setDeliverValue(1400);
-    } else if (selectedDelivery === 'CASCO') {
-      setDeliverValue(2800);
-    } else if (selectedDelivery === 'OUTCASCO') {
-      setDeliverValue(4000);
-    } else if (selectedDelivery === 'LEJOS') {
-      setDeliverValue(4500);
-    }
+    setDeliverValue(deliveryCost);
+    setOrder({
+      ...order,
+      user: updatedUserData,
+    });
   };
 
   React.useEffect(() => {

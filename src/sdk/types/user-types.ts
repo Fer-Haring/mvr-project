@@ -31,6 +31,7 @@ export interface SignupResponse {
   city: string;
   completed_orders: CompletedOrder[];
   cart_items: CartItem[];
+  delivery_cost: number;
   delivery_zone: string;
   delivery_type: string;
   last_name: string;
@@ -87,6 +88,7 @@ export interface User {
   cart_items: CartItem[];
   delivery_zone: string;
   delivery_type: string;
+  delivery_cost: number;
   last_name: string;
   name: string;
   payment_method: string;
@@ -111,6 +113,7 @@ export interface UpdateUserPayload {
   cart_items?: CartItem[];
   delivery_zone?: string;
   delivery_type?: string;
+  delivery_cost?: number;
   last_name?: string;
   name?: string;
   payment_method?: string;

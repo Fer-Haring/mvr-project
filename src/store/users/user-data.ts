@@ -23,6 +23,7 @@ export const useUserData = create(
           city: '',
           delivery_type: '',
           payment_method: '',
+          delivery_cost: 0,
           cart_items: [], // cartItems ahora es un arreglo directamente en User
           completed_orders: [], // completedOrders ahora es un arreglo directamente en User
           phone: '',
@@ -44,6 +45,7 @@ export const useUserData = create(
               address: '',
               city: '',
               delivery_type: '',
+              delivery_cost: 0,
               payment_method: '',
               cart_items: [], // cartItems ahora es un arreglo directamente en User
               completed_orders: [], // completedOrders ahora es un arreglo directamente en User

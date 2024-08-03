@@ -4,6 +4,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@webapp/components/button';
 import Modal from '@webapp/components/modal';
 import { CartPaymentDetail } from '@webapp/controller/cart/step-2/cart-payment-detail';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { useClearCart } from '@webapp/sdk/mutations/cart/delete-cart-mutation';
 import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
 import { useCreateOrder } from '@webapp/sdk/mutations/orders/save-new-order-mutation';
@@ -34,7 +35,7 @@ export const Step2: FunctionComponent<Step2Props> = ({
 }) => {
   const { mutateAsync } = useClearCart();
   const getCart = useGetUserCart();
-
+  const isMobile = useIsMobile();
   const { formatMessage } = useIntl();
   const theme = useTheme();
   const { deleteMessageStore } = useMessageStore();
@@ -62,8 +63,8 @@ export const Step2: FunctionComponent<Step2Props> = ({
 
   const WhatsappButton: FunctionComponent = () => {
     return (
-      <Stack direction={'row'} gap={2} width={'100%'} justifyContent={'center'} alignItems={'center'}>
-        <ReactWhatsapp number="5492215248329" message={fullMessage} element="span" rel="noopener noreferrer">
+      <Stack direction={isMobile ? 'column' : 'row'} gap={2} width={'100%'} justifyContent={'center'} alignItems={'center'}>
+        <ReactWhatsapp number="5492213997379" message={fullMessage} element="span" rel="noopener noreferrer">
           <Button
             variant="contained"
             onClick={handleLastStep}
@@ -72,6 +73,7 @@ export const Step2: FunctionComponent<Step2Props> = ({
               maxWidth: 300,
               color: theme.palette.grey[800],
               backgroundColor: theme.palette.primary.main,
+              fontSize: 16,
               '&:hover': {
                 backgroundColor: theme.palette.primary.main,
                 color: theme.palette.grey[200],
@@ -87,6 +89,7 @@ export const Step2: FunctionComponent<Step2Props> = ({
         </ReactWhatsapp>
         <Button
           variant="contained"
+          color='error'
           onClick={handleCloseModal}
           size="medium"
           sx={{

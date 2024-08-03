@@ -88,8 +88,8 @@ const UserData: React.FC<UserDataProps> = ({ order }) => {
         </Box>
         <Box sx={{ marginTop: '0px !important' }}>
           <Typography variant="body1" color="secondary">
-            <strong>{formatMessage({ id: 'ADMIN.EDIT.PENDING.ORDERS.PAGE.ORDER.CLIENT' })}</strong> {order?.user?.name}{' '}
-            {order?.user?.last_name}
+            <strong>{formatMessage({ id: 'ADMIN.EDIT.PENDING.ORDERS.PAGE.ORDER.DELIVERY_COST' })}</strong>{' '}
+            $ {order?.delivery_cost} ARS
           </Typography>
           <Typography variant="body1" color="secondary">
             <strong>{formatMessage({ id: 'ADMIN.EDIT.PENDING.ORDERS.PAGE.ORDER.TOTAL_USD' })}:</strong> ${' '}

@@ -11,7 +11,6 @@ import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useUserStore } from '@webapp/store/auth/session';
 import { useCompletedOrdersStore } from '@webapp/store/orders/get-completed-orders';
 import { useUserData } from '@webapp/store/users/user-data';
-import { set } from 'lodash';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -61,6 +60,7 @@ export const CartPage: FunctionComponent = () => {
     setStep((prevStep) => prevStep + 1);
   };
 
+  console.log('order', order);
   const handle2NextStep = async () => {
     if (checked && userId) {
       setUpdatingUserLoading(true);
@@ -74,6 +74,7 @@ export const CartPage: FunctionComponent = () => {
               preferred_currency: order.currency_used_to_pay,
               delivery_type: order.delivery_type,
               delivery_zone: order.delivery_zone,
+              delivery_cost: order.user?.delivery_cost || 0,
             },
           })
           .then(() => {
@@ -107,8 +108,12 @@ export const CartPage: FunctionComponent = () => {
       payment_method: user?.payment_method,
       total_products: cart?.length,
       delivery_zone: user?.delivery_zone,
+      delivery_cost: user?.delivery_cost || 0,
       status: 'Pending',
-      user: user!,
+      user: {
+        ...user,
+        delivery_cost: order.user?.delivery_cost || 0,
+      },
     });
     setOrders([order]);
   }, [user, setName, setLastName, setOrder, address, setMsgAddress, cart, city]);
@@ -149,8 +154,8 @@ export const CartPage: FunctionComponent = () => {
             gap: 2,
           }}
         >
-          {step === 1 && <Step0 handleNextStep={handleNextStep} cart={cart!} order={order} setOrder={setOrder} />}
-          {step === 0 && (
+          {step === 0 && <Step0 handleNextStep={handleNextStep} cart={cart!} order={order} setOrder={setOrder} />}
+          {step === 1 && (
             <Step1
               user={user}
               setUser={setUser}
