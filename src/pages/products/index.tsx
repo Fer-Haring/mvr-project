@@ -8,6 +8,7 @@ import ProductFilterPanel from '@webapp/controller/products/product-filter-panel
 import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';
+import { useSelectedMainCategoryStore } from '@webapp/store/products/selected-main-category';
 import { motion } from 'framer-motion';
 import React, { FunctionComponent, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -27,11 +28,11 @@ export const ProductsPage: FunctionComponent = () => {
   const [priceRange, setPriceRange] = useState<number[]>([0, 20000]);
   const { productList, setProductList } = useProductsListData();
   const { setProduct } = useSingleProduct();
+  const { selectedMainCategory, setSelectedMainCategory } = useSelectedMainCategoryStore();
 
   const [sortCriteria, setSortCriteria] = useState<string>('all');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [searchTerms, setSearchTerms] = useState<string>('');
-  const [mainCategory, setMainCategory] = useState<string>('');
   const [categoriesOptions, setCategoriesOptions] = useState<AutocompleteOption[]>([]);
   const [category, setCategory] = useState<AutocompleteOption | null>(null);
   const showHideFilters = useState<boolean>(true);
@@ -45,8 +46,8 @@ export const ProductsPage: FunctionComponent = () => {
   }, [productListData, setProductList]);
 
   useEffect(() => {
-    if (mainCategory) {
-      const filteredProducts = productList.filter((product) => product.main_product_category === mainCategory);
+    if (selectedMainCategory) {
+      const filteredProducts = productList.filter((product) => product.main_product_category === selectedMainCategory);
       const relatedCategories = filteredProducts.map((product) => product.product_category);
       const uniqueRelatedCategories = Array.from(new Set(relatedCategories));
       const formattedCategories = uniqueRelatedCategories.map((cat) => ({ label: cat, value: cat }));
@@ -57,10 +58,10 @@ export const ProductsPage: FunctionComponent = () => {
       const formattedCategories = uniqueCategories.map((cat) => ({ label: cat, value: cat }));
       setCategoriesOptions(formattedCategories);
     }
-  }, [productList, mainCategory]);
+  }, [productList, selectedMainCategory]);
 
   const handleMainCategoryChange = (category: string) => {
-    setMainCategory(category);
+    setSelectedMainCategory(category);
     setSelectedCategory('');
     setSearchTerms('');
   };
@@ -81,8 +82,8 @@ export const ProductsPage: FunctionComponent = () => {
   const filteredAndSortedProducts = useMemo(() => {
     let result = productList;
 
-    if (mainCategory) {
-      result = result.filter((product) => product.main_product_category === mainCategory);
+    if (selectedMainCategory) {
+      result = result.filter((product) => product.main_product_category === selectedMainCategory);
     }
 
     if (selectedCategory) {
@@ -114,7 +115,7 @@ export const ProductsPage: FunctionComponent = () => {
     }
 
     return result;
-  }, [mainCategory, priceRange, productList, searchTerms, selectedCategory, sortCriteria]);
+  }, [selectedMainCategory, priceRange, productList, searchTerms, selectedCategory, sortCriteria]);
 
   const mainCategories = useMemo(() => {
     const allMainCategories = productList.map((product) => product.main_product_category);
@@ -125,9 +126,12 @@ export const ProductsPage: FunctionComponent = () => {
     <ContentWrapper>
       <Stack direction={'row'} gap={6} width={'100%'}>
         <Stack direction={'column'} gap={2} width={'100%'}>
-          {mainCategory && (
+          {selectedMainCategory && (
             <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', pb: 4 }}>
-              <IconButton onClick={() => setMainCategory('')} sx={{ color: theme.palette.common.white, zIndex: 1 }}>
+              <IconButton
+                onClick={() => setSelectedMainCategory('')}
+                sx={{ color: theme.palette.common.white, zIndex: 1 }}
+              >
                 <ArrowBackRoundedIcon sx={{ width: 48, height: 48 }} />
               </IconButton>
               <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -140,21 +144,13 @@ export const ProductsPage: FunctionComponent = () => {
                     fontFamily: 'WordMean',
                   }}
                 >
-                  {mainCategory}
+                  {selectedMainCategory}
                 </Typography>
               </Box>
               <Box sx={{ width: 48 }} />
-              {/* <Tooltip title={formatMessage({ id: 'PRODUCTS.FILTER.BUTTON' })}>
-                <IconButton
-                  sx={{ color: theme.palette.common.white, zIndex: 1 }}
-                  onClick={() => setShowHideFilters(!showHideFilters)}
-                >
-                  <FilterAltRoundedIcon sx={{ width: 32, height: 32 }} />
-                </IconButton>
-              </Tooltip> */}
             </Box>
           )}
-          {mainCategory && (
+          {selectedMainCategory && (
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: showHideFilters ? 1 : 0, y: showHideFilters ? 0 : -20 }}
@@ -176,7 +172,7 @@ export const ProductsPage: FunctionComponent = () => {
               />
             </motion.div>
           )}
-          {!mainCategory && (
+          {!selectedMainCategory && (
             <>
               <Typography
                 variant="h1"
@@ -185,20 +181,22 @@ export const ProductsPage: FunctionComponent = () => {
                 {formatMessage({ id: 'PRODUCTS.SELECT.MAIN.CATEGORY' })}
               </Typography>
               <CategoryButtonWrapper>
-                {mainCategories.map((category) => (
-                  <CategoryButton
-                    key={category}
-                    variant="contained"
-                    className="bn26"
-                    onClick={() => handleMainCategoryChange(category)}
-                  >
-                    {category}
-                  </CategoryButton>
-                ))}
+                {mainCategories
+                  .sort((a, b) => 0 - (a > b ? -1 : 1))
+                  .map((category) => (
+                    <CategoryButton
+                      key={category}
+                      variant="contained"
+                      className="bn26"
+                      onClick={() => handleMainCategoryChange(category)}
+                    >
+                      {category}
+                    </CategoryButton>
+                  ))}
               </CategoryButtonWrapper>
             </>
           )}
-          {mainCategory && (
+          {selectedMainCategory && (
             <StockWrapper key={filteredAndSortedProducts.map((product) => product.id).join('')}>
               {productList.length === 0 && (
                 <Typography variant="h4" sx={{ color: theme.palette.common.white }}>
