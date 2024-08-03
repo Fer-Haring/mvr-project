@@ -110,13 +110,13 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
     navigate('/forgot-password');
   };
 
-  async function loginWithGoogle() {
-    window.location.href = 'https://mvr-prod.onrender.com/login/google';
-  }
+  // async function loginWithGoogle() {
+  //   window.location.href = 'https://mvr-prod.onrender.com/login/google';
+  // }
 
-  const handleGoogleSignIn = async () => {
-    await loginWithGoogle();
-  };
+  // const handleGoogleSignIn = async () => {
+  //   await loginWithGoogle();
+  // };
 
   return (
     <section id="SignIn" className={className || ''} aria-labelledby="sign-in-title">
@@ -222,7 +222,7 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
                     {formatMessage({ id: 'AUTH.SIGN_IN.LINK.LABEL' })}
                   </Button>
                 </Stack>
-                {<AlternateLogin type="signin" onClick={handleGoogleSignIn} />}
+                {/* {<AlternateLogin type="signin" onClick={handleGoogleSignIn} />} */}
               </Box>
             </FormWrapper>
             {error && <Snackbar open={true} autoHideDuration={6000} message={error} onClose={() => setError(null)} />}

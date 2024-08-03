@@ -298,7 +298,7 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                     {formatMessage({ id: 'AUTH.SIGN_UP.LINK.LABEL' })}
                   </Button>
                 </Stack>
-                <AlternateLogin type="signup" onClick={handleGoogleSignUp} />
+                {/* <AlternateLogin type="signup" onClick={handleGoogleSignUp} /> */}
               </Box>
             </FormWrapper>
           </Stack>
