@@ -33,10 +33,6 @@ const ProjectRoutes: Route[] = [
     path: '/home',
     component: <HomePage />,
   },
-  // {
-  //   path: '/',
-  //   component: <Navigate to="/sign-in" />,
-  // },
   {
     path: '/',
     component: <Navigate to="/sign-in" />,
