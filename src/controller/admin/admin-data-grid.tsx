@@ -3,12 +3,7 @@ import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-
 import { useUpdateProduct } from '@webapp/sdk/mutations/products/update-product-mutation';
 import { Product } from '@webapp/sdk/types/products-types';
 import useBulkEditStore from '@webapp/store/admin/bulk-edit-store';
-import {
-  CellEditingStoppedEvent,
-  GetRowIdParams,
-  PaginationNumberFormatterParams,
-  SelectionChangedEvent,
-} from 'ag-grid-community';
+import { CellEditingStoppedEvent, GetRowIdParams, PaginationNumberFormatterParams, SelectionChangedEvent } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { AgGridReact } from 'ag-grid-react';
@@ -16,9 +11,12 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
+
+
 import ProductHeaderActions from './table-header-actions';
 import { localeText } from './table-utils/ag-grid-text-locale';
 import { columnDefs } from './table-utils/columns-def';
+
 
 interface AdminDataGridProps {}
 
@@ -37,6 +35,7 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
     setLoading(true);
     if (productsList.data?.products && Array.isArray(productsList.data.products)) {
       const productsArray: Product[] = productsList.data.products;
+      console.log('productsArray:', productsList.data?.products);
       setRowData(productsArray);
       setProducts(productsArray);
     } else {

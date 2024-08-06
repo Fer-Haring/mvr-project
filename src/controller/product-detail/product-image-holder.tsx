@@ -2,7 +2,6 @@ import Box from '@mui/material/Box';
 import { SxProps, Theme } from '@mui/material/styles';
 import ImageUploader from '@webapp/components/image-uploader';
 import SnackbarUtils from '@webapp/components/snackbar';
-import { uploadProductImage } from '@webapp/sdk/firebase/products';
 import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
 import { useUpdateProduct } from '@webapp/sdk/mutations/products/update-product-mutation';
 import { Product } from '@webapp/sdk/types/products-types';
@@ -34,26 +33,27 @@ const ProductImageHolder: FunctionComponent<ProductImageHolderProps> = ({ classN
 
   const handleUpdateAvatar = async (image: File) => {
     try {
-      const downloadURL = await uploadProductImage(image, product.id!);
-      if (downloadURL) {
-        const updatedProduct = { ...product, product_image: downloadURL };
+      const updatedProduct = { ...product };
 
-        // Usar la mutación para actualizar el producto
-        await updateProductMutation
-          .mutateAsync({
-            productId: product.id!,
-            productData: updatedProduct,
-          })
-          .then(() => {
-            getProducts.refetch();
-          });
+      // Usar la mutación para actualizar el producto con la imagen directamente al endpoint
+      await updateProductMutation
+        .mutateAsync({
+          productId: product.id!,
+          productData: updatedProduct,
+          file: image,
+        })
+        .then(() => {
+          getProducts.refetch();
+        });
 
-        setProduct(updatedProduct);
-        SnackbarUtils.success(formatMessage({ id: 'PROFILE.USER_INFO.AVATAR_UPDATED' }));
-      }
+      setProduct(updatedProduct);
+      SnackbarUtils.success(formatMessage({ id: 'PROFILE.USER_INFO.AVATAR_UPDATED' }));
     } catch (error) {
       console.error('Error updating product image:', error);
-      SnackbarUtils.error(formatMessage({ id: 'PROFILE.USER_INFO.AVATAR_UPDATE_ERROR' }));
+      SnackbarUtils.error(
+        formatMessage({ id: 'PROFILE.USER_INFO.AVATAR_UPDATE_ERROR' }) +
+          (error instanceof Error ? error.message : 'Unknown error')
+      );
     }
   };
 
