@@ -42,6 +42,7 @@ export interface SignupResponse {
   phone: string;
   preferred_currency: string;
   profile_picture: string;
+  favorite_products: Product[];
 }
 
 export interface CompletedOrder {
@@ -123,4 +124,5 @@ export interface UpdateUserPayload {
   phone?: string;
   preferred_currency?: string;
   profile_picture?: string;
+  favorite_products?: Product[];
 }
