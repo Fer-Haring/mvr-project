@@ -3,11 +3,13 @@ import { Autocomplete, Button, Paper, Select, TextField } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
 
-
-export const StockWrapper = styled(motion.ul)(({ theme }) => ({
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(min(15.75rem, 100%), 1fr))',
+export const StockWrapper = styled(motion.ul)<{
+  isMobile: boolean;
+}>(({ theme, isMobile }) => ({
+  display: isMobile ? 'flex' : 'grid',
+  gridTemplateColumns: !isMobile ? 'repeat(auto-fit, minmax(min(15.75rem, 100%), 1fr))' : 'none',
   gridGap: theme.spacing(4),
+  flexDirection: isMobile ? 'column' : 'row',
   width: '100%',
   listStyle: 'none',
   padding: 0,

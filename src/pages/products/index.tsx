@@ -4,7 +4,9 @@ import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
 import ContentWrapper from '@webapp/components/content-wrapper';
 import ProductCard from '@webapp/components/product-card';
+import ProductCardV2 from '@webapp/components/product-card-V2';
 import ProductFilterPanel from '@webapp/controller/products/product-filter-panel';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';
@@ -23,6 +25,7 @@ interface AutocompleteOption {
 
 export const ProductsPage: FunctionComponent = () => {
   const theme = useTheme();
+  const isMobile = useIsMobile();
   const navigate = useNavigate();
   const { formatMessage } = useIntl();
   const [priceRange, setPriceRange] = useState<number[]>([0, 20000]);
@@ -197,28 +200,45 @@ export const ProductsPage: FunctionComponent = () => {
             </>
           )}
           {selectedMainCategory && (
-            <StockWrapper key={filteredAndSortedProducts.map((product) => product.id).join('')}>
+            <StockWrapper key={filteredAndSortedProducts.map((product) => product.id).join('')} isMobile={isMobile}>
               {productList.length === 0 && (
                 <Typography variant="h4" sx={{ color: theme.palette.common.white }}>
                   {formatMessage({ id: 'PRODUCTS.NO_PRODUCTS' })}
                 </Typography>
               )}
-              {filteredAndSortedProducts.map((product, id) => (
-                <ProductCard
-                  key={id}
-                  id={id}
-                  products={[product]}
-                  image={product.product_image || ''}
-                  name={product.product_name}
-                  description={product.description}
-                  price={product.sale_price}
-                  currency={product.price_currency}
-                  onClick={() => {
-                    setProduct(product);
-                    navigate(`/productos/${product.id}`);
-                  }}
-                />
-              ))}
+              {filteredAndSortedProducts.map((product, id) =>
+                isMobile ? (
+                  <ProductCardV2
+                    key={id}
+                    id={id}
+                    products={[product]}
+                    image={product.product_image || ''}
+                    name={product.product_name}
+                    description={product.description}
+                    price={product.sale_price}
+                    currency={product.price_currency}
+                    onClick={() => {
+                      setProduct(product);
+                      navigate(`/productos/${product.id}`);
+                    }}
+                  />
+                ) : (
+                  <ProductCard
+                    key={id}
+                    id={id}
+                    products={[product]}
+                    image={product.product_image || ''}
+                    name={product.product_name}
+                    description={product.description}
+                    price={product.sale_price}
+                    currency={product.price_currency}
+                    onClick={() => {
+                      setProduct(product);
+                      navigate(`/productos/${product.id}`);
+                    }}
+                  />
+                )
+              )}
             </StockWrapper>
           )}
         </Stack>

@@ -123,7 +123,7 @@ export const HomePage: FunctionComponent = () => {
               }}
             />
           ) : (
-            <StockWrapper key={featuredProducts.map((product) => product.id).join('')}>
+            <StockWrapper key={featuredProducts.map((product) => product.id).join('')} >
               {featuredProducts.map((product, id) => (
                 <ProductCard
                   key={id}
