@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
-import BackgroundImage from '@webapp/assets/images/content/background.jpg';
+import BackgroundImage from '@webapp/assets/images/content/background_nuevo.jpg';
 import { easing } from '@webapp/components/framer';
 import Navbar from '@webapp/components/navbar';
 import Sidebar, { NAVBAR_HEIGHT } from '@webapp/components/sidebar';

@@ -4,6 +4,7 @@ import CameraAltRoundedIcon from '@mui/icons-material/CameraAltRounded';
 import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { SxProps, Theme, styled, useTheme } from '@mui/material/styles';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { useAddFavorite } from '@webapp/sdk/mutations/auth/add-to-favorites-mutation';
 import { useGetUserByIdMutation } from '@webapp/sdk/mutations/auth/get-user-by-id-mutation';
 import { useRemoveFavorite } from '@webapp/sdk/mutations/auth/remove-from-favorites-mutation';
@@ -30,7 +31,7 @@ const Wrapper = styled(Paper)(({ theme }) => ({
   },
 }));
 
-interface ProductCardV2Props {
+interface UserFavoriteProductCardProps {
   id: number;
   className?: string;
   children?: React.ReactNode;
@@ -45,7 +46,7 @@ interface ProductCardV2Props {
   destacado?: 'si' | 'no';
 }
 
-const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
+const UserFavoriteProductCard: FunctionComponent<UserFavoriteProductCardProps> = ({
   className,
   sx,
   onClick,
@@ -59,6 +60,7 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
 }) => {
   const theme = useTheme();
   const { formatMessage } = useIntl();
+  const isMobile = useIsMobile();
   const { user } = useUserData();
   const userId = user?.id;
   const strings = description;
@@ -100,7 +102,7 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
           src={image}
           alt="Product"
           style={{
-            width: '30vw',
+            width: !isMobile ? '9vw' : '20vw',
             height: 'auto',
             aspectRatio: '1/1',
             borderRadius: 16,
@@ -112,20 +114,20 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
       {image === '' && (
         <Box
           sx={{
-            width: '100%',
+            width: !isMobile ? '15vw' : '28vw',
             height: 'auto',
             borderRadius: 16,
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            mt: theme.spacing(8),
+            marginLeft: 1,
             gap: theme.spacing(2),
           }}
         >
           <CameraAltRoundedIcon
             sx={{
-              fontSize: 100,
+              fontSize: '6vw',
               color: theme.palette.grey[500],
             }}
           />
@@ -134,7 +136,7 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
               textAlign: 'center',
               color: theme.palette.grey[500],
               fontWeight: 'bold',
-              fontSize: 24,
+              fontSize: '2vw',
             }}
             variant="h6"
           >
@@ -147,20 +149,28 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-between', // Esto asegura que el contenido principal esté en la parte superior y el icono en la parte inferior
+          justifyContent: 'space-between',
           alignItems: 'flex-start',
           padding: theme.spacing(2),
           width: '100%',
-          height: '100%', // Asegura que el contenedor ocupe todo el espacio disponible
+          height: '100%',
         }}
       >
-        <Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            height: '100%',
+          }}
+        >
           <Typography
             sx={{
               textAlign: 'center',
               color: theme.palette.grey[800],
               fontWeight: 'bold',
-              fontSize: '4vw',
+              fontSize: !isMobile ? '1.5vw' : '3vw',
             }}
             variant="h6"
           >
@@ -171,7 +181,7 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
               textAlign: 'left',
               color: theme.palette.grey[800],
               whiteSpace: 'pre-line',
-              fontSize: '3vw',
+              fontSize: !isMobile ? '1vw' : '2vw',
             }}
             variant="body1"
           >
@@ -183,7 +193,7 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
                 textAlign: 'left',
                 color: theme.palette.grey[800],
                 fontWeight: 'bold',
-                fontSize: '4vw',
+                fontSize: !isMobile ? '1.5vw' : '3vw',
               }}
               variant="body1"
             >
@@ -195,7 +205,7 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
                 textAlign: 'left',
                 color: theme.palette.grey[800],
                 fontWeight: 'bold',
-                fontSize: '4vw',
+                fontSize: !isMobile ? '1.5vw' : '3vw',
               }}
               variant="body1"
             >
@@ -218,9 +228,9 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
             onClick={handleBookmarkClick}
           >
             {isFavorite ? (
-              <BookmarkRoundedIcon sx={{ width: '3vw', height: '3vw' }} />
+              <BookmarkRoundedIcon sx={{ width: !isMobile ? '1vw' : '3vw', height: !isMobile ? '1vw' : '3vw' }} />
             ) : (
-              <BookmarkBorderRoundedIcon sx={{ width: '3vw', height: '3vw' }} />
+              <BookmarkBorderRoundedIcon sx={{ width: !isMobile ? '1vw' : '3vw', height: !isMobile ? '1vw' : '3vw' }} />
             )}
           </IconButton>
         </Tooltip>
@@ -229,4 +239,4 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
   );
 };
 
-export default ProductCardV2;
+export default UserFavoriteProductCard;

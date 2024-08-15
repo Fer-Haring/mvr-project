@@ -35,7 +35,6 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
     setLoading(true);
     if (productsList.data?.products && Array.isArray(productsList.data.products)) {
       const productsArray: Product[] = productsList.data.products;
-      console.log('productsArray:', productsList.data?.products);
       setRowData(productsArray);
       setProducts(productsArray);
     } else {

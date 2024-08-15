@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import ContentWrapper from '@webapp/components/content-wrapper';
+import FavoriteList from '@webapp/controller/profile/favorite-list';
 import { ProfileTable } from '@webapp/controller/profile/profile-table';
 import UserData from '@webapp/controller/profile/user-data';
 import UserImageHolder from '@webapp/controller/profile/user-image-holder';
@@ -37,7 +38,7 @@ export const ProfilePage: FunctionComponent = () => {
         <Box sx={{ width: isMobile ? '100%' : '50%' }}>
           <Paper sx={{ p: 2, backgroundColor: alpha(theme.palette.common.white, 0.6) }}>
             <UserImageHolder user={user} />
-            <UserInfoPersonal userData={user} setUser={setUser}/>
+            <UserInfoPersonal userData={user} setUser={setUser} />
           </Paper>
         </Box>
         <Box sx={{ width: isMobile ? '100%' : '50%', gap: 2, display: 'flex', flexDirection: 'column' }}>
@@ -45,10 +46,15 @@ export const ProfilePage: FunctionComponent = () => {
             <UserData userData={user} />
           </Paper>
           <Paper sx={{ p: 2, backgroundColor: alpha(theme.palette.common.white, 0.6) }}>
-            <ProfileTable />
+            <FavoriteList userData={user} />
           </Paper>
         </Box>
       </Stack>
+      <Box sx={{ width: '100%', pt: 2 }}>
+        <Paper sx={{ p: 2, backgroundColor: alpha(theme.palette.common.white, 0.6) }}>
+          <ProfileTable />
+        </Paper>
+      </Box>
     </ContentWrapper>
   );
 };

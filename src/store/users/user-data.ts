@@ -24,13 +24,14 @@ export const useUserData = create(
           delivery_type: '',
           payment_method: '',
           delivery_cost: 0,
-          cart_items: [], // cartItems ahora es un arreglo directamente en User
-          completed_orders: [], // completedOrders ahora es un arreglo directamente en User
+          cart_items: [],
+          completed_orders: [],
           phone: '',
-          delivery_zone: '', // Aquí aseguramos que se usa la clave correcta
+          delivery_zone: '',
           preferred_currency: '',
           password: '',
           username: '',
+          favorite_products: [],
         },
         setUser: (user) => set({ user }),
         cleanUserLogout: () =>
@@ -47,13 +48,14 @@ export const useUserData = create(
               delivery_type: '',
               delivery_cost: 0,
               payment_method: '',
-              cart_items: [], // cartItems ahora es un arreglo directamente en User
-              completed_orders: [], // completedOrders ahora es un arreglo directamente en User
+              cart_items: [],
+              completed_orders: [],
               phone: '',
-              delivery_zone: '', // Aquí aseguramos que se usa la clave correcta
+              delivery_zone: '',
               preferred_currency: '',
               password: '',
               username: '',
+              favorite_products: [],
             },
           }),
       };

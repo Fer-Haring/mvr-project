@@ -156,6 +156,7 @@
   "PROFILE.USER_DATA.PANEL" : "Datos del Usuario",
   "PROFILE.USER_INFO.SELECTED.OPTIONS" : "Tipo de Entrega y Metodo Pago predeterminado",
   "PROFILE.USER_INFO.SELECTED.DELIVERY" : "Tipo de Entrega",
+  "PROFILE.USER_INFO.FAVORITE.PRODUCTS" : "Productos Favoritos",
   "PROFILE.USER_INFO.SELECTED.PAYMENT" : "Metodo de Pago Predeterminado",
   "COMMON.PROFILE.TABLE.EXPAND" : "Expandir",
   "COMMON.PROFILE.TABLE.SEE.DETAILS" : "Ver Detalles",

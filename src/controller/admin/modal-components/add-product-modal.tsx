@@ -100,7 +100,7 @@ const AddProductModal: FunctionComponent<AddProductModalProps> = ({
           <Stack
             direction={{
               xs: 'column',
-              md: 'row',
+              md: 'column',
             }}
             spacing={2}
             alignItems="center"

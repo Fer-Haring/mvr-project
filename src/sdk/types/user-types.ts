@@ -1,3 +1,5 @@
+import { Product } from '@webapp/sdk/types/products-types';
+
 import { CartItem } from './cart-types';
 
 export interface LoginResponse {
@@ -95,6 +97,7 @@ export interface User {
   phone: string;
   preferred_currency: string;
   profile_picture: string;
+  favorite_products: Product[];
 }
 
 export interface AdminData {

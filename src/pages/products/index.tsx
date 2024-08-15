@@ -211,7 +211,7 @@ export const ProductsPage: FunctionComponent = () => {
                   <ProductCardV2
                     key={id}
                     id={id}
-                    products={[product]}
+                    product={product}
                     image={product.product_image || ''}
                     name={product.product_name}
                     description={product.description}
