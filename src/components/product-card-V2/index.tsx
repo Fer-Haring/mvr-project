@@ -12,6 +12,8 @@ import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
+import { useIsMobile } from '../../hooks/is-mobile';
+
 const Wrapper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(0),
   display: 'flex',
@@ -58,6 +60,7 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
   product,
 }) => {
   const theme = useTheme();
+  const isMobile = useIsMobile();
   const { formatMessage } = useIntl();
   const { user } = useUserData();
   const userId = user?.id;
@@ -96,36 +99,50 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
   return (
     <Wrapper className={className || ''} sx={{ ...sx }} role="region" onClick={onClick} key={id}>
       {image && image !== '' && (
-        <img
-          src={image}
-          alt="Product"
-          style={{
-            width: '30vw',
-            height: 'auto',
-            aspectRatio: '1/1',
-            borderRadius: 16,
+        <Box
+          sx={{
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
             backgroundColor: theme.palette.common.white,
+            borderBottomLeftRadius: 16,
+            borderTopLeftRadius: 16,
           }}
-        />
+        >
+          <img
+            src={image}
+            alt="Product"
+            style={{
+              width: isMobile ? '30vw' : '11vw',
+              height: 'auto',
+              aspectRatio: '1/1',
+              borderRadius: 16,
+              borderBottomRightRadius: 0,
+              borderTopRightRadius: 0,
+            }}
+          />
+        </Box>
       )}
 
       {image === '' && (
         <Box
           sx={{
-            width: '100%',
+            width: '50%',
             height: 'auto',
             borderRadius: 16,
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            mt: theme.spacing(8),
+            borderBottomLeftRadius: 16,
+            borderTopLeftRadius: 16,
+            mt: theme.spacing(2),
             gap: theme.spacing(2),
           }}
         >
           <CameraAltRoundedIcon
             sx={{
-              fontSize: 100,
+              fontSize: isMobile ? 60 : 100,
               color: theme.palette.grey[500],
             }}
           />
@@ -134,7 +151,7 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
               textAlign: 'center',
               color: theme.palette.grey[500],
               fontWeight: 'bold',
-              fontSize: 24,
+              fontSize: isMobile ? 16 : 24,
             }}
             variant="h6"
           >
@@ -147,20 +164,20 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-between', // Esto asegura que el contenido principal esté en la parte superior y el icono en la parte inferior
+          justifyContent: 'space-around',
           alignItems: 'flex-start',
-          padding: theme.spacing(2),
+          padding: theme.spacing(1),
           width: '100%',
-          height: '100%', // Asegura que el contenedor ocupe todo el espacio disponible
+          height: '100%',
         }}
       >
-        <Box>
+        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: '100%' }}>
           <Typography
             sx={{
-              textAlign: 'center',
+              textAlign: 'left',
               color: theme.palette.grey[800],
               fontWeight: 'bold',
-              fontSize: '4vw',
+              fontSize: isMobile ? '4vw' : '1.2vw',
             }}
             variant="h6"
           >
@@ -171,59 +188,71 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
               textAlign: 'left',
               color: theme.palette.grey[800],
               whiteSpace: 'pre-line',
-              fontSize: '3vw',
+              fontSize: isMobile ? '3vw' : '0.8vw',
             }}
             variant="body1"
           >
             {modifiedStrings}
           </Typography>
-          {currency === 'USD' ? (
-            <Typography
-              sx={{
-                textAlign: 'left',
-                color: theme.palette.grey[800],
-                fontWeight: 'bold',
-                fontSize: '4vw',
-              }}
-              variant="body1"
-            >
-              $ {price} USD
-            </Typography>
-          ) : (
-            <Typography
-              sx={{
-                textAlign: 'left',
-                color: theme.palette.grey[800],
-                fontWeight: 'bold',
-                fontSize: '4vw',
-              }}
-              variant="body1"
-            >
-              $ {price} ARS
-            </Typography>
-          )}
-        </Box>
-
-        <Tooltip title={isFavorite ? 'Eliminar de favoritos' : 'Agregar a favoritos'} arrow>
-          <IconButton
+          <Box
             sx={{
-              alignSelf: 'flex-end', // Alinea el icono a la derecha
-              backgroundColor: theme.palette.primary.main,
-              padding: '8px',
-              borderRadius: '50%',
-              ':hover': {
-                backgroundColor: isFavorite ? theme.palette.error.main : theme.palette.success.main,
-              },
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              width: '100%',
+              gap: theme.spacing(2),
+              padding: theme.spacing(1),
             }}
-            onClick={handleBookmarkClick}
           >
-            {isFavorite ? (
-              <BookmarkRoundedIcon sx={{ width: '3vw', height: '3vw' }} />
+            {currency === 'USD' ? (
+              <Typography
+                sx={{
+                  textAlign: 'left',
+                  color: theme.palette.grey[800],
+                  fontWeight: 'bold',
+                  fontSize: isMobile ? '4vw' : '2vw',
+                }}
+                variant="body1"
+              >
+                $ {price} USD
+              </Typography>
             ) : (
-              <BookmarkBorderRoundedIcon sx={{ width: '3vw', height: '3vw' }} />
+              <Typography
+                sx={{
+                  textAlign: 'left',
+                  color: theme.palette.grey[800],
+                  fontWeight: 'bold',
+                  fontSize: isMobile ? '4vw' : '2vw',
+                }}
+                variant="body1"
+              >
+                $ {price} ARS
+              </Typography>
             )}
-          </IconButton>
-        </Tooltip>
+            <Tooltip title={isFavorite ? 'Eliminar de favoritos' : 'Agregar a favoritos'} arrow>
+              <IconButton
+                sx={{
+                  backgroundColor: theme.palette.primary.main,
+                  padding: '8px',
+                  borderRadius: '50%',
+                  ':hover': {
+                    backgroundColor: isFavorite ? theme.palette.error.main : theme.palette.success.main,
+                  },
+                }}
+                onClick={handleBookmarkClick}
+              >
+                {isFavorite ? (
+                  <BookmarkRoundedIcon sx={{ width: isMobile ? '3vw' : '1vw', height: isMobile ? '3vw' : '1vw' }} />
+                ) : (
+                  <BookmarkBorderRoundedIcon
+                    sx={{ width: isMobile ? '3vw' : '1vw', height: isMobile ? '3vw' : '1vw' }}
+                  />
+                )}
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
       </Box>
     </Wrapper>
   );

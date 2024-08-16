@@ -3,8 +3,8 @@ import { Box, IconButton, SelectChangeEvent, Typography } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
 import ContentWrapper from '@webapp/components/content-wrapper';
-import ProductCard from '@webapp/components/product-card';
 import ProductCardV2 from '@webapp/components/product-card-V2';
+import { MainCategoriesImages } from '@webapp/controller/products/image-categories-enum';
 import ProductFilterPanel from '@webapp/controller/products/product-filter-panel';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
@@ -127,7 +127,7 @@ export const ProductsPage: FunctionComponent = () => {
 
   return (
     <ContentWrapper>
-      <Stack direction={'row'} gap={6} width={'100%'}>
+      <Stack direction={'row'} gap={6} width={'100%'} p={isMobile ? 0 : 4}>
         <Stack direction={'column'} gap={2} width={'100%'}>
           {selectedMainCategory && (
             <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', pb: 4 }}>
@@ -183,18 +183,38 @@ export const ProductsPage: FunctionComponent = () => {
               >
                 {formatMessage({ id: 'PRODUCTS.SELECT.MAIN.CATEGORY' })}
               </Typography>
-              <CategoryButtonWrapper>
+              <CategoryButtonWrapper isMobile={isMobile}>
                 {mainCategories
                   .sort((a, b) => 0 - (a > b ? -1 : 1))
                   .map((category) => (
-                    <CategoryButton
-                      key={category}
-                      variant="contained"
-                      className="bn26"
+                    <Box
                       onClick={() => handleMainCategoryChange(category)}
+                      sx={{
+                        width: !isMobile ? '15vw' : '100%',
+                        maxWidth: '400px',
+                        height: !isMobile ? '15vw' : '40vw',
+                        display: 'flex',
+                        alignItems: 'flex-end',
+                        gap: 2,
+                        borderRadius: 2,
+                        backgroundImage: `url(${MainCategoriesImages[category]})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        cursor: 'pointer',
+                        transition: 'all .4s ease-in-out',
+                      }}
                     >
-                      {category}
-                    </CategoryButton>
+                      <CategoryButton
+                        isMobile={isMobile}
+                        key={category}
+                        variant="contained"
+                        className="bn26"
+                        onClick={() => handleMainCategoryChange(category)}
+                      >
+                        {category}
+                      </CategoryButton>
+                    </Box>
                   ))}
               </CategoryButtonWrapper>
             </>
@@ -206,39 +226,22 @@ export const ProductsPage: FunctionComponent = () => {
                   {formatMessage({ id: 'PRODUCTS.NO_PRODUCTS' })}
                 </Typography>
               )}
-              {filteredAndSortedProducts.map((product, id) =>
-                isMobile ? (
-                  <ProductCardV2
-                    key={id}
-                    id={id}
-                    product={product}
-                    image={product.product_image || ''}
-                    name={product.product_name}
-                    description={product.description}
-                    price={product.sale_price}
-                    currency={product.price_currency}
-                    onClick={() => {
-                      setProduct(product);
-                      navigate(`/productos/${product.id}`);
-                    }}
-                  />
-                ) : (
-                  <ProductCard
-                    key={id}
-                    id={id}
-                    products={[product]}
-                    image={product.product_image || ''}
-                    name={product.product_name}
-                    description={product.description}
-                    price={product.sale_price}
-                    currency={product.price_currency}
-                    onClick={() => {
-                      setProduct(product);
-                      navigate(`/productos/${product.id}`);
-                    }}
-                  />
-                )
-              )}
+              {filteredAndSortedProducts.map((product, id) => (
+                <ProductCardV2
+                  key={id}
+                  id={id}
+                  product={product}
+                  image={product.product_image || ''}
+                  name={product.product_name}
+                  description={product.description}
+                  price={product.sale_price}
+                  currency={product.price_currency}
+                  onClick={() => {
+                    setProduct(product);
+                    navigate(`/productos/${product.id}`);
+                  }}
+                />
+              ))}
             </StockWrapper>
           )}
         </Stack>

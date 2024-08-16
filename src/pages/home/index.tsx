@@ -61,7 +61,7 @@ export const HomePage: FunctionComponent = () => {
               variant="h1"
               sx={{
                 fontFamily: 'WordMean',
-                fontSize: isMobile ? '8vw' : '65px',
+                fontSize: isMobile ? '8vw' : '5vw',
               }}
             >
               {formatMessage({ id: 'WELCOME.HOME.MESSAGE' })}
@@ -72,7 +72,7 @@ export const HomePage: FunctionComponent = () => {
                 textWrap: 'wrap',
                 textOverflow: 'ellipsis',
                 width: isMobile ? '80vw' : '50%',
-                fontSize: isMobile ? '4vw' : '24px',
+                fontSize: isMobile ? '4vw' : '2vw',
               }}
             >
               {formatMessage({ id: 'WELCOME.HOME.DESCRIPTION' })}
@@ -83,7 +83,7 @@ export const HomePage: FunctionComponent = () => {
               color="primary"
               onClick={() => navigate('/productos')}
               sx={{
-                width: isMobile ? '75vw' : '150px',
+                width: isMobile ? '75vw' : '60vw',
                 marginTop: theme.spacing(4),
                 marginLeft: theme.spacing(4),
                 fontSize: 16,
@@ -144,24 +144,6 @@ export const HomePage: FunctionComponent = () => {
           )}
         </Box>
       </Stack>
-      {!isMobile && (
-        <Box
-          sx={{
-            position: 'absolute',
-            right: 10,
-            zIndex: 0,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <img
-            src={VapeHomeImage}
-            alt="Vape Home"
-            style={{ width: '100%', height: '100%', filter: 'drop-shadow(20px 10px 24px #000000)' }}
-          />
-        </Box>
-      )}
     </ContentWrapper>
   );
 };
