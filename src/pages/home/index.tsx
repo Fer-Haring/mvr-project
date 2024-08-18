@@ -62,6 +62,7 @@ export const HomePage: FunctionComponent = () => {
               sx={{
                 fontFamily: 'WordMean',
                 fontSize: isMobile ? '8vw' : '5vw',
+                color: theme.palette.common.white,
               }}
             >
               {formatMessage({ id: 'WELCOME.HOME.MESSAGE' })}
@@ -73,6 +74,7 @@ export const HomePage: FunctionComponent = () => {
                 textOverflow: 'ellipsis',
                 width: isMobile ? '80vw' : '50%',
                 fontSize: isMobile ? '4vw' : '2vw',
+                color: theme.palette.common.white,
               }}
             >
               {formatMessage({ id: 'WELCOME.HOME.DESCRIPTION' })}
@@ -111,6 +113,7 @@ export const HomePage: FunctionComponent = () => {
               fontSize: isMobile ? '5vw' : 36,
               fontFamily: 'WordMean',
               letterSpacing: 4,
+              color: theme.palette.common.white,
             }}
           >
             {formatMessage({ id: 'WELCOME.HOME.FEATURED.PRODUCTS.TITLE' })}

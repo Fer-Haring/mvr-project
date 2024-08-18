@@ -14,7 +14,7 @@ import { useIntl } from 'react-intl';
 
 import { useIsMobile } from '../../hooks/is-mobile';
 
-const Wrapper = styled(Paper)(({ theme }) => ({
+const Wrapper = styled(Paper)<{ actual_stock: number }>(({ theme, actual_stock }) => ({
   padding: theme.spacing(0),
   display: 'flex',
   flexDirection: 'row',
@@ -25,10 +25,10 @@ const Wrapper = styled(Paper)(({ theme }) => ({
   width: '100%',
   backgroundColor: 'rgba(230, 235, 241, 0.9)',
   '&:hover': {
-    cursor: 'pointer',
-    transform: 'scale(1.02)',
+    cursor: actual_stock > 0 ? 'pointer' : 'not-allowed',
+    transform: actual_stock > 0 ? 'scale(1.02)' : 'scale(1)',
     transition: 'transform 0.5s',
-    boxShadow: '10px 10px 20px 4px rgba(48,111,183,0.9)',
+    boxShadow: actual_stock > 0 ? '10px 10px 20px 4px rgba(48,111,183,0.9)' : 'none',
   },
 }));
 
@@ -64,7 +64,6 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
   const { formatMessage } = useIntl();
   const { user } = useUserData();
   const userId = user?.id;
-  const strings = description;
   const addFavorite = useAddFavorite();
   const removeFavorite = useRemoveFavorite();
   const userData = useGetUserByIdMutation(userId);
@@ -85,8 +84,6 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
     });
   };
 
-  const modifiedStrings = strings?.replace('Precio por Unidad en USD', '\nPrecio por Unidad en USD');
-
   const handleBookmarkClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     if (isFavorite) {
@@ -97,7 +94,14 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
   };
 
   return (
-    <Wrapper className={className || ''} sx={{ ...sx }} role="region" onClick={onClick} key={id}>
+    <Wrapper
+      className={className || ''}
+      sx={{ ...sx }}
+      role="region"
+      onClick={product?.actual_stock! > 0 ? onClick : undefined}
+      key={id}
+      actual_stock={product?.actual_stock || 0}
+    >
       {image && image !== '' && (
         <Box
           sx={{
@@ -192,7 +196,7 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
             }}
             variant="body1"
           >
-            {modifiedStrings}
+            {description}
           </Typography>
           <Box
             sx={{
@@ -252,6 +256,29 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
               </IconButton>
             </Tooltip>
           </Box>
+          {product?.actual_stock! < 1 && (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+              }}
+            >
+              <Typography
+                sx={{
+                  textAlign: 'left',
+                  color: theme.palette.grey[200],
+                  fontSize: isMobile ? '3vw' : '1vw',
+                  backgroundColor: theme.palette.error.main,
+                  borderRadius: theme.spacing(1.5),
+                  padding: theme.spacing(0, 2, 0, 2),
+                }}
+                variant="body1"
+              >
+                {formatMessage({ id: 'PRODUCT.CARD.PRODUCTS.NOSTOCK' })}
+              </Typography>
+            </Box>
+          )}
         </Box>
       </Box>
     </Wrapper>

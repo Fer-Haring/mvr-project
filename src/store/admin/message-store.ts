@@ -1,3 +1,4 @@
+// store/message-store.ts
 import { OrderRequest } from '@webapp/sdk/types/orders-types';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
@@ -16,6 +17,8 @@ interface MessageStore {
   order: OrderRequest;
   setOrder: (order: OrderRequest) => void;
   deleteMessageStore: () => void;
+  transferImage: string | null; // Nuevo estado para la imagen de transferencia
+  setTransferImage: (image: string | null) => void;
 }
 
 export const useMessageStore = create(
@@ -99,7 +102,10 @@ export const useMessageStore = create(
               profile_picture: '',
             },
           },
+          transferImage: null, // Resetear la imagen de transferencia
         }),
+      transferImage: null,
+      setTransferImage: (image: string | null) => set({ transferImage: image }),
     }),
     {
       name: 'message-store',

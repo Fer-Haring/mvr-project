@@ -23,12 +23,16 @@ const AddProductContent: FunctionComponent<AddProductContentProps> = ({ classNam
   const { productList } = useProductsListData();
   const [categoriesOptions, setCategoriesOptions] = useState<AutocompleteOption[]>([]);
   const [category, setCategory] = useState<AutocompleteOption | null>(null);
+  const [mainCategory, setMainCategory] = useState<AutocompleteOption | null>(null);
+  const [mainCategoryOptions, setMainCategoryOptions] = useState<AutocompleteOption[]>([]);
+
   const [inputValue, setInputValue] = useState('');
   const products = Object.values(productList);
 
   useEffect(() => {
     if (products.length > 0) {
       const categoriesMap = new Map();
+      const mainCategoryMap = new Map();
       products.forEach((product) => {
         if (!categoriesMap.has(product.product_category)) {
           categoriesMap.set(product.product_category, {
@@ -37,8 +41,18 @@ const AddProductContent: FunctionComponent<AddProductContentProps> = ({ classNam
           });
         }
       });
+      products.forEach((product) => {
+        if (!mainCategoryMap.has(product.main_product_category)) {
+          mainCategoryMap.set(product.main_product_category, {
+            value: product.main_product_category,
+            label: product.main_product_category,
+          });
+        }
+      });
       const uniqueCategories = Array.from(categoriesMap.values());
       setCategoriesOptions(uniqueCategories);
+      const uniqueMainCategories = Array.from(mainCategoryMap.values());
+      setMainCategoryOptions(uniqueMainCategories);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -48,22 +62,33 @@ const AddProductContent: FunctionComponent<AddProductContentProps> = ({ classNam
     newValue: string | AutocompleteOption | (string | AutocompleteOption)[] | null,
     reason: AutocompleteChangeReason
   ) => {
-    // Caso para manejo de entrada libre (freeSolo)
     if (typeof newValue === 'string') {
       setProduct({ ...product, product_category: newValue });
-      setCategory({ value: newValue, label: newValue }); // Asume que tienes una forma de crear un AutocompleteOption a partir de una cadena
-    }
-    // Caso para cuando se selecciona una opción de las existentes
-    else if (newValue && !Array.isArray(newValue)) {
-      // Verifica que newValue no sea un arreglo
+      setCategory({ value: newValue, label: newValue });
+    } else if (newValue && !Array.isArray(newValue)) {
       setProduct({ ...product, product_category: newValue.value });
       setCategory(newValue);
+    } else {
+      setCategory(null);
     }
-    // Opcional: Agrega manejo para múltiples selecciones si es necesario
-    else {
-      setCategory(null); // O maneja el caso de null o arreglo según necesites
+    reason;
+  };
+
+  const handleMainCategoryChange = (
+    event: React.SyntheticEvent | React.FocusEventHandler<HTMLDivElement>,
+    newValue: string | AutocompleteOption | (string | AutocompleteOption)[] | null,
+    reason: AutocompleteChangeReason
+  ) => {
+    if (typeof newValue === 'string') {
+      setProduct({ ...product, main_product_category: newValue });
+      setMainCategory({ value: newValue, label: newValue });
+    } else if (newValue && !Array.isArray(newValue)) {
+      setProduct({ ...product, main_product_category: newValue.value });
+      setMainCategory(newValue);
+    } else {
+      setMainCategory(null);
     }
-    reason; // Evita advertencias de variable no utilizada
+    reason;
   };
 
   return (
@@ -107,6 +132,7 @@ const AddProductContent: FunctionComponent<AddProductContentProps> = ({ classNam
           <CustomSelect
             labelId="product-currency-select-label"
             id="PRICECURRENCY"
+            label={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.PRICECURRENCY' })}
             value={product.price_currency}
             onChange={(e) => setProduct({ ...product, price_currency: e.target.value as string })}
             variant="outlined"
@@ -121,8 +147,9 @@ const AddProductContent: FunctionComponent<AddProductContentProps> = ({ classNam
         <Box sx={{ display: 'flex', width: '100%', gap: 2, justifyContent: 'space-between', mt: 1 }}>
           <CustomAutoComplete
             size="small"
-            id="organization-autocomplete"
+            id="category-autocomplete"
             value={category === null ? product.product_category : category}
+            label={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.PRODUCTCATEGORY' })}
             options={categoriesOptions}
             isOptionEqualToValue={(option, value) => option.value === value.value}
             getOptionLabel={(option) => (typeof option === 'string' ? option : option.label)}
@@ -142,11 +169,8 @@ const AddProductContent: FunctionComponent<AddProductContentProps> = ({ classNam
               setInputValue(newInputValue);
             }}
             onBlur={() => {
-              // Aquí puedes llamar a `setProduct` o cualquier función que necesites para guardar el valor.
-              // Utiliza `inputValue` ya que este estado contiene el valor actual del input.
               if (inputValue) {
                 setProduct({ ...product, product_category: inputValue });
-                // Si necesitas resetear `inputValue` después de guardar, puedes hacerlo aquí.
               }
             }}
             PopperComponent={({ ...props }) => <CustomPopper {...props} />}
@@ -160,15 +184,46 @@ const AddProductContent: FunctionComponent<AddProductContentProps> = ({ classNam
             aria-label={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.PRODUCTCATEGORY' })}
             aria-haspopup="listbox"
           />
-          <CustomInput
-            name="actualStock"
-            label="ACTUALSTOCK"
-            product={product.actual_stock}
-            type="number"
-            onChange={(e) => setProduct({ ...product, actual_stock: Number(e.target.value) })}
-            autoComplete="actualStock"
+          <CustomAutoComplete
+            size="small"
+            id="main-category-autocomplete"
+            value={mainCategory === null ? product.main_product_category : mainCategory}
+            label={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.MAINPRODUCTCATEGORY' })}
+            options={mainCategoryOptions}
+            isOptionEqualToValue={(option, value) => option.value === value.value}
+            getOptionLabel={(option) => (typeof option === 'string' ? option : option.label)}
+            renderInput={(params) => (
+              <InputField
+                {...params}
+                size="small"
+                label={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.MAINPRODUCTCATEGORY' })}
+                placeholder={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.MAINPRODUCTCATEGORY' })}
+                noDefaultHelperText
+                defaultValue={product.main_product_category}
+              />
+            )}
+            onChange={handleMainCategoryChange}
+            onInputChange={(event, newInputValue) => {
+              setInputValue(newInputValue);
+            }}
+            onBlur={() => {
+              if (inputValue) {
+                setProduct({ ...product, main_product_category: inputValue });
+              }
+            }}
+            PopperComponent={({ ...props }) => <CustomPopper {...props} />}
+            noOptionsText={formatMessage({ id: 'FORM.NO.OPTION' })}
+            forcePopupIcon
+            popupIcon={<KeyboardArrowDownRounded sx={{ color: alpha(theme.palette.text.primary, 0.5) }} />}
+            filterOptions={(options, state) =>
+              options.filter((opt) => opt.label.toLowerCase().includes(state.inputValue.toLowerCase()))
+            }
+            // role="combobox"
+            aria-label={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.MAINPRODUCTCATEGORY' })}
+            aria-haspopup="listbox"
           />
         </Box>
+
         <Box sx={{ display: 'flex', width: '100%', gap: 2, justifyContent: 'space-between', mt: 1 }}>
           <CustomInput
             name="minimumStock"
@@ -261,7 +316,7 @@ const CustomSelect = styled(Select)(({ theme }) => ({
   border: 'none',
   '& label': {
     fontSize: 16,
-    color: theme.palette.grey[200],
+    color: theme.palette.common.white,
   },
   '& .MuiOutlinedInput-notchedOutline': {
     borderRadius: theme.spacing(0.5),
@@ -287,7 +342,7 @@ const CustomAutoComplete = styled(Autocomplete)(({ theme }) => ({
   border: 'none',
   '& label': {
     fontSize: 16,
-    color: theme.palette.grey[200],
+    color: theme.palette.common.white,
   },
   '& .MuiOutlinedInput-notchedOutline': {
     borderRadius: theme.spacing(0.5),

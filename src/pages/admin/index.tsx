@@ -23,7 +23,7 @@ export const AdminDashboardPage: FunctionComponent = () => {
   const pendingOrders = useGetPendingOrders();
   const getCompletedOrders = useGetAllOrders();
   const completedOrders = getCompletedOrders.data
-    ? getCompletedOrders.data?.filter((order) => order.status === 'completed')
+    ? getCompletedOrders.data?.filter((order) => order.status === 'completed' || order.status === 'Completed')
     : [];
   const [activeTable, setActiveTable] = useState<'pending' | 'completed'>('pending');
   const { setProductList } = useProductsListData();

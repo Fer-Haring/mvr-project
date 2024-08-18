@@ -30,6 +30,7 @@ interface ButtonProps extends Omit<MuiLoadingButtonProps, 'color'> {
   children?: React.ReactNode;
   hasBorder?: boolean;
   color?: ButtonColors;
+  component?: React.ElementType;
 }
 
 const Button: FunctionComponent<ButtonProps> = ({
@@ -38,6 +39,7 @@ const Button: FunctionComponent<ButtonProps> = ({
   hasBorder,
   color = 'primary',
   variant = 'contained',
+  component,
   ...props
 }) => {
   const isMobile = useIsMobile();
@@ -46,6 +48,7 @@ const Button: FunctionComponent<ButtonProps> = ({
       className={`${className || ''} ${hasBorder ? 'border' : ''}`}
       variant={variant}
       color={color}
+      {...(component ? { component } : {})}
       isMobile={isMobile}
       {...props}
       onKeyDown={(e) => {

@@ -77,7 +77,7 @@ const CompletedOrdersPaper: FunctionComponent<CompletedOrdersPaperProps> = ({ or
     { headerName: 'Total Productos', field: 'total_products' },
     { headerName: 'Total USD', field: 'total_order_amount_usd' },
     { headerName: 'Total ARS', field: 'total_order_amount_ars' },
-    { headerName: 'Select Editor', field: 'status' },
+    { headerName: 'Estado del Pedido', field: 'status' },
     { headerName: 'Moneda de Pago', field: 'currency_used_to_pay' },
     { headerName: 'Metodo de Pago', field: 'payment_method' },
     { headerName: 'Tipo de Entrega', field: 'delivery_type' },
@@ -107,6 +107,7 @@ const CompletedOrdersPaper: FunctionComponent<CompletedOrdersPaperProps> = ({ or
         case 'completado':
         case 'Completado':
         case 'completed':
+        case 'Completed':
           status = 'completed';
           break;
         case 'cancelado':
@@ -126,7 +127,7 @@ const CompletedOrdersPaper: FunctionComponent<CompletedOrdersPaperProps> = ({ or
     },
     [mutateAsync]
   );
-
+  console.log(rowData);
   return (
     <div className="ag-theme-quartz" style={{ height: 300, width: '100%', marginTop: 25 }}>
       <StyledAgGridReact
