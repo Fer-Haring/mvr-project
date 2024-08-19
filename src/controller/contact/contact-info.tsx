@@ -32,7 +32,16 @@ const ContactInfo: FunctionComponent<ContactInfoProps> = ({ icon, title, subtitl
         },
       }}
     >
-      <Icon icon={icon} style={{ color: theme.palette.grey[800], width: 48, height: 48, minWidth: 48, minHeight: 48 }} />
+      <Icon
+        icon={icon}
+        style={{
+          color: theme.palette.grey[800],
+          width: isMobile ? 32 : 48,
+          height: isMobile ? 32 : 48,
+          minWidth: isMobile ? 32 : 48,
+          minHeight: isMobile ? 32 : 48,
+        }}
+      />
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
         <Typography variant="h2" sx={{ color: theme.palette.grey[800], fontSize: isMobile ? '4vw' : 30 }}>
           {title}

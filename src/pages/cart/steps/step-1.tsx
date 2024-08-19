@@ -149,7 +149,7 @@ export const Step1: FunctionComponent<Step1Props> = ({
             <Typography
               variant="body1"
               fontWeight={600}
-              sx={{ color: theme.palette.error.main, textAlign: 'center', fontSize: '1.1vw' }}
+              sx={{ color: theme.palette.error.main, textAlign: 'center', fontSize: '14px' }}
             >
               {formatMessage({ id: 'CART.PAYMENT.CONFIRMATION.WARNING.ADVICE' })}
             </Typography>
@@ -160,10 +160,10 @@ export const Step1: FunctionComponent<Step1Props> = ({
               <Typography
                 variant="body1"
                 fontWeight={600}
-                sx={{ color: theme.palette.error.main, textAlign: 'center', fontSize: '1.1vw' }}
+                sx={{ color: theme.palette.error.main, textAlign: 'center', fontSize: '14px' }}
               >
                 {formatMessage({ id: 'CART.PAYMENT.CONFIRMATION.WARNING.MISSING.PHONE.ADVICE' })}
-                <Link href="/profile" sx={{ color: theme.palette.error.main, textAlign: 'center', fontSize: '1.1vw' }}>
+                <Link href="/profile" sx={{ color: theme.palette.error.main, textAlign: 'center', fontSize: '14px' }}>
                   {formatMessage({ id: 'CART.PAYMENT.CONFIRMATION.WARNING.MISSING.PHONE.LINK' })}
                 </Link>
               </Typography>
@@ -174,7 +174,7 @@ export const Step1: FunctionComponent<Step1Props> = ({
               checked={checked}
               onChange={(e) => setChecked(e.target.checked)}
               disabled={!areAllFieldsValid() || !phoneNumber}
-              sx={{ color: theme.palette.grey[800] }}
+              sx={{ color: theme.palette.common.black }}
             />
             <Typography
               variant="body1"
