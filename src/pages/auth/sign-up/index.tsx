@@ -39,6 +39,7 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [username, setUsername] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const signUpMutation = useSignupMutation(navigate);
@@ -54,9 +55,10 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
         username: username,
         email: email,
         password: password,
+        phone: phoneNumber,
       });
     } catch (error) {
-      SnackbarUtils.error('An unexpected error occurred');
+      SnackbarUtils.error('Falló el registro, por favor intente nuevamente');
     }
   };
 
@@ -105,6 +107,7 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
     !!getConfirmPasswordError() ||
     !firstName ||
     !lastName ||
+    !phoneNumber ||
     !username;
 
   return (
@@ -173,6 +176,22 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                       helperText={touched.username && !username ? formatMessage({ id: 'COMMON.REQUIRED' }) : ''}
                       autoFocus
                       aria-label={formatMessage({ id: 'AUTH.SIGN_UP.USERNAME.LABEL' })}
+                    />
+                    <InputField
+                      name="phone"
+                      required
+                      fullWidth
+                      variant="standard"
+                      id="phone"
+                      autoComplete="phone"
+                      label={formatMessage({ id: 'AUTH.SIGN_UP.USERNAME.PHONE.LABEL' })}
+                      value={phoneNumber}
+                      onBlur={() => setTouched({ ...touched, phoneNumber: true })}
+                      onChange={(ev) => phoneNumber.length < 30 && setPhoneNumber(ev.target.value)}
+                      error={touched.phoneNumber && !phoneNumber}
+                      helperText={touched.phoneNumber && !phoneNumber ? formatMessage({ id: 'COMMON.REQUIRED' }) : ''}
+                      autoFocus
+                      aria-label={formatMessage({ id: 'AUTH.SIGN_UP.USERNAME.PHONE.LABEL' })}
                     />
                     <InputField
                       required

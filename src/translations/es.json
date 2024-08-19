@@ -44,6 +44,7 @@
   "AUTH.SIGN_UP.LAST_NAME.LABEL": "Apellido",
   "AUTH.SIGN_UP.EMAIL.LABEL": "Correo electrónico",
   "AUTH.SIGN_UP.USERNAME.LABEL": "Nombre de usuario",
+  "AUTH.SIGN_UP.USERNAME.PHONE.LABEL": "Número de teléfono",
   "AUTH.SIGN_UP.PASSWORD.LABEL": "Contraseña",
   "AUTH.SIGN_UP.PASSWORD.CONFIRM.LABEL": "Confirmar contraseña",
   "AUTH.SIGN_UP.PASSWORD.ERROR": "La contraseña que ingresó no cumple con los estándares de seguridad.",

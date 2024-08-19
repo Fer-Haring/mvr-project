@@ -21,6 +21,7 @@ export interface SignupPayload {
   username: string;
   email: string;
   password: string;
+  phone: string;
 }
 
 export interface SignupResponse {
