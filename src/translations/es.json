@@ -473,7 +473,7 @@
   "CART.PAYMENT.SUCCESS": "Pedido realizado con éxito",
   "CART.PAYMENT.SUCCESS.TITLE": "¡Gracias por su compra!",
 
-  "CONTACT.PAGE.WHERE.WE.ARE" : "Donde estamos",
+  "CONTACT.PAGE.WHERE.WE.ARE" : "Contactanos",
   "CONTACT.PAGE.TITLE" : "Contactanos",
   "CONTACT.PAGE.SUBTITLE" : "¿Tienes alguna pregunta? ¡Estamos aquí para ayudarte!",
 
@@ -483,6 +483,8 @@
   "CONTACT.PAGE.SAND.DOUBTS" : "Envíanos tus dudas",
   "CONTACT.PAGE.INSTAGRAM" : "@medicine.vape.room",
   "CONTACT.PAGE.VISIT" : "Visita nuestro Instagram",
+  "CONTACT.PAGE.FACEBOOK" : "Medicine Vape Room",
+  "CONTACT.PAGE.VISIT.FACEBOOK" : "Visita nuestro Facebook",
 
 
 
