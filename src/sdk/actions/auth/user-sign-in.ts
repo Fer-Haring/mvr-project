@@ -1,3 +1,5 @@
+import SnackbarUtils from '@webapp/components/snackbar';
+
 import { LoginPayload, LoginResponse } from '../../types/user-types';
 
 export async function userSignIn(payload: LoginPayload): Promise<LoginResponse> {
@@ -13,7 +15,9 @@ export async function userSignIn(payload: LoginPayload): Promise<LoginResponse> 
     body: params.toString(),
   };
 
-  const URL = 'https://mvr-prod.onrender.com';
+  // Determina cuál URL utilizar dependiendo del entorno
+  const URL = import.meta.env.VITE_API_URL_PROD;
+  // window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
 
   return fetch(`${URL}/identity/login`, options)
     .then(async (response) => {

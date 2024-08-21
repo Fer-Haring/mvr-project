@@ -1,11 +1,11 @@
 import { OrderRequest } from '@webapp/sdk/types/orders-types';
 
-
 export async function createOrder(order: OrderRequest) {
   const token = localStorage.getItem('access_token');
-  const URL = 'https://mvr-prod.onrender.com/orders';
+  const URL =
+    window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
 
-  const response = await fetch(`${URL}/create_order`, {
+  const response = await fetch(`${URL}/orders/create_order`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

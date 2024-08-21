@@ -1,4 +1,5 @@
 import { FormControl, styled } from '@mui/material';
+import { SxProps } from '@mui/material/styles';
 import InputField from '@webapp/components/form/input';
 import { ChangeEvent, FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
@@ -28,7 +29,6 @@ const CustomInput: FunctionComponent<CustomInputProps> = ({ product, name, label
         }}
         autoComplete={autoComplete}
         size="small"
-        aria-hidden="true"
         aria-label={formatMessage({ id: `ADD.NEWPRODUCT.LABEL.${label}` })}
         sx={{
           width: '100%',
@@ -44,19 +44,22 @@ export const CustomInputField = styled(InputField)(({ theme }) => ({
   height: theme.spacing(5),
   borderRadius: theme.spacing(0.5),
   border: 'none',
-  '& label': {
+  color: `${theme.palette.common.black}`,
+  '& .MuiFormLabel-root, & .MuiFormLabel-root.Mui-focused, & .MuiFormLabel-root.Mui-disabled': {
     fontSize: 16,
-    color: theme.palette.grey[200],
+    color: `${theme.palette.common.black}`,
   },
   '& .MuiOutlinedInput-root': {
     height: theme.spacing(5),
     paddingBlock: 0,
     borderRadius: theme.spacing(0.5),
+    color: `${theme.palette.common.black}`,
     border: 'none',
     '& .MuiOutlinedInput-input': {
       height: theme.spacing(5),
       paddingBlock: 0,
       borderRadius: theme.spacing(0.5),
+      color: `${theme.palette.common.black}`,
       border: 'none',
     },
     '& .MuiOutlinedInput-notchedOutline': {

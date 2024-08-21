@@ -2,9 +2,9 @@
 import { refreshToken } from '@webapp/sdk/actions/auth/user-refresh-token';
 import { OrderResponse } from '@webapp/sdk/types/orders-types';
 
-
 export async function getAllOrders(): Promise<OrderResponse[]> {
-  const URL = 'https://mvr-prod.onrender.com/orders';
+  const URL =
+    window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
   const accessToken = localStorage.getItem('access_token');
 
   const options = {
@@ -15,7 +15,7 @@ export async function getAllOrders(): Promise<OrderResponse[]> {
     },
   };
 
-  let response = await fetch(`${URL}/get_all_orders`, options);
+  let response = await fetch(`${URL}/orders/get_all_orders`, options);
 
   // Si la respuesta es 401 (no autorizado), intenta refrescar el token y vuelve a hacer la solicitud
   if (response.status === 401) {

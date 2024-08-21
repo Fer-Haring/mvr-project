@@ -13,7 +13,9 @@ export async function setPassword(payload: SetPasswordPayload): Promise<void> {
     body: JSON.stringify(payload),
   };
 
-  const URL = 'https://mvr-prod.onrender.com';
+  const URL =
+    window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
+
 
   return fetch(`${URL}/identity/set-password`, options)
     .then((response) => {

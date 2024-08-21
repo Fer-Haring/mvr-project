@@ -1,8 +1,9 @@
 export async function downloadOrderPdf(orderId: string): Promise<{ blob: Blob; filename: string }> {
   const token = localStorage.getItem('access_token');
-  const URL = 'https://mvr-prod.onrender.com/orders';
+  const URL =
+    window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
 
-  const response = await fetch(`${URL}/generate_bill/${orderId}`, {
+  const response = await fetch(`${URL}/orders/generate_bill/${orderId}`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,

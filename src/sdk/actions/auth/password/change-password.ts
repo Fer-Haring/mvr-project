@@ -21,7 +21,8 @@ export async function changePassword(payload: ChangePasswordPayload): Promise<Ch
     body: params.toString(),
   };
 
-  const URL = "https://mvr-prod.onrender.com";
+    const URL =
+      window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
 
   return fetch(`${URL}/identity/change_password`, options)
     .then(async (response) => {

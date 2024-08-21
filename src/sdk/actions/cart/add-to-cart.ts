@@ -1,10 +1,12 @@
 import { CartItem } from '@webapp/sdk/types/cart-types';
 
+
 export async function addToCart(cartItem: CartItem) {
   const token = localStorage.getItem('access_token');
-  const URL = 'https://mvr-prod.onrender.com/cart';
+    const URL =
+      window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
 
-  const response = await fetch(`${URL}/add_item`, {
+  const response = await fetch(`${URL}/cart/add_item`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

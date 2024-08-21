@@ -1,9 +1,10 @@
 // En un archivo como import-xlsx.ts
 import { refreshToken } from '../auth/user-refresh-token';
 
-
 export async function importXlsx(file: File) {
-  const URL = 'https://mvr-prod.onrender.com/products/import_product_list';
+  const URL =
+    window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
+
   const accessToken = localStorage.getItem('access_token');
 
   const formData = new FormData();
@@ -17,7 +18,7 @@ export async function importXlsx(file: File) {
     body: formData,
   };
 
-  let response = await fetch(URL, options);
+  let response = await fetch(`${URL}/products/import_product_list`, options);
 
   if (response.status === 401) {
     const newAccessToken = await refreshToken();

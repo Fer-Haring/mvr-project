@@ -1,6 +1,8 @@
 import { User } from '@webapp/sdk/types/user-types';
 
-const BASE_URL = `https://mvr-prod.onrender.com/identity`;
+
+const URL =
+  window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
 
 export async function removeFavorite(userId: string, productId: string): Promise<User> {
   const accessToken = localStorage.getItem('access_token');
@@ -13,7 +15,7 @@ export async function removeFavorite(userId: string, productId: string): Promise
     },
   };
 
-  const response = await fetch(`${BASE_URL}/remove-favorite/${userId}?product_id=${productId}`, options);
+  const response = await fetch(`${URL}/identity/remove-favorite/${userId}?product_id=${productId}`, options);
 
   if (!response.ok) {
     const err = await response.json();

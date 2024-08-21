@@ -1,13 +1,15 @@
 import { useUserGoogleStore } from '@webapp/store/auth/google-sessions';
 import { useUserStore } from '@webapp/store/auth/session';
 
+
 export interface UserLogoutPayload {
   token: string;
   tokenType: string;
 }
 
 export async function userLogout(token: string, tokenType: string): Promise<void> {
-  const URL = 'https://mvr-prod.onrender.com/identity/logout';
+  const URL =
+    window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
 
   if (!token || !tokenType) {
     console.error('No token available');
@@ -24,7 +26,7 @@ export async function userLogout(token: string, tokenType: string): Promise<void
   };
 
   try {
-    const response = await fetch(URL, options);
+    const response = await fetch(`${URL}/identity/logout`, options);
     if (!response.ok) {
       const err = await response.json();
       throw new Error(err.detail);

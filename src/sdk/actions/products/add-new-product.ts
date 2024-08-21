@@ -1,12 +1,14 @@
-import { Product } from "@webapp/sdk/types/products-types";
-import { refreshToken } from "../auth/user-refresh-token";
+import { Product } from '@webapp/sdk/types/products-types';
+
+import { refreshToken } from '../auth/user-refresh-token';
 
 export async function addNewProduct(product: Product, file?: File): Promise<Product> {
-  const URL = "https://mvr-prod.onrender.com/products";
+  const URL =
+    window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
   const accessToken = localStorage.getItem('access_token');
 
   const formData = new FormData();
-  Object.keys(product).forEach(key => {
+  Object.keys(product).forEach((key) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formData.append(key, (product as any)[key]);
   });
@@ -15,7 +17,7 @@ export async function addNewProduct(product: Product, file?: File): Promise<Prod
   }
 
   const headers: HeadersInit = {
-    'Authorization': `Bearer ${accessToken}`,
+    Authorization: `Bearer ${accessToken}`,
   };
 
   const options: RequestInit = {
@@ -24,8 +26,8 @@ export async function addNewProduct(product: Product, file?: File): Promise<Prod
     body: formData,
   };
 
-  let response = await fetch(URL, options);
-  
+  let response = await fetch(`${URL}/products`, options);
+
   if (response.status === 401) {
     const newAccessToken = await refreshToken();
     localStorage.setItem('access_token', newAccessToken);

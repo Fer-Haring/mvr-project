@@ -1,8 +1,9 @@
 export async function clearCart() {
   const token = localStorage.getItem('access_token');
-  const URL = 'https://mvr-prod.onrender.com/cart';
+    const URL =
+      window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
 
-  const response = await fetch(`${URL}/clear_cart`, {
+  const response = await fetch(`${URL}/cart/clear_cart`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',

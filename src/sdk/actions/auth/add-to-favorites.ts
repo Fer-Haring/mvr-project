@@ -1,7 +1,8 @@
 import { Product } from '@webapp/sdk/types/products-types';
 import { User } from '@webapp/sdk/types/user-types';
 
-const BASE_URL = `https://mvr-prod.onrender.com/identity`;
+const URL =
+  window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
 
 export async function addFavorite(userId: string, product: Product): Promise<User> {
   const accessToken = localStorage.getItem('access_token');
@@ -15,7 +16,7 @@ export async function addFavorite(userId: string, product: Product): Promise<Use
     body: JSON.stringify(product),
   };
 
-  const response = await fetch(`${BASE_URL}/add-favorite/${userId}`, options);
+  const response = await fetch(`${URL}/identity/add-favorite/${userId}`, options);
 
   if (!response.ok) {
     const err = await response.json();

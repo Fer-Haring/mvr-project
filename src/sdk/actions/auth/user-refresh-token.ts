@@ -1,6 +1,9 @@
 import { jwtDecode } from 'jwt-decode';
 
+
+
 import { emitter } from './event-emitter';
+
 
 interface DecodedAccessToken {
   email: string;
@@ -19,7 +22,8 @@ export async function decodeAccessToken(accessToken: string): Promise<DecodedAcc
 }
 
 export async function refreshToken(): Promise<string> {
-  const URL = 'https://mvr-prod.onrender.com/identity/refresh-token';
+    const URL =
+      window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
   const refreshToken = localStorage.getItem('refresh_token');
   const accessToken = localStorage.getItem('access_token');
 
@@ -40,7 +44,7 @@ export async function refreshToken(): Promise<string> {
     body: new URLSearchParams({ refresh_token: refreshToken || '', email, password }),
   };
 
-  const response = await fetch(URL, options);
+  const response = await fetch(`${URL}/identity/refresh-token`, options);
   if (!response.ok) {
     const err = await response.json();
     if (!refreshToken || !accessToken || response.status === 401) {

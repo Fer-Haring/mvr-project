@@ -3,7 +3,9 @@ import { OrderResponse } from '@webapp/sdk/types/orders-types';
 
 
 export async function updateOrderStatus(id: number | string, status: string): Promise<OrderResponse> {
-  const URL = 'https://mvr-prod.onrender.com';
+    const URL =
+      window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
+
   const accessToken = localStorage.getItem('access_token');
 
   const options = {

@@ -3,7 +3,8 @@ import { refreshToken } from '@webapp/sdk/actions/auth/user-refresh-token';
 import { CartResponse } from '@webapp/sdk/types/cart-types';
 
 export async function getUserCart(): Promise<CartResponse[]> {
-  const URL = 'https://mvr-prod.onrender.com/cart';
+  const URL =
+    window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
   const accessToken = localStorage.getItem('access_token');
 
   const options = {
@@ -14,7 +15,7 @@ export async function getUserCart(): Promise<CartResponse[]> {
     },
   };
 
-  let response = await fetch(`${URL}/get_cart`, options);
+  let response = await fetch(`${URL}/cart/get_cart`, options);
 
   // Si la respuesta es 401 (no autorizado), intenta refrescar el token y vuelve a hacer la solicitud
   if (response.status === 401) {

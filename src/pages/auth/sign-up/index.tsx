@@ -58,7 +58,11 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
         phone: phoneNumber,
       });
     } catch (error) {
-      SnackbarUtils.error('Falló el registro, por favor intente nuevamente');
+      if (error instanceof Error) {
+        SnackbarUtils.error(error.message);
+      } else {
+        SnackbarUtils.error('Ocurrió un error inesperado.');
+      }
     }
   };
 

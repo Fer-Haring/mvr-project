@@ -1,7 +1,9 @@
 import { SignupPayload, SignupResponse } from '../../types/user-types';
 
+
 export async function userSignup(payload: SignupPayload, file?: File): Promise<SignupResponse> {
-  const URL = 'https://mvr-prod.onrender.com/identity/signup';
+    const URL =
+      window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
 
   const formData = new FormData();
 
@@ -19,7 +21,7 @@ export async function userSignup(payload: SignupPayload, file?: File): Promise<S
     body: formData,
   };
 
-  return fetch(URL, options)
+  return fetch(`${URL}/identity/signup`, options)
     .then(async (response) => {
       if (!response.ok) {
         const err = await response.json();

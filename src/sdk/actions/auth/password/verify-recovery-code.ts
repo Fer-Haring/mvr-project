@@ -1,4 +1,4 @@
-import { NavigateFunction } from "react-router-dom";
+import { NavigateFunction } from 'react-router-dom';
 
 export interface VerifyCodePayload {
   email: string;
@@ -23,7 +23,8 @@ export async function verifyRecoveryCode(payload: VerifyCodePayload): Promise<Ve
     body: params.toString(),
   };
 
-  const URL = "https://mvr-prod.onrender.com";
+  const URL =
+    window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
 
   return fetch(`${URL}/identity/recover_password/validate_code`, options)
     .then(async (response) => {

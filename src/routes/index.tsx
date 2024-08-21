@@ -8,6 +8,7 @@ import {
   ProductsPage,
   ProfilePage,
 } from '@webapp/pages';
+import AdminAddProductPage from '@webapp/pages/admin/add-new-product';
 import ForgotPasswordPage2 from '@webapp/pages/auth/forgot-password';
 import ForgotPasswordNewPassword from '@webapp/pages/auth/forgot-password-new-password';
 import ForgotPasswordVerifyPage2 from '@webapp/pages/auth/forgot-password-verify';
@@ -72,6 +73,10 @@ const ProjectRoutes: Route[] = [
   {
     path: '/admin-dashboard',
     component: <AdminDashboardPage />,
+  },
+  {
+    path: '/admin-dashboard/add-new-product',
+    component: <AdminAddProductPage />,
   },
   {
     path: '/contacto',

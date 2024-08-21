@@ -3,7 +3,9 @@ import { Product } from '@webapp/sdk/types/products-types';
 import { refreshToken } from '../auth/user-refresh-token';
 
 export async function updateProduct(productId: string, productData: Product, file?: File | null) {
-  const URL = 'https://mvr-prod.onrender.com';
+  const URL =
+    window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
+
   let accessToken = localStorage.getItem('access_token');
 
   const formData = new FormData();

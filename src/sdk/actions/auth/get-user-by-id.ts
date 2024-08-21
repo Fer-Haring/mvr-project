@@ -1,8 +1,11 @@
 import { User } from '../../types/user-types';
 import { refreshToken } from './user-refresh-token';
 
+
 export async function getUserById(userId: string): Promise<User> {
-  const URL = 'https://mvr-prod.onrender.com';
+   const URL =
+     window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
+
   const accessToken = localStorage.getItem('access_token');
 
   const options = {

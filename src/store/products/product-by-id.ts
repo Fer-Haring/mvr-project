@@ -34,17 +34,16 @@ const initialState: ProductData = {
   resetProduct: () => {},
 };
 
-
 export const useSingleProduct = create(
   persist<ProductData>(
     (set) => ({
-      ...initialState,
+      product: initialState.product,
       setProduct: (product) => set({ product }),
-      resetProduct: () => set({ ...initialState }),
+      resetProduct: () => set({ product: initialState.product }),
     }),
     {
       name: 'productData',
-      storage: createJSONStorage(() => localStorage)
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );

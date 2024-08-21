@@ -1,7 +1,10 @@
 import { refreshToken } from '../auth/user-refresh-token';
 
+
 export async function getOrderById(orderId: string) {
-  const URL = 'https://mvr-prod.onrender.com';
+    const URL =
+      window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
+
   const accessToken = localStorage.getItem('access_token');
 
   const options = {
