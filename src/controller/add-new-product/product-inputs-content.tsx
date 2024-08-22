@@ -1,5 +1,6 @@
 import KeyboardArrowDownRounded from '@mui/icons-material/KeyboardArrowDownRounded';
-import { AutocompleteChangeReason, Popper, alpha, styled, useTheme } from '@mui/material';
+import { AutocompleteChangeReason, alpha, styled, useTheme } from '@mui/material';
+import Popper from '@mui/material/Popper';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Autocomplete, { AutocompleteOption } from '@webapp/components/form/autocomplete';
