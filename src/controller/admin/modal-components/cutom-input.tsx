@@ -27,6 +27,7 @@ const CustomInput: FunctionComponent<CustomInputProps> = ({ product, name, label
         onChange={(e) => {
           onChange(e);
         }}
+        onFocus={(e) => e.target.select()}
         autoComplete={autoComplete}
         size="small"
         aria-label={formatMessage({ id: `ADD.NEWPRODUCT.LABEL.${label}` })}

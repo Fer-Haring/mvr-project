@@ -11,7 +11,6 @@ import { Product } from '@webapp/sdk/types/products-types';
 import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
 
-
 interface ProductsInputsContentProps {
   className?: string;
   product: Product;
@@ -227,7 +226,7 @@ const ProductsInputsContent: React.FC<ProductsInputsContentProps> = ({
           name="actualStock"
           label="ACTUALSTOCK"
           product={product.actual_stock}
-          type="text"
+          type="number"
           onChange={(e) => setProduct({ ...product, actual_stock: Number(e.target.value) })}
           autoComplete="product_name"
         />
