@@ -9,6 +9,7 @@ import {
   ProfilePage,
 } from '@webapp/pages';
 import AdminAddProductPage from '@webapp/pages/admin/add-new-product';
+import UserListPage from '@webapp/pages/admin/user-list';
 import ForgotPasswordPage2 from '@webapp/pages/auth/forgot-password';
 import ForgotPasswordNewPassword from '@webapp/pages/auth/forgot-password-new-password';
 import ForgotPasswordVerifyPage2 from '@webapp/pages/auth/forgot-password-verify';
@@ -71,14 +72,6 @@ const ProjectRoutes: Route[] = [
     component: <AboutUsPage />,
   },
   {
-    path: '/admin-dashboard',
-    component: <AdminDashboardPage />,
-  },
-  {
-    path: '/admin-dashboard/add-new-product',
-    component: <AdminAddProductPage />,
-  },
-  {
     path: '/contacto',
     component: <ContactPage />,
   },
@@ -95,10 +88,6 @@ const ProjectRoutes: Route[] = [
     component: <ProductDetailPage />,
   },
   {
-    path: '/admin-dashboard/editar-orden-pendiente/:id?',
-    component: <EditPendingOrdersPage />,
-  },
-  {
     path: '/cart',
     component: <CartPage />,
   },
@@ -113,6 +102,23 @@ const ProjectRoutes: Route[] = [
   {
     path: '/set-password',
     component: <SetPasswrodPage />,
+  },
+  //ADMIN ROUTES
+  {
+    path: '/admin-dashboard',
+    component: <AdminDashboardPage />,
+  },
+  {
+    path: '/admin-dashboard/editar-orden-pendiente/:id?',
+    component: <EditPendingOrdersPage />,
+  },
+  {
+    path: '/admin-dashboard/add-new-product',
+    component: <AdminAddProductPage />,
+  },
+  {
+    path: '/admin-dashboard/lista-de-usuarios',
+    component: <UserListPage />,
   },
 ];
 export { ProjectRoutes };

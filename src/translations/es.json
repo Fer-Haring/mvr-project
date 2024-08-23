@@ -232,6 +232,7 @@
   "ADMIN.DASHBOARD.PRODUCTS.TABLE.BUTTONS.ADDPRODUCT": "Agregar Producto",
   "ADMIN.DASHBOARD.PRODUCTS.TABLE.HEADER.PRODUCTNAME": "Nombre del producto",
   "ADMIN.DASHBOARD.PRODUCTS.TABLE.BUTTONS.EXPORT.AS.ECXEL": "Exportar a Excel",
+  "ADMIN.DASHBOARD.PRODUCTS.TABLE.BUTTONS.DELETE.SELECTED.PRODUCT": "Eliminar Producto",
   "ADMIN.DASHBOARD.PRODUCTS.TABLE.BUTTONS.IMPORT.ECXEL": "Importar Archivo Excel",
   "ADMIN.DASHBOARD.PRODUCTS.TABLE.HEADER.DESCRIPTION": "Descripción",
   "ADMIN.DASHBOARD.PRODUCTS.TABLE.HEADER.COSTPRICE": "Precio de costo",
@@ -310,14 +311,6 @@
 
 
 
-
-
-
-
-
-
-
-
   "FORM.LABEL.PRODUCTNAME": "Nombre del Producto",
   "FORM.LABEL.DESCRIPTION": "Descripción",
   "FORM.LABEL.COSTPRICE": "Precio de Costo",
@@ -342,9 +335,36 @@
 
 
 
+
+  "_COMMENT": "____________________________LISTA DE USUARIOS PAGE_______________________________________",
+  "ADMIN.LIST.USERS.PAGE.TITLE" : "Lista de Usuarios",
+  "ADMIN.LIST.USERS.PAGE.SUBTITLE" : "Total de Usuarios: ",
+  "ADMIN.USERS.LIST.PAGE.USER.EMAIL" : "Email: ",
+  "ADMIN.USERS.LIST.PAGE.USER.PHONE" : "Número de Teléfono: ",
+  "ADMIN.LIST.USERS.MODAL.TITLE" : "Detalles del Usuario",
+  "ADMIN.LIST.USERS.MODAL.FIRST_NAME" : "Nombre: ",
+  "ADMIN.LIST.USERS.MODAL.LAST_NAME" : "Apellido: ",
+  "ADMIN.LIST.USERS.MODAL.USERNAME" : "Nombre de Usuario: ",
+  "ADMIN.LIST.USERS.MODAL.EMAIL" : "Correo Electrónico: ",
+  "ADMIN.LIST.USERS.MODAL.PHONE" : "Número de Teléfono: ",
+  "ADMIN.LIST.USERS.MODAL.ADRESS" : "Dirección: ",
+  "ADMIN.LIST.USERS.MODAL.CITY" : "Ciudad: ",
+  "ADMIN.LIST.USERS.MODAL.LAST_CURRENCY" : "Moneda Seleccionada: ",
+  "ADMIN.LIST.USERS.MODAL.DELIVERY_TYPE" : "Tipo de Entrega Predeterminado: ",
+  "ADMIN.LIST.USERS.MODAL.PAYMENT_METHOD" : "Metodo de Pago Predeterminado: ",
+  "ADMIN.LIST.USERS.MODAL.DELIVERY_ZONE" : "Zona de Entrega: ",
+
+
+
+
+
+
+"_COMMENT1": "____________________________ADMIN PAGE_______________________________________",
   "ADD.NEWPRODUCT.LABEL.NAME": "Nombre del Producto",
   "ADMIN.DASHBOARD.PRODUCTS.TABLE.BUTTONS.CANCEL": "Cancelar",
   "ADMIN.DOLLAR.VALUE" : "Valor del Dolar",
+  "ADMIN.EXTRA.BUTTON.PAPER.TITLE" : "Funciones Extra",
+  "ADMIN.EXTRA.BUTTON.PAPER.LIST.USERS" : "Lista de Usuarios",
   "ADMIN.BUTTON.SELECTOR.TABLE.PENDING" : "Pedidos Pendientes",
   "ADMIN.BUTTON.SELECTOR.TABLE.COMPLETED" : "Pedidos Completados",
   "ADMIN.TOTAL.PRODUCTS.INSTOCK" : "Total de Productos en Stock",

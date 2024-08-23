@@ -7,7 +7,7 @@ import ContentWrapper from '@webapp/components/content-wrapper';
 import { AutocompleteOption } from '@webapp/components/form/autocomplete';
 import Modal from '@webapp/components/modal';
 import SnackbarUtils from '@webapp/components/snackbar';
-import ProductsInputsContent from '@webapp/controller/add-new-product/product-inputs-content';
+import ProductsInputsContent from '@webapp/controller/admin/add-new-product/product-inputs-content';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { useAddNewProduct } from '@webapp/sdk/mutations/products/add-new-product-mutation';
 import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';

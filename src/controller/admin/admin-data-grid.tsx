@@ -32,6 +32,7 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
   const productsList = useProductListQuery(1, 500);
   const { mutate } = useUpdateProduct();
   const columns = React.useMemo(() => columnDefs(navigate), [navigate]);
+  const [selectedRowProducts, setSelectedRowProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     setLoading(true);
@@ -93,6 +94,7 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
     (event: SelectionChangedEvent) => {
       const allSelectedRows: Product[] = event.api.getSelectedRows();
       setSelectedProducts(allSelectedRows);
+      setSelectedRowProducts(allSelectedRows);
     },
     [setSelectedProducts]
   );
@@ -102,7 +104,7 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
       <Typography variant="h5" sx={{ color: theme.palette.grey[800], fontWeight: 'bold', textAlign: 'center', mb: 5 }}>
         {formatMessage({ id: 'ADMIN.PRODUCTS.LIST.TITLE' })}
       </Typography>
-      <ProductHeaderActions selectedRows={products} />
+      <ProductHeaderActions selectedRows={selectedRowProducts} />
       <div className="ag-theme-quartz" style={{ height: 800, width: '100%', marginTop: 25 }}>
         {loading ? (
           <Box display="flex" justifyContent="center" alignItems="center" height="100%">

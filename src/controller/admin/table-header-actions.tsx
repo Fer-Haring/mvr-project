@@ -5,6 +5,7 @@ import SnackbarUtils from '@webapp/components/snackbar';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { useExportCsvExcel } from '@webapp/sdk/mutations/admin/export-csv-excel-query';
 import { useImportXlsxCsv } from '@webapp/sdk/mutations/admin/import-xlsx-csv-mutation';
+import { useDeleteProduct } from '@webapp/sdk/mutations/products/delete-product-mutation';
 import { Product } from '@webapp/sdk/types/products-types';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
@@ -18,7 +19,7 @@ interface ProductHeaderActionsProps {
   selectedRows: Product[];
 }
 
-const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = () => {
+const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ selectedRows }) => {
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
@@ -29,6 +30,7 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = () => {
   const exportCsvExcel = useExportCsvExcel();
   const importXlsx = useImportXlsxCsv();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const deleteProductMutation = useDeleteProduct();
 
   const handleOpenExportModal = () => {
     setOpenExportModal(true);
@@ -37,6 +39,14 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = () => {
   const handleFileUploadAndUpdate = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
+    }
+  };
+
+  const handleDeleteProduct = () => {
+    if (selectedRows) {
+      selectedRows.forEach((product) => {
+        deleteProductMutation.mutateAsync(product.id);
+      });
     }
   };
 
@@ -73,41 +83,12 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = () => {
         setOpenExportModal(false);
       })
       .catch((error) => {
-        console.error('Error al exportar:', error);
+        SnackbarUtils.error(`Error al exportar: ${error.message}`);
       });
   };
 
   return (
-    <Stack spacing={2} direction="row" justifyContent="flex-end">
-      <Box
-        sx={{
-          display: 'flex',
-          gap: 2,
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: isMobile ? 'column' : 'row',
-        }}
-      >
-        <BulkEditButton />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleOpenExportModal}
-          sx={{
-            height: 32,
-            width: 'auto',
-            alignContent: 'center',
-            alignSelf: 'end',
-            color: theme.palette.grey[200],
-            '&:hover': {
-              backgroundColor: theme.palette.primary.dark,
-              color: theme.palette.grey[200],
-            },
-          }}
-        >
-          {formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BUTTONS.EXPORT.AS.ECXEL' })}
-        </Button>
-      </Box>
+    <Stack spacing={2} direction={isMobile ? 'column' : 'row'} justifyContent="flex-end">
       <Box
         sx={{
           display: 'flex',
@@ -119,9 +100,12 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = () => {
       >
         <Button
           variant="contained"
-          color="primary"
-          onClick={handleFileUploadAndUpdate}
-          loading={importXlsx.isPending}
+          color={selectedRows.length > 0 ? 'error' : 'disabled'}
+          onClick={
+            selectedRows.length > 0
+              ? handleDeleteProduct
+              : () => SnackbarUtils.error('Seleccione al menos un producto para eliminar')
+          }
           sx={{
             height: 32,
             width: 'auto',
@@ -134,34 +118,95 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = () => {
             },
           }}
         >
-          {formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BUTTONS.IMPORT.ECXEL' })}
-        </Button>
-        <input
-          type="file"
-          ref={fileInputRef}
-          style={{ display: 'none' }}
-          accept=".xlsx, .xls"
-          onChange={handleFileChange}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => navigate('/admin-dashboard/add-new-product')}
-          sx={{
-            height: 32,
-            width: 'auto',
-            alignContent: 'center',
-            alignSelf: 'end',
-            color: theme.palette.grey[200],
-            '&:hover': {
-              backgroundColor: theme.palette.primary.dark,
-              color: theme.palette.grey[200],
-            },
-          }}
-        >
-          {formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BUTTONS.ADDPRODUCT' })}
+          {formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BUTTONS.DELETE.SELECTED.PRODUCT' })}
         </Button>
       </Box>
+      <Stack spacing={2} direction="row" justifyContent="flex-end">
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 2,
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: isMobile ? 'column' : 'row',
+          }}
+        >
+          <BulkEditButton />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleOpenExportModal}
+            sx={{
+              height: 32,
+              width: 'auto',
+              alignContent: 'center',
+              alignSelf: 'end',
+              color: theme.palette.grey[200],
+              '&:hover': {
+                backgroundColor: theme.palette.primary.dark,
+                color: theme.palette.grey[200],
+              },
+            }}
+          >
+            {formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BUTTONS.EXPORT.AS.ECXEL' })}
+          </Button>
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 2,
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: isMobile ? 'column' : 'row',
+          }}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleFileUploadAndUpdate}
+            loading={importXlsx.isPending}
+            sx={{
+              height: 32,
+              width: 'auto',
+              alignContent: 'center',
+              alignSelf: 'end',
+              color: theme.palette.grey[200],
+              '&:hover': {
+                backgroundColor: theme.palette.primary.dark,
+                color: theme.palette.grey[200],
+              },
+            }}
+          >
+            {formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BUTTONS.IMPORT.ECXEL' })}
+          </Button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            style={{ display: 'none' }}
+            accept=".xlsx, .xls"
+            onChange={handleFileChange}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => navigate('/admin-dashboard/add-new-product')}
+            sx={{
+              height: 32,
+              width: 'auto',
+              alignContent: 'center',
+              alignSelf: 'end',
+              color: theme.palette.grey[200],
+              '&:hover': {
+                backgroundColor: theme.palette.primary.dark,
+                color: theme.palette.grey[200],
+              },
+            }}
+          >
+            {formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BUTTONS.ADDPRODUCT' })}
+          </Button>
+        </Box>
+      </Stack>
+
       {openExportModal && (
         <Modal
           open={openExportModal}

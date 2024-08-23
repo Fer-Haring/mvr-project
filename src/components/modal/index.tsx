@@ -35,9 +35,9 @@ const StyledMuiModal = styled(MuiModal)(({ theme }) => ({
 
   '& .modal-wrapper': {
     backgroundColor: theme.palette.background.default,
-    padding: theme.spacing(4),
+    padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadius,
-    width: 'min(75vw, 720px)',
+    width: 'min(75vw, 1080px)',
   },
 }));
 

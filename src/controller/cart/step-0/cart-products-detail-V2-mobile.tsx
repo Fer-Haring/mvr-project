@@ -142,6 +142,7 @@ export const CartProductsDetailV2Mobile: React.FunctionComponent<CartProductsDet
                   }}
                   sx={{
                     fontSize: '4vw',
+                    lineHeight: '1.2',
                     textAlign: 'center',
                     color: theme.palette.common.black,
                     ':hover': {

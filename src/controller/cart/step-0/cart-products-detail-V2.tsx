@@ -143,6 +143,7 @@ export const CartProductsDetailV2: React.FunctionComponent<CartProductsDetailV2P
                   }}
                   sx={{
                     fontSize: '1.6vw',
+                    lineHeight: '30px',
                     textAlign: 'center',
                     color: theme.palette.common.black,
                     ':hover': {
