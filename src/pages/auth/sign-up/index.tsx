@@ -248,6 +248,19 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                       }}
                       aria-label={formatMessage({ id: 'AUTH.SIGN_UP.PASSWORD.LABEL' })}
                     />
+                    <AnimatePresence mode="wait">
+                      {isPasswordFocused && (
+                        <PasswordRequirements
+                          hasAutoHide={true}
+                          password={password}
+                          sx={{
+                            position: 'relative',
+                            zIndex: 10,
+                          }}
+                          aria-label={formatMessage({ id: 'AUTH.SIGN_UP.PASSWORD.LABEL' })}
+                        />
+                      )}
+                    </AnimatePresence>
                     <InputField
                       required
                       fullWidth
@@ -280,23 +293,6 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                       aria-label={formatMessage({ id: 'AUTH.SIGN_UP.PASSWORD.CONFIRM.LABEL' })}
                     />
                   </Stack>
-                  <AnimatePresence mode="wait">
-                    {password && isPasswordFocused && (
-                      <PasswordRequirements
-                        hasAutoHide
-                        password={password}
-                        sx={{
-                          position: 'absolute',
-                          right: 0,
-                          bottom: 0,
-                          left: 0,
-                          transform: { xs: `translateY(calc(100% + ${theme.spacing(1)}))`, md: 'translateY(100%)' },
-                          zIndex: 10,
-                        }}
-                        aria-label={formatMessage({ id: 'AUTH.SIGN_UP.PASSWORD.LABEL' })}
-                      />
-                    )}
-                  </AnimatePresence>
                 </Stack>
                 <Stack direction="column" spacing={1} sx={{ mt: 4 }} role="group" aria-labelledby="sign-up-button">
                   <Button
