@@ -139,7 +139,7 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
                     fullWidth
                     id="email"
                     label={formatMessage({ id: 'AUTH.SIGN_IN.EMAIL.LABEL' })}
-                    value={email}
+                    value={email.toLowerCase()}
                     onBlur={() => setTouched({ ...touched, email: true })}
                     onChange={(ev) => {
                       setEmail(ev.target.value);
@@ -213,7 +213,7 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
                   </Button>
                   <Button
                     variant="text"
-                    color='text'
+                    color="text"
                     onClick={goToRegister}
                     fullWidth={isMobile}
                     aria-label={formatMessage({ id: 'AUTH.SIGN_IN.LINK.LABEL' })}

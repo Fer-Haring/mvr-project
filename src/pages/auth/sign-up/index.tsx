@@ -204,7 +204,7 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                       id="email"
                       autoComplete="email"
                       label={formatMessage({ id: 'AUTH.SIGN_UP.EMAIL.LABEL' })}
-                      value={email}
+                      value={email.toLowerCase()}
                       onBlur={() => setTouched({ ...touched, email: true })}
                       onChange={(ev) => setEmail(ev.target.value)}
                       error={touched.email && !validateEmail(email)}

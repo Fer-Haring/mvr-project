@@ -1,13 +1,15 @@
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
 import { Box, IconButton, SelectChangeEvent, Typography } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import { useTheme } from '@mui/material/styles';
+import { alpha, useTheme } from '@mui/material/styles';
 import ContentWrapper from '@webapp/components/content-wrapper';
 import ProductCardV2 from '@webapp/components/product-card-V2';
 import { MainCategoriesImages } from '@webapp/controller/products/image-categories-enum';
 import ProductFilterPanel from '@webapp/controller/products/product-filter-panel';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
+import { Product } from '@webapp/sdk/types/products-types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';
 import { useSelectedMainCategoryStore } from '@webapp/store/products/selected-main-category';
@@ -63,6 +65,15 @@ export const ProductsPage: FunctionComponent = () => {
     }
   }, [productList, selectedMainCategory]);
 
+  useEffect(() => {
+    const scrollableElement = document.querySelector('.content');
+    const savedScrollPosition = sessionStorage.getItem('scrollPosition');
+    if (scrollableElement && savedScrollPosition) {
+      scrollableElement.scrollTo({ top: parseInt(savedScrollPosition), behavior: 'auto' });
+      sessionStorage.removeItem('scrollPosition');
+    }
+  }, [productList]);
+
   const handleMainCategoryChange = (category: string) => {
     setSelectedMainCategory(category);
     setSelectedCategory('');
@@ -80,6 +91,23 @@ export const ProductsPage: FunctionComponent = () => {
 
   const handleSortCriteriaChange = (event: SelectChangeEvent<string>) => {
     setSortCriteria(event.target.value);
+  };
+
+  const handleScrollToTop = () => {
+    const scrollableElement = document.querySelector('.content');
+    if (scrollableElement) {
+      scrollableElement.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handleProductClick = (product: Product) => {
+    const scrollableElement = document.querySelector('.content');
+    if (scrollableElement) {
+      const scrollPosition = scrollableElement.scrollTop;
+      sessionStorage.setItem('scrollPosition', scrollPosition.toString());
+    }
+    setProduct(product);
+    navigate(`/productos/${product.id}`);
   };
 
   const filteredAndSortedProducts = useMemo(() => {
@@ -130,10 +158,27 @@ export const ProductsPage: FunctionComponent = () => {
       <Stack direction={'row'} gap={6} width={'100%'} p={isMobile ? 0 : 4}>
         <Stack direction={'column'} gap={2} width={'100%'}>
           {selectedMainCategory && (
-            <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', pb: 4 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+                height: 64,
+                pb: 4,
+                pt: 4,
+                backgroundColor: alpha(theme.palette.primary.main, 0.6),
+                position: 'sticky',
+                top: 0,
+                zIndex: 1,
+                borderRadius: 1,
+              }}
+            >
               <IconButton
                 onClick={() => setSelectedMainCategory('')}
-                sx={{ color: theme.palette.common.white, zIndex: 1 }}
+                sx={{
+                  color: theme.palette.common.white,
+                  zIndex: 1,
+                }}
               >
                 <ArrowBackRoundedIcon sx={{ width: 48, height: 48 }} />
               </IconButton>
@@ -237,8 +282,7 @@ export const ProductsPage: FunctionComponent = () => {
                   price={product.sale_price}
                   currency={product.price_currency}
                   onClick={() => {
-                    setProduct(product);
-                    navigate(`/productos/${product.id}`);
+                    handleProductClick(product);
                   }}
                 />
               ))}
@@ -246,6 +290,22 @@ export const ProductsPage: FunctionComponent = () => {
           )}
         </Stack>
       </Stack>
+      <IconButton
+        onClick={() => handleScrollToTop()}
+        sx={{
+          position: 'fixed',
+          bottom: 24,
+          right: 24,
+          backgroundColor: theme.palette.primary.main,
+          color: theme.palette.common.white,
+          zIndex: 1000,
+          '&:hover': {
+            backgroundColor: alpha(theme.palette.primary.main, 0.8),
+          },
+        }}
+      >
+        <ArrowUpwardRoundedIcon />
+      </IconButton>
     </ContentWrapper>
   );
 };
