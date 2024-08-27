@@ -166,7 +166,7 @@ export const ProductsPage: FunctionComponent = () => {
                 height: 64,
                 pb: 4,
                 pt: 4,
-                backgroundColor: alpha(theme.palette.primary.main, 0.6),
+                backgroundColor: alpha(theme.palette.common.white, 0.9),
                 position: 'sticky',
                 top: 0,
                 zIndex: 1,
@@ -176,7 +176,7 @@ export const ProductsPage: FunctionComponent = () => {
               <IconButton
                 onClick={() => setSelectedMainCategory('')}
                 sx={{
-                  color: theme.palette.common.white,
+                  color: theme.palette.common.black,
                   zIndex: 1,
                 }}
               >
@@ -186,10 +186,11 @@ export const ProductsPage: FunctionComponent = () => {
                 <Typography
                   variant="h1"
                   sx={{
-                    color: theme.palette.common.white,
+                    color: theme.palette.common.black,
                     textAlign: 'center',
                     position: 'absolute',
                     fontFamily: 'WordMean',
+                    letterSpacing: 4,
                   }}
                 >
                   {selectedMainCategory}

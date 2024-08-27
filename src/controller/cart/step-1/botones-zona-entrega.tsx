@@ -7,7 +7,7 @@ import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { User } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useUserData } from '@webapp/store/users/user-data';
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 
 interface ZoneDeliverButtonsProps {
@@ -23,6 +23,21 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
   const isMobile = useIsMobile();
   const { setUser: setUserData } = useUserData();
   const { setDeliverValue, setOrder, order } = useMessageStore();
+
+  useEffect(() => {
+    let deliveryCost = 0;
+    const selectedDelivery = userData.delivery_zone || order.delivery_zone;
+
+    if (selectedDelivery === 'BSSO') {
+      deliveryCost = 1400;
+    } else if (selectedDelivery === 'CASCO') {
+      deliveryCost = 2800;
+    } else if (selectedDelivery === 'OUTCASCO') {
+      deliveryCost = 4000;
+    } else if (selectedDelivery === 'LEJOS') {
+      deliveryCost = 4500;
+    }
+  }, [userData]);
 
   const handleOnChange = async (selectedDelivery: string) => {
     let deliveryCost = 0;
