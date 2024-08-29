@@ -50,7 +50,6 @@ export const Step2: FunctionComponent<Step2Props> = ({
   const [uploadingImage, setUploadingImage] = useState(false);
 
   const handleOpenModal = async () => {
-    console.log('Opening modal...');
 
     if (order.payment_method === 'Transferencia bancaria' && !image) {
       setError('Debes subir una imagen de comprobante de transferencia.');

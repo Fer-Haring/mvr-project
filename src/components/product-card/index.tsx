@@ -63,7 +63,6 @@ const ProductCard: FunctionComponent<ProductCardProps> = ({
 
   const handleBookmarkClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
-    console.log('Bookmark clicked');
   };
 
   return (

@@ -1,3 +1,4 @@
+import SnackbarUtils from '@webapp/components/snackbar';
 import { NavigateFunction } from 'react-router-dom';
 
 export interface SendCodePayload {
@@ -36,7 +37,7 @@ export async function sendPasswordRecoveryCode(payload: SendCodePayload): Promis
       return response.json();
     })
     .catch((error) => {
-      console.log('error', error);
+      SnackbarUtils.error(error);
       throw error;
     });
 }

@@ -466,7 +466,7 @@ export const CustomThemeOptions = (mode: PaletteMode): Partial<ThemeOptions> => 
     MuiFormLabel: {
       styleOverrides: {
         root: {
-          color: mode === 'dark' ? darkModePalette[0].primaryAltText : lightModePalette[0].primaryText,
+          color: mode === 'dark' ? '#000000' : lightModePalette[0].primaryText,
           fontWeight: 500,
           '.MuiFormLabel-asterisk, .MuiInputLabel-asterisk': {
             color: `${colors.error.main} !important`,
@@ -498,7 +498,7 @@ export const CustomThemeOptions = (mode: PaletteMode): Partial<ThemeOptions> => 
           color: mode === 'dark' ? darkModePalette[0].primaryText : lightModePalette[0].primaryText,
           background: 'transparent',
           '& label': {
-            color: mode === 'dark' ? darkModePalette[0].primaryText : lightModePalette[0].primaryText,
+            color: mode === 'dark' ? '#000000' : lightModePalette[0].primaryText,
           },
         },
       },
@@ -511,7 +511,7 @@ export const CustomThemeOptions = (mode: PaletteMode): Partial<ThemeOptions> => 
           outline: 'none',
           background: 'transparent',
           '& label': {
-            color: mode === 'dark' ? darkModePalette[0].primaryAltText : lightModePalette[0].primaryText,
+            color: mode === 'dark' ? '#000000' : lightModePalette[0].primaryText,
           },
           '& :-webkit-autofill': {
             WebkitBoxShadow: `0 0 0 1000px ${
@@ -724,7 +724,7 @@ export const CustomThemeOptions = (mode: PaletteMode): Partial<ThemeOptions> => 
             },
             '&[aria-selected="true"]': {
               backgroundColor: `${colors.primary.main} !important`,
-              color: colors.primary.contrastText,
+              color: colors.primary.light,
               fontWeight: 500,
             },
           },

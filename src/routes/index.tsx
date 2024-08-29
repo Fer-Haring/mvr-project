@@ -9,6 +9,7 @@ import {
   ProfilePage,
 } from '@webapp/pages';
 import AdminAddProductPage from '@webapp/pages/admin/add-new-product';
+import OrderManagementPage from '@webapp/pages/admin/order-management';
 import UserListPage from '@webapp/pages/admin/user-list';
 import ForgotPasswordPage2 from '@webapp/pages/auth/forgot-password';
 import ForgotPasswordNewPassword from '@webapp/pages/auth/forgot-password-new-password';
@@ -109,16 +110,20 @@ const ProjectRoutes: Route[] = [
     component: <AdminDashboardPage />,
   },
   {
-    path: '/admin-dashboard/editar-orden-pendiente/:id?',
-    component: <EditPendingOrdersPage />,
-  },
-  {
     path: '/admin-dashboard/add-new-product',
     component: <AdminAddProductPage />,
   },
   {
     path: '/admin-dashboard/lista-de-usuarios',
     component: <UserListPage />,
+  },
+  {
+    path: '/admin-dashboard/pedidos-pendientes',
+    component: <OrderManagementPage />,
+  },
+  {
+    path: '/admin-dashboard/pedidos-pendientes/:id?',
+    component: <EditPendingOrdersPage />,
   },
 ];
 export { ProjectRoutes };

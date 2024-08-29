@@ -1,6 +1,6 @@
+import SnackbarUtils from '@webapp/components/snackbar';
 import { useUserGoogleStore } from '@webapp/store/auth/google-sessions';
 import { useUserStore } from '@webapp/store/auth/session';
-
 
 export interface UserLogoutPayload {
   token: string;
@@ -40,7 +40,7 @@ export async function userLogout(token: string, tokenType: string): Promise<void
     useUserStore.getState().logOut();
     useUserGoogleStore.getState().logOut();
   } catch (error) {
-    console.log('Logout error:', error);
+    SnackbarUtils.error('Error al cerrar sesión: ' + error);
     throw error;
   }
 }

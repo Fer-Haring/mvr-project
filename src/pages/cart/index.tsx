@@ -60,7 +60,6 @@ export const CartPage: FunctionComponent = () => {
     setStep((prevStep) => prevStep + 1);
   };
 
-  console.log('order', order);
   const handle2NextStep = async () => {
     if (checked && userId) {
       setUpdatingUserLoading(true);

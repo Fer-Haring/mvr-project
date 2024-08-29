@@ -1,9 +1,10 @@
+import SnackbarUtils from '@webapp/components/snackbar';
+
 import { SignupPayload, SignupResponse } from '../../types/user-types';
 
-
 export async function userSignup(payload: SignupPayload, file?: File): Promise<SignupResponse> {
-    const URL =
-      window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
+  const URL =
+    window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
 
   const formData = new FormData();
 
@@ -30,7 +31,7 @@ export async function userSignup(payload: SignupPayload, file?: File): Promise<S
       return response.json();
     })
     .catch((error) => {
-      console.log('error', error);
+      SnackbarUtils.error(error);
       throw error;
     });
 }

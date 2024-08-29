@@ -1,15 +1,20 @@
 import { useMutation } from '@tanstack/react-query';
-import { ChangePasswordPayload, ChangePasswordResponse, changePassword } from '@webapp/sdk/actions/auth/password/change-password';
+import SnackbarUtils from '@webapp/components/snackbar';
+import {
+  ChangePasswordPayload,
+  ChangePasswordResponse,
+  changePassword,
+} from '@webapp/sdk/actions/auth/password/change-password';
 
 export const useChangePasswordMutation = () => {
   return useMutation<ChangePasswordResponse, Error, ChangePasswordPayload, unknown>({
     mutationFn: (payload: ChangePasswordPayload) => changePassword(payload),
     onSuccess: (data) => {
-      console.log('Password changed successfully:', data);
+      SnackbarUtils.success('Password changed successfully');
       // Maneja cualquier lógica adicional después de cambiar la contraseña exitosamente
     },
     onError: (error) => {
-      console.error('Failed to change password:', error);
+      SnackbarUtils.error('Failed to change password:' + error);
     },
   });
 };

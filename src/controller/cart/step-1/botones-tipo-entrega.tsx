@@ -88,6 +88,7 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({
           }}
         >
           <Button
+            size="small"
             onClick={handleSelectDelivery}
             color={deliveryType === 'Delivery' ? 'primary' : 'unselected'}
             aria-label={formatMessage({ id: 'COMMON.SELECTED.DELIVERY.DELIVERY' })}
@@ -95,6 +96,7 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({
             {formatMessage({ id: 'COMMON.SELECTED.DELIVERY.DELIVERY' })}
           </Button>
           <Button
+            size="small"
             onClick={handleSelectLocalPickup}
             color={deliveryType === 'Retiro en local' ? 'primary' : 'unselected'}
             aria-label={formatMessage({ id: 'COMMON.SELECTED.DELIVERY.LOCAL_PICKUP' })}

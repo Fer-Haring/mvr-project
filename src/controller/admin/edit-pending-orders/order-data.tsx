@@ -72,8 +72,6 @@ const OrderData: React.FC<OrderDataProps> = ({ order }) => {
     };
   };
 
-  console.log(order)
-
   const updateQuantity = (productId: string, newQuantity: number) => {
     if (order && order.cart_items) {
       const updatedCartItems = order.cart_items

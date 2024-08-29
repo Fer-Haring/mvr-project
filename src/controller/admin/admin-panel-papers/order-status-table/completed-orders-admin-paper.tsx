@@ -47,7 +47,7 @@ const CompletedOrdersPaper: FunctionComponent<CompletedOrdersPaperProps> = ({ or
       setIsLoading(true);
       try {
         await createBillMutation(props.data.order_id!).then(() => {
-          SnackbarUtils.success('Recibo Descargado con Éxito');
+          SnackbarUtils.success('Recibo Descargado');
         });
       } catch (error) {
         SnackbarUtils.error(`Error Descargando el Recibo: ${error} `);
@@ -127,7 +127,7 @@ const CompletedOrdersPaper: FunctionComponent<CompletedOrdersPaperProps> = ({ or
     },
     [mutateAsync]
   );
-  console.log(rowData);
+
   return (
     <div className="ag-theme-quartz" style={{ height: 300, width: '100%', marginTop: 25 }}>
       <StyledAgGridReact

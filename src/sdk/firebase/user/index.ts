@@ -8,7 +8,6 @@ export const uploadAvatar = async (file: File) => {
   const storageRef = storageReference(storage, 'Avatars/' + userId);
 
   const snapshot = await uploadBytes(storageRef, file);
-  console.log('Uploaded a blob or file!', snapshot.metadata);
 
   // Obtener la URL de descarga
   const downloadURL = await getDownloadURL(storageRef);

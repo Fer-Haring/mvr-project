@@ -1,6 +1,5 @@
 import SnackbarUtils from '@webapp/components/snackbar';
-import { NavigateFunction } from "react-router-dom";
-
+import { NavigateFunction } from 'react-router-dom';
 
 export interface SendNewPasswordPayload {
   email: string;
@@ -25,8 +24,8 @@ export async function sendNewPassword(payload: SendNewPasswordPayload): Promise<
     body: params.toString(),
   };
 
-    const URL =
-      window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
+  const URL =
+    window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
 
   return fetch(`${URL}/identity/recover_password/update_password`, options)
     .then(async (response) => {
@@ -41,7 +40,7 @@ export async function sendNewPassword(payload: SendNewPasswordPayload): Promise<
       return response.json();
     })
     .catch((error) => {
-      console.log('error', error);
+      SnackbarUtils.error(error);
       throw error;
     });
 }

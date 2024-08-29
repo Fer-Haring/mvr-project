@@ -8,7 +8,6 @@ export const uploadTransferReceipt = async (file: File, userId: string): Promise
   const fileRef = storageRef(storage, `TransfersReceipts/${userId}_${timestamp}`);
 
   const snapshot = await uploadBytes(fileRef, file);
-  console.log('Uploaded a file!', snapshot.metadata);
 
   // Obtener la URL de descarga
   const downloadURL = await getDownloadURL(fileRef);

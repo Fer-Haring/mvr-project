@@ -54,7 +54,7 @@ const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders
       field: 'order_id',
       sort: 'desc',
       onCellClicked(event) {
-        navigate(`/admin-dashboard/editar-orden-pendiente/${event.data.order_id}`);
+        navigate(`/admin-dashboard/pedidos-pendientes/${event.data.order_id}`);
         setOrders([event.data]);
       },
       cellClass: 'order-id-cell',

@@ -73,13 +73,16 @@ export const Step1: FunctionComponent<Step1Props> = ({
         isAddressValid &&
         isCityValid &&
         isCurrencyUsedToPayValid &&
-        isCurrencyPayValid
+        isCurrencyPayValid &&
+        order.delivery_cost !== 0 &&
+        user?.delivery_cost !== 0
       );
     } else {
       return isPaymentTypeValid && isDeliveryTypeValid && isCurrencyPayValid;
     }
   };
 
+  console.log(order.delivery_cost, user?.delivery_cost);
   useEffect(() => {
     setIsAddressValid(isValidField(user?.address));
     setIsCityValid(isValidField(user?.city));

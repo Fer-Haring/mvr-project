@@ -1,3 +1,4 @@
+import SnackbarUtils from '@webapp/components/snackbar';
 import { NavigateFunction } from 'react-router-dom';
 
 export interface VerifyCodePayload {
@@ -38,7 +39,7 @@ export async function verifyRecoveryCode(payload: VerifyCodePayload): Promise<Ve
       return response.json();
     })
     .catch((error) => {
-      console.log('error', error);
+      SnackbarUtils.error(error);
       throw error;
     });
 }

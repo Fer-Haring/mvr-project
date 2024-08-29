@@ -74,6 +74,7 @@ const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({
         }}
       >
         <Button
+          size="small"
           onClick={handleSelectDollar}
           color={preferredCurrency === 'USD' ? 'primary' : 'unselected'}
           aria-label={formatMessage({ id: 'CART.PAYMENT.USD' })}
@@ -81,6 +82,7 @@ const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({
           {formatMessage({ id: 'CART.PAYMENT.USD' })}
         </Button>
         <Button
+          size="small"
           onClick={handleSelectArs}
           color={preferredCurrency === 'ARS' ? 'primary' : 'unselected'}
           aria-label={formatMessage({ id: 'CART.PAYMENT.ARS' })}

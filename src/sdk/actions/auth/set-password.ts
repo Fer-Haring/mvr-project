@@ -1,3 +1,5 @@
+import SnackbarUtils from '@webapp/components/snackbar';
+
 // set-password.ts
 export interface SetPasswordPayload {
   email: string;
@@ -16,7 +18,6 @@ export async function setPassword(payload: SetPasswordPayload): Promise<void> {
   const URL =
     window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
 
-
   return fetch(`${URL}/identity/set-password`, options)
     .then((response) => {
       if (!response.ok) {
@@ -30,7 +31,7 @@ export async function setPassword(payload: SetPasswordPayload): Promise<void> {
       return result;
     })
     .catch((error) => {
-      console.log('error', error);
+      SnackbarUtils.error(error);
       throw error;
     });
 }

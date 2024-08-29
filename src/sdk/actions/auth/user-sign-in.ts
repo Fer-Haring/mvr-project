@@ -33,7 +33,7 @@ export async function userSignIn(payload: LoginPayload): Promise<LoginResponse> 
       return loginResponse;
     })
     .catch((error) => {
-      console.log('error', error);
+      SnackbarUtils.error(error);
       throw error;
     });
 }

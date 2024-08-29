@@ -27,11 +27,10 @@ export const EditPendingOrdersPage: React.FC<EditPendingOrdersPageProps> = () =>
     if (!orders[0]) return;
 
     const order = orders[0];
-    console.log(orderId, order);
 
     await saveOrder.mutateAsync({ id: orderId!, order: order as OrderResponse });
     await pendingOrders.refetch();
-    navigate('/admin-dashboard');
+    navigate('/admin-dashboard/pedidos-pendientes');
     resetStore();
   };
 
@@ -61,7 +60,7 @@ export const EditPendingOrdersPage: React.FC<EditPendingOrdersPageProps> = () =>
             sx={{ mt: 5, maxWidth: '20vw' }}
             disabled={saveOrder.isPending}
             onClick={() => {
-              navigate('/admin-dashboard');
+              navigate('/admin-dashboard/pedidos-pendientes');
               resetStore();
             }}
           >

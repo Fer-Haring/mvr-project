@@ -1,3 +1,4 @@
+import SnackbarUtils from '@webapp/components/snackbar';
 import { Product } from '@webapp/sdk/types/products-types';
 
 import { refreshToken } from '../auth/user-refresh-token';
@@ -14,15 +15,6 @@ export async function updateProduct(productId: string, productData: Product, fil
     formData.append('file', file); // Añade el archivo si existe
   }
 
-  // Log the FormData content
-  formData.forEach((value, key) => {
-    if (value instanceof File) {
-      console.log(`FormData: ${key} = File(${value.name}, ${value.size} bytes)`);
-    } else {
-      console.log(`FormData: ${key} = ${value}`);
-    }
-  });
-
   const options = {
     method: 'PUT',
     headers: {
@@ -33,15 +25,11 @@ export async function updateProduct(productId: string, productData: Product, fil
 
   let response;
   try {
-    console.log('Sending request to update product...');
     response = await fetch(`${URL}/products/${productId}`, options);
-    console.log('Response received:', response);
   } catch (networkError) {
     if (networkError instanceof Error) {
-      console.error('Network error:', networkError.message);
       throw new Error('Network error: ' + networkError.message);
     } else {
-      console.error('Unknown network error:', networkError);
       throw new Error('An unknown network error occurred');
     }
   }
@@ -49,18 +37,14 @@ export async function updateProduct(productId: string, productData: Product, fil
   if (response.status === 401) {
     // Si el token ha expirado, intenta refrescarlo
     try {
-      console.log('Token expired, refreshing token...');
       accessToken = await refreshToken();
       localStorage.setItem('access_token', accessToken);
       options.headers['Authorization'] = `Bearer ${accessToken}`;
       response = await fetch(`${URL}/products/${productId}`, options);
-      console.log('Response after refreshing token:', response);
     } catch (refreshError) {
       if (refreshError instanceof Error) {
-        console.error('Failed to refresh token:', refreshError.message);
         throw new Error('Failed to refresh token: ' + refreshError.message);
       } else {
-        console.error('Unknown error refreshing token:', refreshError);
         throw new Error('Unknown error refreshing token');
       }
     }
@@ -84,6 +68,6 @@ export async function updateProduct(productId: string, productData: Product, fil
   }
 
   const product = await response.json();
-  console.log('Product updated successfully:', product);
+  SnackbarUtils.success('Producto actualizado correctamente: ' + product.name);
   return product;
 }

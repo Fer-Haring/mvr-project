@@ -9,7 +9,6 @@ import { useMessageStore } from '@webapp/store/admin/message-store';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-
 interface PaymentTypeButtonsProps {
   className?: string;
   userData: User;
@@ -43,9 +42,7 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
     if (onValidChange) {
       onValidChange(!!userData?.payment_method);
     }
-  }, [userData, ]);
-
-    console.log('Boton Pago', order);
+  }, [userData]);
 
   return (
     <Stack gap={2} sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
@@ -69,6 +66,7 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
         }}
       >
         <Button
+          size="small"
           onClick={() => selectPaymentType('Efectivo')}
           color={selectedPaymentType === 'Efectivo' ? 'primary' : 'unselected'}
           aria-label={formatMessage({ id: 'COMMON.SELECTED.PAYMENT.CASH' })}
@@ -76,6 +74,7 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
           {formatMessage({ id: 'COMMON.SELECTED.PAYMENT.CASH' })}
         </Button>
         <Button
+          size="small"
           onClick={() => selectPaymentType('Tarjeta de crédito')}
           color={selectedPaymentType === 'Tarjeta de crédito' ? 'primary' : 'unselected'}
           aria-label={formatMessage({ id: 'COMMON.SELECTED.PAYMENT.CREDIT_CARD' })}
@@ -83,6 +82,7 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
           {formatMessage({ id: 'COMMON.SELECTED.PAYMENT.CREDIT_CARD' })}
         </Button>
         <Button
+          size="small"
           onClick={() => selectPaymentType('Transferencia bancaria')}
           color={selectedPaymentType === 'Transferencia bancaria' ? 'primary' : 'unselected'}
           aria-label={formatMessage({ id: 'COMMON.SELECTED.PAYMENT.BANK_TRANSFER' })}
@@ -90,13 +90,7 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
           {formatMessage({ id: 'COMMON.SELECTED.PAYMENT.BANK_TRANSFER' })}
         </Button>
         <Button
-          onClick={() => selectPaymentType('Pago contra entrega')}
-          color={selectedPaymentType === 'Pago contra entrega' ? 'primary' : 'unselected'}
-          aria-label={formatMessage({ id: 'COMMON.SELECTED.PAYMENT.DELIVERY_PAY' })}
-        >
-          {formatMessage({ id: 'COMMON.SELECTED.PAYMENT.DELIVERY_PAY' })}
-        </Button>
-        <Button
+          size="small"
           onClick={() => selectPaymentType('Pago con Crypto')}
           color={selectedPaymentType === 'Pago con Crypto' ? 'primary' : 'unselected'}
           aria-label={formatMessage({ id: 'COMMON.SELECTED.PAYMENT.CRYPTO' })}

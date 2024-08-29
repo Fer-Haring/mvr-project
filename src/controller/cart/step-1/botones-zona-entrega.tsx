@@ -37,6 +37,21 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
     } else if (selectedDelivery === 'LEJOS') {
       deliveryCost = 4500;
     }
+
+    // Actualizar el costo de entrega si es necesario
+    if (userData.delivery_cost !== deliveryCost) {
+      const updatedUserData = {
+        ...userData,
+        delivery_cost: deliveryCost,
+      };
+      setUser(updatedUserData);
+      setUserData(updatedUserData);
+      setDeliverValue(deliveryCost);
+      setOrder({
+        ...order,
+        user: updatedUserData,
+      });
+    }
   }, [userData]);
 
   const handleOnChange = async (selectedDelivery: string) => {
@@ -110,18 +125,20 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
           }}
         >
           <Button
+            size="small"
             onClick={() => handleOnChange('BSSO')}
             color={userData.delivery_zone === 'BSSO' ? 'primary' : 'unselected'}
             aria-label={formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.1' })}
-            sx={{ fontSize: isMobile ? '2vw' : '1vw' }}
+            sx={{ fontSize: isMobile ? '14px' : '1vw' }}
           >
             {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.1' })}
           </Button>
           <Button
+            size="small"
             onClick={() => handleOnChange('CASCO')}
             color={userData.delivery_zone === 'CASCO' ? 'primary' : 'unselected'}
             aria-label={formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.2' })}
-            sx={{ fontSize: isMobile ? '2vw' : '1vw' }}
+            sx={{ fontSize: isMobile ? '14px' : '1vw' }}
           >
             {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.2' })}
           </Button>
@@ -138,18 +155,20 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
           }}
         >
           <Button
+            size="small"
             onClick={() => handleOnChange('OUTCASCO')}
             color={userData.delivery_zone === 'OUTCASCO' ? 'primary' : 'unselected'}
             aria-label={formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.3' })}
-            sx={{ fontSize: isMobile ? '2vw' : '1vw' }}
+            sx={{ fontSize: isMobile ? '14px' : '1vw' }}
           >
             {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.3' })}
           </Button>
           <Button
+            size="small"
             onClick={() => handleOnChange('LEJOS')}
             color={userData.delivery_zone === 'LEJOS' ? 'primary' : 'unselected'}
             aria-label={formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.4' })}
-            sx={{ fontSize: isMobile ? '2vw' : '1vw' }}
+            sx={{ fontSize: isMobile ? '14px' : '1vw' }}
           >
             {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.4' })}
           </Button>

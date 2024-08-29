@@ -1,3 +1,5 @@
+import SnackbarUtils from '@webapp/components/snackbar';
+
 export interface ChangePasswordPayload {
   current_password: string;
   new_password: string;
@@ -16,13 +18,13 @@ export async function changePassword(payload: ChangePasswordPayload): Promise<Ch
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+      Authorization: `Bearer ${localStorage.getItem('access_token')}`,
     },
     body: params.toString(),
   };
 
-    const URL =
-      window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
+  const URL =
+    window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
 
   return fetch(`${URL}/identity/change_password`, options)
     .then(async (response) => {
@@ -33,7 +35,7 @@ export async function changePassword(payload: ChangePasswordPayload): Promise<Ch
       return response.json();
     })
     .catch((error) => {
-      console.log('error', error);
+      SnackbarUtils.error(error);
       throw error;
     });
 }

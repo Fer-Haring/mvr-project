@@ -1,6 +1,7 @@
 import { Typography, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@webapp/components/button';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
 import React from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +12,7 @@ const ExtraAccesAdminPaperPaper: React.FunctionComponent = () => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   return (
     <CustomAdminPaper>
@@ -38,7 +40,7 @@ const ExtraAccesAdminPaperPaper: React.FunctionComponent = () => {
         <Box
           sx={{
             display: 'flex',
-            flexDirection: 'row',
+            flexDirection: isMobile ? 'column' : 'row',
             gap: 2,
             justifyContent: 'center',
             alignItems: 'center',
@@ -50,6 +52,13 @@ const ExtraAccesAdminPaperPaper: React.FunctionComponent = () => {
             onClick={() => navigate('/admin-dashboard/lista-de-usuarios')}
           >
             {formatMessage({ id: 'ADMIN.EXTRA.BUTTON.PAPER.LIST.USERS' })}
+          </Button>
+          <Button
+            color="primary"
+            sx={{ width: '100%', fontSize: 14 }}
+            onClick={() => navigate('/admin-dashboard/pedidos-pendientes')}
+          >
+            {formatMessage({ id: 'ADMIN.EXTRA.BUTTON.PAPER.ORDER.MANAGEMENT' })}
           </Button>
           {/* <Button color="primary" sx={{ width: '100%' }}>
             {formatMessage({ id: 'ADMIN.EXTRA.BUTTON.PAPER.LIST.USERS' })}
