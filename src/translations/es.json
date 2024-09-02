@@ -424,6 +424,26 @@
   "ADD.NEWPRODUCT.LABEL.PROMOPRICE": "Precio promocional",
   "CART.PAYMENT.CHECKOUT" : "Verificar Información de Compra",
 
+
+
+
+"_COMMENT2": "____________________________CART STEP 1 PAGE_______________________________________",
+
+"CART.PAYMENT.SUMMARY" : "Resumen del Pedido",
+"CART.PAYMENT.METHOD" : "Metodo de Pago",
+"CART.DELIVERY.TYPE" : "Tipo de Entrega",
+"CART.CURRENCY" : "Moneda",
+"CART.DELIVERY.ZONE" : "Zona de Entrega",
+"CART.DELIVERY.ADDRESS" : "Dirección de Entrega",
+"CART.DELIVERY.CITY" : "Ciudad de Entrega",
+
+
+
+
+
+
+
+
   "CART.HEADER.NAME" : "Nombre",
   "CART.HEADER.QUANTITY" : "Cantidad",
   "CART.HEADER.PRICE" : "Precio Unitario",

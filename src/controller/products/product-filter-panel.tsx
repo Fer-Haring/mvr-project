@@ -18,12 +18,12 @@ import { AutocompleteOption } from '@webapp/components/form/autocomplete';
 import InputField from '@webapp/components/form/input';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { CustomAutoComplete, CustomSelect, FiltersHolder, Slider } from '@webapp/pages/products/products';
-import React from 'react';
+import { useSelectedProductFilterStore } from '@webapp/store/products/selected-product-filter';
+import React, { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 
 interface FilterOptionsState {
   inputValue: string;
-  // cualquier otra propiedad que el estado pueda tener
 }
 
 interface ProductFilterPanelProps {
@@ -45,6 +45,7 @@ const ProductFilterPanel: React.FunctionComponent<ProductFilterPanelProps> = ({
   searchTerms,
   setSearchTerms,
   category,
+  setCategory,
   categoriesOptions,
   handleCategoryChange,
   sortCriteria,
@@ -55,6 +56,23 @@ const ProductFilterPanel: React.FunctionComponent<ProductFilterPanelProps> = ({
   const { formatMessage } = useIntl();
   const isMobile = useIsMobile();
   const theme = useTheme();
+  const { selectedProductFilter, setSelectedProductFilter } = useSelectedProductFilterStore();
+
+  useEffect(() => {
+    if (category) {
+      setSelectedProductFilter(category.label);
+    }
+  }, [category, setSelectedProductFilter]);
+
+  useEffect(() => {
+    if (selectedProductFilter) {
+      const selectedCategory = categoriesOptions.find((option) => option.label === selectedProductFilter);
+      if (selectedCategory) {
+        setCategory(selectedCategory);
+      }
+    }
+  }, [selectedProductFilter, categoriesOptions, setCategory]);
+
   return (
     <FiltersHolder isMobile={isMobile}>
       <FormControl fullWidth>
@@ -84,7 +102,10 @@ const ProductFilterPanel: React.FunctionComponent<ProductFilterPanelProps> = ({
             />
           )}
           freeSolo
-          onChange={(e, newValue) => handleCategoryChange(e, newValue as AutocompleteOption)}
+          onChange={(e, newValue) => {
+            handleCategoryChange(e, newValue as AutocompleteOption);
+            setSelectedProductFilter((newValue as AutocompleteOption).label);
+          }}
           PopperComponent={({ ...props }) => <CustomPopper {...props} />}
           noOptionsText={formatMessage({ id: 'FORM.NO.OPTION' })}
           forcePopupIcon

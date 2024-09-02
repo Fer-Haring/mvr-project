@@ -7,7 +7,6 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import BackgroundVideo from '@webapp/assets/videos/video-login.mp4';
-import AlternateLogin from '@webapp/components/auth/alternate-login';
 import FormWrapper from '@webapp/components/auth/form-wrapper';
 import Button from '@webapp/components/button';
 import InputField from '@webapp/components/form/input';

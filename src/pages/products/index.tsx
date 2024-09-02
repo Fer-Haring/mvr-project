@@ -13,6 +13,7 @@ import { Product } from '@webapp/sdk/types/products-types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';
 import { useSelectedMainCategoryStore } from '@webapp/store/products/selected-main-category';
+import { useSelectedProductFilterStore } from '@webapp/store/products/selected-product-filter';
 import { motion } from 'framer-motion';
 import React, { FunctionComponent, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -34,9 +35,10 @@ export const ProductsPage: FunctionComponent = () => {
   const { productList, setProductList } = useProductsListData();
   const { setProduct } = useSingleProduct();
   const { selectedMainCategory, setSelectedMainCategory } = useSelectedMainCategoryStore();
+  const { selectedProductFilter, setSelectedProductFilter } = useSelectedProductFilterStore();
 
   const [sortCriteria, setSortCriteria] = useState<string>('all');
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(selectedProductFilter);
   const [searchTerms, setSearchTerms] = useState<string>('');
   const [categoriesOptions, setCategoriesOptions] = useState<AutocompleteOption[]>([]);
   const [category, setCategory] = useState<AutocompleteOption | null>(null);
@@ -110,6 +112,14 @@ export const ProductsPage: FunctionComponent = () => {
     navigate(`/productos/${product.id}`);
   };
 
+  const handleBackButton = () => {
+    setSelectedMainCategory('');
+    setSelectedCategory('');
+    setSearchTerms('');
+    setSelectedProductFilter('');
+    setCategory(null);
+  };
+
   const filteredAndSortedProducts = useMemo(() => {
     let result = productList;
 
@@ -174,7 +184,7 @@ export const ProductsPage: FunctionComponent = () => {
               }}
             >
               <IconButton
-                onClick={() => setSelectedMainCategory('')}
+                onClick={handleBackButton}
                 sx={{
                   color: theme.palette.common.black,
                   zIndex: 1,

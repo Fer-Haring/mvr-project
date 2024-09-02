@@ -2,17 +2,20 @@ import { Box, CircularProgress, Typography, alpha, styled, useTheme } from '@mui
 import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
 import { useUpdateProduct } from '@webapp/sdk/mutations/products/update-product-mutation';
 import { Product } from '@webapp/sdk/types/products-types';
+import { useAgGridColumnSortingStore } from '@webapp/store/admin/ag-grid-column-sort';
+import { useAgGridFilterStore } from '@webapp/store/admin/ag-grid-filters';
 import useBulkEditStore from '@webapp/store/admin/bulk-edit-store';
 import {
   CellEditingStoppedEvent,
+  ColDef,
+  FilterChangedEvent,
   GetRowIdParams,
   PaginationNumberFormatterParams,
   SelectionChangedEvent,
 } from 'ag-grid-community';
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { AgGridReact } from 'ag-grid-react';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { ref } from 'firebase/database';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
@@ -26,13 +29,17 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { formatMessage } = useIntl();
+  const gridRef = useRef<AgGridReact>(null);
+  const isUserDragging = useRef(false);
   const [rowData, setRowData] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
-  const { setProducts, setSelectedProducts, products } = useBulkEditStore();
+  const { setProducts, setSelectedProducts } = useBulkEditStore();
+  const { columnOrder, setColumnOrder } = useAgGridColumnSortingStore();
+  const { filters, setFilter } = useAgGridFilterStore();
   const productsList = useProductListQuery(1, 500);
   const { mutate } = useUpdateProduct();
-  const columns = React.useMemo(() => columnDefs(navigate), [navigate]);
   const [selectedRowProducts, setSelectedRowProducts] = useState<Product[]>([]);
+  const isFiltering = useRef(false);
 
   useEffect(() => {
     setLoading(true);
@@ -45,6 +52,62 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
     }
     setLoading(false);
   }, [productsList.data?.products, setProducts]);
+
+  useEffect(() => {
+    if (gridRef.current && gridRef.current.api) {
+      const gridApi = gridRef.current.api;
+
+      // Escuchar el evento de movimiento de columnas
+      const onColumnMoved = () => {
+        const allColumns = gridApi.getColumns();
+        const columnOrder = allColumns?.map((col) => col.getColId());
+        setColumnOrder(columnOrder || []);
+      };
+
+      gridApi.addEventListener('columnMoved', onColumnMoved);
+
+      return () => {
+        gridApi.removeEventListener('columnMoved', onColumnMoved);
+      };
+    }
+  }, [gridRef, setColumnOrder]);
+
+  useEffect(() => {
+    if (gridRef.current && gridRef.current.api && columnOrder && columnOrder.length > 0) {
+      const columnApi = gridRef.current.api;
+
+      columnApi.applyColumnState({
+        state: columnOrder.map((colId) => ({
+          colId,
+          order: columnOrder.indexOf(colId),
+        })),
+        applyOrder: true,
+      });
+    }
+  }, [gridRef.current?.api, columnOrder]);
+
+  useEffect(() => {
+    if (gridRef.current && filters && rowData.length > 0 && !loading && !isFiltering.current) {
+      isFiltering.current = true;
+      const gridApi = gridRef.current.api;
+
+      if (gridApi) {
+        gridApi.setFilterModel(filters);
+        gridApi.onFilterChanged();
+      }
+
+      isFiltering.current = false;
+    }
+  }, [filters, rowData, loading]);
+
+  const onFilterChanged = (params: FilterChangedEvent) => {
+    const appliedFilters = params.api.getFilterModel();
+    Object.keys(appliedFilters).forEach((colId) => {
+      if (JSON.stringify(filters[colId]) !== JSON.stringify(appliedFilters[colId])) {
+        setFilter(colId, appliedFilters[colId]);
+      }
+    });
+  };
 
   const paginationPageSizeSelector = useMemo<number[] | boolean>(() => {
     return [200, 500, 1000];
@@ -99,6 +162,43 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
     [setSelectedProducts]
   );
 
+  const onGridReady = (params: any) => {
+    const gridApi = params.api;
+
+    const onColumnMoved = () => {
+      const allColumns = gridApi.getColumns();
+      const columnOrder = allColumns.map((col: any) => col.getColId());
+      setColumnOrder(columnOrder);
+    };
+
+    gridApi.addEventListener('columnMoved', onColumnMoved);
+
+    // Limpia el listener cuando el componente se desmonte
+    return () => {
+      gridApi.removeEventListener('columnMoved', onColumnMoved);
+    };
+  };
+
+  const onColumnMoved = useCallback(
+    (params: any) => {
+      const columnState = params.columnApi.getColumnState();
+      const columnOrder = columnState.map((colState: any) => colState.colId);
+      setColumnOrder(columnOrder);
+    },
+    [setColumnOrder]
+  );
+
+  const columns = useMemo(() => {
+    const originalColumns = columnDefs(navigate);
+
+    if (columnOrder && columnOrder.length > 0) {
+      return columnOrder
+        .map((colId) => originalColumns.find((col) => col.field === colId))
+        .filter((col): col is ColDef<unknown, any> => col !== undefined);
+    }
+
+    return originalColumns;
+  }, [navigate, columnOrder]);
   return (
     <div>
       <Typography variant="h5" sx={{ color: theme.palette.grey[800], fontWeight: 'bold', textAlign: 'center', mb: 5 }}>
@@ -112,6 +212,7 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
           </Box>
         ) : (
           <StyledAgGridReact
+            ref={gridRef}
             rowData={rowData}
             columnDefs={columns}
             pagination={true}
@@ -126,6 +227,9 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
             paginationPageSizeSelector={paginationPageSizeSelector}
             paginationNumberFormatter={paginationNumberFormatter}
             suppressServerSideFullWidthLoadingRow={true}
+            onFilterChanged={onFilterChanged}
+            onGridReady={onGridReady}
+            onColumnMoved={onColumnMoved}
             gridOptions={{
               rowSelection: 'multiple',
               rowMultiSelectWithClick: false,
