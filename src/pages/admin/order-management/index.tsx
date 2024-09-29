@@ -6,42 +6,55 @@ import Button from '@webapp/components/button';
 import ContentWrapper from '@webapp/components/content-wrapper';
 import CompletedOrdersPaper from '@webapp/controller/admin/admin-panel-papers/order-status-table/completed-orders-admin-paper';
 import PendingOrdersPaper from '@webapp/controller/admin/admin-panel-papers/order-status-table/pending-orders-admin-paper';
+import CancelledOrdersPaper from '@webapp/controller/admin/admin-panel-papers/order-status-table/cancelled-orders-admin-paper';
 import { useGetAllOrders } from '@webapp/sdk/mutations/orders/get-all-orders-query';
-import { useGetPendingOrders } from '@webapp/sdk/mutations/orders/get-pending-orders-query';
-import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
-import { OrderResponse } from '@webapp/sdk/types/orders-types';
 import { useProductsListData } from '@webapp/store/products/products-list';
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
 
 const OrderManagementPage: React.FunctionComponent = () => {
   const theme = useTheme();
   const { formatMessage } = useIntl();
-  const pendingOrders = useGetPendingOrders();
-  const getCompletedOrders = useGetAllOrders();
-  const completedOrders = getCompletedOrders.data
-    ? getCompletedOrders.data?.filter((order) => order.status === 'completed' || order.status === 'Completed')
-    : [];
+  const { data: allOrdersData = [], isLoading, error } = useGetAllOrders();
   const { setProductList } = useProductsListData();
   const productListArray = useProductListQuery(1, 500);
-  const [activeTable, setActiveTable] = useState<'pending' | 'completed'>('pending');
-  const [pendingOrdersData, setPendingOrdersData] = useState<OrderResponse[]>([]);
+  const [activeTable, setActiveTable] = useState<'pending' | 'canceled' | 'completed'>('pending');
 
   useEffect(() => {
     setProductList(productListArray.data?.products || []);
-    setPendingOrdersData(pendingOrders.data || []);
-  }, [productListArray.data?.products, setProductList, pendingOrders.data]);
+  }, [setProductList]);
 
-  const handleTableChange = (table: 'pending' | 'completed') => {
+  const pendingOrders = allOrdersData.filter((order) => order.status?.toLowerCase() === 'pending');
+  const completedOrders = allOrdersData.filter((order) => order.status?.toLowerCase() === 'completed');
+  const cancelledOrders = allOrdersData.filter((order) => order.status?.toLowerCase() === 'canceled');
+
+  const handleTableChange = (table: 'pending' | 'canceled' | 'completed') => {
     setActiveTable(table);
   };
 
   const renderOrderTable = () => {
-    if (activeTable === 'pending') {
-      if (pendingOrdersData.length !== 0) {
-        return <PendingOrdersPaper orders={pendingOrdersData} />;
-      } else {
-        return (
+    if (isLoading) {
+      return (
+        <Typography variant="body1" sx={{ textAlign: 'center', mt: 4 }}>
+          {formatMessage({ id: 'ADMIN.ORDERS.LOADING' })}
+        </Typography>
+      );
+    }
+
+    if (error) {
+      return (
+        <Typography variant="body1" sx={{ textAlign: 'center', mt: 4, color: theme.palette.error.main }}>
+          {formatMessage({ id: 'ADMIN.ORDERS.ERROR' })}
+        </Typography>
+      );
+    }
+
+    switch (activeTable) {
+      case 'pending':
+        return pendingOrders.length > 0 ? (
+          <PendingOrdersPaper orders={pendingOrders} />
+        ) : (
           <Typography
             variant="body1"
             sx={{ color: theme.palette.grey[800], fontWeight: 'bold', textAlign: 'center', mt: 4 }}
@@ -49,32 +62,54 @@ const OrderManagementPage: React.FunctionComponent = () => {
             {formatMessage({ id: 'ADMIN.ORDERS.NO_PENDING_ORDERS' })}
           </Typography>
         );
-      }
-    } else {
-      return <CompletedOrdersPaper orders={completedOrders} />;
+      case 'completed':
+        return completedOrders.length > 0 ? (
+          <CompletedOrdersPaper orders={completedOrders} />
+        ) : (
+          <Typography
+            variant="body1"
+            sx={{ color: theme.palette.grey[800], fontWeight: 'bold', textAlign: 'center', mt: 4 }}
+          >
+            {formatMessage({ id: 'ADMIN.ORDERS.NO_COMPLETED_ORDERS' })}
+          </Typography>
+        );
+      case 'canceled':
+        return cancelledOrders.length > 0 ? (
+          <CancelledOrdersPaper orders={cancelledOrders} />
+        ) : (
+          <Typography
+            variant="body1"
+            sx={{ color: theme.palette.grey[800], fontWeight: 'bold', textAlign: 'center', mt: 4 }}
+          >
+            {formatMessage({ id: 'ADMIN.ORDERS.NO_CANCELLED_ORDERS' })}
+          </Typography>
+        );
+      default:
+        return null;
     }
   };
+
+  const tableOptions: { labelId: string; value: 'pending' | 'canceled' | 'completed' }[] = [
+    { labelId: 'ADMIN.BUTTON.SELECTOR.TABLE.PENDING', value: 'pending' },
+    { labelId: 'ADMIN.BUTTON.SELECTOR.TABLE.CANCELLED', value: 'canceled' },
+    { labelId: 'ADMIN.BUTTON.SELECTOR.TABLE.COMPLETED', value: 'completed' },
+  ];
 
   return (
     <ContentWrapper>
       <Paper sx={{ p: 2, width: '100%', mt: 2, backgroundColor: alpha(theme.palette.common.white, 0.7) }}>
         <ButtonGroup variant="contained" aria-label="order table selection">
-          <Button
-            size="small"
-            color={activeTable === 'pending' ? 'primary' : 'unselected'}
-            onClick={() => handleTableChange('pending')}
-            variant={activeTable === 'pending' ? 'contained' : 'outlined'}
-          >
-            {formatMessage({ id: 'ADMIN.BUTTON.SELECTOR.TABLE.PENDING' })}
-          </Button>
-          <Button
-            size="small"
-            color={activeTable === 'completed' ? 'primary' : 'unselected'}
-            onClick={() => handleTableChange('completed')}
-            variant={activeTable === 'completed' ? 'contained' : 'outlined'}
-          >
-            {formatMessage({ id: 'ADMIN.BUTTON.SELECTOR.TABLE.COMPLETED' })}
-          </Button>
+          {tableOptions.map((option) => (
+            <Button
+              key={option.value}
+              size="small"
+              color={activeTable === option.value ? 'primary' : 'unselected'}
+              onClick={() => handleTableChange(option.value)}
+              variant={activeTable === option.value ? 'contained' : 'outlined'}
+            >
+              {formatMessage({ id: option.labelId })}
+            </Button>
+          ))}
         </ButtonGroup>
         <Typography
           variant="body1"
@@ -82,7 +117,7 @@ const OrderManagementPage: React.FunctionComponent = () => {
         >
           {formatMessage({ id: 'ADMIN.ORDERS.CONTROL' })}
         </Typography>
-        {activeTable === 'pending' ? renderOrderTable() : <CompletedOrdersPaper orders={completedOrders} />}
+        {renderOrderTable()}
       </Paper>
     </ContentWrapper>
   );
