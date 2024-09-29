@@ -1,27 +1,26 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
+
 
 export interface DollarValueData {
-  value: number;
+  value: string;
 }
 
 
 type DollarValue = {
   dollarValue: DollarValueData;
-  setDollarValue: (dollarValue: number) => void;
+  setDollarValue: (dollarValue: string) => void;
 };
 
 export const useDollarValue = create(
   persist<DollarValue>(
     (set) => ({
-      dollarValue: { value: 0 },
+      dollarValue: { value: '' },
       setDollarValue: (dollarValue) => set({ dollarValue: { value: dollarValue } }),
     }),
     {
       name: 'dollarValue',
-      getStorage: () => localStorage,
+      storage: createJSONStorage(() => localStorage)
     }
   )
 );
-
-

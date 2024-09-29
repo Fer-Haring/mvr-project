@@ -1,64 +1,46 @@
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import { styled, useTheme } from '@mui/material';
+import { CircularProgress, styled, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import VapeHomeImage from '@webapp/assets/images/home/liquid-home.png';
 import Button from '@webapp/components/button';
 import ContentWrapper from '@webapp/components/content-wrapper';
-import ProductCard from '@webapp/components/product-card';
-import { getCompletedOrders, getDollarValue } from '@webapp/sdk/firebase/admin';
-import { getProducts } from '@webapp/sdk/firebase/products';
-import { getAllUsers } from '@webapp/sdk/firebase/user';
-import { CompletedOrder, Products, User } from '@webapp/sdk/users-types';
+import ProductCardV2 from '@webapp/components/product-card-V2';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
+import { useGetDollarValue } from '@webapp/sdk/mutations/admin/get-dollar-value-query';
+import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
 import { useAdminDataStore } from '@webapp/store/admin/admin-data';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';
 import { motion } from 'framer-motion';
-import { FunctionComponent, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
-export const HomePage: FunctionComponent = () => {
+export const HomePage: React.FunctionComponent = () => {
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
   const theme = useTheme();
+  const isMobile = useIsMobile();
   const { setDollarValue } = useDollarValue();
   const { setProduct } = useSingleProduct();
-  const { setUsers, setProducts, setOrders } = useAdminDataStore();
+  const { setUsers, setOrders } = useAdminDataStore();
   const { productList, setProductList } = useProductsListData();
+  const productListArray = useProductListQuery(1, 500);
   const products = Object.values(productList);
-  const destacatedProducts = products.filter((product) => product.destacated === 'Si');
+  const featuredProducts = products.filter((product) => product.featured === true);
+  const getDollar = useGetDollarValue();
 
   useEffect(() => {
-    getProducts().then((products: Products[]) => {
-      if (products) {
-        setProductList(products);
-        setProducts(products);
-      }
-    });
-    getAllUsers().then((users: User[]) => {
-      if (users) {
-        setUsers(users);
-      }
-    });
-    getCompletedOrders().then((orders: CompletedOrder[]) => {
-      if (orders) {
-        setOrders(orders);
-      }
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    setProductList(productListArray.data?.products || []);
+  }, [productListArray.data?.products, setOrders, setProductList, setUsers]);
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      const dollarVal = await getDollarValue();
-      setDollarValue(dollarVal?.value);
-    };
-
-    fetchProduct();
-  }, [setDollarValue]);
+    if (getDollar.isSuccess) {
+      setDollarValue(getDollar.data?.venta || 0);
+    }
+  }, [getDollar.data?.venta, getDollar.isSuccess, setDollarValue]);
 
   return (
     <ContentWrapper>
@@ -69,14 +51,16 @@ export const HomePage: FunctionComponent = () => {
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'space-between',
+            alignItems: 'center',
           }}
         >
-          <Stack direction={'column'} gap={2} height={'45vh'}>
+          <Stack direction={'column'} gap={2} height={isMobile ? '30vh' : '40vh'}>
             <Typography
               variant="h1"
               sx={{
                 fontFamily: 'WordMean',
-                fontSize: '65px',
+                fontSize: isMobile ? '8vw' : '5vw',
+                color: theme.palette.common.white,
               }}
             >
               {formatMessage({ id: 'WELCOME.HOME.MESSAGE' })}
@@ -86,7 +70,9 @@ export const HomePage: FunctionComponent = () => {
               sx={{
                 textWrap: 'wrap',
                 textOverflow: 'ellipsis',
-                width: '50%',
+                width: isMobile ? '80vw' : '50%',
+                fontSize: isMobile ? '4vw' : '2vw',
+                color: theme.palette.common.white,
               }}
             >
               {formatMessage({ id: 'WELCOME.HOME.DESCRIPTION' })}
@@ -97,12 +83,10 @@ export const HomePage: FunctionComponent = () => {
               color="primary"
               onClick={() => navigate('/productos')}
               sx={{
-                width: '150px',
+                width: isMobile ? '75vw' : '60vw',
                 marginTop: theme.spacing(4),
                 marginLeft: theme.spacing(4),
-                ':hover': {
-                  color: theme.palette.grey[200],
-                },
+                fontSize: 16,
               }}
             >
               {formatMessage({ id: 'WELCOME.HOME.BUTTON' })}
@@ -124,62 +108,58 @@ export const HomePage: FunctionComponent = () => {
             sx={{
               marginBottom: theme.spacing(4),
               textDecoration: 'underline',
-              fontSize: 36,
+              fontSize: isMobile ? '5vw' : 36,
               fontFamily: 'WordMean',
               letterSpacing: 4,
+              color: theme.palette.common.white,
             }}
           >
-            {formatMessage({ id: 'WELCOME.HOME.DESTACATED.PRODUCTS.TITLE' })}
+            {formatMessage({ id: 'WELCOME.HOME.FEATURED.PRODUCTS.TITLE' })}
           </Typography>
-          <StockWrapper key={destacatedProducts.map((product) => product.productId).join('')}>
-            {destacatedProducts.map((product, id) => (
-              <ProductCard
-                key={id}
-                id={id}
-                products={[product]}
-                image={product.productImage || ''}
-                name={product.productName}
-                description={product.description}
-                price={product.salePrice}
-                currency={product.priceCurrency}
-                onClick={() => {
-                  setProduct(product);
-                  navigate(`/productos/${product.productId}`);
-                }}
-              />
-            ))}
-          </StockWrapper>
+          {productListArray.isLoading ? (
+            <CircularProgress
+              size={60}
+              sx={{
+                color: theme.palette.primary.main,
+              }}
+            />
+          ) : (
+            <StockWrapper key={featuredProducts.map((product) => product.id).join('')} isMobile={isMobile}>
+              {featuredProducts.map((product, id) =>
+                product.actual_stock > 0 ? (
+                  <ProductCardV2
+                    key={product.id}
+                    id={id}
+                    product={product}
+                    image={product.product_image || ''}
+                    name={product.product_name}
+                    description={product.description}
+                    price={product.sale_price}
+                    currency={product.price_currency}
+                    onClick={() => {
+                      setProduct(product);
+                      navigate(`/productos/${product.id}`);
+                    }}
+                  />
+                ) : null
+              )}
+            </StockWrapper>
+          )}
         </Box>
       </Stack>
-      <Box
-        sx={{
-          position: 'absolute',
-          right: 10,
-          zIndex: 0,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <img
-          src={VapeHomeImage}
-          alt="Vape Home"
-          style={{ width: '100%', height: '100%', filter: 'drop-shadow(20px 10px 24px #000000)' }}
-        />
-      </Box>
     </ContentWrapper>
   );
 };
 
-const StockWrapper = styled(motion.ul)(({ theme }) => ({
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(min(12.75rem, 100%), 1fr))',
+export const StockWrapper = styled(motion.ul)<{
+  isMobile: boolean;
+}>(({ theme, isMobile }) => ({
+  display: isMobile ? 'flex' : 'grid',
+  gridTemplateColumns: 'repeat(3, 1fr)',
+  gridTemplateRows: 'repeat(1, 1fr)',
   gridGap: theme.spacing(4),
+  flexDirection: isMobile ? 'column' : 'row',
   width: '100%',
-  listStyle: 'none',
   padding: 0,
   margin: 0,
-  '& > li': {
-    width: '100%',
-  },
 }));

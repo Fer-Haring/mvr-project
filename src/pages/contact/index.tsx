@@ -1,133 +1,107 @@
-import { Icon } from '@iconify/react';
-import { Box, Divider } from '@mui/material';
+// import { Icon } from '@iconify/react';
+import { Box } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { alpha, styled, useTheme } from '@mui/material/styles';
-import mapImage from '@webapp/assets/images/map.png';
+import newLogo from '@webapp/assets/images/new_logo.png';
 import ContentWrapper from '@webapp/components/content-wrapper';
+import ContactInfo from '@webapp/controller/contact/contact-info';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
-
-import MailForm from './mail-form';
-
-// import { useNavigate } from 'react-router-dom';
 
 export const ContactPage: FunctionComponent = () => {
   const theme = useTheme();
   const { formatMessage } = useIntl();
-
-  // const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   return (
     <ContentWrapper>
-      <Paper
-        sx={{
-          p: 2,
-          backgroundColor: alpha(theme.palette.common.white, 0.6),
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+      <StyledPaper>
         <Typography
           variant="h1"
           gutterBottom
-          sx={{ fontFamily: 'WordMean', textAlign: 'center', color: theme.palette.grey[800], p: 4 }}
+          sx={{
+            fontFamily: 'WordMean',
+            textAlign: 'center',
+            color: theme.palette.grey[800],
+            p: 4,
+            fontSize: isMobile ? '6vw' : 40,
+          }}
         >
           {formatMessage({ id: 'CONTACT.PAGE.WHERE.WE.ARE' })}
         </Typography>
-        <img
-          src={mapImage}
-          alt="Map"
-          style={{
-            width: '90%',
+        <Stack
+          sx={{
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            width: '100%',
             height: 'auto',
-            borderRadius: '10px',
-            boxShadow: theme.shadows[2],
+            gap: 6,
+            mb: 6,
           }}
-        />
-        <StyledDivider orientation="horizontal" flexItem />
-        <Stack spacing={2} sx={{ mt: 0, width: '100%' }}>
-          {/* TITULO */}
-          <Typography
-            variant="h1"
-            gutterBottom
-            sx={{ fontFamily: 'WordMean', textAlign: 'center', color: theme.palette.grey[800] }}
+        >
+          <img
+            src={newLogo}
+            alt="New Logo"
+            style={{
+              width: '80vw',
+              maxWidth: '300px',
+              height: 'auto',
+              borderRadius: '50%',
+            }}
+          />
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 5,
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              mb: isMobile ? 6 : 0,
+            }}
           >
-            {formatMessage({ id: 'CONTACT.PAGE.TITLE' })}
-          </Typography>
-
-          {/* CONTAINER */}
-          <Stack
-            direction={'row'}
-            gap={2}
-            width={'100%'}
-            justifyContent={'space-evenly'}
-            alignItems={'flex-start'}
-            p={3}
-          >
-            {/* INFO CONTACTO */}
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 5,
-                justifyContent: 'space-between',
-                alignItems: 'flex-start',
-              }}
-            >
-              <Stack direction={'row'} gap={2} width={'100%'} justifyContent={'flex-start'} alignItems={'center'}>
-                <Icon icon="mdi:cellphone" style={{ color: theme.palette.grey[800], width: 48, height: 48 }} />
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-                  <Typography variant="h2" sx={{ color: theme.palette.grey[800] }}>
-                    {formatMessage({ id: 'CONTACT.PAGE.PHONE.NUMBER' })}
-                  </Typography>
-                  <Typography variant="h5" sx={{ color: theme.palette.grey[800] }}>
-                    {formatMessage({ id: 'CONTACT.PAGE.ATTENTION.HRS' })}
-                  </Typography>
-                </Box>
-              </Stack>
-              <Stack direction={'row'} gap={2} width={'100%'} justifyContent={'flex-start'} alignItems={'center'}>
-                <Icon
-                  icon="mdi:alternate-email"
-                  style={{ color: theme.palette.grey[800], width: 48, height: 48, maxWidth: 'none' }}
-                />
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-                  <Typography variant="h2" sx={{ color: theme.palette.grey[800] }}>
-                    {formatMessage({ id: 'CONTACT.PAGE.EMAIL' })}
-                  </Typography>
-                  <Typography variant="h5" sx={{ color: theme.palette.grey[800] }}>
-                    {formatMessage({ id: 'CONTACT.PAGE.SAND.DOUBTS' })}
-                  </Typography>
-                </Box>
-              </Stack>
-              <Stack direction={'row'} gap={2} width={'100%'} justifyContent={'flex-start'} alignItems={'center'}>
-                <Icon icon="mdi:instagram" style={{ color: theme.palette.grey[800], width: 48, height: 48 }} />
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-                  <Typography variant="h2" sx={{ color: theme.palette.grey[800] }}>
-                    {formatMessage({ id: 'CONTACT.PAGE.INSTAGRAM' })}
-                  </Typography>
-                  <Typography variant="h5" sx={{ color: theme.palette.grey[800] }}>
-                    {formatMessage({ id: 'CONTACT.PAGE.VISIT' })}
-                  </Typography>
-                </Box>
-              </Stack>
-            </Box>
-
-            {/* FORMULARIO */}
-
-            <MailForm />
-          </Stack>
+            <ContactInfo
+              icon="mdi:cellphone"
+              title={formatMessage({ id: 'CONTACT.PAGE.PHONE.NUMBER' })}
+              subtitle={formatMessage({ id: 'CONTACT.PAGE.ATTENTION.HRS' })}
+              url="https://wa.me/2213997379"
+            />
+            <ContactInfo
+              icon="mdi:alternate-email"
+              title={formatMessage({ id: 'CONTACT.PAGE.EMAIL' })}
+              subtitle={formatMessage({ id: 'CONTACT.PAGE.SAND.DOUBTS' })}
+            />
+            <ContactInfo
+              icon="mdi:facebook"
+              title={formatMessage({ id: 'CONTACT.PAGE.FACEBOOK' })}
+              subtitle={formatMessage({ id: 'CONTACT.PAGE.VISIT.FACEBOOK' })}
+              url="https://www.facebook.com/MedicineVapeRoom"
+            />
+            <ContactInfo
+              icon="mdi:instagram"
+              title={formatMessage({ id: 'CONTACT.PAGE.INSTAGRAM' })}
+              subtitle={formatMessage({ id: 'CONTACT.PAGE.VISIT' })}
+              url="https://www.instagram.com/medicinevroom/"
+            />
+          </Box>
         </Stack>
-      </Paper>
+      </StyledPaper>
     </ContentWrapper>
   );
 };
 
-const StyledDivider = styled(Divider)({
-  flexGrow: 1,
-  margin: '10px 10px',
-  marginTop: '60px',
-});
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(2),
+  backgroundColor: alpha(theme.palette.common.white, 0.6),
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  maxWidth: '100%',
+  width: '90vw',
+  margin: 'auto',
+}));

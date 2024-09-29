@@ -1,57 +1,19 @@
 import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded';
-import AdminPanelSettingsRoundedIcon from '@mui/icons-material/AdminPanelSettingsRounded';
-import CallRoundedIcon from '@mui/icons-material/CallRounded';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 // import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
-import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
 import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
 import List from '@mui/material/List';
 import { styled, useTheme } from '@mui/material/styles';
 import MvpLogo from '@webapp/assets/images/content/logo.png';
 import ImageLogo from '@webapp/assets/images/content/name-image.png';
-import { auth } from '@webapp/sdk/firebase/firebase';
-import { getUser } from '@webapp/sdk/firebase/user';
 import { useUserData } from '@webapp/store/users/user-data';
 import { motion, useReducedMotion } from 'framer-motion';
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { easing } from '../framer';
-import SidebarItem, { SidebarItemType } from './sidebar-item';
-
-const sidebarItems: SidebarItemType[] = [
-  {
-    icon: <HomeRoundedIcon />,
-    label: 'Home',
-    to: '/home',
-    private: false,
-  },
-  {
-    icon: <Inventory2RoundedIcon />,
-    label: 'Productos',
-    to: '/productos',
-    private: false,
-  },
-  // {
-  //   icon: <InfoRoundedIcon />,
-  //   label: 'Sobre Nosotros',
-  //   to: '/sobre-nosotros',
-  //   private: false,
-  // },
-  {
-    icon: <CallRoundedIcon />,
-    label: 'Contacto',
-    to: '/contacto',
-    private: false,
-  },
-  {
-    icon: <AdminPanelSettingsRoundedIcon />,
-    label: 'Admin',
-    to: '/admin-dashboard',
-    private: true,
-  },
-];
+import SidebarItem from './sidebar-item';
+import { sidebarItems } from './sidebarItems';
 
 /**
  * Props for `<Sidebar />`.
@@ -77,8 +39,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ className }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
-  const userId = auth.currentUser?.uid;
-  const { user, setUser } = useUserData();
+  const { user } = useUserData();
   const [collapsed, setCollapsed] = React.useState<boolean>(localStorage.getItem('sidebarCollapsed') === 'true');
 
   const shouldReduceMotion = useReducedMotion();
@@ -91,17 +52,6 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ className }) => {
   const handleNavigate = (to: string) => {
     navigate(to);
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const userData = await getUser(userId!);
-      if (userData) {
-        setUser(userData);
-      }
-    };
-
-    fetchData();
-  }, [setUser, userId]);
 
   return (
     <SidebarContainer
@@ -131,7 +81,8 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ className }) => {
       <div className="content">
         <List>
           {sidebarItems
-            .filter((item) => !item.private || (item.private && user.admin))
+            .filter((item) => !item.private || (item.private && user?.admin))
+            .filter((item) => !item.private || item.private)
             .map((item) => (
               <SidebarItem
                 key={item.to}

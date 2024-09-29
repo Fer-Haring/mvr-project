@@ -3,49 +3,94 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
-import { updateUserInDb } from '@webapp/sdk/firebase/user';
-import { User } from '@webapp/sdk/users-types';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
+import { User } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useUserData } from '@webapp/store/users/user-data';
-import { useUserId } from '@webapp/store/users/user-id';
-import { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 
 interface ZoneDeliverButtonsProps {
   className?: string;
   userData: User;
+  setUser: (user: User) => void;
+  onValidChange?: (isValid: boolean) => void;
 }
 
-const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userData }) => {
+const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userData, onValidChange, setUser }) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
-  const { userId } = useUserId();
-  const { setUser } = useUserData();
-  const [deliveryType, setDeliveryType] = useState(userData.deliverZone);
-  const { setDeliverValue } = useMessageStore();
+  const isMobile = useIsMobile();
+  const { setUser: setUserData } = useUserData();
+  const { setDeliverValue, setOrder, order } = useMessageStore();
 
-  const handleLBEZones = () => {
-    setDeliveryType('LBE');
-    handleOnChange('LBE');
-  };
+  useEffect(() => {
+    let deliveryCost = 0;
+    const selectedDelivery = userData.delivery_zone || order.delivery_zone;
 
-  const handleOZZones = () => {
-    setDeliveryType('OZ');
-    handleOnChange('OZ');
-  };
-
-  const handleOnChange = (selectedDelivery: string) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { userId: ignoredUserId, ...restOfUserData } = userData;
-    updateUserInDb({ userId, ...restOfUserData, deliverZone: selectedDelivery });
-    setUser({ ...userData, deliverZone: selectedDelivery });
-    if (selectedDelivery === 'LBE') {
-      setDeliverValue(2500);
+    if (selectedDelivery === 'BSSO') {
+      deliveryCost = 1400;
+    } else if (selectedDelivery === 'CASCO') {
+      deliveryCost = 2800;
+    } else if (selectedDelivery === 'OUTCASCO') {
+      deliveryCost = 4000;
+    } else if (selectedDelivery === 'LEJOS') {
+      deliveryCost = 4500;
     }
-    if (selectedDelivery === 'OZ') {
-      setDeliverValue(3500);
+
+    // Actualizar el costo de entrega si es necesario
+    if (userData.delivery_cost !== deliveryCost) {
+      const updatedUserData = {
+        ...userData,
+        delivery_cost: deliveryCost,
+      };
+      setUser(updatedUserData);
+      setUserData(updatedUserData);
+      setDeliverValue(deliveryCost);
+      setOrder({
+        ...order,
+        user: updatedUserData,
+      });
     }
+  }, [userData]);
+
+  const handleOnChange = async (selectedDelivery: string) => {
+    let deliveryCost = 0;
+
+    if (selectedDelivery === 'BSSO') {
+      deliveryCost = 1400;
+    } else if (selectedDelivery === 'CASCO') {
+      deliveryCost = 2800;
+    } else if (selectedDelivery === 'OUTCASCO') {
+      deliveryCost = 4000;
+    } else if (selectedDelivery === 'LEJOS') {
+      deliveryCost = 4500;
+    }
+
+    const updatedUserData = {
+      ...userData,
+      delivery_zone: selectedDelivery,
+      delivery_cost: deliveryCost,
+    };
+
+    if (onValidChange) {
+      onValidChange(true);
+    }
+
+    setUser(updatedUserData);
+    setUserData(updatedUserData);
+    setDeliverValue(deliveryCost);
+    setOrder({
+      ...order,
+      user: updatedUserData,
+    });
   };
+
+  React.useEffect(() => {
+    if (onValidChange) {
+      onValidChange(!!userData.delivery_zone);
+    }
+  }, [userData, onValidChange]);
 
   return (
     <Stack gap={2} sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 4 }}>
@@ -53,59 +98,82 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
         variant="h4"
         fontWeight={600}
         textAlign="center"
-        fontSize={24}
+        fontSize={isMobile ? '3vw' : '1.6vw'}
         sx={{ mb: 0, color: theme.palette.grey[900] }}
       >
         {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.SELECTOR' })}
       </Typography>
-      <Box
+      <Stack
+        gap={isMobile ? 0 : 2}
         sx={{
-          display: 'flex',
           width: '100%',
-          gap: 2,
-          mb: 3,
-          justifyContent: 'space-evenly',
+          display: 'flex',
+          justifyContent: 'center',
           alignItems: 'center',
-          flexDirection: 'column',
+          flexDirection: isMobile ? 'column' : 'row',
         }}
       >
-        <Button
-          onClick={handleLBEZones}
-          onSelect={() => handleOnChange('LBE')}
+        <Box
           sx={{
-            width: '100%',
-            maxWidth: '236px',
-            height: '48px',
-            backgroundColor: deliveryType === 'LBE' ? theme.palette.primary.main : theme.palette.grey[200],
-            border: deliveryType === 'LBE' ? 'none' : `1px solid ${theme.palette.divider}`,
-            '&:hover': {
-              backgroundColor: deliveryType === 'LBE' ? theme.palette.primary.main : theme.palette.grey[300],
-              border: deliveryType === 'LBE' ? 'none' : `1px solid ${theme.palette.divider}`,
-            },
+            display: 'flex',
+            width: isMobile ? '100%' : '50%',
+            gap: 2,
+            mb: 3,
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+            flexDirection: 'column',
           }}
-          aria-label={formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.1' })}
         >
-          {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.1' })}
-        </Button>
-        <Button
-          onClick={handleOZZones}
-          onSelect={() => handleOnChange('OZ')}
+          <Button
+            size="small"
+            onClick={() => handleOnChange('BSSO')}
+            color={userData.delivery_zone === 'BSSO' ? 'primary' : 'unselected'}
+            aria-label={formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.1' })}
+            sx={{ fontSize: isMobile ? '14px' : '1vw' }}
+          >
+            {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.1' })}
+          </Button>
+          <Button
+            size="small"
+            onClick={() => handleOnChange('CASCO')}
+            color={userData.delivery_zone === 'CASCO' ? 'primary' : 'unselected'}
+            aria-label={formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.2' })}
+            sx={{ fontSize: isMobile ? '14px' : '1vw' }}
+          >
+            {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.2' })}
+          </Button>
+        </Box>
+        <Box
           sx={{
-            width: '100%',
-            maxWidth: '236px',
-            height: '48px',
-            backgroundColor: deliveryType === 'OZ' ? theme.palette.primary.main : theme.palette.grey[200],
-            border: deliveryType === 'OZ' ? 'none' : `1px solid ${theme.palette.divider}`,
-            '&:hover': {
-              backgroundColor: deliveryType === 'OZ' ? theme.palette.primary.main : theme.palette.grey[300],
-              border: deliveryType === 'OZ' ? 'none' : `1px solid ${theme.palette.divider}`,
-            },
+            display: 'flex',
+            width: isMobile ? '100%' : '50%',
+            gap: 2,
+            mb: 3,
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+            flexDirection: 'column',
           }}
-          aria-label={formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.2' })}
         >
-          {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.2' })}
-        </Button>
-      </Box>
+          <Button
+            size="small"
+            onClick={() => handleOnChange('OUTCASCO')}
+            color={userData.delivery_zone === 'OUTCASCO' ? 'primary' : 'unselected'}
+            aria-label={formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.3' })}
+            sx={{ fontSize: isMobile ? '14px' : '1vw' }}
+          >
+            {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.3' })}
+          </Button>
+          <Button
+            size="small"
+            onClick={() => handleOnChange('LEJOS')}
+            color={userData.delivery_zone === 'LEJOS' ? 'primary' : 'unselected'}
+            aria-label={formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.4' })}
+            sx={{ fontSize: isMobile ? '14px' : '1vw' }}
+          >
+            {formatMessage({ id: 'CART.PAYMENT.DELIVER.ZONE.4' })}
+          </Button>
+        </Box>
+      </Stack>
     </Stack>
   );
 };

@@ -1,50 +1,49 @@
-import { Products } from '@webapp/sdk/users-types';
+import { Product } from '@webapp/sdk/types/products-types';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 type ProductData = {
-  product: Products;
-  setProduct: (product: Products) => void;
+  product: Product;
+  setProduct: (product: Product) => void;
   resetProduct: () => void;
 };
 
 const initialState: ProductData = {
   product: {
-    actualStock: '',
-    costPrice: 0,
+    actual_stock: 0,
+    cost_price: 0,
     description: '',
-    destacated: '',
-    fraction: 0,
-    minimumStock: 0,
-    priceCurrency: '',
-    productCategory: '',
-    mainProductCategory: '',
-    productCode: '',
-    productId: '',
-    productImage: '',
-    productName: '',
-    promoPrice: 0,
-    salePrice: '',
-    showInCatalog: '',
-    stockControl: '',
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    featured: false,
+    fraction: '',
+    minimum_stock: 0,
+    price_currency: '',
+    product_category: '',
+    main_product_category: '',
+    product_code: '',
+    id: '',
+    product_image: '',
+    product_name: '',
+    promo_price: '',
+    sale_price: '',
+    show_in_catalog: '',
+    stock_control: '',
+    currency_type: '',
+    product_id: '',
   },
   setProduct: () => {},
   resetProduct: () => {},
 };
 
-
 export const useSingleProduct = create(
   persist<ProductData>(
     (set) => ({
-      ...initialState,
+      product: initialState.product,
       setProduct: (product) => set({ product }),
-      resetProduct: () => set({ ...initialState }),
+      resetProduct: () => set({ product: initialState.product }),
     }),
     {
       name: 'productData',
-      getStorage: () => localStorage,
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );

@@ -3,12 +3,10 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
-import { updateUserInDb } from '@webapp/sdk/firebase/user';
-import { User } from '@webapp/sdk/users-types';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
+import { User } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
-import { useUserData } from '@webapp/store/users/user-data';
-import { useUserId } from '@webapp/store/users/user-id';
-import { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import CurrencySelectButtons from './botones-moneda-pago';
@@ -16,14 +14,21 @@ import CurrencySelectButtons from './botones-moneda-pago';
 interface DeliveryTypeButtonsProps {
   className?: string;
   userData: User;
+  setUser: (user: User) => void;
+  onValidChange?: (isValid: boolean) => void;
+  setIsCurrencyPayValid: (isValid: boolean) => void;
 }
 
-const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ userData }) => {
+const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({
+  userData,
+  setUser,
+  onValidChange,
+  setIsCurrencyPayValid,
+}) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
-  const { userId } = useUserId();
-  const { setUser } = useUserData();
-  const [deliveryType, setDeliveryType] = useState(userData.deliveryType);
+  const isMobile = useIsMobile();
+  const [deliveryType, setDeliveryType] = useState<string>(userData?.delivery_type || '');
   const { setOrder, order } = useMessageStore();
 
   const handleSelectDelivery = () => {
@@ -37,74 +42,69 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ user
   };
 
   const handleOnChange = (selectedDelivery: string) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { userId: ignoredUserId, ...restOfUserData } = userData;
-    updateUserInDb({ userId, ...restOfUserData, deliveryType: selectedDelivery });
-    setUser({ ...userData, deliveryType: selectedDelivery });
-    setOrder({ ...order, deliveryType: selectedDelivery });
+    if (onValidChange) {
+      onValidChange(true);
+    }
+    setUser({ ...userData, delivery_type: selectedDelivery });
+    setOrder({ ...order, delivery_type: selectedDelivery });
   };
 
+  React.useEffect(() => {
+    if (onValidChange) {
+      onValidChange(!!userData?.delivery_type);
+    }
+  }, [userData, onValidChange]);
+
   return (
-    <Stack gap={2} sx={{ width: '33%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <Typography
-        variant="h4"
-        fontWeight={600}
-        textAlign="center"
-        fontSize={24}
-        sx={{ mb: 0, color: theme.palette.grey[900] }}
-      >
-        {formatMessage({ id: 'PROFILE.USER_INFO.SELECTED.DELIVERY' })}
-      </Typography>
-      <Box
-        sx={{
-          display: 'flex',
-          width: '100%',
-          gap: 2,
-          mb: 3,
-          justifyContent: 'space-evenly',
-          alignItems: 'center',
-          flexDirection: 'column',
-        }}
-      >
-        <Button
-          onClick={handleSelectDelivery}
-          onSelect={() => handleOnChange('Delivery')}
-          sx={{
-            width: '100%',
-            maxWidth: '236px',
-            height: '48px',
-            backgroundColor: deliveryType === 'Delivery' ? theme.palette.primary.main : theme.palette.grey[200],
-            border: deliveryType === 'Delivery' ? 'none' : `1px solid ${theme.palette.divider}`,
-            '&:hover': {
-              backgroundColor: deliveryType === 'Delivery' ? theme.palette.primary.main : theme.palette.grey[300],
-              border: deliveryType === 'Delivery' ? 'none' : `1px solid ${theme.palette.divider}`,
-            },
-          }}
-          aria-label={formatMessage({ id: 'COMMON.SELECTED.DELIVERY.DELIVERY' })}
+    <Stack
+      gap={2}
+      sx={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        flexDirection: isMobile ? 'column' : 'row',
+      }}
+    >
+      <Stack gap={2} sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Typography
+          variant="h4"
+          fontWeight={600}
+          textAlign="center"
+          fontSize={isMobile ? '3vw' : '1.6vw'}
+          sx={{ mb: 0, color: theme.palette.grey[900] }}
         >
-          {formatMessage({ id: 'COMMON.SELECTED.DELIVERY.DELIVERY' })}
-        </Button>
-        <Button
-          onClick={handleSelectLocalPickup}
-          onSelect={() => handleOnChange('Retiro en local')}
+          {formatMessage({ id: 'PROFILE.USER_INFO.SELECTED.DELIVERY' })}
+        </Typography>
+        <Box
           sx={{
+            display: 'flex',
             width: '100%',
-            maxWidth: '236px',
-            height: '48px',
-            backgroundColor: deliveryType === 'Retiro en local' ? theme.palette.primary.main : theme.palette.grey[200],
-            border: deliveryType === 'Retiro en local' ? 'none' : `1px solid ${theme.palette.divider}`,
-            '&:hover': {
-              backgroundColor:
-                deliveryType === 'Retiro en local' ? theme.palette.primary.main : theme.palette.grey[300],
-              border: deliveryType === 'Retiro en local' ? 'none' : `1px solid ${theme.palette.divider}`,
-            },
+            gap: 2,
+            mb: 3,
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+            flexDirection: 'row',
           }}
-          aria-label={formatMessage({ id: 'COMMON.SELECTED.DELIVERY.LOCAL_PICKUP' })}
         >
-          {formatMessage({ id: 'COMMON.SELECTED.DELIVERY.LOCAL_PICKUP' })}
-        </Button>
-      </Box>
-      <CurrencySelectButtons userData={userData} />
+          <Button
+            size="small"
+            onClick={handleSelectDelivery}
+            color={deliveryType === 'Delivery' ? 'primary' : 'unselected'}
+            aria-label={formatMessage({ id: 'COMMON.SELECTED.DELIVERY.DELIVERY' })}
+          >
+            {formatMessage({ id: 'COMMON.SELECTED.DELIVERY.DELIVERY' })}
+          </Button>
+          <Button
+            size="small"
+            onClick={handleSelectLocalPickup}
+            color={deliveryType === 'Retiro en local' ? 'primary' : 'unselected'}
+            aria-label={formatMessage({ id: 'COMMON.SELECTED.DELIVERY.LOCAL_PICKUP' })}
+          >
+            {formatMessage({ id: 'COMMON.SELECTED.DELIVERY.LOCAL_PICKUP' })}
+          </Button>
+        </Box>
+      </Stack>
     </Stack>
   );
 };

@@ -1,10 +1,9 @@
 import { Typography, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-// import { CompletedOrder } from '@webapp/sdk/users-types';
 import deliverAnimation from '@webapp/assets/images/animations/deliver.json';
-import { useAdminDataStore } from '@webapp/store/admin/admin-data';
-import { FunctionComponent } from 'react';
+import { useGetAllOrders } from '@webapp/sdk/mutations/orders/get-all-orders-query';
+import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 import Lottie from 'react-lottie';
 
@@ -13,8 +12,8 @@ import { CustomAdminPaper } from './papers-styles';
 const TotalOrdersPaper: FunctionComponent = () => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
-  const { orders } = useAdminDataStore();
-  const totalOrders = Object.values(orders).length;
+  const orders = useGetAllOrders();
+  const totalOrders = Object.values(orders?.data || []).length;
 
   return (
     <CustomAdminPaper>

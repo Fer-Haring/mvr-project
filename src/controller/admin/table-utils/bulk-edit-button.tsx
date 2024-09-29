@@ -1,11 +1,12 @@
-import React from 'react';
+import { styled } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@webapp/components/button';
+import SnackbarUtils from '@webapp/components/snackbar';
+import React from 'react';
 import { useIntl } from 'react-intl';
-import { styled } from '@mui/material';
-import BulkEditModal from '../modal-components/product-bulk-edit-modal';
 
+import BulkEditModal from '../modal-components/product-bulk-edit-modal';
 
 const BulkEditButton = () => {
   const { formatMessage } = useIntl();
@@ -28,7 +29,7 @@ const BulkEditButton = () => {
 
   const handleSaveModal = (value: string) => {
     // Lógica para guardar el valor editado
-    console.log('Saved value:', value);
+    SnackbarUtils.error('Saved value: ' + value);
   };
 
   const handleOptionClick = (option: string) => {
@@ -44,8 +45,8 @@ const BulkEditButton = () => {
       case 'EDIT_ACTUAL_STOCK':
         title = formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BULK_EDIT.EDIT_ACTUAL_STOCK' });
         break;
-      case 'EDIT_DESTACATED':
-        title = formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BULK_EDIT.EDIT_DESTACATED' });
+      case 'EDIT_FEATURED':
+        title = formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BULK_EDIT.EDIT_FEATURED' });
         break;
       case 'EDIT_PROMO_PRICE':
         title = formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BULK_EDIT.EDIT_PROMO_PRICE' });
@@ -106,8 +107,8 @@ const BulkEditButton = () => {
         <StyledMenuItem onClick={() => handleOptionClick('EDIT_ACTUAL_STOCK')}>
           {formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BULK_EDIT.EDIT_ACTUAL_STOCK' })}
         </StyledMenuItem>
-        <StyledMenuItem onClick={() => handleOptionClick('EDIT_DESTACATED')}>
-          {formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BULK_EDIT.EDIT_DESTACATED' })}
+        <StyledMenuItem onClick={() => handleOptionClick('EDIT_FEATURED')}>
+          {formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BULK_EDIT.EDIT_FEATURED' })}
         </StyledMenuItem>
         <StyledMenuItem onClick={() => handleOptionClick('EDIT_PROMO_PRICE')}>
           {formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BULK_EDIT.EDIT_PROMO_PRICE' })}
@@ -131,19 +132,14 @@ const BulkEditButton = () => {
           {formatMessage({ id: 'ADMIN.DASHBOARD.PRODUCTS.TABLE.BULK_EDIT.EDIT_MINIMUM_STOCK' })}
         </StyledMenuItem>
       </Menu>
-      <BulkEditModal
-        open={modalOpen}
-        handleClose={handleCloseModal}
-        handleSave={handleSaveModal}
-        title={modalTitle}
-      />
+      <BulkEditModal open={modalOpen} handleClose={handleCloseModal} handleSave={handleSaveModal} title={modalTitle} />
     </div>
   );
 };
 
 export default BulkEditButton;
 
-const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
+const StyledMenuItem = styled(MenuItem)(() => ({
   color: 'black',
   backgroundColor: 'white',
   '&:hover': {

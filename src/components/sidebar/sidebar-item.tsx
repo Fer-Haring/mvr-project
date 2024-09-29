@@ -1,11 +1,10 @@
-import React, { FunctionComponent } from 'react';
-
 import { PaletteMode } from '@mui/material';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Tooltip from '@mui/material/Tooltip';
 import { alpha, styled, useTheme } from '@mui/material/styles';
+import React, { FunctionComponent } from 'react';
 
 /**
  * Type definition for the properties of the sidebar item.
@@ -47,14 +46,12 @@ const SidebarItem: FunctionComponent<SidebarItemProps> = ({
   onClick,
 }) => {
   const theme = useTheme();
-  const colorMode = theme.palette.mode;
-
   // Use Tooltip for collapsed items and apply appropriate ARIA
   return collapsed ? (
     <Tooltip title={item.label} placement="right" arrow>
       <Item
         className={className || ''}
-        colorMode={colorMode}
+        // colorMode={colorMode}
         data-active={active}
         selected={active}
         disabled={disabled}
@@ -63,6 +60,9 @@ const SidebarItem: FunctionComponent<SidebarItemProps> = ({
         aria-selected={active} // Reflects the selection state to assistive technologies
         role="menuitem" // Identifies the element as a menuitem for accessibility purposes
         onClick={onClick}
+        sx={{
+          color: theme.palette.common.white,
+        }}
       >
         <ListItemIcon>{item.icon}</ListItemIcon>
       </Item>
@@ -71,7 +71,7 @@ const SidebarItem: FunctionComponent<SidebarItemProps> = ({
     // For non-collapsed items, display the icon and text
     <Item
       className={className || ''}
-      colorMode={colorMode}
+      // colorMode={colorMode}
       data-active={active}
       selected={active}
       disabled={disabled}
@@ -79,6 +79,9 @@ const SidebarItem: FunctionComponent<SidebarItemProps> = ({
       aria-selected={active} // Reflects the selection state to assistive technologies
       role="menuitem" // Identifies the element as a menuitem for accessibility purposes
       onClick={onClick}
+      sx={{
+        color: theme.palette.common.white,
+      }}
     >
       <ListItemIcon>{item.icon}</ListItemIcon>
       <ListItemText primary={item.label} />

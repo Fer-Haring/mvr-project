@@ -3,15 +3,18 @@ import { Autocomplete, Button, Paper, Select, TextField } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
 
-export const StockWrapper = styled(motion.ul)(({ theme }) => ({
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(min(19.75rem, 100%), 1fr))',
+
+export const StockWrapper = styled(motion.ul)<{
+  isMobile: boolean;
+}>(({ theme, isMobile }) => ({
+  display: isMobile ? 'flex' : 'grid',
+  gridTemplateColumns: 'repeat(3, 1fr)',
+  gridTemplateRows: 'repeat(1, 1fr)',
   gridGap: theme.spacing(4),
+  flexDirection: isMobile ? 'column' : 'row',
   width: '100%',
-  listStyle: 'none',
   padding: 0,
   margin: 0,
-
 }));
 
 export const Slider = styled(BaseSlider)(
@@ -190,41 +193,47 @@ export const CustomInputSearch = styled(TextField)(({ theme }) => ({
   },
 }));
 
-export const FiltersHolder = styled(Paper)(({ theme }) => ({
+export const FiltersHolder = styled(Paper)<{ isMobile: boolean }>(({ theme, isMobile }) => ({
   width: '100%',
-  maxWidth: '320px',
   height: 'auto',
   display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'flex-start',
+  flexDirection: isMobile ? 'column' : 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
   position: 'sticky',
-  top: theme.spacing(0.1),
-  gap: theme.spacing(4),
-  padding: theme.spacing(2),
-  paddingTop: theme.spacing(4),
-  backgroundColor: alpha(theme.palette.common.white, 1),
+  gap: theme.spacing(2),
+  paddingTop: isMobile ? theme.spacing(2) : theme.spacing(0.5),
+  paddingBottom: theme.spacing(0.5),
+  paddingRight: theme.spacing(2),
+  paddingLeft: theme.spacing(2),
+  backgroundColor: alpha(theme.palette.common.white, 0.7),
+  marginBottom: theme.spacing(2),
 }));
 
 // Main category button
 
-export const CategoryButtonWrapper = styled(motion.ul)(({ theme }) => ({
+export const CategoryButtonWrapper = styled(motion.ul)<{ isMobile: boolean }>(({ theme, isMobile }) => ({
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(min(13.75rem, 100%), 1fr))',
-  gridGap: theme.spacing(4),
+  gridTemplateColumns: !isMobile
+    ? 'repeat(auto-fit, minmax(min(13.75rem, 100%), 1fr))'
+    : 'repeat(auto-fit, minmax(min(8.75rem, 100%), 1fr))',
+  gridGap: !isMobile ? theme.spacing(10) : theme.spacing(2),
   width: '100%',
   listStyle: 'none',
-  padding: 0,
+  padding: !isMobile ? theme.spacing(3) : theme.spacing(1),
   margin: 0,
 }));
 
-export const CategoryButton = styled(Button)(({ theme }) => ({
+export const CategoryButton = styled(Button)<{ isMobile: boolean }>(({ theme, isMobile }) => ({
   width: '100%',
-  maxWidth: '350px',
-  fontSize: '16px',
+  maxWidth: '400px',
+  fontSize: !isMobile ? '16px' : '14px',
   fontWeight: 600,
   color: theme.palette.common.white,
+  display: 'flex',
+  justifyContent: 'space_between',
+  alignItems: 'center',
   cursor: 'pointer',
-  textAlign: 'center',
   border: 'none',
   backgroundSize: ' 300% 100%',
   borderRadius: '50px',

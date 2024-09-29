@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { alpha, styled } from '@mui/material/styles';
 import Button, { ButtonColors } from '@webapp/components/button';
-import { FunctionComponent } from 'react';
+import React from 'react';
 
 interface AddProductModalProps extends Partial<MuiModalProps> {
   className?: string;
@@ -40,7 +40,7 @@ const StyledMuiModal = styled(MuiModal)(({ theme }) => ({
   },
 }));
 
-const AddProductModal: FunctionComponent<AddProductModalProps> = ({
+const AddProductModal: React.FunctionComponent<AddProductModalProps> = ({
   className,
   open,
   customContent,
@@ -100,7 +100,7 @@ const AddProductModal: FunctionComponent<AddProductModalProps> = ({
           <Stack
             direction={{
               xs: 'column',
-              md: 'row',
+              md: 'column',
             }}
             spacing={2}
             alignItems="center"

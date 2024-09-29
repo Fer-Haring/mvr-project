@@ -1,7 +1,7 @@
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { SxProps, Theme, styled } from '@mui/material/styles';
-import { FunctionComponent, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 // Definición del estilo para CellsTypos
 const CellsTypos = styled(Typography)(({ theme }) => ({
@@ -14,13 +14,13 @@ const CellsTypos = styled(Typography)(({ theme }) => ({
 }));
 
 interface TooltipProps {
-  value: string 
+  value: string;
   sx?: SxProps<Theme>;
   onClick?: () => void;
   onBlur?: () => void;
 }
 
-const EllipsisTooltip: FunctionComponent<TooltipProps> = ({ value, sx, onClick, onBlur }) => {
+const EllipsisTooltip: React.FunctionComponent<TooltipProps> = ({ value, sx, onClick, onBlur }) => {
   const [isEllipsis, setIsEllipsis] = useState(false);
   const textRef = useRef<HTMLDivElement>(null);
 

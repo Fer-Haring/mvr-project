@@ -1,6 +1,7 @@
-import { CartItem } from '@webapp/sdk/users-types';
+import { CartItem } from '@webapp/sdk/types/cart-types';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
+
 
 interface CartStore {
   cart: CartItem[];
@@ -15,16 +16,16 @@ export const useCartStore = create(
       cart: [],
       addToCart: (product, unitQuantity) => {
         set((state) => {
-          const found = state.cart.find((item) => item.productId === product.productId);
+          const found = state.cart.find((item) => item.product_id === product.product_id);
           if (found) {
             // Si el producto ya está en el carrito, incrementa la cantidad y recalcula el subtotal
             return {
               cart: state.cart.map((item) =>
-                item.productId === product.productId
+                item.product_id === product.product_id
                   ? {
                       ...item,
-                      unitQuantity: item.unitQuantity + unitQuantity,
-                      subTotal: (item.unitQuantity + unitQuantity) * item.unitPrice,
+                      unitQuantity: item.quantity + unitQuantity,
+                      subTotal: (item.quantity + unitQuantity) * item.unit_price,
                     }
                   : item
               ),
@@ -37,7 +38,7 @@ export const useCartStore = create(
                 {
                   ...product,
                   unitQuantity: unitQuantity,
-                  subTotal: unitQuantity * product.unitPrice, // Calcula el subtotal
+                  subTotal: unitQuantity * product.unit_price, // Calcula el subtotal
                 },
               ],
             };
@@ -48,9 +49,9 @@ export const useCartStore = create(
         set((state) => {
           const updatedCart = state.cart
             .map((item) => {
-              if (item.productId === productId) {
-                const newUnitQuantity = item.unitQuantity - 1;
-                const newSubTotal = newUnitQuantity * item.unitPrice;
+              if (item.product_id === productId) {
+                const newUnitQuantity = item.quantity - 1;
+                const newSubTotal = newUnitQuantity * item.unit_price;
 
                 return {
                   ...item,
@@ -60,7 +61,7 @@ export const useCartStore = create(
               }
               return item;
             })
-            .filter((item) => item.unitQuantity > 0);
+            .filter((item) => item.quantity > 0);
 
           return { cart: updatedCart };
         });
@@ -69,7 +70,7 @@ export const useCartStore = create(
     }),
     {
       name: 'cart',
-      getStorage: () => localStorage,
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );

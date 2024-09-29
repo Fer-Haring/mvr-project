@@ -1,11 +1,12 @@
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 import { useTheme } from '@mui/material';
-import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import Button from '@webapp/components/button';
 import { motion } from 'framer-motion';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
+
 
 interface Step3Props {
   step: number;

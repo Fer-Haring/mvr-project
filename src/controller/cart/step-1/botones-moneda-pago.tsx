@@ -3,26 +3,31 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
-import { updateUserInDb } from '@webapp/sdk/firebase/user';
-import { User } from '@webapp/sdk/users-types';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
+import { User } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
-import { useUserData } from '@webapp/store/users/user-data';
-import { useUserId } from '@webapp/store/users/user-id';
+import React from 'react';
 import { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 interface CurrencySelectButtonsProps {
   className?: string;
   userData: User;
+  setUser: (user: User) => void;
+  setIsCurrencyPayValid: (isValid: boolean) => void;
 }
 
-const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({ userData }) => {
+const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({
+  userData,
+  setIsCurrencyPayValid,
+  setUser,
+}) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
-  const { userId } = useUserId();
-  const { setUser } = useUserData();
-  const [preferredCurrency, setPreferredCurrency] = useState(userData.preferredCurrency);
-  const { setOrder, order } = useMessageStore();
+  const isMobile = useIsMobile();
+  const [preferredCurrency, setPreferredCurrency] = useState(userData?.preferred_currency);
+  const setOrder = useMessageStore((state) => state.setOrder);
+  const order = useMessageStore((state) => state.order);
 
   const handleSelectDollar = () => {
     setPreferredCurrency('USD');
@@ -34,13 +39,18 @@ const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({ 
     handleOnChange('ARS');
   };
 
-  const handleOnChange = (selectedCurrency: string) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { userId: ignoredUserId, ...restOfUserData } = userData;
-    updateUserInDb({ userId, ...restOfUserData, preferredCurrency: selectedCurrency });
-    setUser({ ...userData, preferredCurrency: selectedCurrency });
-    setOrder({ ...order, currencyUsedToPay: selectedCurrency });
+  const handleOnChange = async (selectedCurrency: string) => {
+    const updatedUserData = { ...userData, preferred_currency: selectedCurrency };
+    setIsCurrencyPayValid(true);
+    setUser(updatedUserData);
+    setOrder({ ...order, currency_used_to_pay: selectedCurrency });
   };
+
+  React.useEffect(() => {
+    if (userData?.preferred_currency) {
+      setIsCurrencyPayValid(true);
+    }
+  }, [userData?.preferred_currency]);
 
   return (
     <Stack gap={2} sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -48,7 +58,7 @@ const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({ 
         variant="h4"
         fontWeight={600}
         textAlign="center"
-        fontSize={24}
+        fontSize={isMobile ? '3vw' : '1.6vw'}
         sx={{ mb: 0, color: theme.palette.grey[900] }}
       >
         {formatMessage({ id: 'CART.PAYMENT.SELECT.CURRENCY' })}
@@ -60,41 +70,21 @@ const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({ 
           gap: 2,
           justifyContent: 'space-evenly',
           alignItems: 'center',
-          flexDirection: 'column',
+          flexDirection: 'row',
         }}
       >
         <Button
+          size="small"
           onClick={handleSelectDollar}
-          onSelect={() => handleOnChange('USD')}
-          sx={{
-            width: '100%',
-            maxWidth: '236px',
-            height: '48px',
-            backgroundColor: preferredCurrency === 'USD' ? theme.palette.primary.main : theme.palette.grey[200],
-            border: preferredCurrency === 'USD' ? 'none' : `1px solid ${theme.palette.divider}`,
-            '&:hover': {
-              backgroundColor: preferredCurrency === 'USD' ? theme.palette.primary.main : theme.palette.grey[300],
-              border: preferredCurrency === 'USD' ? 'none' : `1px solid ${theme.palette.divider}`,
-            },
-          }}
+          color={preferredCurrency === 'USD' ? 'primary' : 'unselected'}
           aria-label={formatMessage({ id: 'CART.PAYMENT.USD' })}
         >
           {formatMessage({ id: 'CART.PAYMENT.USD' })}
         </Button>
         <Button
+          size="small"
           onClick={handleSelectArs}
-          onSelect={() => handleOnChange('ARS')}
-          sx={{
-            width: '100%',
-            maxWidth: '236px',
-            height: '48px',
-            backgroundColor: preferredCurrency === 'ARS' ? theme.palette.primary.main : theme.palette.grey[200],
-            border: preferredCurrency === 'ARS' ? 'none' : `1px solid ${theme.palette.divider}`,
-            '&:hover': {
-              backgroundColor: preferredCurrency === 'ARS' ? theme.palette.primary.main : theme.palette.grey[300],
-              border: preferredCurrency === 'ARS' ? 'none' : `1px solid ${theme.palette.divider}`,
-            },
-          }}
+          color={preferredCurrency === 'ARS' ? 'primary' : 'unselected'}
           aria-label={formatMessage({ id: 'CART.PAYMENT.ARS' })}
         >
           {formatMessage({ id: 'CART.PAYMENT.ARS' })}

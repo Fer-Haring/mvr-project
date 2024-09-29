@@ -2,19 +2,27 @@ import {
   AboutUsPage,
   AdminDashboardPage,
   ContactPage,
+  EditPendingOrdersPage,
   HomePage,
   ProductDetailPage,
   ProductsPage,
   ProfilePage,
 } from '@webapp/pages';
+import AdminAddProductPage from '@webapp/pages/admin/add-new-product';
+import OrderManagementPage from '@webapp/pages/admin/order-management';
+import UserListPage from '@webapp/pages/admin/user-list';
 import ForgotPasswordPage2 from '@webapp/pages/auth/forgot-password';
+import ForgotPasswordNewPassword from '@webapp/pages/auth/forgot-password-new-password';
 import ForgotPasswordVerifyPage2 from '@webapp/pages/auth/forgot-password-verify';
+import GoogleAuthCallback from '@webapp/pages/auth/google_auth';
+import SetPasswrodPage from '@webapp/pages/auth/set-password';
 // Auth pages
 import SignInPage2 from '@webapp/pages/auth/sign-in';
 import SignUpPage2 from '@webapp/pages/auth/sign-up';
-import VerificationCodePage2 from '@webapp/pages/auth/verification-code';
+import VerificationCodePage from '@webapp/pages/auth/verification-code';
 import { CartPage } from '@webapp/pages/cart';
-import UnderConstructionPage from '@webapp/pages/under-construction';
+import PrivacyPolicyPage from '@webapp/pages/privacy_policies';
+// import UnderConstructionPage from '@webapp/pages/under-construction';
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 
@@ -28,18 +36,14 @@ const ProjectRoutes: Route[] = [
     path: '/home',
     component: <HomePage />,
   },
-  // {
-  //   path: '/',
-  //   component: <Navigate to="/sign-in" />,
-  // },
   {
     path: '/',
-    component: <Navigate to="/under-construction" />,
+    component: <Navigate to="/sign-in" />,
   },
-  {
-    path: '/under-construction',
-    component: <UnderConstructionPage />,
-  },
+  // {
+  //   path: '/under-construction',
+  //   component: <UnderConstructionPage />,
+  // },
   {
     path: '/sign-in',
     component: <SignInPage2 />,
@@ -58,15 +62,15 @@ const ProjectRoutes: Route[] = [
   },
   {
     path: '/verification-code',
-    component: <VerificationCodePage2 />,
+    component: <VerificationCodePage />,
+  },
+  {
+    path: '/forgot-password/new-password',
+    component: <ForgotPasswordNewPassword />,
   },
   {
     path: '/sobre-nosotros',
     component: <AboutUsPage />,
-  },
-  {
-    path: '/admin-dashboard',
-    component: <AdminDashboardPage />,
   },
   {
     path: '/contacto',
@@ -87,6 +91,39 @@ const ProjectRoutes: Route[] = [
   {
     path: '/cart',
     component: <CartPage />,
+  },
+  {
+    path: '/privacy-policy',
+    component: <PrivacyPolicyPage />,
+  },
+  {
+    path: '/google-auth-callback',
+    component: <GoogleAuthCallback />,
+  },
+  {
+    path: '/set-password',
+    component: <SetPasswrodPage />,
+  },
+  //ADMIN ROUTES
+  {
+    path: '/admin-dashboard',
+    component: <AdminDashboardPage />,
+  },
+  {
+    path: '/admin-dashboard/add-new-product',
+    component: <AdminAddProductPage />,
+  },
+  {
+    path: '/admin-dashboard/lista-de-usuarios',
+    component: <UserListPage />,
+  },
+  {
+    path: '/admin-dashboard/pedidos-pendientes',
+    component: <OrderManagementPage />,
+  },
+  {
+    path: '/admin-dashboard/pedidos-pendientes/:id?',
+    component: <EditPendingOrdersPage />,
   },
 ];
 export { ProjectRoutes };

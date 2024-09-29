@@ -4,7 +4,8 @@ import { ColDef } from 'ag-grid-community';
 const currencyFormatter = (params: any) => {
   const { value, data } = params;
   if (!value || !data) return value;
-  const currency = data.priceCurrency;
+  if (value === 'nan') return '';
+  const currency = data.price_currency;
   if (currency === 'ARS') {
     return `$ ${value}`;
   } else if (currency === 'USD') {
@@ -13,7 +14,7 @@ const currencyFormatter = (params: any) => {
   return value;
 };
 
-export const columnDefs: ColDef[] = [
+export const columnDefs = (navigate: (path: string) => void): ColDef[] => [
   {
     headerName: '',
     field: 'checks',
@@ -22,16 +23,25 @@ export const columnDefs: ColDef[] = [
     checkboxSelection: true,
     headerCheckboxSelection: true,
     headerCheckboxSelectionFilteredOnly: true,
-    width: 50,
+    width: 30,
+    resizable: false,
+    sort: 'asc',
   },
-  { headerName: 'Nombre del Producto', field: 'productName', editable: true, filter: true },
+  {
+    headerName: 'Nombre del Producto',
+    field: 'product_name',
+    editable: true,
+    filter: true,
+    onCellClicked: (params) => navigate(`/productos/${params.data.id}`),
+    cellClass: 'product-name-cell',
+  },
   { headerName: 'Descripción', field: 'description', editable: true, filter: true },
-  { headerName: 'Categoría Principal', field: 'mainProductCategory', editable: true, filter: true },
-  { headerName: 'Categoría del Producto', field: 'productCategory', editable: true, filter: true },
-  { headerName: 'Tipo de Moneda', field: 'priceCurrency', editable: true, filter: true },
+  { headerName: 'Categoría Principal', field: 'main_product_category', editable: true, filter: true },
+  { headerName: 'Categoría del Producto', field: 'product_category', editable: true, filter: true },
+  { headerName: 'Tipo de Moneda', field: 'price_currency', editable: true, filter: true, width: 150 },
   {
     headerName: 'Precio de Costo',
-    field: 'costPrice',
+    field: 'cost_price',
     editable: true,
     type: 'numericColumn',
     filter: 'agNumberColumnFilter',
@@ -39,7 +49,7 @@ export const columnDefs: ColDef[] = [
   },
   {
     headerName: 'Precio de Venta',
-    field: 'salePrice',
+    field: 'sale_price',
     editable: true,
     filter: 'agNumberColumnFilter',
     type: 'numericColumn',
@@ -47,18 +57,24 @@ export const columnDefs: ColDef[] = [
   },
   {
     headerName: 'Precio Promocional',
-    field: 'promoPrice',
+    field: 'promo_price',
     editable: true,
     filter: 'agNumberColumnFilter',
     type: 'numericColumn',
     valueFormatter: currencyFormatter,
   },
-  { headerName: 'Stock Actual', field: 'actualStock', editable: true, filter: true },
-  { headerName: 'Stock Mínimo', field: 'minimumStock', editable: true, filter: true },
-  { headerName: 'Control de Stock', field: 'stockControl', editable: true, filter: true },
-  { headerName: 'Mostrar en Catálogo', field: 'showInCatalog', editable: true, filter: true },
-  { headerName: 'Destacado', field: 'destacated', editable: true, filter: true },
+  { headerName: 'Stock Actual', field: 'actual_stock', editable: true, filter: true },
+  { headerName: 'Stock Mínimo', field: 'minimum_stock', editable: true, filter: true },
+  { headerName: 'Control de Stock', field: 'stock_control', editable: true, filter: true },
+  { headerName: 'Mostrar en Catálogo', field: 'show_in_catalog', editable: true, filter: true },
+  {
+    headerName: 'Destacado',
+    field: 'featured',
+    editable: true,
+    filter: true,
+    cellStyle: { display: 'flex', justifyContent: 'center' },
+  },
   { headerName: 'Fracción', field: 'fraction', editable: true, filter: true },
-  { headerName: 'Id Producto', field: 'productId', hide: true },
-  { headerName: 'Id Producto', field: 'productImage', hide: true },
+  { headerName: 'Id Producto', field: 'id', hide: true },
+  { headerName: 'Id Producto', field: 'product_image', hide: true },
 ];

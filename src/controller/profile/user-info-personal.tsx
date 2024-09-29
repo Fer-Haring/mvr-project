@@ -4,69 +4,77 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import InputField from '@webapp/components/form/input';
-import { updateUserInDb } from '@webapp/sdk/firebase/user';
-import { User } from '@webapp/sdk/users-types';
-import { useUserData } from '@webapp/store/users/user-data';
-import { useUserId } from '@webapp/store/users/user-id';
-import { FunctionComponent, useEffect, useState } from 'react';
+import { useUpdateUser } from '@webapp/sdk/mutations/auth/user-update-mutation';
+import { UpdateUserPayload, User } from '@webapp/sdk/types/user-types';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 interface UserInfoPersonalProps {
   className?: string;
   userData: User;
+  setUser: (user: User) => void;
 }
 
-const UserInfoPersonal: FunctionComponent<UserInfoPersonalProps> = ({ className, userData }) => {
+const UserInfoPersonal: FunctionComponent<UserInfoPersonalProps> = ({ className, userData, setUser }) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
-  const { userId } = useUserId();
-  const { setUser } = useUserData();
-  const [name, setName] = useState(userData.name);
-  const [lastName, setLastName] = useState(userData.lastName);
-  const [email, setEmail] = useState(userData.email);
-  const [phone, setPhone] = useState(userData.phone);
-  const [address, setAdress] = useState(userData.address);
-  const [city, setCity] = useState(userData.city);
+  const [name, setName] = useState(userData?.name);
+  const [lastName, setLastName] = useState(userData?.last_name);
+  const [email, setEmail] = useState(userData?.email);
+  const [phone, setPhone] = useState(userData?.phone);
+  const [address, setAddress] = useState(userData?.address);
+  const [city, setCity] = useState(userData?.city);
   const [showSaveButton, setShowSaveButton] = useState(false);
+  const { mutate } = useUpdateUser(userData?.id);
 
   useEffect(() => {
     const hasChanged =
-      name !== userData.name ||
-      lastName !== userData.lastName ||
-      email !== userData.email ||
-      phone !== userData.phone ||
-      address !== userData.address ||
-      city !== userData.city;
+      name !== userData?.name ||
+      lastName !== userData?.last_name ||
+      email !== userData?.email ||
+      phone !== userData?.phone ||
+      address !== userData?.address ||
+      city !== userData?.city;
     setShowSaveButton(hasChanged);
   }, [name, lastName, email, phone, address, city, userData]);
 
   const handleSaveChanges = () => {
-    const updatedFields: Partial<User> = {};
+    const updatedFields: Partial<UpdateUserPayload> = {
+      username: userData?.username,
+      email: userData?.email,
+      password: userData?.password,
+      address: address || '',
+      admin: userData?.admin,
+      city: city || '',
+      completed_orders: userData?.completed_orders,
+      cart_items: userData?.cart_items,
+      delivery_zone: userData?.delivery_zone,
+      delivery_type: userData?.delivery_type,
+      last_name: lastName || '',
+      name: name || '',
+      payment_method: userData?.payment_method,
+      phone: phone || '',
+      preferred_currency: userData?.preferred_currency,
+      profile_picture: userData?.profile_picture,
+    };
 
-    if (name !== userData.name) updatedFields.name = name;
-    if (lastName !== userData.lastName) updatedFields.lastName = lastName;
-    if (phone !== userData.phone) updatedFields.phone = phone;
-    if (address !== userData.address) updatedFields.address = address;
-    if (city !== userData.city) updatedFields.city = city;
-
-    if (Object.keys(updatedFields).length > 0) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { userId: ignoredUserId, ...restOfUserData } = userData;
-      updateUserInDb({ userId: userId, ...restOfUserData, ...updatedFields });
-      setUser({ ...userData, ...updatedFields });
-    }
+    mutate({ payload: updatedFields as UpdateUserPayload });
+    setUser({ ...userData, ...updatedFields });
   };
-
-  const isSomeInputChange = false;
 
   return (
     <Box className={className || ''}>
-      <Typography variant="h4" fontWeight={600} fontSize={28} sx={{ mb: 0, color: theme.palette.grey[900] }}>
+      <Typography
+        variant="h4"
+        fontWeight={600}
+        fontSize={26}
+        sx={{ mt: 4, color: theme.palette.grey[900], textAlign: 'center' }}
+      >
         {formatMessage({ id: 'PROFILE.USER_INFO.PANEL' })}
       </Typography>
       <Divider sx={{ mb: 4 }} />
-      <Stack gap={4} sx={{ width: '100%' }}>
-        <Box sx={{ display: 'flex', width: '100%', gap: 2, justifyContent: 'space-between', mt: 4 }}>
+      <Stack gap={3} sx={{ width: '100%', paddingX: 4 }}>
+        <Box sx={{ display: 'flex', width: '100%', gap: 2, justifyContent: 'space-between', mt: 2 }}>
           <CustomInputField
             name="name"
             label={formatMessage({ id: 'COMMON.FIRST_NAME' })}
@@ -74,9 +82,7 @@ const UserInfoPersonal: FunctionComponent<UserInfoPersonalProps> = ({ className,
             value={name}
             onChange={(e) => setName(e.target.value)}
             autoComplete="name"
-            hidden
             size="small"
-            aria-hidden="true"
             aria-label={formatMessage({ id: 'COMMON.FIRST_NAME' })}
           />
           <CustomInputField
@@ -86,9 +92,7 @@ const UserInfoPersonal: FunctionComponent<UserInfoPersonalProps> = ({ className,
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             autoComplete="lastName"
-            hidden
             size="small"
-            aria-hidden="true"
             aria-label={formatMessage({ id: 'COMMON.LAST_NAME' })}
             sx={{ width: '100%' }}
           />
@@ -104,8 +108,6 @@ const UserInfoPersonal: FunctionComponent<UserInfoPersonalProps> = ({ className,
           size="small"
           aria-label={formatMessage({ id: 'COMMON.EMAIL' })}
           autoComplete="email"
-          hidden
-          aria-hidden="true"
           sx={{ width: '100%' }}
         />
         <CustomInputField
@@ -118,22 +120,18 @@ const UserInfoPersonal: FunctionComponent<UserInfoPersonalProps> = ({ className,
           size="small"
           aria-label={formatMessage({ id: 'COMMON.PHONE.NUMBER' })}
           autoComplete="phone"
-          hidden
-          aria-hidden="true"
           sx={{ width: '100%' }}
         />
         <CustomInputField
           name="address"
           label={formatMessage({ id: 'COMMON.ADRESS' })}
           value={address}
-          onChange={(e) => setAdress(e.target.value)}
+          onChange={(e) => setAddress(e.target.value)}
           type="text"
           fullWidth
           size="small"
           aria-label={formatMessage({ id: 'COMMON.ADRESS' })}
           autoComplete="address"
-          hidden
-          aria-hidden="true"
           sx={{ width: '100%' }}
         />
         <CustomInputField
@@ -146,14 +144,11 @@ const UserInfoPersonal: FunctionComponent<UserInfoPersonalProps> = ({ className,
           size="small"
           aria-label={formatMessage({ id: 'COMMON.CITY' })}
           autoComplete="city"
-          hidden
-          aria-hidden="true"
           sx={{ width: '100%' }}
         />
         {showSaveButton && (
           <Button
             onClick={handleSaveChanges}
-            loading={isSomeInputChange}
             sx={{ mr: 0, ml: 'auto', display: 'flex' }}
             aria-label={formatMessage({ id: 'PROFILE.SECURITY.SAVE' })}
           >

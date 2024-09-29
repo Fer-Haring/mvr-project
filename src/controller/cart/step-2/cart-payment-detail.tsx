@@ -1,8 +1,10 @@
 import { Box, Divider, Paper, Stack, Typography, alpha, styled, useTheme } from '@mui/material';
-import { CartItem } from '@webapp/sdk/users-types';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
+import { CartItem } from '@webapp/sdk/types/cart-types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useCompletedOrdersStore } from '@webapp/store/orders/get-completed-orders';
+import React from 'react';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
@@ -13,6 +15,7 @@ interface CartProductsDetailProps {
 
 export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ cartProducts }) => {
   const theme = useTheme();
+  const isMobile = useIsMobile();
   const { formatMessage } = useIntl();
   const { dollarValue } = useDollarValue();
   const [totalCartValue, setTotalCartValue] = useState(0);
@@ -24,8 +27,8 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
   useEffect(() => {
     const calculateTotal = (): number => {
       return cartProducts.reduce((acc, product) => {
-        const conversionRate = product.priceCurrency === 'USD' ? dollarValue.value : 1;
-        const convertedValue = product.subTotal * Number(conversionRate);
+        const conversionRate = product.price_currency === 'USD' ? dollarValue.value : 1;
+        const convertedValue = product.sub_total * Number(conversionRate);
         const roundedResult = Math.round(convertedValue * 100) / 100;
         return roundedResult + acc;
       }, 0);
@@ -33,25 +36,23 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
     const totalCartValue = calculateTotal() + deliverValue;
     setTotalCartValue(totalCartValue);
     setSubTotal(calculateTotal());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cartProducts, dollarValue, deliverValue]);
 
   useEffect(() => {
-    const totalUSD = totalCartValue / dollarValue.value;
+    const totalUSD = totalCartValue / Number(dollarValue.value);
     setOrder({
       ...order,
-      totalOrderAmountARS: totalCartValue,
-      totalOrderAmountUSD: Math.round(totalUSD * 100) / 100,
+      total_order_amount_ars: totalCartValue,
+      total_order_amount_usd: Math.round(totalUSD * 100) / 100,
     });
     setOrders([
       {
         ...order,
-        totalOrderAmount: totalCartValue,
-        totalOrderAmountARS: totalCartValue,
-        totalOrderAmountUSD: Math.round(totalUSD * 100) / 100,
+        total_order_amount: totalCartValue,
+        total_order_amount_ars: totalCartValue,
+        total_order_amount_usd: Math.round(totalUSD * 100) / 100,
       },
     ]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCartValue]);
 
   return (
@@ -71,7 +72,7 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
       <Box
         sx={{
           display: 'flex',
-          flexDirection: 'row',
+          flexDirection: isMobile ? 'column' : 'row',
           gap: 4,
           width: '100%',
           pt: 4,
@@ -80,32 +81,36 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
         }}
       >
         <Stack direction={'column'} gap={4} width={'100%'}>
-          <TextsContainer>
-            <CustomTypography variant="h5">{formatMessage({ id: 'CART.PAYMENT.DETAILS.ADDRESS' })}</CustomTypography>
-            <CustomTypography variant="subtitle1">
-              {address}, {msgCity}
-            </CustomTypography>
-          </TextsContainer>
-          <TextsContainer>
-            <CustomTypography variant="h5">{formatMessage({ id: 'CART.PAYMENT.DETAILS.PAYMENT' })}</CustomTypography>
-            <CustomTypography variant="subtitle1">{order.paymentMethod}</CustomTypography>
-          </TextsContainer>
-          <TextsContainer>
-            <CustomTypography variant="h5">
-              {formatMessage({ id: 'CART.PAYMENT.DETAILS.DELIVER.TYPE' })}
-            </CustomTypography>
-            <CustomTypography variant="subtitle1">{order.deliveryType}</CustomTypography>
-          </TextsContainer>
-          <TextsContainer>
-            <CustomTypography variant="h5">
-              {formatMessage({ id: 'CART.PAYMENT.DETAILS.SLECTED.CURRENCY' })}
-            </CustomTypography>
-            {order.currencyUsedToPay === 'USD' ? (
-              <CustomTypography variant="subtitle1">{formatMessage({ id: 'CART.PAYMENT.USD' })}</CustomTypography>
-            ) : (
-              <CustomTypography variant="subtitle1">{formatMessage({ id: 'CART.PAYMENT.ARS' })}</CustomTypography>
-            )}
-          </TextsContainer>
+          <Stack direction={isMobile ? 'row' : 'column'} gap={2} width={'100%'}>
+            <TextsContainer>
+              <CustomTypography variant="h5">{formatMessage({ id: 'CART.PAYMENT.DETAILS.ADDRESS' })}</CustomTypography>
+              <CustomTypography variant="subtitle1">
+                {address}, {msgCity}
+              </CustomTypography>
+            </TextsContainer>
+            <TextsContainer>
+              <CustomTypography variant="h5">{formatMessage({ id: 'CART.PAYMENT.DETAILS.PAYMENT' })}</CustomTypography>
+              <CustomTypography variant="subtitle1">{order.payment_method}</CustomTypography>
+            </TextsContainer>
+          </Stack>
+          <Stack direction={isMobile ? 'row' : 'column'} gap={2} width={'100%'}>
+            <TextsContainer>
+              <CustomTypography variant="h5">
+                {formatMessage({ id: 'CART.PAYMENT.DETAILS.DELIVER.TYPE' })}
+              </CustomTypography>
+              <CustomTypography variant="subtitle1">{order.delivery_type}</CustomTypography>
+            </TextsContainer>
+            <TextsContainer>
+              <CustomTypography variant="h5">
+                {formatMessage({ id: 'CART.PAYMENT.DETAILS.SLECTED.CURRENCY' })}
+              </CustomTypography>
+              {order.currency_used_to_pay === 'USD' ? (
+                <CustomTypography variant="subtitle1">{formatMessage({ id: 'CART.PAYMENT.USD' })}</CustomTypography>
+              ) : (
+                <CustomTypography variant="subtitle1">{formatMessage({ id: 'CART.PAYMENT.ARS' })}</CustomTypography>
+              )}
+            </TextsContainer>
+          </Stack>
         </Stack>
 
         <Stack direction={'column'} gap={4} width={'100%'}>
@@ -128,9 +133,9 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
                 {formatMessage({ id: 'CART.PAYMENT.DETAILS.TOTAL' })}
               </CustomTypography>
               <StyledDivider orientation="horizontal" flexItem />
-              {order.currencyUsedToPay === 'USD' ? (
+              {order.currency_used_to_pay === 'USD' ? (
                 <CustomTypography sx={{ fontSize: 24, fontWeight: 'bold' }} variant="subtitle1">
-                  $ {totalCartValue / dollarValue.value}
+                  $ {(totalCartValue / Number(dollarValue.value)).toFixed(2)}
                 </CustomTypography>
               ) : (
                 <CustomTypography sx={{ fontSize: 24, fontWeight: 'bold' }} variant="subtitle1">

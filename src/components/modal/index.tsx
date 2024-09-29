@@ -1,5 +1,3 @@
-import { FunctionComponent } from 'react';
-
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -7,6 +5,7 @@ import { default as MuiModal, ModalProps as MuiModalProps } from '@mui/material/
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
+import React, { FunctionComponent } from 'react';
 
 import Button, { ButtonColors } from '../button';
 
@@ -36,9 +35,9 @@ const StyledMuiModal = styled(MuiModal)(({ theme }) => ({
 
   '& .modal-wrapper': {
     backgroundColor: theme.palette.background.default,
-    padding: theme.spacing(4),
+    padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadius,
-    width: 'min(75vw, 720px)',
+    width: 'min(75vw, 1080px)',
   },
 }));
 
@@ -61,7 +60,6 @@ const Modal: FunctionComponent<ModalProps> = ({
   handleClose,
   ...props
 }) => {
-
   return (
     <StyledMuiModal
       className={className || ''}
@@ -107,7 +105,7 @@ const Modal: FunctionComponent<ModalProps> = ({
             }}
             spacing={2}
             alignItems="center"
-            justifyContent="flex-end"
+            justifyContent={primaryButtonText ? 'center' : 'flex-end'}
           >
             {secondaryButtonText && (
               <Button

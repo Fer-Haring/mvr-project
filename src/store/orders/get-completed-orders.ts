@@ -1,10 +1,11 @@
-import { CompletedOrder } from '@webapp/sdk/users-types';
+import { OrderResponse } from '@webapp/sdk/types/orders-types';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
+
 
 interface CompletedOrdersData {
-  orders: CompletedOrder[];
-  setOrders: (orders: CompletedOrder[]) => void;
+  orders: OrderResponse[];
+  setOrders: (orders: OrderResponse[]) => void;
   resetStore: () => void;
 }
 
@@ -12,12 +13,12 @@ export const useCompletedOrdersStore = create(
   persist<CompletedOrdersData>(
     (set) => ({
       orders: [],
-      setOrders: (orders: CompletedOrder[]) => set({ orders }),
-			resetStore: () => set({ orders: [] }),
+      setOrders: (orders: OrderResponse[]) => set({ orders }),
+      resetStore: () => set({ orders: [] }),
     }),
     {
       name: 'completedOrdersData',
-      getStorage: () => localStorage,
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );

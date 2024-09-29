@@ -1,10 +1,11 @@
+import { Product } from '@webapp/sdk/types/products-types';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { Products } from '@webapp/sdk/users-types';
+import { createJSONStorage, persist } from 'zustand/middleware';
+// import { Products } from '@webapp/sdk/types/user-types';
 
 type ProductListData = {
-  productList: Products[]; 
-  setProductList: (productList: Products[]) => void;
+  productList: Product[]; 
+  setProductList: (productList: Product[]) => void;
 };
 
 export const useProductsListData = create(
@@ -15,7 +16,7 @@ export const useProductsListData = create(
     }),
     {
       name: 'productListData',
-      getStorage: () => localStorage,
+      storage: createJSONStorage(() => localStorage)
     }
   )
 );

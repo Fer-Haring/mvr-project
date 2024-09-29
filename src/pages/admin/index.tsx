@@ -2,21 +2,24 @@ import { alpha, useTheme } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import ContentWrapper from '@webapp/components/content-wrapper';
+import AdminDataGrid from '@webapp/controller/admin/admin-data-grid';
 import DollarValueInputPaper from '@webapp/controller/admin/admin-panel-papers/dollar-value-admin-paper';
-import DonutChartPaper from '@webapp/controller/admin/admin-panel-papers/donut-chart-admin-paper';
-import PendingOrdersPaper from '@webapp/controller/admin/admin-panel-papers/pending-orders-admin-paper';
+import ExtraAccesAdminPaperPaper from '@webapp/controller/admin/admin-panel-papers/extra-access-admin-panel';
 import TotalOrdersPaper from '@webapp/controller/admin/admin-panel-papers/total-orders-admin-paper';
 import TotalProductsPaper from '@webapp/controller/admin/admin-panel-papers/total-products-admin-paper';
 import TotalSalesPaper from '@webapp/controller/admin/admin-panel-papers/total-sales-admin-paper';
-import { useAdminDataStore } from '@webapp/store/admin/admin-data';
-import { FunctionComponent } from 'react';
+import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
+import { useProductsListData } from '@webapp/store/products/products-list';
+import React, { useEffect } from 'react';
 
-// import { AdminTable } from '../../controller/admin/admin-table';
-import AdminDataGrid from '@webapp/controller/admin/admin-data-grid';
-
-export const AdminDashboardPage: FunctionComponent = () => {
+export const AdminDashboardPage: React.FunctionComponent = () => {
   const theme = useTheme();
-  const { orders } = useAdminDataStore();
+  const { setProductList } = useProductsListData();
+  const productListArray = useProductListQuery(1, 500);
+
+  useEffect(() => {
+    setProductList(productListArray.data?.products || []);
+  }, [productListArray.data?.products, setProductList]);
 
   return (
     <ContentWrapper>
@@ -32,12 +35,10 @@ export const AdminDashboardPage: FunctionComponent = () => {
         <TotalProductsPaper />
         <TotalOrdersPaper />
         <TotalSalesPaper />
-        <DonutChartPaper />
-        <PendingOrdersPaper orders={orders} />
+        <ExtraAccesAdminPaperPaper />
       </Stack>
       <Paper sx={{ p: 2, width: '100%', mt: 2, backgroundColor: alpha(theme.palette.common.white, 0.7) }}>
-        {/* <AdminTable /> */}
-        <AdminDataGrid/>
+        <AdminDataGrid />
       </Paper>
     </ContentWrapper>
   );

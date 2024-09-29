@@ -5,8 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { alpha, styled, useTheme } from '@mui/material/styles';
-import { logout } from '@webapp/sdk/firebase/auth';
-import { useUserData } from '@webapp/store/users/user-data';
+import { useLogout } from '@webapp/sdk/mutations/auth/user-logout-mutation';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
@@ -80,7 +79,7 @@ const Avatar: FunctionComponent<AvatarProps> = ({ className, active, fullName, i
   const intl = useIntl();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { cleanUserLogout } = useUserData();
+  const logoutMutation = useLogout();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -114,9 +113,17 @@ const Avatar: FunctionComponent<AvatarProps> = ({ className, active, fullName, i
   };
 
   const handleLogout = async () => {
-    await logout();
-    cleanUserLogout();
-    navigate('/sign-in');
+    try {
+      const token = localStorage.getItem('access_token');
+      const tokenType = localStorage.getItem('token_type');
+      if (token && tokenType) {
+        await logoutMutation.mutateAsync();
+      } else {
+        console.error('No token or token type available');
+      }
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
   };
 
   return (
@@ -150,7 +157,7 @@ const Avatar: FunctionComponent<AvatarProps> = ({ className, active, fullName, i
         open={open}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: 'top',
+          vertical: 'bottom',
           horizontal: getAvatarSizeWithMargin(),
         }}
         sx={{

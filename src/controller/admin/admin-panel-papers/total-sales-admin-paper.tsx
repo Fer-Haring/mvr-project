@@ -1,10 +1,9 @@
 import { Typography, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-// import { CompletedOrder } from '@webapp/sdk/users-types';
 import statisticsAnimation from '@webapp/assets/images/animations/statistics.json';
-import { useAdminDataStore } from '@webapp/store/admin/admin-data';
-import { FunctionComponent } from 'react';
+import { useGetAllOrders } from '@webapp/sdk/mutations/orders/get-all-orders-query';
+import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 import Lottie from 'react-lottie';
 
@@ -17,13 +16,13 @@ type TotalsByCurrency = {
 const TotalSalesPaper: FunctionComponent = () => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
-  const { orders } = useAdminDataStore();
+  const orders = useGetAllOrders();
   const totalsByCurrency: TotalsByCurrency = {};
 
-  Object.values(orders).forEach((order) => {
-    order.cartItems?.forEach((item) => {
-      const currency = item.priceCurrency;
-      const subTotal = Number(item.subTotal);
+  Object.values(orders?.data || []).forEach((order) => {
+    order.cart_items?.forEach((item) => {
+      const currency = item.price_currency;
+      const subTotal = Number(item.sub_total);
       if (totalsByCurrency[currency]) {
         totalsByCurrency[currency] += subTotal;
       } else {

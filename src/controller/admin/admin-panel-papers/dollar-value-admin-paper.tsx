@@ -1,9 +1,9 @@
 import { Typography, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import InputField from '@webapp/components/form/input';
-import { updateDollarValue } from '@webapp/sdk/firebase/admin';
+// import { useUpdateDollarValue } from '@webapp/sdk/mutations/admin/update-dollar-value-mutation';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
-import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import { CustomAdminPaper } from './papers-styles';
@@ -11,7 +11,8 @@ import { CustomAdminPaper } from './papers-styles';
 const DollarValueInputPaper: FunctionComponent = () => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
-  const { dollarValue, setDollarValue } = useDollarValue();
+  const { dollarValue } = useDollarValue();
+  // const { mutate } = useUpdateDollarValue();
 
   const [inputValue, setInputValue] = useState(
     Object.values(dollarValue?.value)[0] ? Object.values(dollarValue?.value)[0] : dollarValue.value
@@ -23,15 +24,15 @@ const DollarValueInputPaper: FunctionComponent = () => {
     }
   }, [dollarValue, inputValue]);
 
-  const handleUpdateDollarValue = async (event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setInputValue(value);
-    const parsedValue = parseFloat(value);
-    if (!isNaN(parsedValue)) {
-      setDollarValue(parsedValue);
-      await updateDollarValue(parsedValue);
-    }
-  };
+  // const handleUpdateDollarValue = async (event: ChangeEvent<HTMLInputElement>) => {
+  //   const value = event.target.value;
+  //   setInputValue(value);
+  //   const parsedValue = parseFloat(value);
+  //   if (!isNaN(parsedValue)) {
+  //     setDollarValue(parsedValue);
+  //     mutate({ dollarValue: parsedValue });
+  //   }
+  // };
 
   return (
     <CustomAdminPaper>
@@ -60,11 +61,12 @@ const DollarValueInputPaper: FunctionComponent = () => {
           name="dollarValue"
           type="number"
           value={inputValue}
-          onChange={handleUpdateDollarValue}
+          // onChange={handleUpdateDollarValue}
           hidden
           size="small"
           aria-hidden="true"
           aria-label={formatMessage({ id: 'COMMON.DOLLAR.VALUE' })}
+          disabled={true}
           sx={{
             paddingX: theme.spacing(6),
             '& .MuiOutlinedInput-root': {

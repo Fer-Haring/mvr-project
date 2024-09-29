@@ -43,7 +43,9 @@
   "AUTH.SIGN_UP.FIRST_NAME.LABEL": "First Name",
   "AUTH.SIGN_UP.LAST_NAME.LABEL": "Last Name",
   "AUTH.SIGN_UP.EMAIL.LABEL": "Email",
+  "AUTH.SIGN_UP.USERNAME.LABEL": "Username",
   "AUTH.SIGN_UP.PASSWORD.LABEL": "Password",
+  "AUTH.SIGN_UP.USERNAME.PHONE.LABEL": "Phone Number",
   "AUTH.SIGN_UP.PASSWORD.CONFIRM.LABEL": "Confirm Password",
   "AUTH.SIGN_UP.PASSWORD.ERROR": "The password you entered does not match the security standards.",
   "AUTH.SIGN_UP.PASSWORD.HELPER_TEXT": "Password must be alphanumeric, at least 1 uppercase character, and at least 8 characters long.",
@@ -86,5 +88,14 @@
   "AUTH.VERIFICATION_CODE.RESEND_CODE.LINK.LABEL": "Resend code",
   "AUTH.VERIFICATION_CODE.RESEND_CODE.LINK.SENDING.LABEL": "Sending code...",
   "AUTH.VERIFICATION_CODE.RESEND_CODE.LINK.SENT.LABEL": "Your code has been sent",
-  "AUTH.PASSWORD_CHANGE.SUCCESS": "Password successfully changed"
+  "AUTH.PASSWORD_CHANGE.SUCCESS": "Password successfully changed",
+  "AUTH.CREATE.PASSWORD.TITLE": "Create Password",
+"AUTH.CREATE.PASSWORD.SUBTITLE": "Create a password to secure your account.",
+"AUTH.CREATE.PASSWORD.PASSWORD.LABEL": "Password",
+"AUTH.CREATE.PASSWORD.PASSWORD.ERROR": "The password you entered does not match the security standards.",
+"AUTH.CREATE.PASSWORD.PASSWORD.HELPER_TEXT": "Password must be alphanumeric, at least one uppercase character, and at least eight characters long.",
+"AUTH.CREATE.PASSWORD.CONFIRM.LABEL": "Confirm Password",
+"AUTH.CREATE.PASSWORD.BUTTON.LABEL": "Create Password",
+"AUTH.CREATE.PASSWORD.PASSWORD.CONFIRM.LABEL": "Confirm Password",
+"AUTH.CREATE.PASSWORD.SUCCESS": "Password successfully created"
 }

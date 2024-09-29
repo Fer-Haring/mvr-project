@@ -1,6 +1,6 @@
-import { User } from '@webapp/sdk/users-types';
+import { User } from '@webapp/sdk/types/user-types';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 type UserData = {
   user: User;
@@ -10,53 +10,59 @@ type UserData = {
 
 export const useUserData = create(
   persist<UserData>(
-    (set) => ({
-      user: {
-        userId: '',
-        name: '',
-        lastName: '',
-        email: '',
-        profilePicture: '',
-        admin: false,
-        address: '',
-        city: '',
-        deliveryType: '',
-        paymentMethod: '',
-        cartItems: [], // cartItems ahora es un arreglo directamente en User
-        completedOrders: [], // completedOrders ahora es un arreglo directamente en User
-        phone: '',
-        deliverZone: '',
-        preferredCurrency: '',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      setUser: (user) => set({ user }),
-      cleanUserLogout: () =>
-        set({
-          user: {
-            userId: '',
-            name: '',
-            lastName: '',
-            email: '',
-            profilePicture: '',
-            admin: false,
-            address: '',
-            city: '',
-            deliveryType: '',
-            paymentMethod: '',
-            cartItems: [],
-            completedOrders: [],
-            phone: '',
-            deliverZone: '',
-            preferredCurrency: '',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-        }),
-    }),
+    (set) => {
+      return {
+        user: {
+          id: '',
+          name: '',
+          last_name: '',
+          email: '',
+          profile_picture: '',
+          admin: false,
+          address: '',
+          city: '',
+          delivery_type: '',
+          payment_method: '',
+          delivery_cost: 0,
+          cart_items: [],
+          completed_orders: [],
+          phone: '',
+          delivery_zone: '',
+          preferred_currency: '',
+          password: '',
+          username: '',
+          favorite_products: [],
+        },
+        setUser: (user) => set({ user }),
+        cleanUserLogout: () =>
+          set({
+            user: {
+              id: '',
+              name: '',
+              last_name: '',
+              email: '',
+              profile_picture: '',
+              admin: false,
+              address: '',
+              city: '',
+              delivery_type: '',
+              delivery_cost: 0,
+              payment_method: '',
+              cart_items: [],
+              completed_orders: [],
+              phone: '',
+              delivery_zone: '',
+              preferred_currency: '',
+              password: '',
+              username: '',
+              favorite_products: [],
+            },
+          }),
+      };
+    },
     {
       name: 'userData', // Nombre del store para persistencia
-      getStorage: () => localStorage, // Define localStorage como el método de almacenamiento
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );

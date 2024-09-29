@@ -82,6 +82,7 @@ const Wrapper = styled(Box)(({ theme }) => ({
 
 interface VerificationCodeCtrlProps {
   className?: string;
+  value?: string; // Add value prop
   placeholder?: string;
   length?: number;
   error?: boolean;
@@ -92,6 +93,7 @@ interface VerificationCodeCtrlProps {
 
 const VerificationCodeCtrl: FunctionComponent<VerificationCodeCtrlProps> = ({
   className,
+  value, // Use value prop
   placeholder,
   length = codeLength,
   error,
@@ -102,19 +104,21 @@ const VerificationCodeCtrl: FunctionComponent<VerificationCodeCtrlProps> = ({
   return (
     <Wrapper
       className={`${className || ''} ${error ? 'error' : ''} ${success ? 'success' : ''}`}
-      role="group" // Use role="group" to group related elements.
-      aria-label="Verification Code Input" // Provide a label for the group.
+      role="group"
+      aria-label="Verification Code Input"
     >
       <ReactInputVerificationCode
         length={length}
         autoFocus
         placeholder={placeholder || ''}
+        value={value} // Pass value prop
         onChange={(data) => onChange(data)}
         onCompleted={(data) => onCompleted(data)}
-        aria-label="Verification Code Input" // Provide a label for the input.
+        aria-label="Verification Code Input"
       />
     </Wrapper>
   );
 };
+
 
 export default VerificationCodeCtrl;

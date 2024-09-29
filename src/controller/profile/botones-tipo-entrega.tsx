@@ -3,11 +3,10 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
-import { updateUserInDb } from '@webapp/sdk/firebase/user';
-import { User } from '@webapp/sdk/users-types';
+import { useUpdateUser } from '@webapp/sdk/mutations/auth/user-update-mutation';
+import { User } from '@webapp/sdk/types/user-types';
 import { useUserData } from '@webapp/store/users/user-data';
-import { useUserId } from '@webapp/store/users/user-id';
-import { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 interface DeliveryTypeButtonsProps {
@@ -18,9 +17,9 @@ interface DeliveryTypeButtonsProps {
 const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ userData }) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
-  const { userId } = useUserId();
   const { setUser } = useUserData();
-  const [deliveryType, setDeliveryType] = useState(userData.deliveryType);
+  const [deliveryType, setDeliveryType] = useState(userData?.delivery_type);
+  const { mutate } = useUpdateUser(userData?.id);
 
   const handleSelectDelivery = () => {
     setDeliveryType('Delivery');
@@ -34,18 +33,23 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ user
 
   const handleOnChange = (selectedDelivery: string) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { userId: ignoredUserId, ...restOfUserData } = userData;
-    updateUserInDb({ userId, ...restOfUserData, deliveryType: selectedDelivery });
-    setUser({ ...userData, deliveryType: selectedDelivery });
+    const { id: ignoredUserId, ...restOfUserData } = userData;
+    mutate({ payload: { ...restOfUserData, delivery_type: selectedDelivery } });
+    setUser({ ...userData, delivery_type: selectedDelivery });
   };
 
   return (
-    <Stack gap={2} sx={{ mt: 4, width: '100%', display: 'flex' }}>
-      <Typography variant="h4" fontWeight={600} fontSize={22} sx={{ mb: 0, color: theme.palette.grey[900] }}>
+    <Stack gap={2} sx={{ mt: 2, width: '100%', display: 'flex' }}>
+      <Typography
+        variant="h4"
+        fontWeight={600}
+        fontSize={22}
+        sx={{ mb: 0, color: theme.palette.grey[900], textAlign: 'center' }}
+      >
         {formatMessage({ id: 'PROFILE.USER_INFO.SELECTED.OPTIONS' })}
       </Typography>
-      <Divider sx={{ mb: 2 }} />
-      <Stack gap={2} sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <Divider sx={{ mb: 1 }} color="#000000" orientation="horizontal" />
+      <Stack gap={2} sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 2 }}>
         <Typography
           variant="h4"
           fontWeight={600}
@@ -67,17 +71,7 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ user
           <Button
             onClick={handleSelectDelivery}
             onSelect={() => handleOnChange('Delivery')}
-            sx={{
-              width: '100%',
-              maxWidth: '236px',
-              height: '48px',
-              backgroundColor: deliveryType === 'Delivery' ? theme.palette.primary.main : theme.palette.grey[200],
-              border: deliveryType === 'Delivery' ? 'none' : `1px solid ${theme.palette.divider}`,
-              '&:hover': {
-                backgroundColor: deliveryType === 'Delivery' ? theme.palette.primary.main : theme.palette.grey[300],
-                border: deliveryType === 'Delivery' ? 'none' : `1px solid ${theme.palette.divider}`,
-              },
-            }}
+            color={deliveryType === 'Delivery' ? 'primary' : 'unselected'}
             aria-label={formatMessage({ id: 'COMMON.SELECTED.DELIVERY.DELIVERY' })}
           >
             {formatMessage({ id: 'COMMON.SELECTED.DELIVERY.DELIVERY' })}
@@ -85,19 +79,7 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ user
           <Button
             onClick={handleSelectLocalPickup}
             onSelect={() => handleOnChange('Retiro en local')}
-            sx={{
-              width: '100%',
-              maxWidth: '236px',
-              height: '48px',
-              backgroundColor:
-                deliveryType === 'Retiro en local' ? theme.palette.primary.main : theme.palette.grey[200],
-              border: deliveryType === 'Retiro en local' ? 'none' : `1px solid ${theme.palette.divider}`,
-              '&:hover': {
-                backgroundColor:
-                  deliveryType === 'Retiro en local' ? theme.palette.primary.main : theme.palette.grey[300],
-                border: deliveryType === 'Retiro en local' ? 'none' : `1px solid ${theme.palette.divider}`,
-              },
-            }}
+            color={deliveryType === 'Retiro en local' ? 'primary' : 'unselected'}
             aria-label={formatMessage({ id: 'COMMON.SELECTED.DELIVERY.LOCAL_PICKUP' })}
           >
             {formatMessage({ id: 'COMMON.SELECTED.DELIVERY.LOCAL_PICKUP' })}

@@ -1,18 +1,19 @@
-import { Products } from '@webapp/sdk/users-types';
+
+import { Product } from '@webapp/sdk/types/products-types';
 import { create } from 'zustand';
 
 // Define el estado inicial de la tienda
 interface BulkEditState {
-  products: Products[];
-  selectedProducts: Products[];
-  originalSelectedProducts: Products[];
+  products: Product[];
+  selectedProducts: Product[];
+  originalSelectedProducts: Product[];
 }
 
 // Define las acciones que se pueden despachar
 interface BulkEditActions {
-  setProducts: (products: Products[]) => void;
-  setSelectedProducts: (products: Products[]) => void;
-  updateSelectedProducts: (updatedFields: Partial<Products>) => void;
+  setProducts: (products: Product[]) => void;
+  setSelectedProducts: (products: Product[]) => void;
+  updateSelectedProducts: (updatedFields: Partial<Product>) => void;
   clearSelectedProducts: () => void;
 }
 
@@ -32,7 +33,7 @@ const useBulkEditStore = create<BulkEditState & BulkEditActions>((set) => ({
       ...updatedFields,
     })),
     products: state.products.map((product) =>
-      state.selectedProducts.some((selected) => selected.productId === product.productId)
+      state.selectedProducts.some((selected) => selected.id === product.id)
         ? { ...product, ...updatedFields }
         : product
     ),

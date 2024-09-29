@@ -6,6 +6,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
 import { styled, useTheme } from '@mui/material/styles';
 import BackgroundVideo from '@webapp/assets/videos/video-login.mp4';
+import AlternateLogin from '@webapp/components/auth/alternate-login';
 import FormWrapper from '@webapp/components/auth/form-wrapper';
 import PasswordRequirements from '@webapp/components/auth/password-requirements';
 import Button from '@webapp/components/button';
@@ -13,8 +14,7 @@ import InputField from '@webapp/components/form/input';
 import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
 import SnackbarUtils from '@webapp/components/snackbar';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { saveUserInDb, signUp } from '@webapp/sdk/firebase/auth';
-import { auth } from '@webapp/sdk/firebase/firebase';
+import { useSignupMutation } from '@webapp/sdk/mutations/auth/user-sign-up-mutation';
 import { validateEmail } from '@webapp/utils/input-validations';
 import { AnimatePresence } from 'framer-motion';
 import React, { FunctionComponent, useState } from 'react';
@@ -38,20 +38,31 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [email, setEmail] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  const signUpMutation = useSignupMutation(navigate);
 
-  const isSignUpLoading = false;
+  const isSignUpLoading = signUpMutation.isPending;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      await signUp(email, password);
-      const user = auth.currentUser?.uid;
-      saveUserInDb(firstName, lastName, email, '', user);
-      navigate('/sign-in');
+      await signUpMutation.mutateAsync({
+        name: firstName,
+        last_name: lastName,
+        username: username,
+        email: email,
+        password: password,
+        phone: phoneNumber,
+      });
     } catch (error) {
-      SnackbarUtils.error('An unexpected error occurred');
+      if (error instanceof Error) {
+        SnackbarUtils.error(error.message);
+      } else {
+        SnackbarUtils.error('Ocurrió un error inesperado.');
+      }
     }
   };
 
@@ -84,6 +95,14 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
     navigate('/sign-in');
   };
 
+  async function loginWithGoogle() {
+    window.location.href = 'https://mvr-prod.onrender.com/login/google';
+  }
+
+  const handleGoogleSignUp = async () => {
+    await loginWithGoogle();
+  };
+
   const handleDisabled =
     !validateEmail(email) ||
     !/^(?=.*?[A-Z])(?=.*?[0-9])[\S]{8,}$/.test(password) ||
@@ -91,7 +110,9 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
     password !== confirmPassword ||
     !!getConfirmPasswordError() ||
     !firstName ||
-    !lastName;
+    !lastName ||
+    !phoneNumber ||
+    !username;
 
   return (
     <section id="SignUp" className={className || ''} aria-labelledby="sign-up-title">
@@ -143,7 +164,39 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                       aria-label={formatMessage({ id: 'AUTH.SIGN_UP.LAST_NAME.LABEL' })}
                     />
                   </Stack>
-                  <Stack direction={{ sm: 'column', md: 'row' }} spacing={1} rowGap={1}>
+                  <Stack direction={'column'} spacing={0} rowGap={1}>
+                    <InputField
+                      name="username"
+                      required
+                      fullWidth
+                      variant="standard"
+                      id="username"
+                      autoComplete="given-name"
+                      label={formatMessage({ id: 'AUTH.SIGN_UP.USERNAME.LABEL' })}
+                      value={username}
+                      onBlur={() => setTouched({ ...touched, username: true })}
+                      onChange={(ev) => username.length < 30 && setUsername(ev.target.value)}
+                      error={touched.username && !username}
+                      helperText={touched.username && !username ? formatMessage({ id: 'COMMON.REQUIRED' }) : ''}
+                      autoFocus
+                      aria-label={formatMessage({ id: 'AUTH.SIGN_UP.USERNAME.LABEL' })}
+                    />
+                    <InputField
+                      name="phone"
+                      required
+                      fullWidth
+                      variant="standard"
+                      id="phone"
+                      autoComplete="phone"
+                      label={formatMessage({ id: 'AUTH.SIGN_UP.USERNAME.PHONE.LABEL' })}
+                      value={phoneNumber}
+                      onBlur={() => setTouched({ ...touched, phoneNumber: true })}
+                      onChange={(ev) => phoneNumber.length < 30 && setPhoneNumber(ev.target.value)}
+                      error={touched.phoneNumber && !phoneNumber}
+                      helperText={touched.phoneNumber && !phoneNumber ? formatMessage({ id: 'COMMON.REQUIRED' }) : ''}
+                      autoFocus
+                      aria-label={formatMessage({ id: 'AUTH.SIGN_UP.USERNAME.PHONE.LABEL' })}
+                    />
                     <InputField
                       required
                       fullWidth
@@ -151,7 +204,7 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                       id="email"
                       autoComplete="email"
                       label={formatMessage({ id: 'AUTH.SIGN_UP.EMAIL.LABEL' })}
-                      value={email}
+                      value={email.toLowerCase()}
                       onBlur={() => setTouched({ ...touched, email: true })}
                       onChange={(ev) => setEmail(ev.target.value)}
                       error={touched.email && !validateEmail(email)}
@@ -195,6 +248,19 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                       }}
                       aria-label={formatMessage({ id: 'AUTH.SIGN_UP.PASSWORD.LABEL' })}
                     />
+                    <AnimatePresence mode="wait">
+                      {isPasswordFocused && (
+                        <PasswordRequirements
+                          hasAutoHide={true}
+                          password={password}
+                          sx={{
+                            position: 'relative',
+                            zIndex: 10,
+                          }}
+                          aria-label={formatMessage({ id: 'AUTH.SIGN_UP.PASSWORD.LABEL' })}
+                        />
+                      )}
+                    </AnimatePresence>
                     <InputField
                       required
                       fullWidth
@@ -227,23 +293,6 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                       aria-label={formatMessage({ id: 'AUTH.SIGN_UP.PASSWORD.CONFIRM.LABEL' })}
                     />
                   </Stack>
-                  <AnimatePresence mode="wait">
-                    {password && isPasswordFocused && (
-                      <PasswordRequirements
-                        hasAutoHide
-                        password={password}
-                        sx={{
-                          position: 'absolute',
-                          right: 0,
-                          bottom: 0,
-                          left: 0,
-                          transform: { xs: `translateY(calc(100% + ${theme.spacing(1)}))`, md: 'translateY(100%)' },
-                          zIndex: 10,
-                        }}
-                        aria-label={formatMessage({ id: 'AUTH.SIGN_UP.PASSWORD.LABEL' })}
-                      />
-                    )}
-                  </AnimatePresence>
                 </Stack>
                 <Stack direction="column" spacing={1} sx={{ mt: 4 }} role="group" aria-labelledby="sign-up-button">
                   <Button
@@ -259,18 +308,16 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                   </Button>
                   <Button
                     variant="text"
+                    color="text"
                     onClick={goToLogin}
                     fullWidth={isMobile}
-                    sx={{ flexShrink: 0 }}
+                    sx={{ flexShrink: 0, fontSize: '1rem' }}
                     aria-label={formatMessage({ id: 'AUTH.SIGN_UP.LINK.LABEL' })}
                   >
                     {formatMessage({ id: 'AUTH.SIGN_UP.LINK.LABEL' })}
                   </Button>
                 </Stack>
-                {/* <AlternateLogin
-              type="signup"
-              onClick={handleGoogleSignUp}
-            /> */}
+                {/* <AlternateLogin type="signup" onClick={handleGoogleSignUp} /> */}
               </Box>
             </FormWrapper>
           </Stack>

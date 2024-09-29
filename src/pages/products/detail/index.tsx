@@ -1,5 +1,5 @@
 import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
-import { FormControl, MenuItem, Select, SelectChangeEvent, styled, useTheme } from '@mui/material';
+import { FormControl, MenuItem, Select, SelectChangeEvent, alpha, styled, useTheme } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -8,52 +8,61 @@ import ContentWrapper from '@webapp/components/content-wrapper';
 import SnackbarUtils from '@webapp/components/snackbar';
 import ProductImageHolder from '@webapp/controller/product-detail/product-image-holder';
 import SimilarProducts from '@webapp/controller/product-detail/similar-products';
-import { getProductById } from '@webapp/sdk/firebase/products';
-import { CartItem } from '@webapp/sdk/users-types';
-import { useCartStore } from '@webapp/store/cart/cart';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
+import { useAddToCart } from '@webapp/sdk/mutations/cart/add-to-cart-mutation';
+import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
+import { useGetProductById } from '@webapp/sdk/mutations/products/get-product-by-id-query';
+import { CartItem } from '@webapp/sdk/types/cart-types';
+import { Product } from '@webapp/sdk/types/products-types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';
-import { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
 
 export const ProductDetailPage: FunctionComponent = () => {
   const theme = useTheme();
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const { formatMessage } = useIntl();
+  const isMobile = useIsMobile();
   const { product, setProduct } = useSingleProduct();
   const { productList } = useProductsListData();
-  const stockNumber = parseInt(product.actualStock, 10);
+  const stockNumber = product?.actual_stock || 0;
   const [selectedQuantity, setSelectedQuantity] = useState('1');
-  const { addToCart } = useCartStore();
+  const { data: productById, isLoading } = useGetProductById(id!);
+  const { mutateAsync: addToCartMutation, isPending } = useAddToCart();
+  const getCart = useGetUserCart();
 
   const handleQuantityChange = (event: SelectChangeEvent<string>) => {
     setSelectedQuantity(event.target.value);
   };
 
   useEffect(() => {
-    if (id !== product.productId) {
-      getProductById(id!).then(() => {
-        setProduct(product);
-      });
+    if (id && !isLoading && productById) {
+      if (id !== product?.id) {
+        setProduct(productById as Product);
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [id, isLoading, productById, product, setProduct]);
 
   const handleAddToCart = () => {
     if (!product) return;
 
     const cartItem: CartItem = {
-      productId: product.productId!,
-      productName: product.productName,
-      unitPrice: parseFloat(product.salePrice),
-      unitQuantity: parseInt(selectedQuantity, 10),
-      priceCurrency: product.priceCurrency,
-      subTotal: parseFloat(product.salePrice) * parseInt(selectedQuantity, 10),
+      product_id: product?.id,
+      product_name: product?.product_name,
+      unit_price: parseFloat(product?.sale_price),
+      price_currency: product?.price_currency,
+      product_category: product?.product_category,
+      product_description: product?.description,
+      sub_total: parseFloat(product?.sale_price) * parseInt(selectedQuantity, 10),
+      product_image: product?.product_image,
+      quantity: parseInt(selectedQuantity, 10),
     };
-
-    addToCart(cartItem, parseInt(selectedQuantity, 10));
-    SnackbarUtils.success(`${selectedQuantity} ${product.productName} agregado(s) al carrito`);
+    addToCartMutation(cartItem).then(() => {
+      getCart.refetch();
+      SnackbarUtils.success(formatMessage({ id: 'PRODUCT.ADD.TO.CART.SUCCESS' }));
+    });
   };
 
   const options = [];
@@ -78,18 +87,35 @@ export const ProductDetailPage: FunctionComponent = () => {
       </Typography>
       <Stack
         sx={{
-          mt: 3,
+          mt: 1,
           width: '100%',
           display: 'flex',
-          flexDirection: 'row',
+          flexDirection: isMobile ? 'column' : 'row',
           justifyContent: 'flex-start',
-          alignItems: 'flex-start',
+          alignItems: 'center',
           gap: theme.spacing(1),
           mb: theme.spacing(6),
         }}
       >
-        <ProductImageHolder product={product} id={product.productId!} />
-        <Paper sx={{ p: 2, width: '100%', mt: 3, maxWidth: 700, backgroundColor: 'rgba(255,255,255, 0.6)' }}>
+        <ProductImageHolder product={product} id={product?.id} />
+        <Paper
+          sx={{
+            p: 2,
+            width: '100%',
+            mt: 0,
+            maxWidth: 700,
+            backgroundColor: alpha(theme.palette.common.white, 0.6),
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          {stockNumber === 0 && (
+            <OutOfStockOverlay>
+              <Typography variant="h3" fontWeight={600} sx={{ color: theme.palette.error.main }}>
+                {formatMessage({ id: 'PRODUCT.DETAIL.NO.STOCK' })}
+              </Typography>
+            </OutOfStockOverlay>
+          )}
           <Stack
             sx={{
               mt: 1,
@@ -101,10 +127,10 @@ export const ProductDetailPage: FunctionComponent = () => {
             }}
           >
             <Typography variant="h2" fontWeight={600} sx={{ mb: 2, color: theme.palette.grey[900], fontSize: 39 }}>
-              {product.productName}
+              {product?.product_name}
             </Typography>
             <Typography variant="h4" fontWeight={400} sx={{ mb: 2, color: theme.palette.grey[700] }}>
-              {product.description}
+              {product?.description}
             </Typography>
           </Stack>
 
@@ -121,13 +147,13 @@ export const ProductDetailPage: FunctionComponent = () => {
             <Typography variant="body1" fontWeight={400} sx={{ color: theme.palette.grey[800] }}>
               {formatMessage({ id: 'PRODUCT.DETAIL.UNIT.PRICE' })}
             </Typography>
-            {product.priceCurrency === 'USD' ? (
+            {product?.price_currency === 'USD' ? (
               <Typography variant="h3" fontWeight={600} sx={{ mb: 2, color: theme.palette.grey[900] }}>
-                ${product.salePrice} USD
+                ${product?.sale_price} USD
               </Typography>
             ) : (
               <Typography variant="h3" fontWeight={600} sx={{ mb: 2, color: theme.palette.grey[900] }}>
-                ${product.salePrice} ARS
+                ${product?.sale_price} ARS
               </Typography>
             )}
           </Stack>
@@ -177,6 +203,7 @@ export const ProductDetailPage: FunctionComponent = () => {
             <Button
               variant="contained"
               color="primary"
+              loading={isPending}
               startIcon={<ShoppingCartRoundedIcon />}
               sx={{
                 ml: 2,
@@ -238,4 +265,18 @@ const CustomSelect = styled(Select)(({ theme }) => ({
   '& .MuiSelect-select.MuiSelect-select': {
     color: theme.palette.grey[800],
   },
+}));
+
+const OutOfStockOverlay = styled('div')(({ theme }) => ({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: alpha(theme.palette.common.white, 0.6),
+  zIndex: 1,
+  borderRadius: theme.shape.borderRadius,
 }));

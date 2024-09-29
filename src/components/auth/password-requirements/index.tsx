@@ -33,8 +33,8 @@ const BADGES = [
   },
 ];
 
-const ContainerWrapper = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
+const ContainerWrapper = styled(Box)<{ bagdesMet: boolean }>(({ theme, bagdesMet }) => ({
+  backgroundColor: bagdesMet ? theme.palette.success.main : theme.palette.grey[900],
   borderRadius: theme.shape.borderRadius,
   border: `1px solid ${theme.palette.grey[100]}`,
   padding: theme.spacing(2),
@@ -61,7 +61,7 @@ const PasswordRequirements: React.FC<PasswordRequirementsProps> = ({ password, h
   }, [password]);
 
   useEffect(() => {
-    if (hasAutoHide) {
+    if (hasAutoHide && allRulesMet) {
       if (allRulesMet) {
         const timer = setTimeout(() => {
           setShow(false);
@@ -75,8 +75,12 @@ const PasswordRequirements: React.FC<PasswordRequirementsProps> = ({ password, h
     }
   }, [password, allRulesMet, hasAutoHide]);
 
+  if (!show) {
+    return null;
+  }
+
   return (
-    <ContainerWrapper {...props} aria-label="Password Requirements">
+    <ContainerWrapper {...props} aria-label="Password Requirements" bagdesMet={allRulesMet}>
       <motion.div
         initial={ReducedMotion ? {} : { opacity: 0 }}
         animate={ReducedMotion ? {} : { opacity: show ? 1 : 0 }}
