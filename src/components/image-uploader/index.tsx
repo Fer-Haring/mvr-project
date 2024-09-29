@@ -12,10 +12,10 @@ import { motion } from 'framer-motion';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { DropzoneOptions, useDropzone } from 'react-dropzone';
 import { useIntl } from 'react-intl';
-import { Navigation, Pagination } from 'swiper/modules';
+import {  Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-const Wrapper = styled(Box)<{ isMobile: boolean }>(({ theme, isMobile }) => ({
+const Wrapper = styled(Box)<{ isMobile: boolean }>(({ theme }) => ({
   minWidth: '245px',
   position: 'relative',
   // backgroundColor: theme.palette.background.default,

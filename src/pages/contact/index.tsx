@@ -87,7 +87,7 @@ export const ContactPage: FunctionComponent = () => {
               icon="mdi:instagram"
               title={formatMessage({ id: 'CONTACT.PAGE.INSTAGRAM' })}
               subtitle={formatMessage({ id: 'CONTACT.PAGE.VISIT' })}
-              url="https://www.instagram.com/medicine.vape.room/"
+              url="https://www.instagram.com/medicinevroom/"
             />
           </Box>
         </Stack>
