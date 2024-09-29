@@ -1,5 +1,5 @@
 // import { Icon } from '@iconify/react';
-import { Box, Divider } from '@mui/material';
+import { Box } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -10,8 +10,6 @@ import ContactInfo from '@webapp/controller/contact/contact-info';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
-
-import MailForm from './mail-form';
 
 export const ContactPage: FunctionComponent = () => {
   const theme = useTheme();
@@ -107,9 +105,3 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   width: '90vw',
   margin: 'auto',
 }));
-
-const StyledDivider = styled(Divider)({
-  flexGrow: 1,
-  margin: '10px 10px',
-  marginTop: '60px',
-});
