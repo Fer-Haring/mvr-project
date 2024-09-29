@@ -26,11 +26,7 @@ const Wrapper = styled(Box)<{ isMobile: boolean }>(({ theme, isMobile }) => ({
   alignItems: 'center',
   cursor: 'pointer',
   height: '100%',
-  // minHeight: '400px',
   padding: theme.spacing(2),
-  // [theme.breakpoints.between('xs', 'sm')]: {
-  //   minHeight: '200px',
-  // },
   transition: theme.transitions.create(['border'], {
     duration: theme.transitions.duration.short,
     easing: theme.transitions.easing.easeInOut,
@@ -267,7 +263,7 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
             <Swiper
               slidesPerView={isMobile ? 1.3 : 1.25}
               centeredSlides={true}
-              spaceBetween={isMobile ? 20 : 50}
+              spaceBetween={isMobile ? 20 : 20}
               pagination={{ clickable: true }}
               style={{ width: '100%', height: '100%' }}
               modules={[Pagination]}
