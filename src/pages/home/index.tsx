@@ -1,13 +1,11 @@
-/* eslint-disable react/react-in-jsx-scope */
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import { CircularProgress, styled, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import VapeHomeImage from '@webapp/assets/images/home/liquid-home.png';
 import Button from '@webapp/components/button';
 import ContentWrapper from '@webapp/components/content-wrapper';
-import ProductCard from '@webapp/components/product-card';
+import ProductCardV2 from '@webapp/components/product-card-V2';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { useGetDollarValue } from '@webapp/sdk/mutations/admin/get-dollar-value-query';
 import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
@@ -16,11 +14,11 @@ import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';
 import { motion } from 'framer-motion';
-import { FunctionComponent, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
-export const HomePage: FunctionComponent = () => {
+export const HomePage: React.FunctionComponent = () => {
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
   const theme = useTheme();
@@ -126,23 +124,25 @@ export const HomePage: FunctionComponent = () => {
               }}
             />
           ) : (
-            <StockWrapper key={featuredProducts.map((product) => product.id).join('')} >
-              {featuredProducts.map((product, id) => (
-                <ProductCard
-                  key={id}
-                  id={id}
-                  products={[product]}
-                  image={product.product_image || ''}
-                  name={product.product_name}
-                  description={product.description}
-                  price={product.sale_price}
-                  currency={product.price_currency}
-                  onClick={() => {
-                    setProduct(product);
-                    navigate(`/productos/${product.id}`);
-                  }}
-                />
-              ))}
+            <StockWrapper key={featuredProducts.map((product) => product.id).join('')} isMobile={isMobile}>
+              {featuredProducts.map((product, id) =>
+                product.actual_stock > 0 ? (
+                  <ProductCardV2
+                    key={product.id}
+                    id={id}
+                    product={product}
+                    image={product.product_image || ''}
+                    name={product.product_name}
+                    description={product.description}
+                    price={product.sale_price}
+                    currency={product.price_currency}
+                    onClick={() => {
+                      setProduct(product);
+                      navigate(`/productos/${product.id}`);
+                    }}
+                  />
+                ) : null
+              )}
             </StockWrapper>
           )}
         </Box>
@@ -151,15 +151,15 @@ export const HomePage: FunctionComponent = () => {
   );
 };
 
-const StockWrapper = styled(motion.ul)(({ theme }) => ({
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(min(12.75rem, 100%), 1fr))',
+export const StockWrapper = styled(motion.ul)<{
+  isMobile: boolean;
+}>(({ theme, isMobile }) => ({
+  display: isMobile ? 'flex' : 'grid',
+  gridTemplateColumns: 'repeat(3, 1fr)',
+  gridTemplateRows: 'repeat(1, 1fr)',
   gridGap: theme.spacing(4),
+  flexDirection: isMobile ? 'column' : 'row',
   width: '100%',
-  listStyle: 'none',
   padding: 0,
   margin: 0,
-  '& > li': {
-    width: '100%',
-  },
 }));

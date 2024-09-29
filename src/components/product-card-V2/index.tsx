@@ -35,7 +35,6 @@ const Wrapper = styled(Paper)<{ actual_stock: number }>(({ theme, actual_stock }
 interface ProductCardV2Props {
   id: number;
   className?: string;
-  children?: React.ReactNode;
   sx?: SxProps<Theme>;
   onClick?: () => void;
   product?: Product;
@@ -93,14 +92,23 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
     }
   };
 
+  const handleClickOnStock = () => {
+    if (product?.actual_stock! > 0 && onClick) {
+      onClick();
+    } else if (user?.admin && onClick) {
+      onClick();
+    } else {
+      return;
+    }
+  };
+
   return (
     <Wrapper
-      className={className || ''}
+      className={className ?? ''}
       sx={{ ...sx }}
-      role="region"
-      onClick={product?.actual_stock! > 0 ? onClick : undefined}
+      onClick={handleClickOnStock}
       key={id}
-      actual_stock={product?.actual_stock || 0}
+      actual_stock={product?.actual_stock ?? 0}
     >
       {image && image !== '' && (
         <Box

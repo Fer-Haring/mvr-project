@@ -20,6 +20,7 @@ export interface Product {
   product_code: string;
   product_id: null | string;
   product_image: string;
+  images_array?: string[];
   product_name: string;
   promo_price: string;
   sale_price: string;

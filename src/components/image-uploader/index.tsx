@@ -12,6 +12,8 @@ import { motion } from 'framer-motion';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { DropzoneOptions, useDropzone } from 'react-dropzone';
 import { useIntl } from 'react-intl';
+import { Navigation, Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 const Wrapper = styled(Box)<{ isMobile: boolean }>(({ theme, isMobile }) => ({
   minWidth: '245px',
@@ -24,11 +26,11 @@ const Wrapper = styled(Box)<{ isMobile: boolean }>(({ theme, isMobile }) => ({
   alignItems: 'center',
   cursor: 'pointer',
   height: '100%',
-  minHeight: '400px',
+  // minHeight: '400px',
   padding: theme.spacing(2),
-  [theme.breakpoints.between('xs', 'sm')]: {
-    minHeight: '200px',
-  },
+  // [theme.breakpoints.between('xs', 'sm')]: {
+  //   minHeight: '200px',
+  // },
   transition: theme.transitions.create(['border'], {
     duration: theme.transitions.duration.short,
     easing: theme.transitions.easing.easeInOut,
@@ -36,13 +38,13 @@ const Wrapper = styled(Box)<{ isMobile: boolean }>(({ theme, isMobile }) => ({
 
   '&.disabled': {
     cursor: 'not-allowed',
-    pointerEvents: 'none',
     borderColor: alpha(theme.palette.grey[300], 0.5),
-    '& > *': {
-      opacity: 0.5,
-    },
     '& .upload-image-icon': {
       opacity: 0.5,
+      pointerEvents: 'none',
+    },
+    '& .delete-image-icon': {
+      display: 'none',
     },
     '& .upload-image-img': {
       opacity: 1,
@@ -64,10 +66,12 @@ const Wrapper = styled(Box)<{ isMobile: boolean }>(({ theme, isMobile }) => ({
 
   '& .upload-image-img': {
     backgroundColor: theme.palette.grey[300],
-    width: isMobile ? '50vw' : '100%',
-    height: isMobile ? '50vw' : '20vw',
+    width: '100%',
+    height: 'auto',
     '& img': {
       objectFit: 'cover',
+      width: '100%',
+      height: '300px',
     },
   },
 
@@ -102,11 +106,15 @@ const Wrapper = styled(Box)<{ isMobile: boolean }>(({ theme, isMobile }) => ({
 interface ImageUploaderProps {
   className?: string;
   defaultImageUrl?: string;
+  defaultImageUrls?: string[];
   sx?: SxProps<Theme>;
   disabled?: boolean;
   onImageChange?: (imageFile: File | undefined) => void;
+  onImagesChange?: (imageFiles: File[] | undefined) => void;
   onImageDelete: () => void;
+  onImagesDelete?: () => void;
   admin?: boolean;
+  multiple?: boolean;
 }
 
 const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
@@ -117,6 +125,9 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
   onImageChange,
   onImageDelete,
   admin,
+  defaultImageUrls,
+  multiple,
+  onImagesChange,
 }) => {
   const intl = useIntl();
   const isMobile = useIsMobile();
@@ -133,13 +144,15 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
     | 'COMMON.IMAGE_UPLOAD.STATUS.DONE';
 
   const [status, setStatus] = useState<StatusType>(IDLE_STATUS);
-  const [imageUrl, setImageUrl] = useState<string | undefined>(defaultImageUrl);
+  const [imageUrls, setImageUrls] = useState<string[]>(
+    defaultImageUrls ?? (defaultImageUrl !== undefined ? [defaultImageUrl] : [])
+  );
 
   const options: DropzoneOptions = {
     accept: { 'image/jpeg': [], 'image/png': [], 'image/gif': [], 'image/webp': [] },
-    maxFiles: 1,
+    maxFiles: multiple ? 20 : 1,
+    multiple: multiple,
     // maxSize: 4194304,
-    multiple: false,
     onDragEnter: undefined,
     onDragLeave: undefined,
     onDragOver: undefined,
@@ -150,29 +163,31 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
       if (disabled) {
         return;
       }
-
-      const file = acceptedFiles[0];
-      const reader = new FileReader();
-
-      reader.onabort = () => {
-        setStatus(ERROR_STATUS);
-      };
-      reader.onerror = () => {
-        setStatus(ERROR_STATUS);
-      };
-      reader.onprogress = () => {
-        setStatus(LOADING_STATUS);
-      };
-      reader.onload = () => {
-        setStatus(DONE_STATUS);
-        setImageUrl(reader.result as string);
-        onImageChange && onImageChange(file as File);
-      };
-
       setStatus(LOADING_STATUS);
-      reader.readAsDataURL(file);
+      const promises = acceptedFiles.map((file) => {
+        return new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onabort = () => reject(new Error('File reading was aborted'));
+          reader.onerror = () => reject(new Error('File reading has failed'));
+          reader.onload = () => resolve(reader.result as string);
+          reader.readAsDataURL(file);
+        });
+      });
+      Promise.all(promises)
+        .then((results) => {
+          setStatus(DONE_STATUS);
+          setImageUrls(results);
+          if (multiple) {
+            onImagesChange && onImagesChange(acceptedFiles as File[]);
+          } else {
+            onImageChange && onImageChange(acceptedFiles[0] as File);
+          }
+        })
+        .catch(() => {
+          setStatus(ERROR_STATUS);
+        });
     },
-    [disabled, onImageChange]
+    [disabled, multiple, onImageChange, onImagesChange]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, ...options });
@@ -192,15 +207,25 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
     }
   };
 
-  const handleDeleteImage = (ev: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+  const handleDeleteImage = (ev: React.MouseEvent<SVGSVGElement, MouseEvent>, index?: number) => {
     if (disabled) {
       return;
     }
     ev.stopPropagation();
-    setStatus(IDLE_STATUS);
-    setImageUrl(undefined);
-    onImageChange && onImageChange(undefined);
-    onImageDelete();
+    if (multiple) {
+      const newImageUrls = [...imageUrls];
+      newImageUrls.splice(index!, 1);
+      setImageUrls(newImageUrls);
+      onImagesChange && onImagesChange(undefined);
+      if (newImageUrls.length === 0) {
+        setStatus(IDLE_STATUS);
+      }
+    } else {
+      setStatus(IDLE_STATUS);
+      setImageUrls([]);
+      onImageChange && onImageChange(undefined);
+      onImageDelete();
+    }
   };
 
   const ImageVariants = {
@@ -209,14 +234,18 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
   };
 
   React.useEffect(() => {
-    if (defaultImageUrl) {
-      setImageUrl(defaultImageUrl);
+    if (defaultImageUrls && defaultImageUrls.length > 0) {
+      setImageUrls(defaultImageUrls);
+    } else if (defaultImageUrl !== undefined) {
+      setImageUrls([defaultImageUrl]);
+    } else {
+      setImageUrls([]);
     }
-  }, [defaultImageUrl]);
+  }, [defaultImageUrls, defaultImageUrl]);
 
   return (
     <motion.div
-      className={className || ''}
+      className={className ?? ''}
       whileHover={disabled ? {} : { scale: 1.025 }}
       transition={disabled ? {} : { ...easing }}
     >
@@ -227,26 +256,71 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
         } ${disabled ? 'disabled' : ''}`}
         sx={{ ...sx }}
         data-disabled={disabled}
-        {...getRootProps()}
+        {...(disabled ? {} : getRootProps())}
         tabIndex={0} // Add tabIndex to make it focusable
         role="button" // Add role="button" to indicate it's an interactive element
         aria-label={intl.formatMessage({ id: getTitle() })} // Add an aria-label for accessibility
       >
         <input {...getInputProps()} type="file" disabled={disabled} />
-        {imageUrl ? (
-          <motion.div variants={ImageVariants} initial="initial" animate={imageUrl ? 'animate' : 'initial'}>
-            <Avatar
-              variant="square"
-              className="upload-image-img"
-              src={imageUrl}
-              alt="Image"
-              sx={{
-                borderRadius: 2,
-              }}
-            />
-          </motion.div>
+        {imageUrls && imageUrls.length > 0 ? (
+          multiple ? (
+            <Swiper
+              slidesPerView={isMobile ? 1.3 : 1.25}
+              centeredSlides={true}
+              spaceBetween={isMobile ? 20 : 50}
+              pagination={{ clickable: true }}
+              style={{ width: '100%', height: '100%' }}
+              modules={[Pagination]}
+            >
+              {imageUrls.map((url, index) => (
+                <SwiperSlide key={index}>
+                  <motion.div variants={ImageVariants} initial="initial" animate={'animate'}>
+                    <div style={{ position: 'relative' }}>
+                      <Avatar
+                        variant="square"
+                        className="upload-image-img"
+                        src={url}
+                        alt={`Image ${index + 1}`}
+                        sx={{ borderRadius: 2 }}
+                      />
+                      {!disabled && (
+                        <DeleteForeverRoundedIcon
+                          className="delete-image-icon"
+                          onClick={(ev) => handleDeleteImage(ev, index)}
+                          tabIndex={0}
+                          role="button"
+                          aria-label="Delete Image"
+                        />
+                      )}
+                    </div>
+                  </motion.div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          ) : (
+            <motion.div variants={ImageVariants} initial="initial" animate={'animate'}>
+              <div style={{ position: 'relative' }}>
+                <Avatar
+                  variant="square"
+                  className="upload-image-img"
+                  src={imageUrls[0]}
+                  alt="Image"
+                  sx={{ borderRadius: 2 }}
+                />
+                {!disabled && (
+                  <DeleteForeverRoundedIcon
+                    className="delete-image-icon"
+                    onClick={(ev) => handleDeleteImage(ev)}
+                    tabIndex={0}
+                    role="button"
+                    aria-label="Delete Image"
+                  />
+                )}
+              </div>
+            </motion.div>
+          )
         ) : (
-          <motion.div variants={ImageVariants} initial="initial" animate={!imageUrl ? 'animate' : 'initial'}>
+          <motion.div variants={ImageVariants} initial="initial" animate={'animate'}>
             <div className="upload-image-icon">
               <FileUploadRoundedIcon />
             </div>

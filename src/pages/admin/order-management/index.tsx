@@ -36,6 +36,25 @@ const OrderManagementPage: React.FunctionComponent = () => {
     setActiveTable(table);
   };
 
+  const renderOrderTable = () => {
+    if (activeTable === 'pending') {
+      if (pendingOrdersData.length !== 0) {
+        return <PendingOrdersPaper orders={pendingOrdersData} />;
+      } else {
+        return (
+          <Typography
+            variant="body1"
+            sx={{ color: theme.palette.grey[800], fontWeight: 'bold', textAlign: 'center', mt: 4 }}
+          >
+            {formatMessage({ id: 'ADMIN.ORDERS.NO_PENDING_ORDERS' })}
+          </Typography>
+        );
+      }
+    } else {
+      return <CompletedOrdersPaper orders={completedOrders} />;
+    }
+  };
+
   return (
     <ContentWrapper>
       <Paper sx={{ p: 2, width: '100%', mt: 2, backgroundColor: alpha(theme.palette.common.white, 0.7) }}>
@@ -63,20 +82,7 @@ const OrderManagementPage: React.FunctionComponent = () => {
         >
           {formatMessage({ id: 'ADMIN.ORDERS.CONTROL' })}
         </Typography>
-        {activeTable === 'pending' ? (
-          pendingOrdersData.length !== 0 ? (
-            <PendingOrdersPaper orders={pendingOrdersData ? pendingOrdersData : []} />
-          ) : (
-            <Typography
-              variant="body1"
-              sx={{ color: theme.palette.grey[800], fontWeight: 'bold', textAlign: 'center', mt: 4 }}
-            >
-              {formatMessage({ id: 'ADMIN.ORDERS.NO_PENDING_ORDERS' })}
-            </Typography>
-          )
-        ) : (
-          <CompletedOrdersPaper orders={completedOrders} />
-        )}
+        {activeTable === 'pending' ? renderOrderTable() : <CompletedOrdersPaper orders={completedOrders} />}
       </Paper>
     </ContentWrapper>
   );

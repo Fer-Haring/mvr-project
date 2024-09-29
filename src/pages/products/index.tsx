@@ -42,7 +42,7 @@ export const ProductsPage: FunctionComponent = () => {
   const [searchTerms, setSearchTerms] = useState<string>('');
   const [categoriesOptions, setCategoriesOptions] = useState<AutocompleteOption[]>([]);
   const [category, setCategory] = useState<AutocompleteOption | null>(null);
-  const showHideFilters = useState<boolean>(true);
+  const showHideFilters = true;
 
   const { data: productListData } = useProductListQuery(1, 500);
 
@@ -163,6 +163,10 @@ export const ProductsPage: FunctionComponent = () => {
     return Array.from(new Set(allMainCategories));
   }, [productList]);
 
+  const sortedMainCategories = useMemo(() => {
+    return [...mainCategories].sort((a, b) => 0 - (a > b ? -1 : 1));
+  }, [mainCategories]);
+
   return (
     <ContentWrapper>
       <Stack direction={'row'} gap={6} width={'100%'} p={isMobile ? 0 : 4}>
@@ -194,7 +198,7 @@ export const ProductsPage: FunctionComponent = () => {
               </IconButton>
               <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Typography
-                  variant="h1"
+                  variant="h4"
                   sx={{
                     color: theme.palette.common.black,
                     textAlign: 'center',
@@ -240,38 +244,37 @@ export const ProductsPage: FunctionComponent = () => {
                 {formatMessage({ id: 'PRODUCTS.SELECT.MAIN.CATEGORY' })}
               </Typography>
               <CategoryButtonWrapper isMobile={isMobile}>
-                {mainCategories
-                  .sort((a, b) => 0 - (a > b ? -1 : 1))
-                  .map((category) => (
-                    <Box
+                {sortedMainCategories.map((category) => (
+                  <Box
+                    key={category}
+                    onClick={() => handleMainCategoryChange(category)}
+                    sx={{
+                      width: !isMobile ? '15vw' : '100%',
+                      maxWidth: '400px',
+                      height: !isMobile ? '15vw' : '40vw',
+                      display: 'flex',
+                      alignItems: 'flex-end',
+                      gap: 2,
+                      borderRadius: 2,
+                      backgroundImage: `url(${MainCategoriesImages[category]})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat',
+                      cursor: 'pointer',
+                      transition: 'all .4s ease-in-out',
+                    }}
+                  >
+                    <CategoryButton
+                      isMobile={isMobile}
+                      key={category}
+                      variant="contained"
+                      className="bn26"
                       onClick={() => handleMainCategoryChange(category)}
-                      sx={{
-                        width: !isMobile ? '15vw' : '100%',
-                        maxWidth: '400px',
-                        height: !isMobile ? '15vw' : '40vw',
-                        display: 'flex',
-                        alignItems: 'flex-end',
-                        gap: 2,
-                        borderRadius: 2,
-                        backgroundImage: `url(${MainCategoriesImages[category]})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat',
-                        cursor: 'pointer',
-                        transition: 'all .4s ease-in-out',
-                      }}
                     >
-                      <CategoryButton
-                        isMobile={isMobile}
-                        key={category}
-                        variant="contained"
-                        className="bn26"
-                        onClick={() => handleMainCategoryChange(category)}
-                      >
-                        {category}
-                      </CategoryButton>
-                    </Box>
-                  ))}
+                      {category}
+                    </CategoryButton>
+                  </Box>
+                ))}
               </CategoryButtonWrapper>
             </>
           )}
@@ -284,7 +287,7 @@ export const ProductsPage: FunctionComponent = () => {
               )}
               {filteredAndSortedProducts.map((product, id) => (
                 <ProductCardV2
-                  key={id}
+                  key={product.id}
                   id={id}
                   product={product}
                   image={product.product_image || ''}

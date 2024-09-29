@@ -87,7 +87,7 @@ export const ProductDetailPage: FunctionComponent = () => {
       </Typography>
       <Stack
         sx={{
-          mt: 3,
+          mt: 1,
           width: '100%',
           display: 'flex',
           flexDirection: isMobile ? 'column' : 'row',
@@ -102,7 +102,7 @@ export const ProductDetailPage: FunctionComponent = () => {
           sx={{
             p: 2,
             width: '100%',
-            mt: 3,
+            mt: 0,
             maxWidth: 700,
             backgroundColor: alpha(theme.palette.common.white, 0.6),
             position: 'relative',

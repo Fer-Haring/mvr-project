@@ -38,7 +38,7 @@ const FavoriteList: React.FunctionComponent<FavoriteListProps> = ({ userData }) 
           alignItems: 'center',
         }}
       >
-        {userData?.favorite_products.map((product) => (
+        {userData?.favorite_products?.map((product) => (
           <Box key={product.id} sx={{ width: '100%', padding: 2 }}>
             <UserFavoriteProductCard
               key={product.id}

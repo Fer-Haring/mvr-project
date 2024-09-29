@@ -4,6 +4,7 @@ import ImageUploader from '@webapp/components/image-uploader';
 import SnackbarUtils from '@webapp/components/snackbar';
 import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
 import { useUpdateProduct } from '@webapp/sdk/mutations/products/update-product-mutation';
+import useUploadImagesArrayMutation from '@webapp/sdk/mutations/products/upload-images-array-mutation';
 import { Product } from '@webapp/sdk/types/products-types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useUserData } from '@webapp/store/users/user-data';
@@ -22,36 +23,55 @@ const ProductImageHolder: FunctionComponent<ProductImageHolderProps> = ({ classN
   const { setProduct } = useSingleProduct();
   const { user } = useUserData();
   const updateProductMutation = useUpdateProduct();
+  const uploadImagesMutation = useUploadImagesArrayMutation();
   const getProducts = useProductListQuery(1, 500);
 
-  const onAvatarChange = (avatarFile: File | undefined) => {
-    if (!avatarFile) {
+  const onImagesChange = (imageFiles: File[] | undefined) => {
+    if (!imageFiles || imageFiles.length === 0) {
       return;
     }
-    handleUpdateAvatar(avatarFile);
+    handleUpdateImages(imageFiles);
   };
 
-  const handleUpdateAvatar = async (image: File) => {
+  const handleUpdateImages = async (images: File[]) => {
     try {
-      const updatedProduct = { ...product };
+      const updatedProduct = await uploadImagesMutation.mutateAsync({
+        productId: product.id!,
+        images,
+      });
 
-      // Usar la mutación para actualizar el producto con la imagen directamente al endpoint
-      await updateProductMutation
-        .mutateAsync({
-          productId: product.id!,
-          productData: updatedProduct,
-          file: image,
-        })
-        .then(() => {
-          getProducts.refetch();
-        });
-
+      getProducts.refetch();
       setProduct(updatedProduct);
-      SnackbarUtils.success(formatMessage({ id: 'PROFILE.USER_INFO.AVATAR_UPDATED' }));
+      SnackbarUtils.success(formatMessage({ id: 'PRODUCT.IMAGES_UPDATED' }));
     } catch (error) {
-      console.error('Error updating product image:', error);
+      console.error('Error uploading product images:', error);
       SnackbarUtils.error(
-        formatMessage({ id: 'PROFILE.USER_INFO.AVATAR_UPDATE_ERROR' }) +
+        formatMessage({ id: 'PRODUCT.IMAGES_UPDATE_ERROR' }) +
+          (error instanceof Error ? error.message : 'Unknown error')
+      );
+    }
+  };
+
+  const onImagesDelete = () => {
+    handleDeleteImages();
+  };
+
+  const handleDeleteImages = async () => {
+    try {
+      const updatedProduct = { ...product, images_array: [] };
+
+      await updateProductMutation.mutateAsync({
+        productId: product.id!,
+        productData: updatedProduct,
+      });
+
+      getProducts.refetch();
+      setProduct(updatedProduct);
+      SnackbarUtils.success(formatMessage({ id: 'PRODUCT.IMAGES_DELETED' }));
+    } catch (error) {
+      console.error('Error deleting product images:', error);
+      SnackbarUtils.error(
+        formatMessage({ id: 'PRODUCT.IMAGES_DELETE_ERROR' }) +
           (error instanceof Error ? error.message : 'Unknown error')
       );
     }
@@ -61,19 +81,19 @@ const ProductImageHolder: FunctionComponent<ProductImageHolderProps> = ({ classN
     <Box
       className={className || ''}
       sx={{ ...sx, minWidth: 300, maxWidth: 400, width: '100%' }}
-      aria-label={formatMessage({ id: 'PROFILE.USER_INFO.PANEL' })}
+      aria-label={formatMessage({ id: 'PRODUCT.IMAGE_PANEL' })}
       key={id}
     >
       <ImageUploader
         sx={{ width: '100%' }}
-        onImageChange={onAvatarChange}
-        onImageDelete={() => {
-          // setProductImage({ file: undefined, url: undefined });
-        }}
+        onImagesChange={onImagesChange}
+        onImagesDelete={onImagesDelete}
         disabled={user?.admin ? false : true}
+        defaultImageUrls={product.images_array}
         defaultImageUrl={product.product_image}
         admin={user?.admin}
-        // aria-label={formatMessage({ id: 'PROFILE.USER_INFO.AVATAR_UPLOAD' })}
+        multiple={true}
+        onImageDelete={onImagesDelete}
       />
     </Box>
   );
