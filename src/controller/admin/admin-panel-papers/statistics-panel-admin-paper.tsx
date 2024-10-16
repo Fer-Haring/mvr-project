@@ -35,7 +35,7 @@ const StatisticsPanelAdminPaper: React.FunctionComponent = () => {
             mb: 3,
           }}
         >
-          {formatMessage({ id: 'ADMIN.STATISTICS.TITLE' })}
+          {formatMessage({ id: 'ADMIN.STATISTICS.MAIN.TITLE' })}
         </Typography>
         <Box
           sx={{

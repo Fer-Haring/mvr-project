@@ -35,6 +35,8 @@
     "@types/node": "20.8.10",
     "@types/react-slick": "^0.23.13",
     "@types/react-window": "^1.8.8",
+    "ag-charts-community": "^10.2.0",
+    "ag-charts-react": "^10.2.0",
     "ag-grid-community": "^31.3.2",
     "ag-grid-react": "^31.3.2",
     "amazon-cognito-identity-js": "6.1.2",

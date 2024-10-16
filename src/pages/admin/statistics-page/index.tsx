@@ -1,50 +1,57 @@
-import { Box, CircularProgress, TextField } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { alpha, styled, useTheme } from '@mui/material/styles';
+import Stack from '@mui/system/Stack';
 import ContentWrapper from '@webapp/components/content-wrapper';
-import Modal from '@webapp/components/modal';
-import UserCard from '@webapp/controller/admin/users-list/user-card';
-import UserDetailModalContent from '@webapp/controller/admin/users-list/user-detail-modal-content';
+import ArsChart from '@webapp/controller/admin/admin-panel-papers/statistics-components/ars-chart';
+import BestSellingProductsChart from '@webapp/controller/admin/admin-panel-papers/statistics-components/best-selling-products';
+import ARSFinancialBalanceChart from '@webapp/controller/admin/admin-panel-papers/statistics-components/financial-summary-chart';
+import UsdChart from '@webapp/controller/admin/admin-panel-papers/statistics-components/usd-chart';
+import USDFinancialBalanceChart from '@webapp/controller/admin/admin-panel-papers/statistics-components/usd-financial-summary-chart';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useGetUsers } from '@webapp/sdk/mutations/auth/get-users-query';
-import { User } from '@webapp/sdk/types/user-types';
-import React, { useMemo, useState } from 'react';
+import React from 'react';
 import { useIntl } from 'react-intl';
 
 const StatisticsPage: React.FunctionComponent = () => {
-  const theme = useTheme();
   const isMobile = useIsMobile();
+  const theme = useTheme();
   const { formatMessage } = useIntl();
-
-
 
   return (
     <ContentWrapper>
-      <StyledPaper>
+      <Stack spacing={5} width={isMobile ? '100vw' : '85vw'}>
         <Typography
           sx={{
             textAlign: 'center',
             fontSize: '2em',
             fontWeight: 'bold',
             marginBottom: 2,
-            color: theme.palette.common.black,
+            color: theme.palette.common.white,
           }}
         >
-          {formatMessage({ id: 'ADMIN.LIST.USERS.PAGE.TITLE' })}
+          {formatMessage({ id: 'ADMIN.STATISTICS.MAIN.TITLE' })}
         </Typography>
-
-        <Typography
-          sx={{
-            textAlign: 'center',
-            fontSize: '1em',
-            marginBottom: 2,
-            color: theme.palette.common.black,
-          }}
-        >
-          {formatMessage({ id: 'ADMIN.LIST.USERS.PAGE.SUBTITLE' })}
-        </Typography>
-      </StyledPaper>
+        <StyledPaper>
+          <Typography
+            sx={{
+              textAlign: 'center',
+              fontSize: '1.5em',
+              fontWeight: 'bold',
+              marginBottom: 2,
+              color: theme.palette.common.black,
+            }}
+          >
+            {formatMessage({ id: 'ADMIN.STATISTICS.BALANCE_TITLE' })}
+          </Typography>
+          <Stack spacing={3} width={'100%'}>
+            <ARSFinancialBalanceChart />
+            <USDFinancialBalanceChart />
+            <ArsChart />
+            <UsdChart />
+            <BestSellingProductsChart />
+          </Stack>
+        </StyledPaper>
+      </Stack>
     </ContentWrapper>
   );
 };
