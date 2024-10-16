@@ -1,7 +1,6 @@
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
-import { Divider, Link, useTheme } from '@mui/material';
-import { Box, Checkbox, Typography } from '@mui/material';
+import { Box, Checkbox, Divider, Link, Typography, useTheme } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Button from '@webapp/components/button';
 import PaymentTypeButtons from '@webapp/controller/cart/step-1/botones-metodo-pago';
@@ -13,9 +12,7 @@ import { useUpdateUser } from '@webapp/sdk/mutations/auth/user-update-mutation';
 import { OrderRequest } from '@webapp/sdk/types/orders-types';
 import { User } from '@webapp/sdk/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
-import { set } from 'lodash';
-import React, { useEffect, useState } from 'react';
-import { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 interface Step1Props {
@@ -82,7 +79,6 @@ export const Step1: FunctionComponent<Step1Props> = ({
     }
   };
 
-  console.log(order.delivery_cost, user?.delivery_cost);
   useEffect(() => {
     setIsAddressValid(isValidField(user?.address));
     setIsCityValid(isValidField(user?.city));

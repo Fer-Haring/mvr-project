@@ -57,7 +57,6 @@ const BulkEditModal: React.FC<BulkEditModalProps> = ({ open, handleClose, handle
   };
 
   const onSave = () => {
-    
     handleSave(inputValue);
     handleClose();
   };
@@ -87,9 +86,11 @@ const BulkEditModal: React.FC<BulkEditModalProps> = ({ open, handleClose, handle
     if (typeof newValue === 'string') {
       setProduct({ ...product, product_category: newValue });
       setCategory({ value: newValue, label: newValue });
+      setInputValue(newValue); // Actualizamos el inputValue
     } else if (newValue && !Array.isArray(newValue)) {
       setProduct({ ...product, product_category: newValue.value });
       setCategory(newValue);
+      setInputValue(newValue.value); // Actualizamos el inputValue
     } else {
       setCategory(null);
     }
@@ -104,24 +105,27 @@ const BulkEditModal: React.FC<BulkEditModalProps> = ({ open, handleClose, handle
       aria-describedby="bulk-edit-modal-description"
     >
       {title !== 'Editar Categoría' ? (
-      <Box sx={style}>
-        <Typography variant="h6" component="h2">
-          {title}
-        </Typography>
-        <TextField
-          fullWidth
-          margin="normal"
-          label="Value"
-          value={inputValue}
-          onChange={handleInputChange}
-        />
-        <Button onClick={onSave} variant="contained" color="primary">
-          Save
-        </Button>
-      </Box>
+        <Box sx={style}>
+          <Typography variant="h6" component="h2">
+            {title}
+          </Typography>
+          <TextField
+            fullWidth
+            margin="normal"
+            label={title}
+            value={inputValue}
+            onChange={handleInputChange}
+          />
+          <Button onClick={onSave} variant="contained" color="primary">
+            Guardar
+          </Button>
+        </Box>
       ) : (
-        <Box sx={{ display: 'flex', width: '100%', gap: 2, justifyContent: 'space-between', mt: 1 }}>
-        <CustomAutoComplete
+        <Box sx={style}>
+          <Typography variant="h6" component="h2">
+            {title}
+          </Typography>
+          <CustomAutoComplete
             size="small"
             id="organization-autocomplete"
             value={category === null ? product.product_category : category}
@@ -141,28 +145,15 @@ const BulkEditModal: React.FC<BulkEditModalProps> = ({ open, handleClose, handle
             freeSolo
             onChange={handleCategoryChange}
             onInputChange={(event, newInputValue) => {
-              setInputValue(newInputValue);
-            }}
-            onBlur={() => {
-              // Aquí puedes llamar a `setProduct` o cualquier función que necesites para guardar el valor.
-              // Utiliza `inputValue` ya que este estado contiene el valor actual del input.
-              if (inputValue) {
-                setProduct({ ...product, product_category: inputValue });
-                // Si necesitas resetear `inputValue` después de guardar, puedes hacerlo aquí.
-              }
+              setInputValue(newInputValue); // Guardamos el valor en inputValue
             }}
             PopperComponent={({ ...props }) => <CustomPopper {...props} />}
             noOptionsText={formatMessage({ id: 'FORM.NO.OPTION' })}
-            forcePopupIcon
-            popupIcon={<KeyboardArrowDownRounded sx={{ color: alpha(theme.palette.text.primary, 0.5) }} />}
-            filterOptions={(options, state) =>
-              options.filter((opt) => opt.label.toLowerCase().includes(state.inputValue.toLowerCase()))
-            }
-            role="combobox"
-            aria-label={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.product_category' })}
-            aria-haspopup="listbox"
           />
-          </Box>
+          <Button onClick={onSave} variant="contained" color="primary">
+            Guardar
+          </Button>
+        </Box>
       )}
     </StyledMuiModal>
   );

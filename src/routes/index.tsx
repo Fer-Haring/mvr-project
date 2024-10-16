@@ -25,6 +25,7 @@ import PrivacyPolicyPage from '@webapp/pages/privacy_policies';
 // import UnderConstructionPage from '@webapp/pages/under-construction';
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import StatisticsPage from '@webapp/pages/admin/statistics-page';
 
 interface Route {
   path: string;
@@ -116,6 +117,10 @@ const ProjectRoutes: Route[] = [
   {
     path: '/admin-dashboard/lista-de-usuarios',
     component: <UserListPage />,
+  },
+  {
+    path: '/admin-dashboard/estadisticas',
+    component: <StatisticsPage />,
   },
   {
     path: '/admin-dashboard/pedidos-pendientes',

@@ -131,7 +131,10 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ selectedRow
             flexDirection: isMobile ? 'column' : 'row',
           }}
         >
-          <BulkEditButton />
+          <BulkEditButton
+            selectedProductIds={selectedRows.map((product) => product.id)}
+            selectedProducts={selectedRows}
+          />
           <Button
             variant="contained"
             color="primary"

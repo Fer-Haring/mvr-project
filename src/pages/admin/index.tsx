@@ -11,6 +11,7 @@ import TotalSalesPaper from '@webapp/controller/admin/admin-panel-papers/total-s
 import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
 import { useProductsListData } from '@webapp/store/products/products-list';
 import React, { useEffect } from 'react';
+import StatisticsPanelAdminPaper from '@webapp/controller/admin/admin-panel-papers/statistics-panel-admin-paper';
 
 export const AdminDashboardPage: React.FunctionComponent = () => {
   const theme = useTheme();
@@ -36,6 +37,7 @@ export const AdminDashboardPage: React.FunctionComponent = () => {
         <TotalOrdersPaper />
         <TotalSalesPaper />
         <ExtraAccesAdminPaperPaper />
+        <StatisticsPanelAdminPaper />
       </Stack>
       <Paper sx={{ p: 2, width: '100%', mt: 2, backgroundColor: alpha(theme.palette.common.white, 0.7) }}>
         <AdminDataGrid />

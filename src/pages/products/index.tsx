@@ -4,6 +4,8 @@ import { Box, IconButton, SelectChangeEvent, Typography } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { alpha, useTheme } from '@mui/material/styles';
 import ContentWrapper from '@webapp/components/content-wrapper';
+import InputField from '@webapp/components/form/input';
+import Modal from '@webapp/components/modal';
 import ProductCardV2 from '@webapp/components/product-card-V2';
 import { MainCategoriesImages } from '@webapp/controller/products/image-categories-enum';
 import ProductFilterPanel from '@webapp/controller/products/product-filter-panel';
@@ -46,6 +48,13 @@ export const ProductsPage: FunctionComponent = () => {
 
   const { data: productListData } = useProductListQuery(1, 500);
 
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [enteredPassword, setEnteredPassword] = useState('');
+  const [passwordError, setPasswordError] = useState(false);
+
+  // Contraseña hardcodeada
+  const PASSWORD = 'MVRprivado';
+
   useEffect(() => {
     if (productListData?.products) {
       setProductList(productListData.products);
@@ -77,9 +86,26 @@ export const ProductsPage: FunctionComponent = () => {
   }, [productList]);
 
   const handleMainCategoryChange = (category: string) => {
-    setSelectedMainCategory(category);
-    setSelectedCategory('');
-    setSearchTerms('');
+    if (category === 'THC') {
+      // Mostrar modal de contraseña
+      setShowPasswordModal(true);
+    } else {
+      setSelectedMainCategory(category);
+      setSelectedCategory('');
+      setSearchTerms('');
+    }
+  };
+
+  const handlePasswordSubmit = () => {
+    if (enteredPassword === PASSWORD) {
+      // Si la contraseña es correcta, mostrar la categoría THC
+      setSelectedMainCategory('THC');
+      setShowPasswordModal(false);
+      setPasswordError(false);
+    } else {
+      // Mostrar error si la contraseña es incorrecta
+      setPasswordError(true);
+    }
   };
 
   const handleCategoryChange = (event: React.SyntheticEvent, newValue: AutocompleteOption | null) => {
@@ -320,6 +346,28 @@ export const ProductsPage: FunctionComponent = () => {
       >
         <ArrowUpwardRoundedIcon />
       </IconButton>
+      <Modal
+        open={showPasswordModal}
+        onClose={() => setShowPasswordModal(false)}
+        title={formatMessage({ id: 'PRODUCTS.PASSWORD_MODAL_TITLE' })}
+        subtitle={formatMessage({ id: 'PRODUCTS.PASSWORD_MODAL_SUBTITLE' })}
+        customContent={
+          <InputField
+            fullWidth
+            type="password"
+            label="Contraseña"
+            value={enteredPassword}
+            onChange={(e) => setEnteredPassword(e.target.value)}
+            error={passwordError}
+            helperText={passwordError ? 'Contraseña incorrecta' : ''}
+          />
+        }
+        primaryButtonText="Ingresar"
+        primaryButtonOnClick={handlePasswordSubmit}
+        secondaryButtonText="Cancelar"
+        secondaryButtonColor={'error'}
+        secondaryButtonOnClick={() => setShowPasswordModal(false)}
+      />
     </ContentWrapper>
   );
 };

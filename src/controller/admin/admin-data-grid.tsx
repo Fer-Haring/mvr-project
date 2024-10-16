@@ -14,7 +14,6 @@ import {
   SelectionChangedEvent,
 } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
-import { ref } from 'firebase/database';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
@@ -30,7 +29,6 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
   const navigate = useNavigate();
   const { formatMessage } = useIntl();
   const gridRef = useRef<AgGridReact>(null);
-  const isUserDragging = useRef(false);
   const [rowData, setRowData] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const { setProducts, setSelectedProducts } = useBulkEditStore();

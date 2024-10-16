@@ -35,8 +35,6 @@ const Navbar: FunctionComponent<NavbarProps> = ({ className }) => {
   const userData = useGetUserByIdMutation(useUserStore((state) => state.userInfo?.userId) ?? '');
   const [paused, setPaused] = React.useState(true);
 
-  console.log(userData);
-
   const { data: cartData } = useGetUserCart();
 
   useEffect(() => {

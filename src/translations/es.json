@@ -211,6 +211,8 @@
   "PRODUCT.NO.AVAILABLE" : "No hay productos disponibles",
   "PRODUCTS.SEARCH": "Buscar Productos",
   "PRODUCT.CARD.PRODUCTS.NOSTOCK" : "Sin Stock",
+  "PRODUCTS.PASSWORD_MODAL_TITLE" : "Acceso Restringido",
+  "PRODUCTS.PASSWORD_MODAL_SUBTITLE" : "Para poder acceder a esta sección, por favor ingrese la contraseña proporcionada por el administrador",
   " ": " ",
   "ADMIN.DASHBOARD.TITLE" : "Panel de Administración",
   "ADMIN.DASHBOARD.SUBTITLE" : "Bienvenido al panel de administración",
@@ -362,6 +364,8 @@
 
 
 "_COMMENT1": "____________________________ADMIN PAGE_______________________________________",
+  "ADMIN.STATISTICS.TITLE" : "Estadísticas de ventas",
+  "ADMIN.STATISTICS.SUBTITLE" : "Ver Resumen",
   "ADD.NEWPRODUCT.LABEL.NAME": "Nombre del Producto",
   "ADMIN.DASHBOARD.PRODUCTS.TABLE.BUTTONS.CANCEL": "Cancelar",
   "ADMIN.DOLLAR.VALUE" : "Valor del Dolar",
