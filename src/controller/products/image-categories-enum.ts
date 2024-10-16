@@ -15,6 +15,7 @@ import ResisArtesanalesImage from '@webapp/assets/main_categories/resis_artesana
 import ResisComercialesImage from '@webapp/assets/main_categories/resis_comerciales-min.png';
 import SalesImage from '@webapp/assets/main_categories/sales-min.png';
 import ThcImage from '@webapp/assets/main_categories/thc-min.png';
+import DisposableImage from '@webapp/assets/main_categories/disposables97.jpeg';
 
 export const MainCategoriesImages: { [key: string]: string } = {
   ATOS: AtosImage,
@@ -34,4 +35,5 @@ export const MainCategoriesImages: { [key: string]: string } = {
   Sales: SalesImage,
   THC: ThcImage,
   Herramientas: HerramientasImage,
+  'Disposables 97%': DisposableImage,
 };

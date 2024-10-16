@@ -86,7 +86,7 @@ export const ProductsPage: FunctionComponent = () => {
   }, [productList]);
 
   const handleMainCategoryChange = (category: string) => {
-    if (category === 'THC') {
+    if (category === 'Disposables 97%') {
       // Mostrar modal de contraseña
       setShowPasswordModal(true);
     } else {
@@ -99,7 +99,7 @@ export const ProductsPage: FunctionComponent = () => {
   const handlePasswordSubmit = () => {
     if (enteredPassword === PASSWORD) {
       // Si la contraseña es correcta, mostrar la categoría THC
-      setSelectedMainCategory('THC');
+      setSelectedMainCategory('Disposables 97%');
       setShowPasswordModal(false);
       setPasswordError(false);
     } else {

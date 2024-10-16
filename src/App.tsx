@@ -47,7 +47,6 @@ const App: React.FunctionComponent = (): JSX.Element => {
   // Theme is now directly dependent on the mode from useColorMode
   const theme = React.useMemo(
     () => createTheme({ ...CustomThemeOptions(mode), ...getPaletteMode(mode) }, getLocale()),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [mode, locale]
   );
 
