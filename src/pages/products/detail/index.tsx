@@ -79,7 +79,7 @@ export const ProductDetailPage: FunctionComponent = () => {
       </MenuItem>
     );
   }
-
+console.log('product detail', product)
   return (
     <ContentWrapper key={id}>
       <Typography variant="h4" fontWeight={600} sx={{ mb: 2 }}>

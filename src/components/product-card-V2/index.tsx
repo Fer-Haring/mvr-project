@@ -37,7 +37,7 @@ interface ProductCardV2Props {
   className?: string;
   sx?: SxProps<Theme>;
   onClick?: () => void;
-  product?: Product;
+  product: Product;
   image: string;
   name: string;
   description: string;
@@ -67,6 +67,10 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
   const removeFavorite = useRemoveFavorite();
   const userData = useGetUserByIdMutation(userId);
 
+  const imageUrl = product?.images_array && product.images_array.length > 0
+    ? product.images_array[0]
+    : product?.product_image || '';
+
   const isFavorite = useMemo(() => {
     return user?.favorite_products?.some((p: Product) => p.id === product?.id);
   }, [user, product]);
@@ -78,7 +82,7 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
   };
 
   const handleRemoveFavorite = () => {
-    removeFavorite.mutateAsync({ userId, productId: product?.id! }).then(() => {
+    removeFavorite.mutateAsync({ userId, productId: product.id }).then(() => {
       userData.refetch();
     });
   };
@@ -93,7 +97,7 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
   };
 
   const handleClickOnStock = () => {
-    if (product?.actual_stock! > 0 && onClick) {
+    if (product.actual_stock > 0 && onClick) {
       onClick();
     } else if (user?.admin && onClick) {
       onClick();
@@ -110,7 +114,7 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
       key={id}
       actual_stock={product?.actual_stock ?? 0}
     >
-      {image && image !== '' && (
+      {imageUrl && imageUrl !== '' && (
         <Box
           sx={{
             height: '100%',
@@ -122,7 +126,7 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
           }}
         >
           <img
-            src={image}
+            src={imageUrl}
             alt="Product"
             style={{
               width: isMobile ? '30vw' : '11vw',
@@ -136,7 +140,7 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
         </Box>
       )}
 
-      {image === '' && (
+      {imageUrl === '' && (
         <Box
           sx={{
             width: '50%',
@@ -264,7 +268,7 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
               </IconButton>
             </Tooltip>
           </Box>
-          {product?.actual_stock! < 1 && (
+          {product.actual_stock < 1 && (
             <Box
               sx={{
                 display: 'flex',
