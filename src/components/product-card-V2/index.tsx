@@ -50,7 +50,6 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
   className,
   sx,
   onClick,
-  image,
   name,
   description,
   price,

@@ -188,6 +188,7 @@
   "PRODUCTS.FILTER": "Filtrar por Categoria",
   "PRODUCTS.ALL": "Todos los Productos",
   "PRODUCTS.SELECT.MAIN.CATEGORY": "Categorías Principales",
+    "PRODUCTS.DETAIL.IMAGE_SUCCESS_UPLOAD": "Imagen Para el {producto} Actualizada con Éxito",
   "PRODUCT.DETAIL.UNIT.PRICE": "Precio por Unidad",
   "PRODUCT.DETAIL.NO.STOCK": "Sin Stock",
   "PRODUCT.ADD.TO.CART": "Agregar al Carrito",

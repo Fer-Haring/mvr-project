@@ -4,9 +4,8 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import BackgroundVideo from '@webapp/assets/videos/video-login.mp4';
-import AlternateLogin from '@webapp/components/auth/alternate-login';
 import FormWrapper from '@webapp/components/auth/form-wrapper';
 import PasswordRequirements from '@webapp/components/auth/password-requirements';
 import Button from '@webapp/components/button';
@@ -26,7 +25,6 @@ interface SignUpPage2Props {
 }
 
 const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
-  const theme = useTheme();
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const { formatMessage } = useIntl();
@@ -95,13 +93,13 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
     navigate('/sign-in');
   };
 
-  async function loginWithGoogle() {
-    window.location.href = 'https://mvr-prod.onrender.com/login/google';
-  }
+  // async function loginWithGoogle() {
+  //   window.location.href = 'https://mvr-prod.onrender.com/login/google';
+  // }
 
-  const handleGoogleSignUp = async () => {
-    await loginWithGoogle();
-  };
+  // const handleGoogleSignUp = async () => {
+  //   await loginWithGoogle();
+  // };
 
   const handleDisabled =
     !validateEmail(email) ||
@@ -248,6 +246,7 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                       }}
                       aria-label={formatMessage({ id: 'AUTH.SIGN_UP.PASSWORD.LABEL' })}
                     />
+                    {isMobile && (
                     <AnimatePresence mode="wait">
                       {isPasswordFocused && (
                         <PasswordRequirements
@@ -261,6 +260,7 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                         />
                       )}
                     </AnimatePresence>
+                  )}
                     <InputField
                       required
                       fullWidth
@@ -293,8 +293,23 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                       aria-label={formatMessage({ id: 'AUTH.SIGN_UP.PASSWORD.CONFIRM.LABEL' })}
                     />
                   </Stack>
+                  {!isMobile && (
+                    <AnimatePresence mode="wait">
+                      {isPasswordFocused && (
+                        <PasswordRequirements
+                          hasAutoHide={true}
+                          password={password}
+                          sx={{
+                            position: 'relative',
+                            zIndex: 10,
+                          }}
+                          aria-label={formatMessage({ id: 'AUTH.SIGN_UP.PASSWORD.LABEL' })}
+                        />
+                      )}
+                    </AnimatePresence>
+                  )}
                 </Stack>
-                <Stack direction="column" spacing={1} sx={{ mt: 4 }} role="group" aria-labelledby="sign-up-button">
+                <Stack direction="column" spacing={1} sx={{ mt: 4, alignItems: 'center', justifyContent: 'center' }} role="group" aria-labelledby="sign-up-button">
                   <Button
                     type="submit"
                     id="sign-up-button"
@@ -311,7 +326,7 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                     color="text"
                     onClick={goToLogin}
                     fullWidth={isMobile}
-                    sx={{ flexShrink: 0, fontSize: '1rem' }}
+                    sx={{ flexShrink: 0, fontSize: '1rem', color: '#FFFFFF'  }}
                     aria-label={formatMessage({ id: 'AUTH.SIGN_UP.LINK.LABEL' })}
                   >
                     {formatMessage({ id: 'AUTH.SIGN_UP.LINK.LABEL' })}
@@ -335,11 +350,11 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
 export default SignUpPage2;
 
 const BackgroundVideoStyle = styled('video')({
-  position: 'absolute', // Posición absoluta para cubrir todo el contenedor
+  position: 'absolute',
   top: 0,
   left: 0,
   width: '100%',
   height: '100%',
-  objectFit: 'cover', // Esto asegurará que el video cubra todo el espacio disponible sin perder su proporción
-  zIndex: -1, // Coloca el video detrás de todo el contenido
+  objectFit: 'cover',
+  zIndex: -1,
 });

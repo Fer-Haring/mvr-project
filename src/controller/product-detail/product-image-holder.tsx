@@ -42,11 +42,11 @@ const ProductImageHolder: FunctionComponent<ProductImageHolderProps> = ({ classN
 
       getProducts.refetch();
       setProduct(updatedProduct);
-      SnackbarUtils.success(formatMessage({ id: 'PRODUCT.IMAGES_UPDATED' }));
+      SnackbarUtils.success(formatMessage({ id: 'PRODUCTS.DETAIL.IMAGE_SUCCESS_UPLOAD' }, { producto: product.product_name }));
     } catch (error) {
       console.error('Error uploading product images:', error);
       SnackbarUtils.error(
-        formatMessage({ id: 'PRODUCT.IMAGES_UPDATE_ERROR' }) +
+        formatMessage({ id: 'PROFILE.USER_INFO.AVATAR_ERROR' }) +
           (error instanceof Error ? error.message : 'Unknown error')
       );
     }

@@ -193,7 +193,7 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
                   <Link
                     underline="hover"
                     onClick={goToForgotPassword}
-                    sx={{ display: 'block', width: theme.spacing(20) }}
+                    sx={{ display: 'block', width: theme.spacing(20), color: '#FFFFFF' }}
                     aria-label="Forgot Password"
                   >
                     {formatMessage({ id: 'AUTH.SIGN_IN.FORGOT_PASSWORD.LINK.LABEL' })}
@@ -216,7 +216,7 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
                     onClick={goToRegister}
                     fullWidth={isMobile}
                     aria-label={formatMessage({ id: 'AUTH.SIGN_IN.LINK.LABEL' })}
-                    sx={{ textWrap: 'balance', width: '100%', fontSize: '1rem' }}
+                    sx={{ textWrap: 'balance', width: '100%', fontSize: '1rem', color: '#FFFFFF' }}
                   >
                     {formatMessage({ id: 'AUTH.SIGN_IN.LINK.LABEL' })}
                   </Button>
