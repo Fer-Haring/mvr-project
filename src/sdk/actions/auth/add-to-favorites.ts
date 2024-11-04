@@ -23,6 +23,5 @@ export async function addFavorite(userId: string, product: Product): Promise<Use
     throw new Error(err.detail || 'Failed to add favorite');
   }
 
-  const updatedUser = await response.json();
-  return updatedUser;
+  return await response.json();
 }

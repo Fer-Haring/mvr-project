@@ -61,6 +61,7 @@ export const HomePage: React.FunctionComponent = () => {
                 fontFamily: 'WordMean',
                 fontSize: isMobile ? '8vw' : '5vw',
                 color: theme.palette.common.white,
+                letterSpacing: 6,
               }}
             >
               {formatMessage({ id: 'WELCOME.HOME.MESSAGE' })}

@@ -17,6 +17,7 @@ import { useUserSignInMutation } from '@webapp/sdk/mutations/auth/user-sign-in-m
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
+import Card from '@webapp/components/card';
 
 interface SignInPage2Props {
   className?: string;
@@ -73,7 +74,7 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
     // signIn(email, password, navigate);
     try {
       await login.mutateAsync({ email, password });
-      // Redirigir a la página principal
+
       navigate('/home');
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -109,16 +110,8 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
     navigate('/forgot-password');
   };
 
-  // async function loginWithGoogle() {
-  //   window.location.href = 'https://mvr-prod.onrender.com/login/google';
-  // }
-
-  // const handleGoogleSignIn = async () => {
-  //   await loginWithGoogle();
-  // };
-
   return (
-    <section id="SignIn" className={className || ''} aria-labelledby="sign-in-title">
+    <section id="SignIn" className={className ?? ''} aria-labelledby="sign-in-title">
       <AuthLayoutContainer
         variant="half"
         leftContent={
@@ -131,98 +124,100 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
               title={formatMessage({ id: 'AUTH.SIGN_IN.TITLE' })}
               subtitle={formatMessage({ id: 'AUTH.SIGN_IN.SUBTITLE' })}
             >
-              <Box component="form" onSubmit={handleSubmit} noValidate>
-                <Stack direction="column" spacing={1}>
-                  <InputField
-                    required
-                    fullWidth
-                    id="email"
-                    label={formatMessage({ id: 'AUTH.SIGN_IN.EMAIL.LABEL' })}
-                    value={email.toLowerCase()}
-                    onBlur={() => setTouched({ ...touched, email: true })}
-                    onChange={(ev) => {
-                      setEmail(ev.target.value);
-                      setEmailHasAutoFilled(hasValue(ev.target.value));
-                    }}
-                    error={(touched.email && !email) || !!loginFailed}
-                    helperText={touched.email && !email ? formatMessage({ id: 'COMMON.REQUIRED' }) : ''}
-                    name="email"
-                    autoComplete="email"
-                    autoFocus
-                    aria-label="Email"
-                    inputProps={{
-                      onAnimationStart: makeAnimationStartHandler(setEmailHasAutoFilled),
-                    }}
-                    InputLabelProps={{
-                      shrink: emailHasAutoFilled || !!email,
-                    }}
-                  />
-                  <InputField
-                    required
-                    fullWidth
-                    name="password"
-                    label={formatMessage({ id: 'AUTH.SIGN_IN.PASSWORD.LABEL' })}
-                    value={password}
-                    onBlur={() => setTouched({ ...touched, password: true })}
-                    onChange={(ev) => {
-                      setPassword(ev.target.value);
-                      setPasswordHasAutoFilled(hasValue(ev.target.value));
-                    }}
-                    error={(touched.password && !password) || !!loginFailed}
-                    helperText={touched.password && !password ? formatMessage({ id: 'COMMON.REQUIRED' }) : ''}
-                    type={showPassword ? 'text' : 'password'}
-                    id="password"
-                    autoComplete="current-password"
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="start">
-                          <IconButton onClick={handleClickShowPassword} aria-label="Toggle Password Visibility">
-                            {showPassword ? <VisibilityRoundedIcon /> : <VisibilityOffRoundedIcon />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                    aria-label="Password"
-                    inputProps={{
-                      onAnimationStart: makeAnimationStartHandler(setPasswordHasAutoFilled),
-                    }}
-                    InputLabelProps={{
-                      shrink: passwordHasAutoFilled || !!password,
-                    }}
-                  />
-                  <Link
-                    underline="hover"
-                    onClick={goToForgotPassword}
-                    sx={{ display: 'block', width: theme.spacing(20), color: '#FFFFFF' }}
-                    aria-label="Forgot Password"
-                  >
-                    {formatMessage({ id: 'AUTH.SIGN_IN.FORGOT_PASSWORD.LINK.LABEL' })}
-                  </Link>
-                </Stack>
-                <Stack direction="column" spacing={1} sx={{ mt: { xs: 5, sm: 4 } }}>
-                  <Button
-                    type="submit"
-                    disabled={!email || !password || password.length < 8}
-                    loading={isLoginLoading}
-                    sx={{ width: '100%' }}
-                    fullWidth={isMobile}
-                    aria-label={formatMessage({ id: 'AUTH.SIGN_IN.BUTTON.LABEL' })}
-                  >
-                    {formatMessage({ id: 'AUTH.SIGN_IN.BUTTON.LABEL' })}
-                  </Button>
-                  <Button
-                    variant="text"
-                    color="text"
-                    onClick={goToRegister}
-                    fullWidth={isMobile}
-                    aria-label={formatMessage({ id: 'AUTH.SIGN_IN.LINK.LABEL' })}
-                    sx={{ textWrap: 'balance', width: '100%', fontSize: '1rem', color: '#FFFFFF' }}
-                  >
-                    {formatMessage({ id: 'AUTH.SIGN_IN.LINK.LABEL' })}
-                  </Button>
-                </Stack>
-                {/* {<AlternateLogin type="signin" onClick={handleGoogleSignIn} />} */}
-              </Box>
+              <Card background_color='white' opacity={0.4}>
+                <Box component="form" onSubmit={handleSubmit} noValidate>
+                  <Stack direction="column" spacing={1}>
+                    <InputField
+                      required
+                      fullWidth
+                      id="email"
+                      label={formatMessage({ id: 'AUTH.SIGN_IN.EMAIL.LABEL' })}
+                      value={email.toLowerCase()}
+                      onBlur={() => setTouched({ ...touched, email: true })}
+                      onChange={(ev) => {
+                        setEmail(ev.target.value);
+                        setEmailHasAutoFilled(hasValue(ev.target.value));
+                      }}
+                      error={(touched.email && !email) || loginFailed}
+                      helperText={touched.email && !email ? formatMessage({ id: 'COMMON.REQUIRED' }) : ''}
+                      name="email"
+                      autoComplete="email"
+                      autoFocus
+                      aria-label="Email"
+                      inputProps={{
+                        onAnimationStart: makeAnimationStartHandler(setEmailHasAutoFilled),
+                      }}
+                      InputLabelProps={{
+                        shrink: emailHasAutoFilled || !!email,
+                      }}
+                    />
+                    <InputField
+                      required
+                      fullWidth
+                      name="password"
+                      label={formatMessage({ id: 'AUTH.SIGN_IN.PASSWORD.LABEL' })}
+                      value={password}
+                      onBlur={() => setTouched({ ...touched, password: true })}
+                      onChange={(ev) => {
+                        setPassword(ev.target.value);
+                        setPasswordHasAutoFilled(hasValue(ev.target.value));
+                      }}
+                      error={(touched.password && !password) || loginFailed}
+                      helperText={touched.password && !password ? formatMessage({ id: 'COMMON.REQUIRED' }) : ''}
+                      type={showPassword ? 'text' : 'password'}
+                      id="password"
+                      autoComplete="current-password"
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="start">
+                            <IconButton onClick={handleClickShowPassword} aria-label="Toggle Password Visibility">
+                              {showPassword ? <VisibilityRoundedIcon /> : <VisibilityOffRoundedIcon />}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                      aria-label="Password"
+                      inputProps={{
+                        onAnimationStart: makeAnimationStartHandler(setPasswordHasAutoFilled),
+                      }}
+                      InputLabelProps={{
+                        shrink: passwordHasAutoFilled || !!password,
+                      }}
+                    />
+                    <Link
+                      underline="hover"
+                      onClick={goToForgotPassword}
+                      sx={{ display: 'block', width: theme.spacing(20), color: '#FFFFFF' }}
+                      aria-label="Forgot Password"
+                    >
+                      {formatMessage({ id: 'AUTH.SIGN_IN.FORGOT_PASSWORD.LINK.LABEL' })}
+                    </Link>
+                  </Stack>
+                  <Stack direction="column" spacing={1} sx={{ mt: { xs: 5, sm: 4 } }}>
+                    <Button
+                      type="submit"
+                      disabled={!email || !password || password.length < 8}
+                      loading={isLoginLoading}
+                      sx={{ width: '100%' }}
+                      fullWidth={isMobile}
+                      aria-label={formatMessage({ id: 'AUTH.SIGN_IN.BUTTON.LABEL' })}
+                    >
+                      {formatMessage({ id: 'AUTH.SIGN_IN.BUTTON.LABEL' })}
+                    </Button>
+                    <Button
+                      variant="text"
+                      color="text"
+                      onClick={goToRegister}
+                      fullWidth={isMobile}
+                      aria-label={formatMessage({ id: 'AUTH.SIGN_IN.LINK.LABEL' })}
+                      sx={{ textWrap: 'balance', width: '100%', fontSize: '1rem', color: '#FFFFFF' }}
+                    >
+                      {formatMessage({ id: 'AUTH.SIGN_IN.LINK.LABEL' })}
+                    </Button>
+                  </Stack>
+                  {/* {<AlternateLogin type="signin" onClick={handleGoogleSignIn} />} */}
+                </Box>
+              </Card>
             </FormWrapper>
             {error && <Snackbar open={true} autoHideDuration={6000} message={error} onClose={() => setError(null)} />}
             {success && (
@@ -243,11 +238,11 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
 export default SignInPage2;
 
 const BackgroundVideoStyle = styled('video')({
-  position: 'absolute', // Posición absoluta para cubrir todo el contenedor
+  position: 'absolute',
   top: 0,
   left: 0,
   width: '100%',
   height: '100%',
-  objectFit: 'cover', // Esto asegurará que el video cubra todo el espacio disponible sin perder su proporción
-  zIndex: -1, // Coloca el video detrás de todo el contenido
+  objectFit: 'cover',
+  zIndex: -1,
 });

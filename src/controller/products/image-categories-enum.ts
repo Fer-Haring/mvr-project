@@ -16,6 +16,7 @@ import ResisComercialesImage from '@webapp/assets/main_categories/resis_comercia
 import SalesImage from '@webapp/assets/main_categories/sales-min.png';
 import ThcImage from '@webapp/assets/main_categories/thc-min.png';
 import DisposableImage from '@webapp/assets/main_categories/disposables97.jpeg';
+import MecanicosImage from '@webapp/assets/main_categories/mods_mecanicos.jpeg';
 
 export const MainCategoriesImages: { [key: string]: string } = {
   ATOS: AtosImage,
@@ -27,6 +28,7 @@ export const MainCategoriesImages: { [key: string]: string } = {
   'Kits Inicio': KitsInicioImage,
   Liquidos: LiquidosImage,
   'Mods Avanzados': ModsAvanzadosImage,
+  'Mecanicos High End': MecanicosImage,
   Pirex: PyrexImage,
   'Pods Descartables': PodsDescartablesImage,
   'Pods Recargables': PodsRecargablesImage,
