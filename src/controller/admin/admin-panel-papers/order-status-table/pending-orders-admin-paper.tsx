@@ -44,8 +44,8 @@ const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders
     return format(date, 'dd/MM/yyyy');
   };
 
-  const formatNumber = (number: number) => {
-    return `$ ${number.toFixed(2)}`;
+  const formatNumber = (number: number | undefined) => {
+    return `$ ${number?.toFixed(2)}`;
   };
 
   const columnDefs = (navigate: (path: string) => void): ColDef[] => [
