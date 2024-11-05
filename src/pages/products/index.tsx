@@ -10,7 +10,7 @@ import ProductCardV2 from '@webapp/components/product-card-V2';
 import { MainCategoriesImages } from '@webapp/controller/products/image-categories-enum';
 import ProductFilterPanel from '@webapp/controller/products/product-filter-panel';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useProductListQuery } from '@webapp/services/mutations/products/get-product-list-query';
+import { useProduct } from '@webapp/hooks/productsHooks/useProducts';
 import { Product } from '@webapp/services/types/products-types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';
@@ -46,7 +46,7 @@ export const ProductsPage: FunctionComponent = () => {
   const [category, setCategory] = useState<AutocompleteOption | null>(null);
   const showHideFilters = true;
 
-  const { data: productListData } = useProductListQuery(1, 500);
+  const { products: productListData } = useProduct();
 
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [enteredPassword, setEnteredPassword] = useState('');

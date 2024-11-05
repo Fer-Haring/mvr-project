@@ -84,7 +84,7 @@ const Avatar: FunctionComponent<AvatarProps> = ({ className, active, fullName, i
   const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const { clearCartData } = useCart();
+  const { clearUserCart } = useCart();
 
   const handleClick = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -117,7 +117,7 @@ const Avatar: FunctionComponent<AvatarProps> = ({ className, active, fullName, i
   const logout = async () => {
     persistor.purge();
     persistor.flush();
-    dispatch(clearCartData());
+    dispatch(clearUserCart);
     navigate('/sign-in');
   };
 

@@ -7,10 +7,9 @@ import Button from '@webapp/components/button';
 import ContentWrapper from '@webapp/components/content-wrapper';
 import ProductCardV2 from '@webapp/components/product-card-V2';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useProducts } from '@webapp/hooks/productsHooks/useProductsList';
+import { useProduct } from '@webapp/hooks/productsHooks/useProducts';
 import { useAdminDataStore } from '@webapp/store/admin/admin-data';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
-import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';
 import { motion } from 'framer-motion';
 import React, { useEffect } from 'react';
@@ -23,13 +22,16 @@ export const HomePage: React.FunctionComponent = () => {
   const theme = useTheme();
   const isMobile = useIsMobile();
   const { setDollarValue } = useDollarValue();
-  const { setProduct } = useSingleProduct();
   const { setUsers, setOrders } = useAdminDataStore();
   const { productList, setProductList } = useProductsListData();
-  const { products: productListArray, loading: productListLoading } = useProducts(1, 500);
+  const { products: productListArray, loading: productListLoading, fetchProductsList, fetchProductById } = useProduct();
   const products = Object.values(productList);
   const featuredProducts = products.filter((product) => product.featured === true);
   const { dollarValue } = useDollarValue();
+
+  useEffect(() => {
+    fetchProductsList(1, 500);
+  }, []);
 
   useEffect(() => {
     setProductList(productListArray?.products || []);
@@ -137,7 +139,7 @@ export const HomePage: React.FunctionComponent = () => {
                     price={product.sale_price}
                     currency={product.price_currency}
                     onClick={() => {
-                      setProduct(product);
+                      fetchProductById(product.id!);
                       navigate(`/productos/${product.id}`);
                     }}
                   />

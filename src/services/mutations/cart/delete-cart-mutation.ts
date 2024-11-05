@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import SnackbarUtils from '@webapp/components/snackbar';
-import { clearCart } from '@webapp/services/actions/cart/delete-cart';
+import { clearCartApi } from '@webapp/services/actions/cart/delete-cart';
 
 export function useClearCart() {
   const queryClient = useQueryClient();
 
   return useMutation<void, Error>({
-    mutationFn: () => clearCart(),
+    mutationFn: () => clearCartApi(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });
       // SnackbarUtils.success(`Carrito limpiado con éxito`);

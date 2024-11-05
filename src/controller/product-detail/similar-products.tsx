@@ -1,7 +1,7 @@
 import { Box, Divider, Stack, Typography, styled, useTheme } from '@mui/material';
-import ProductCard from '@webapp/components/product-card';
+import ProductCardV2 from '@webapp/components/product-card-V2';
+import { useProduct } from '@webapp/hooks/productsHooks/useProducts';
 import { Product } from '@webapp/services/types/products-types';
-import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { motion } from 'framer-motion';
 import React, { FunctionComponent, useMemo } from 'react';
 import { useIntl } from 'react-intl';
@@ -16,13 +16,13 @@ const SimilarProducts: FunctionComponent<SimilarProductsProps> = ({ productList,
   const theme = useTheme();
   const navigate = useNavigate();
   const { formatMessage } = useIntl();
-  const { setProduct } = useSingleProduct();
+  const { fetchProductById } = useProduct();
 
   const similarProducts = useMemo(() => {
     // Filtra productos por la misma categoría, excluyendo el producto actual
     const filteredProducts = Object.values(productList).filter(
       (product) =>
-        product.main_product_category === selectedProduct.main_product_category && product.id !== selectedProduct.id
+        product?.main_product_category === selectedProduct?.main_product_category && product?.id !== selectedProduct?.id
     );
     const shuffledProducts = filteredProducts.sort(() => 0.5 - Math.random());
     return shuffledProducts.slice(0, 4);
@@ -36,16 +36,17 @@ const SimilarProducts: FunctionComponent<SimilarProductsProps> = ({ productList,
       <Divider sx={{ backgroundColor: theme.palette.common.white, height: 2 }} component={Box} />
       <Wrapper>
         {similarProducts.map((product, id) => (
-          <ProductCard
-            key={id}
+          <ProductCardV2
+            key={product.id}
             id={id}
-            image={product.product_image}
+            product={product}
+            image={product.product_image || ''}
             name={product.product_name}
             description={product.description}
             price={product.sale_price}
             currency={product.price_currency}
             onClick={() => {
-              setProduct(product);
+              fetchProductById(product.id!);
               navigate(`/productos/${product.id}`);
             }}
           />

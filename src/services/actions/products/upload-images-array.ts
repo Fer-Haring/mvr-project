@@ -1,5 +1,4 @@
 import SnackbarUtils from '@webapp/components/snackbar';
-import { Product } from '@webapp/services/types/products-types';
 
 import { refreshToken } from '../auth/user-refresh-token';
 

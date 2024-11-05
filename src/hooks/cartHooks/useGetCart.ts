@@ -1,19 +1,27 @@
 import { useAppDispatch, useAppSelector } from '@webapp/hooks/redux-hooks';
-import { clearCart } from '@webapp/redux/store/slices/carSlices';
-import { getUserCartThunk } from '@webapp/redux/store/thunks/cartThunks';
+import { clearCart, removeCartItem } from '@webapp/redux/store/slices/cartSlices';
+import { addToCartThunk, clearCartThunk, getUserCartThunk } from '@webapp/redux/store/thunks/cartThunks';
+import { CartItem } from '@webapp/services/types/cart-types';
 
 export const useCart = () => {
   const dispatch = useAppDispatch();
-  const { cartItems, loading, error } = useAppSelector((state) => state.cart);
+  const cartState = useAppSelector((state) => state.cart);
 
   const fetchCart = () => dispatch(getUserCartThunk());
-  const clearCartData = () => dispatch(clearCart());
+  const addItemToCart = (item: CartItem) => dispatch(addToCartThunk(item));
+  const clearUserCart = () => dispatch(clearCartThunk());
+  const resetCart = () => dispatch(clearCart());
+
+  const handleRemoveCartItem = (itemId: string) => {
+    dispatch(removeCartItem(itemId));
+  };
 
   return {
-    cartItems,
-    loading,
-    error,
+    ...cartState,
     fetchCart,
-    clearCartData,
+    addItemToCart,
+    clearUserCart,
+    resetCart,
+    handleRemoveCartItem,
   };
 };

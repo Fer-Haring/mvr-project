@@ -5,45 +5,38 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import ContentWrapper from '@webapp/components/content-wrapper';
-import SnackbarUtils from '@webapp/components/snackbar';
 import ProductImageHolder from '@webapp/controller/product-detail/product-image-holder';
 import SimilarProducts from '@webapp/controller/product-detail/similar-products';
+import { useCart } from '@webapp/hooks/cartHooks/useGetCart';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useAddToCart } from '@webapp/services/mutations/cart/add-to-cart-mutation';
-import { useGetUserCart } from '@webapp/services/mutations/cart/get-cart-query';
-import { useGetProductById } from '@webapp/services/mutations/products/get-product-by-id-query';
+import { useProduct } from '@webapp/hooks/productsHooks/useProducts';
 import { CartItem } from '@webapp/services/types/cart-types';
-import { Product } from '@webapp/services/types/products-types';
-import { useSingleProduct } from '@webapp/store/products/product-by-id';
-import { useProductsListData } from '@webapp/store/products/products-list';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export const ProductDetailPage: FunctionComponent = () => {
   const theme = useTheme();
   const { id } = useParams<{ id: string }>();
   const { formatMessage } = useIntl();
   const isMobile = useIsMobile();
-  const { product, setProduct } = useSingleProduct();
-  const { productList } = useProductsListData();
+  const { fetchProductById, loading, product, products } = useProduct();
   const stockNumber = product?.actual_stock || 0;
   const [selectedQuantity, setSelectedQuantity] = useState('1');
-  const { data: productById, isLoading } = useGetProductById(id!);
-  const { mutateAsync: addToCartMutation, isPending } = useAddToCart();
-  const getCart = useGetUserCart();
+  const { addItemToCart, fetchCart, loading: loadingCart } = useCart();
 
   const handleQuantityChange = (event: SelectChangeEvent<string>) => {
     setSelectedQuantity(event.target.value);
   };
 
   useEffect(() => {
-    if (id && !isLoading && productById) {
+    if (id && !loading && product) {
       if (id !== product?.id) {
-        setProduct(productById as Product);
+        fetchProductById(id);
       }
     }
-  }, [id, isLoading, productById, product, setProduct]);
+  }, [id, loading, product, fetchProductById]);
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -59,9 +52,9 @@ export const ProductDetailPage: FunctionComponent = () => {
       product_image: product?.product_image,
       quantity: parseInt(selectedQuantity, 10),
     };
-    addToCartMutation(cartItem).then(() => {
-      getCart.refetch();
-      SnackbarUtils.success(formatMessage({ id: 'PRODUCT.ADD.TO.CART.SUCCESS' }));
+    addItemToCart(cartItem).then(() => {
+      fetchCart();
+      toast.success(formatMessage({ id: 'PRODUCT.ADDED.TO.CART' }));
     });
   };
 
@@ -97,7 +90,7 @@ export const ProductDetailPage: FunctionComponent = () => {
           mb: theme.spacing(6),
         }}
       >
-        <ProductImageHolder product={product} id={product?.id} />
+        <ProductImageHolder product={product!} id={product?.id || ''} />
         <Paper
           sx={{
             p: 2,
@@ -203,7 +196,7 @@ export const ProductDetailPage: FunctionComponent = () => {
             <Button
               variant="contained"
               color="primary"
-              loading={isPending}
+              loading={loadingCart}
               startIcon={<ShoppingCartRoundedIcon />}
               sx={{
                 ml: 2,
@@ -219,7 +212,7 @@ export const ProductDetailPage: FunctionComponent = () => {
         </Paper>
       </Stack>
       <Stack direction={'row'} width={'100%'}>
-        <SimilarProducts productList={productList} selectedProduct={product} />
+        <SimilarProducts productList={products?.products || []} selectedProduct={product!} />
       </Stack>
     </ContentWrapper>
   );

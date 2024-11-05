@@ -1,7 +1,7 @@
-export async function clearCart() {
+export async function clearCartApi() {
   const token = localStorage.getItem('access_token');
-    const URL =
-      window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
+  const URL =
+    window.location.hostname === 'localhost' ? import.meta.env.VITE_API_URL_DEV : import.meta.env.VITE_API_URL_PROD;
 
   const response = await fetch(`${URL}/cart/clear_cart`, {
     method: 'DELETE',

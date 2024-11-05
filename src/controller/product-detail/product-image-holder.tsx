@@ -1,15 +1,13 @@
 import Box from '@mui/material/Box';
 import { SxProps, Theme } from '@mui/material/styles';
 import ImageUploader from '@webapp/components/image-uploader';
-import SnackbarUtils from '@webapp/components/snackbar';
-import { useProductListQuery } from '@webapp/services/mutations/products/get-product-list-query';
-import { useUpdateProduct } from '@webapp/services/mutations/products/update-product-mutation';
-import useUploadImagesArrayMutation from '@webapp/services/mutations/products/upload-images-array-mutation';
+import { useProduct, useUploadImagesArray } from '@webapp/hooks/productsHooks/useProducts';
+import { useAppSelector } from '@webapp/hooks/redux-hooks';
+import { updateProductThunk } from '@webapp/redux/store/thunks/productsThunks';
 import { Product } from '@webapp/services/types/products-types';
-import { useSingleProduct } from '@webapp/store/products/product-by-id';
-import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
+import { toast } from 'react-toastify';
 
 interface ProductImageHolderProps {
   className?: string;
@@ -20,11 +18,9 @@ interface ProductImageHolderProps {
 
 const ProductImageHolder: FunctionComponent<ProductImageHolderProps> = ({ className, product, sx, id }) => {
   const { formatMessage } = useIntl();
-  const { setProduct } = useSingleProduct();
-  const { user } = useUserData();
-  const updateProductMutation = useUpdateProduct();
-  const uploadImagesMutation = useUploadImagesArrayMutation();
-  const getProducts = useProductListQuery(1, 500);
+  const { userById } = useAppSelector((state) => state.user);
+  const { uploadImages } = useUploadImagesArray();
+  const { fetchProductsList, fetchProductById } = useProduct();
 
   const onImagesChange = (imageFiles: File[] | undefined) => {
     if (!imageFiles || imageFiles.length === 0) {
@@ -35,19 +31,13 @@ const ProductImageHolder: FunctionComponent<ProductImageHolderProps> = ({ classN
 
   const handleUpdateImages = async (images: File[]) => {
     try {
-      const updatedProduct = await uploadImagesMutation.mutateAsync({
-        productId: product.id!,
-        images,
-      });
+      await uploadImages(product.id!, images);
 
-      getProducts.refetch();
-      setProduct(updatedProduct);
-      SnackbarUtils.success(
-        formatMessage({ id: 'PRODUCTS.DETAIL.IMAGE_SUCCESS_UPLOAD' }, { producto: product.product_name })
-      );
+      fetchProductsList(1, 500);
+      fetchProductById(product.id!);
+      toast.success(formatMessage({ id: 'PRODUCTS.DETAIL.IMAGE_SUCCESS_UPLOAD' }, { producto: product.product_name }));
     } catch (error) {
-      console.error('Error uploading product images:', error);
-      SnackbarUtils.error(
+      toast.error(
         formatMessage({ id: 'PROFILE.USER_INFO.AVATAR_ERROR' }) +
           (error instanceof Error ? error.message : 'Unknown error')
       );
@@ -62,17 +52,17 @@ const ProductImageHolder: FunctionComponent<ProductImageHolderProps> = ({ classN
     try {
       const updatedProduct = { ...product, images_array: [] };
 
-      await updateProductMutation.mutateAsync({
+      await updateProductThunk({
         productId: product.id!,
         productData: updatedProduct,
       });
 
-      getProducts.refetch();
-      setProduct(updatedProduct);
-      SnackbarUtils.success(formatMessage({ id: 'PRODUCT.IMAGES_DELETED' }));
+      fetchProductsList(1, 500);
+      fetchProductById(product.id!);
+      toast.success(formatMessage({ id: 'PRODUCT.IMAGES_DELETED' }));
     } catch (error) {
       console.error('Error deleting product images:', error);
-      SnackbarUtils.error(
+      toast.error(
         formatMessage({ id: 'PRODUCT.IMAGES_DELETE_ERROR' }) +
           (error instanceof Error ? error.message : 'Unknown error')
       );
@@ -90,10 +80,10 @@ const ProductImageHolder: FunctionComponent<ProductImageHolderProps> = ({ classN
         sx={{ width: '100%' }}
         onImagesChange={onImagesChange}
         onImagesDelete={onImagesDelete}
-        disabled={user?.admin ? false : true}
-        defaultImageUrls={product.images_array}
-        defaultImageUrl={product.product_image}
-        admin={user?.admin}
+        disabled={userById?.user?.admin ? false : true}
+        defaultImageUrls={product?.images_array || []}
+        defaultImageUrl={product?.product_image || ''}
+        admin={userById?.user?.admin}
         multiple={true}
         onImageDelete={onImagesDelete}
       />
