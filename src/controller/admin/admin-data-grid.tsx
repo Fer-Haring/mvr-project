@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box, CircularProgress, Typography, alpha, styled, useTheme } from '@mui/material';
 import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
 import { useUpdateProduct } from '@webapp/sdk/mutations/products/update-product-mutation';
@@ -187,7 +188,7 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
   );
 
   const columns = useMemo(() => {
-    const originalColumns = columnDefs(navigate);
+    const originalColumns = columnDefs();
 
     if (columnOrder && columnOrder.length > 0) {
       return columnOrder
@@ -197,6 +198,7 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
 
     return originalColumns;
   }, [navigate, columnOrder]);
+
   return (
     <div>
       <Typography variant="h5" sx={{ color: theme.palette.grey[800], fontWeight: 'bold', textAlign: 'center', mb: 5 }}>
@@ -259,47 +261,16 @@ const StyledAgGridReact = styled(AgGridReact)(({ theme }) => ({
   '& .ag-row-even': {
     fontSize: 16,
     backgroundColor: alpha(theme.palette.primary.main, 0.5),
-    borderRadius: theme.spacing(2),
-  },
-  '& .ag-row-odd': {
-    fontSize: 16,
-    borderRadius: theme.spacing(2),
   },
   '& .ag-header': {
     marginBottom: theme.spacing(2),
     border: 0,
-  },
-  '& .ag-pinned-left-header': {
-    backgroundColor: theme.palette.grey[200],
-    color: theme.palette.common.black,
-    fontWeight: theme.typography.fontWeightBold,
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    borderRadius: theme.spacing(2),
-  },
-  '& .ag-cell-last-left-pinned:not': {
-    backgroundColor: theme.palette.grey[200],
-    color: theme.palette.common.black,
-    fontWeight: theme.typography.fontWeightBold,
-    textAlign: 'center',
-    borderRadius: theme.spacing(2),
-    border: 'none',
-  },
-  '& .product-name-cell': {
-    cursor: 'pointer',
-    '&:hover': {
-      color: theme.palette.primary.main,
-      fontWeight: theme.typography.fontWeightBold,
-      fontSize: 18,
-    },
   },
   '& .ag-header-container': {
     backgroundColor: theme.palette.grey[200],
     color: theme.palette.common.black,
     fontWeight: theme.typography.fontWeightBold,
     padding: theme.spacing(2),
-    textAlign: 'center',
-    borderRadius: theme.spacing(2),
     '& .ag-header-cell': {
       border: 0,
     },

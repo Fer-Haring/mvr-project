@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
+import { IconButton } from '@mui/material';
+import Tooltip from '@mui/material/Tooltip';
+import { useTheme } from '@mui/material/styles';
 import { ColDef } from 'ag-grid-community';
+import { ICellRendererParams } from 'ag-grid-community';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const currencyFormatter = (params: any) => {
   const { value, data } = params;
@@ -14,7 +21,30 @@ const currencyFormatter = (params: any) => {
   return value;
 };
 
-export const columnDefs = (navigate: (path: string) => void): ColDef[] => [
+// Define un CellRenderer personalizado para la columna con el checkbox y el icono
+const CheckboxIconCellRenderer: React.FC<ICellRendererParams> = (params) => {
+  const theme = useTheme();
+  const navigate = useNavigate();
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <Tooltip title={'Ver detalles'} placement="top">
+        <IconButton
+          aria-label="details"
+          size="medium"
+          onClick={() => {
+            navigate(`/productos/${params.data.id}`);
+          }}
+          style={{ padding: '4px' }}
+        >
+          <InfoRoundedIcon fontSize="medium" style={{ color: theme.palette.primary.main }} />
+        </IconButton>
+      </Tooltip>
+    </div>
+  );
+};
+
+export const columnDefs = (): ColDef[] => [
   {
     headerName: '',
     field: 'checks',
@@ -32,8 +62,6 @@ export const columnDefs = (navigate: (path: string) => void): ColDef[] => [
     field: 'product_name',
     editable: true,
     filter: true,
-    onCellClicked: (params) => navigate(`/productos/${params.data.id}`),
-    cellClass: 'product-name-cell',
   },
   { headerName: 'Descripción', field: 'description', editable: true, filter: true },
   { headerName: 'Categoría Principal', field: 'main_product_category', editable: true, filter: true },
@@ -77,4 +105,12 @@ export const columnDefs = (navigate: (path: string) => void): ColDef[] => [
   { headerName: 'Fracción', field: 'fraction', editable: true, filter: true },
   { headerName: 'Id Producto', field: 'id', hide: true },
   { headerName: 'Id Producto', field: 'product_image', hide: true },
+  {
+    headerName: 'Acciones',
+    field: 'actions',
+    hide: false,
+    maxWidth: 60,
+    pinned: 'right',
+    cellRenderer: CheckboxIconCellRenderer,
+  },
 ];
