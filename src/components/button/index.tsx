@@ -31,6 +31,7 @@ interface ButtonProps extends Omit<MuiLoadingButtonProps, 'color'> {
   hasBorder?: boolean;
   color?: ButtonColors;
   component?: React.ElementType;
+  size?: 'small' | 'medium' | 'large';
 }
 
 const Button: FunctionComponent<ButtonProps> = ({
@@ -40,6 +41,7 @@ const Button: FunctionComponent<ButtonProps> = ({
   color = 'primary',
   variant = 'contained',
   component,
+  size = 'small',
   ...props
 }) => {
   const isMobile = useIsMobile();
@@ -49,6 +51,7 @@ const Button: FunctionComponent<ButtonProps> = ({
       variant={variant}
       color={color}
       {...(component ? { component } : {})}
+      size={size}
       isMobile={isMobile}
       {...props}
       onKeyDown={(e) => {
@@ -58,7 +61,7 @@ const Button: FunctionComponent<ButtonProps> = ({
         }
       }}
       sx={{
-        maxHeight: props.size === 'small' ? '40px' : '50px',
+        maxHeight: size === 'small' ? '40px' : '50px',
         ...props.sx,
       }}
       aria-label={props['aria-label']} // ARIA attribute to provide a label for the button

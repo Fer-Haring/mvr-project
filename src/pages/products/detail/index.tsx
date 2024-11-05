@@ -16,12 +16,13 @@ import { useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+
 export const ProductDetailPage: FunctionComponent = () => {
   const theme = useTheme();
   const { id } = useParams<{ id: string }>();
   const { formatMessage } = useIntl();
   const isMobile = useIsMobile();
-  const { fetchProductById, loading, product, products } = useProduct();
+  const { fetchProductById, loading, product, products, fetchProductsList } = useProduct();
   const stockNumber = product?.actual_stock || 0;
   const [selectedQuantity, setSelectedQuantity] = useState('1');
   const { addItemToCart, fetchCart, loading: loadingCart } = useCart();
@@ -31,12 +32,11 @@ export const ProductDetailPage: FunctionComponent = () => {
   };
 
   useEffect(() => {
-    if (id && !loading && product) {
-      if (id !== product?.id) {
-        fetchProductById(id);
-      }
+    if (id && !loading) {
+      fetchProductById(id);
+      fetchProductsList(1, 500);
     }
-  }, [id, loading, product, fetchProductById]);
+  }, []);
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -54,7 +54,7 @@ export const ProductDetailPage: FunctionComponent = () => {
     };
     addItemToCart(cartItem).then(() => {
       fetchCart();
-      toast.success(formatMessage({ id: 'PRODUCT.ADDED.TO.CART' }));
+      toast.success(formatMessage({ id: 'PRODUCT.ADD.TO.CART.SUCCESS' }));
     });
   };
 
@@ -72,7 +72,7 @@ export const ProductDetailPage: FunctionComponent = () => {
       </MenuItem>
     );
   }
-  console.log('product detail', product);
+
   return (
     <ContentWrapper key={id}>
       <Typography variant="h4" fontWeight={600} sx={{ mb: 2 }}>
