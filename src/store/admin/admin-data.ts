@@ -1,5 +1,5 @@
-import { Product } from '@webapp/sdk/types/products-types';
-import { CompletedOrder, User } from '@webapp/sdk/types/user-types';
+import { Product } from '@webapp/services/types/products-types';
+import { CompletedOrder, User } from '@webapp/services/types/user-types';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
@@ -12,7 +12,6 @@ interface AdminData {
   setOrders: (orders: CompletedOrder[]) => void;
   resetStore: () => void;
 }
-
 
 export const useAdminDataStore = create(
   persist<AdminData>(
@@ -27,7 +26,7 @@ export const useAdminDataStore = create(
     }),
     {
       name: 'adminData',
-      storage: createJSONStorage(() => localStorage)
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );

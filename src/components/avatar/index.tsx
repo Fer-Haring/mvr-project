@@ -5,7 +5,9 @@ import MenuItem from '@mui/material/MenuItem';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { alpha, styled, useTheme } from '@mui/material/styles';
-import { useLogout } from '@webapp/sdk/mutations/auth/user-logout-mutation';
+import { useCart } from '@webapp/hooks/cartHooks/useGetCart';
+import { useAppDispatch } from '@webapp/hooks/redux-hooks';
+import { persistor } from '@webapp/redux/store/store';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
@@ -79,10 +81,10 @@ const Avatar: FunctionComponent<AvatarProps> = ({ className, active, fullName, i
   const intl = useIntl();
   const theme = useTheme();
   const navigate = useNavigate();
-  const logoutMutation = useLogout();
-
+  const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const { clearCartData } = useCart();
 
   const handleClick = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -112,12 +114,19 @@ const Avatar: FunctionComponent<AvatarProps> = ({ className, active, fullName, i
     navigate('/profile');
   };
 
+  const logout = async () => {
+    persistor.purge();
+    persistor.flush();
+    dispatch(clearCartData());
+    navigate('/sign-in');
+  };
+
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem('access_token');
       const tokenType = localStorage.getItem('token_type');
       if (token && tokenType) {
-        await logoutMutation.mutateAsync();
+        await logout();
       } else {
         console.error('No token or token type available');
       }

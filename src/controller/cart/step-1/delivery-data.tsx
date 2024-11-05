@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import InputField from '@webapp/components/form/input';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { User } from '@webapp/sdk/types/user-types';
+import { User } from '@webapp/services/types/user-types';
 import React, { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 

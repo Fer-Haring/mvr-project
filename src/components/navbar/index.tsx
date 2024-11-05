@@ -2,11 +2,12 @@ import { Badge, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import cartAnimation from '@webapp/assets/images/animations/cart.json';
 import DrawerNavbar from '@webapp/controller/drawer-navbar';
+import { useCart } from '@webapp/hooks/cartHooks/useGetCart';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useGetUserByIdMutation } from '@webapp/sdk/mutations/auth/get-user-by-id-mutation';
-import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
-import { User } from '@webapp/sdk/types/user-types';
-import { useUserStore } from '@webapp/store/auth/session';
+import { useGetUserById } from '@webapp/hooks/userHooks/useUserById';
+// import { useGetUserByIdMutation } from '@webapp/services/mutations/auth/get-user-by-id-mutation';
+// import { useGetUserCart } from '@webapp/services/mutations/cart/get-cart-query';
+import { User } from '@webapp/services/types/user-types';
 import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent, useEffect } from 'react';
 import { useIntl } from 'react-intl';
@@ -15,6 +16,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import Avatar from '../avatar';
 import { NAVBAR_HEIGHT } from '../sidebar';
+import { useAppSelector } from '@webapp/hooks/redux-hooks';
 
 interface NavbarProps {
   className?: string;
@@ -32,16 +34,18 @@ const Navbar: FunctionComponent<NavbarProps> = ({ className }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, setUser } = useUserData();
-  const userData = useGetUserByIdMutation(useUserStore((state) => state.userInfo?.userId) ?? '');
+  const userId = useAppSelector((state) => state.user.signIn.userInfo?.user_id);
+  const { user: userData, fetchUserById } = useGetUserById(userId ?? '');
   const [paused, setPaused] = React.useState(true);
 
-  const { data: cartData } = useGetUserCart();
+  const { cartItems } = useCart();
 
   useEffect(() => {
+    fetchUserById();
     if (userData) {
-      setUser(userData.data as User);
+      setUser(userData as User);
     }
-  }, [userData.data]);
+  }, []);
 
   const handlePause = () => {
     setPaused(!paused);
@@ -49,8 +53,8 @@ const Navbar: FunctionComponent<NavbarProps> = ({ className }) => {
   };
 
   useEffect(() => {
-    cartData?.length;
-  }, [cartData]);
+    cartItems?.length;
+  }, [cartItems]);
 
   return (
     <NavbarContainer className={className || ''} isMobile={isMobile}>
@@ -62,7 +66,7 @@ const Navbar: FunctionComponent<NavbarProps> = ({ className }) => {
       <div className="right">
         <div className="forms">
           <Box onClick={handlePause}>
-            <Badge badgeContent={cartData?.length} color="error">
+            <Badge badgeContent={cartItems?.length} color="error">
               <Lottie
                 options={{
                   loop: true,

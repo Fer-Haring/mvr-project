@@ -9,11 +9,11 @@ import SnackbarUtils from '@webapp/components/snackbar';
 import ProductImageHolder from '@webapp/controller/product-detail/product-image-holder';
 import SimilarProducts from '@webapp/controller/product-detail/similar-products';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useAddToCart } from '@webapp/sdk/mutations/cart/add-to-cart-mutation';
-import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
-import { useGetProductById } from '@webapp/sdk/mutations/products/get-product-by-id-query';
-import { CartItem } from '@webapp/sdk/types/cart-types';
-import { Product } from '@webapp/sdk/types/products-types';
+import { useAddToCart } from '@webapp/services/mutations/cart/add-to-cart-mutation';
+import { useGetUserCart } from '@webapp/services/mutations/cart/get-cart-query';
+import { useGetProductById } from '@webapp/services/mutations/products/get-product-by-id-query';
+import { CartItem } from '@webapp/services/types/cart-types';
+import { Product } from '@webapp/services/types/products-types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';
 import React, { FunctionComponent, useEffect, useState } from 'react';
@@ -79,7 +79,7 @@ export const ProductDetailPage: FunctionComponent = () => {
       </MenuItem>
     );
   }
-console.log('product detail', product)
+  console.log('product detail', product);
   return (
     <ContentWrapper key={id}>
       <Typography variant="h4" fontWeight={600} sx={{ mb: 2 }}>

@@ -2,7 +2,7 @@ import { Paper, alpha, styled } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { OrderResponse } from '@webapp/sdk/types/orders-types';
+import { OrderResponse } from '@webapp/services/types/orders-types';
 import { format } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
 import React from 'react';
@@ -88,8 +88,8 @@ const UserData: React.FC<UserDataProps> = ({ order }) => {
         </Box>
         <Box sx={{ marginTop: '0px !important' }}>
           <Typography variant="body1" color="secondary">
-            <strong>{formatMessage({ id: 'ADMIN.EDIT.PENDING.ORDERS.PAGE.ORDER.DELIVERY_COST' })}</strong>{' '}
-            $ {order?.delivery_cost} ARS
+            <strong>{formatMessage({ id: 'ADMIN.EDIT.PENDING.ORDERS.PAGE.ORDER.DELIVERY_COST' })}</strong> ${' '}
+            {order?.delivery_cost} ARS
           </Typography>
           <Typography variant="body1" color="secondary">
             <strong>{formatMessage({ id: 'ADMIN.EDIT.PENDING.ORDERS.PAGE.ORDER.TOTAL_USD' })}:</strong> ${' '}

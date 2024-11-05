@@ -1,5 +1,5 @@
 // store/message-store.ts
-import { OrderRequest } from '@webapp/sdk/types/orders-types';
+import { OrderRequest } from '@webapp/services/types/orders-types';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 

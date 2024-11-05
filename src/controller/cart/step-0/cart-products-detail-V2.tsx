@@ -5,10 +5,10 @@ import Stack from '@mui/system/Stack';
 import NoImageProd from '@webapp/assets/images/prod-no-image.png';
 import SnackbarUtils from '@webapp/components/snackbar';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useAddToCart } from '@webapp/sdk/mutations/cart/add-to-cart-mutation';
-import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
-import { CartItem } from '@webapp/sdk/types/cart-types';
-import { OrderRequest } from '@webapp/sdk/types/orders-types';
+import { useAddToCart } from '@webapp/services/mutations/cart/add-to-cart-mutation';
+import { useGetUserCart } from '@webapp/services/mutations/cart/get-cart-query';
+import { CartItem } from '@webapp/services/types/cart-types';
+import { OrderRequest } from '@webapp/services/types/orders-types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import React, { useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -184,7 +184,15 @@ export const CartProductsDetailV2: React.FunctionComponent<CartProductsDetailV2P
                     color: theme.palette.common.black,
                   }}
                 >
-                  <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, alignItems: 'center', justifyContent:'space-between' }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      gap: 2,
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                  >
                     <Typography variant={'body1'} fontWeight={600} sx={{ fontSize: '0.9vw' }}>
                       {formatMessage({ id: 'CART.HEADER.SUBTOTAL' })}
                     </Typography>

@@ -12,7 +12,7 @@ import Button from '@webapp/components/button';
 import InputField from '@webapp/components/form/input';
 import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useSendNewPasswordMutation } from '@webapp/sdk/mutations/auth/password/send-new-password-mutation';
+import { useSendNewPasswordMutation } from '@webapp/services/mutations/auth/password/send-new-password-mutation';
 import { useRecoveryPasswordData } from '@webapp/store/auth/recovery-password-data';
 import { AnimatePresence } from 'framer-motion';
 import React, { FunctionComponent, useState } from 'react';
@@ -36,7 +36,7 @@ const ForgotPasswordNewPassword: FunctionComponent<ForgotPasswordNewPasswordPage
   const [error, setError] = useState<string | null>(null);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
-  const {email} = useRecoveryPasswordData();
+  const { email } = useRecoveryPasswordData();
   const { mutate, isPending } = useSendNewPasswordMutation();
 
   const isLoading = isPending;
@@ -93,135 +93,135 @@ const ForgotPasswordNewPassword: FunctionComponent<ForgotPasswordNewPasswordPage
     newPassword !== confirmPassword ||
     !!getConfirmPasswordError();
 
-    return (
-      <section id="SignUp" className={className || ''} aria-labelledby="sign-up-title">
-        <AuthLayoutContainer
-          variant="half"
-          leftContent={
-            <Stack
-              direction="column"
-              spacing={2}
-              sx={{ display: 'flex', width: '70%', alignItems: 'center', justifyContent: 'center' }}
+  return (
+    <section id="SignUp" className={className || ''} aria-labelledby="sign-up-title">
+      <AuthLayoutContainer
+        variant="half"
+        leftContent={
+          <Stack
+            direction="column"
+            spacing={2}
+            sx={{ display: 'flex', width: '70%', alignItems: 'center', justifyContent: 'center' }}
+          >
+            <FormWrapper
+              title={formatMessage({ id: 'AUTH.CREATE.PASSWORD.TITLE' })}
+              subtitle={formatMessage({ id: 'AUTH.CREATE.PASSWORD.SUBTITLE' })}
+              aria-label={formatMessage({ id: 'AUTH.CREATE.PASSWORD.TITLE' })}
             >
-              <FormWrapper
-                title={formatMessage({ id: 'AUTH.CREATE.PASSWORD.TITLE' })}
-                subtitle={formatMessage({ id: 'AUTH.CREATE.PASSWORD.SUBTITLE' })}
-                aria-label={formatMessage({ id: 'AUTH.CREATE.PASSWORD.TITLE' })}
-              >
-                <Box component="form" onSubmit={handleSubmit} noValidate>
-                  <Stack direction="column" spacing={{ xs: 1, md: 0.5 }} sx={{ position: 'relative' }}>
-                    <Stack direction={{ sm: 'column', md: 'column' }} spacing={1} rowGap={1}>
-                      <InputField
-                        required
-                        fullWidth
-                        name="newPassword"
-                        label={formatMessage({ id: 'AUTH.CREATE.PASSWORD.PASSWORD.LABEL' })}
-                        value={newPassword}
-                        type={showPassword ? 'text' : 'password'}
-                        id="new-password"
-                        autoComplete="new-password"
-                        onFocus={() => setIsPasswordFocused(true)}
-                        onBlur={() => {
-                          setIsPasswordFocused(false);
-                          setTouched({ ...touched, newPassword: true });
-                        }}
-                        onChange={(ev) => setNewPassword(ev.target.value)}
-                        error={!!getPasswordError()}
-                        helperText={getPasswordError()}
-                        inputProps={{
-                          pattern: '^(?=.*?[A-Z])(?=.*?[0-9])[\\S]{8,}$',
-                          autoComplete: 'new-password',
-                          form: {
-                            autoComplete: 'off',
-                          },
-                        }}
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="start">
-                              <IconButton onClick={handleClickShowPassword}>
-                                {showPassword ? <VisibilityRoundedIcon /> : <VisibilityOffRoundedIcon />}
-                              </IconButton>
-                            </InputAdornment>
-                          ),
+              <Box component="form" onSubmit={handleSubmit} noValidate>
+                <Stack direction="column" spacing={{ xs: 1, md: 0.5 }} sx={{ position: 'relative' }}>
+                  <Stack direction={{ sm: 'column', md: 'column' }} spacing={1} rowGap={1}>
+                    <InputField
+                      required
+                      fullWidth
+                      name="newPassword"
+                      label={formatMessage({ id: 'AUTH.CREATE.PASSWORD.PASSWORD.LABEL' })}
+                      value={newPassword}
+                      type={showPassword ? 'text' : 'password'}
+                      id="new-password"
+                      autoComplete="new-password"
+                      onFocus={() => setIsPasswordFocused(true)}
+                      onBlur={() => {
+                        setIsPasswordFocused(false);
+                        setTouched({ ...touched, newPassword: true });
+                      }}
+                      onChange={(ev) => setNewPassword(ev.target.value)}
+                      error={!!getPasswordError()}
+                      helperText={getPasswordError()}
+                      inputProps={{
+                        pattern: '^(?=.*?[A-Z])(?=.*?[0-9])[\\S]{8,}$',
+                        autoComplete: 'new-password',
+                        form: {
+                          autoComplete: 'off',
+                        },
+                      }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="start">
+                            <IconButton onClick={handleClickShowPassword}>
+                              {showPassword ? <VisibilityRoundedIcon /> : <VisibilityOffRoundedIcon />}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                      aria-label={formatMessage({ id: 'AUTH.CREATE.PASSWORD.PASSWORD.LABEL' })}
+                    />
+                    <InputField
+                      required
+                      fullWidth
+                      name="confirmPassword"
+                      label={formatMessage({ id: 'AUTH.CREATE.PASSWORD.PASSWORD.CONFIRM.LABEL' })}
+                      value={confirmPassword}
+                      type={showPassword ? 'text' : 'password'}
+                      id="confirm-password"
+                      autoComplete="new-password"
+                      onBlur={() => setTouched({ ...touched, confirmPassword: true })}
+                      onChange={(ev) => setConfirmPassword(ev.target.value)}
+                      error={!!getConfirmPasswordError()}
+                      helperText={getConfirmPasswordError()}
+                      inputProps={{
+                        pattern: '^(?=.*?[A-Z])(?=.*?[0-9])[\\S]{8,}$',
+                        autoComplete: 'new-password',
+                        form: {
+                          autoComplete: 'off',
+                        },
+                      }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="start">
+                            <IconButton onClick={handleClickShowPassword}>
+                              {showPassword ? <VisibilityRoundedIcon /> : <VisibilityOffRoundedIcon />}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                      aria-label={formatMessage({ id: 'AUTH.CREATE.PASSWORD.PASSWORD.CONFIRM.LABEL' })}
+                    />
+                  </Stack>
+                  <AnimatePresence mode="wait">
+                    {newPassword && isPasswordFocused && (
+                      <PasswordRequirements
+                        hasAutoHide
+                        password={newPassword}
+                        sx={{
+                          position: 'absolute',
+                          right: 0,
+                          bottom: 0,
+                          left: 0,
+                          transform: { xs: `translateY(calc(100% + ${theme.spacing(1)}))`, md: 'translateY(100%)' },
+                          zIndex: 10,
                         }}
                         aria-label={formatMessage({ id: 'AUTH.CREATE.PASSWORD.PASSWORD.LABEL' })}
                       />
-                      <InputField
-                        required
-                        fullWidth
-                        name="confirmPassword"
-                        label={formatMessage({ id: 'AUTH.CREATE.PASSWORD.PASSWORD.CONFIRM.LABEL' })}
-                        value={confirmPassword}
-                        type={showPassword ? 'text' : 'password'}
-                        id="confirm-password"
-                        autoComplete="new-password"
-                        onBlur={() => setTouched({ ...touched, confirmPassword: true })}
-                        onChange={(ev) => setConfirmPassword(ev.target.value)}
-                        error={!!getConfirmPasswordError()}
-                        helperText={getConfirmPasswordError()}
-                        inputProps={{
-                          pattern: '^(?=.*?[A-Z])(?=.*?[0-9])[\\S]{8,}$',
-                          autoComplete: 'new-password',
-                          form: {
-                            autoComplete: 'off',
-                          },
-                        }}
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="start">
-                              <IconButton onClick={handleClickShowPassword}>
-                                {showPassword ? <VisibilityRoundedIcon /> : <VisibilityOffRoundedIcon />}
-                              </IconButton>
-                            </InputAdornment>
-                          ),
-                        }}
-                        aria-label={formatMessage({ id: 'AUTH.CREATE.PASSWORD.PASSWORD.CONFIRM.LABEL' })}
-                      />
-                    </Stack>
-                    <AnimatePresence mode="wait">
-                      {newPassword && isPasswordFocused && (
-                        <PasswordRequirements
-                          hasAutoHide
-                          password={newPassword}
-                          sx={{
-                            position: 'absolute',
-                            right: 0,
-                            bottom: 0,
-                            left: 0,
-                            transform: { xs: `translateY(calc(100% + ${theme.spacing(1)}))`, md: 'translateY(100%)' },
-                            zIndex: 10,
-                          }}
-                          aria-label={formatMessage({ id: 'AUTH.CREATE.PASSWORD.PASSWORD.LABEL' })}
-                        />
-                      )}
-                    </AnimatePresence>
-                  </Stack>
-                  <Stack direction="column" spacing={1} sx={{ mt: 4 }} role="group" aria-labelledby="sign-up-button">
-                    <Button
-                      type="submit"
-                      id="sign-up-button"
-                      disabled={handleDisabled}
-                      loading={isLoading}
-                      sx={{ width: '100%' }}
-                      fullWidth={isMobile}
-                      aria-label={formatMessage({ id: 'AUTH.CREATE.PASSWORD.BUTTON.LABEL' })}
-                    >
-                      {formatMessage({ id: 'AUTH.CREATE.PASSWORD.BUTTON.LABEL' })}
-                    </Button>
-                  </Stack>
-                </Box>
-              </FormWrapper>
-            </Stack>
-          }
-          rightContent={
-            <BackgroundVideoStyle autoPlay loop muted className="bg-video">
-              <source src={BackgroundVideo} type="video/mp4" />
-            </BackgroundVideoStyle>
-          }
-        />
-      </section>
-    );
-  };
+                    )}
+                  </AnimatePresence>
+                </Stack>
+                <Stack direction="column" spacing={1} sx={{ mt: 4 }} role="group" aria-labelledby="sign-up-button">
+                  <Button
+                    type="submit"
+                    id="sign-up-button"
+                    disabled={handleDisabled}
+                    loading={isLoading}
+                    sx={{ width: '100%' }}
+                    fullWidth={isMobile}
+                    aria-label={formatMessage({ id: 'AUTH.CREATE.PASSWORD.BUTTON.LABEL' })}
+                  >
+                    {formatMessage({ id: 'AUTH.CREATE.PASSWORD.BUTTON.LABEL' })}
+                  </Button>
+                </Stack>
+              </Box>
+            </FormWrapper>
+          </Stack>
+        }
+        rightContent={
+          <BackgroundVideoStyle autoPlay loop muted className="bg-video">
+            <source src={BackgroundVideo} type="video/mp4" />
+          </BackgroundVideoStyle>
+        }
+      />
+    </section>
+  );
+};
 
 export default ForgotPasswordNewPassword;
 

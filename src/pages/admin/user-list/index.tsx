@@ -7,8 +7,8 @@ import Modal from '@webapp/components/modal';
 import UserCard from '@webapp/controller/admin/users-list/user-card';
 import UserDetailModalContent from '@webapp/controller/admin/users-list/user-detail-modal-content';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useGetUsers } from '@webapp/sdk/mutations/auth/get-users-query';
-import { User } from '@webapp/sdk/types/user-types';
+import { useGetUsers } from '@webapp/services/mutations/auth/get-users-query';
+import { User } from '@webapp/services/types/user-types';
 import React, { useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 

@@ -1,12 +1,9 @@
-import { useGetAllOrders } from '@webapp/sdk/mutations/orders/get-all-orders-query';
+import { useGetAllOrders } from '@webapp/services/mutations/orders/get-all-orders-query';
 import React, { FunctionComponent } from 'react';
 import Chart from 'react-apexcharts';
 
-
-
 import ApexChartWrapper from './apex-chart';
 import { CustomAdminPaper } from './papers-styles';
-
 
 const DonutChartPaper: FunctionComponent = () => {
   // const { orders } = useAdminDataStore();

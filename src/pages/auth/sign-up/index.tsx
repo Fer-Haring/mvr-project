@@ -13,7 +13,7 @@ import InputField from '@webapp/components/form/input';
 import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
 import SnackbarUtils from '@webapp/components/snackbar';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useSignupMutation } from '@webapp/sdk/mutations/auth/user-sign-up-mutation';
+import { useSignupMutation } from '@webapp/services/mutations/auth/user-sign-up-mutation';
 import { validateEmail } from '@webapp/utils/input-validations';
 import { AnimatePresence } from 'framer-motion';
 import React, { FunctionComponent, useState } from 'react';
@@ -247,20 +247,20 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                       aria-label={formatMessage({ id: 'AUTH.SIGN_UP.PASSWORD.LABEL' })}
                     />
                     {isMobile && (
-                    <AnimatePresence mode="wait">
-                      {isPasswordFocused && (
-                        <PasswordRequirements
-                          hasAutoHide={true}
-                          password={password}
-                          sx={{
-                            position: 'relative',
-                            zIndex: 10,
-                          }}
-                          aria-label={formatMessage({ id: 'AUTH.SIGN_UP.PASSWORD.LABEL' })}
-                        />
-                      )}
-                    </AnimatePresence>
-                  )}
+                      <AnimatePresence mode="wait">
+                        {isPasswordFocused && (
+                          <PasswordRequirements
+                            hasAutoHide={true}
+                            password={password}
+                            sx={{
+                              position: 'relative',
+                              zIndex: 10,
+                            }}
+                            aria-label={formatMessage({ id: 'AUTH.SIGN_UP.PASSWORD.LABEL' })}
+                          />
+                        )}
+                      </AnimatePresence>
+                    )}
                     <InputField
                       required
                       fullWidth
@@ -309,7 +309,13 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                     </AnimatePresence>
                   )}
                 </Stack>
-                <Stack direction="column" spacing={1} sx={{ mt: 4, alignItems: 'center', justifyContent: 'center' }} role="group" aria-labelledby="sign-up-button">
+                <Stack
+                  direction="column"
+                  spacing={1}
+                  sx={{ mt: 4, alignItems: 'center', justifyContent: 'center' }}
+                  role="group"
+                  aria-labelledby="sign-up-button"
+                >
                   <Button
                     type="submit"
                     id="sign-up-button"
@@ -326,7 +332,7 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                     color="text"
                     onClick={goToLogin}
                     fullWidth={isMobile}
-                    sx={{ flexShrink: 0, fontSize: '1rem', color: '#FFFFFF'  }}
+                    sx={{ flexShrink: 0, fontSize: '1rem', color: '#FFFFFF' }}
                     aria-label={formatMessage({ id: 'AUTH.SIGN_UP.LINK.LABEL' })}
                   >
                     {formatMessage({ id: 'AUTH.SIGN_UP.LINK.LABEL' })}

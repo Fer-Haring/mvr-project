@@ -7,8 +7,8 @@ import Button from '@webapp/components/button';
 // import { CartProductsDetail } from '@webapp/controller/cart/step-0/cart-products-detail';
 import { CartProductsDetailV2 } from '@webapp/controller/cart/step-0/cart-products-detail-V2';
 import { CartProductsDetailV2Mobile } from '@webapp/controller/cart/step-0/cart-products-detail-V2-mobile';
-import { CartItem } from '@webapp/sdk/types/cart-types';
-import { OrderRequest } from '@webapp/sdk/types/orders-types';
+import { CartItem } from '@webapp/services/types/cart-types';
+import { OrderRequest } from '@webapp/services/types/orders-types';
 import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 

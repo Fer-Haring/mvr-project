@@ -5,13 +5,13 @@ import ContentWrapper from '@webapp/components/content-wrapper';
 import AdminDataGrid from '@webapp/controller/admin/admin-data-grid';
 import DollarValueInputPaper from '@webapp/controller/admin/admin-panel-papers/dollar-value-admin-paper';
 import ExtraAccesAdminPaperPaper from '@webapp/controller/admin/admin-panel-papers/extra-access-admin-panel';
+import StatisticsPanelAdminPaper from '@webapp/controller/admin/admin-panel-papers/statistics-panel-admin-paper';
 import TotalOrdersPaper from '@webapp/controller/admin/admin-panel-papers/total-orders-admin-paper';
 import TotalProductsPaper from '@webapp/controller/admin/admin-panel-papers/total-products-admin-paper';
 import TotalSalesPaper from '@webapp/controller/admin/admin-panel-papers/total-sales-admin-paper';
-import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
+import { useProductListQuery } from '@webapp/services/mutations/products/get-product-list-query';
 import { useProductsListData } from '@webapp/store/products/products-list';
 import React, { useEffect } from 'react';
-import StatisticsPanelAdminPaper from '@webapp/controller/admin/admin-panel-papers/statistics-panel-admin-paper';
 
 export const AdminDashboardPage: React.FunctionComponent = () => {
   const theme = useTheme();

@@ -1,7 +1,7 @@
 import { Box, Divider, Typography, useTheme } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import UserFavoriteProductCard from '@webapp/components/user-favorite-product-card';
-import { User } from '@webapp/sdk/types/user-types';
+import { User } from '@webapp/services/types/user-types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import React from 'react';
 import { useIntl } from 'react-intl';

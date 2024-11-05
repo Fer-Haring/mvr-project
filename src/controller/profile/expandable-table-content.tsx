@@ -10,7 +10,7 @@ import {
   alpha,
   styled,
 } from '@mui/material';
-import { CompletedOrder } from '@webapp/sdk/types/user-types';
+import { CompletedOrder } from '@webapp/services/types/user-types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';

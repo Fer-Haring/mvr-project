@@ -1,16 +1,15 @@
 import { styled } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import BackgroundVideo from '@webapp/assets/videos/video-login.mp4';
 import FormWrapper from '@webapp/components/auth/form-wrapper';
 import Button from '@webapp/components/button';
 import InputField from '@webapp/components/form/input';
 import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
 import { EMAIL_REGEX } from '@webapp/configuration/regex';
-import BackgroundVideo from '@webapp/assets/videos/video-login.mp4';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useSendRecoveryCodeMutation } from '@webapp/sdk/mutations/auth/password/send-password-recovery-code-mutation';
+import { useSendRecoveryCodeMutation } from '@webapp/services/mutations/auth/password/send-password-recovery-code-mutation';
 import { useRecoveryPasswordData } from '@webapp/store/auth/recovery-password-data';
-
 import { normalizeUserData } from '@webapp/utils/normalize-user-data';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -66,7 +65,11 @@ const ForgotPasswordPage2: FunctionComponent<ForgotPasswordPage2Props> = ({ clas
       <AuthLayoutContainer
         variant="half"
         leftContent={
-          <Stack direction="column" spacing={2} sx={{ display: 'flex', width: '70%', alignItems: 'center', justifyContent: 'center' }}>
+          <Stack
+            direction="column"
+            spacing={2}
+            sx={{ display: 'flex', width: '70%', alignItems: 'center', justifyContent: 'center' }}
+          >
             <FormWrapper
               title={formatMessage({ id: 'AUTH.FORGOT_PASSWORD.TITLE' })}
               subtitle={formatMessage({ id: 'AUTH.FORGOT_PASSWORD.SUBTITLE' })}
@@ -126,7 +129,6 @@ const ForgotPasswordPage2: FunctionComponent<ForgotPasswordPage2Props> = ({ clas
 };
 
 export default ForgotPasswordPage2;
-
 
 const BackgroundVideoStyle = styled('video')({
   position: 'absolute',

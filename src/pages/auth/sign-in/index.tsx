@@ -1,6 +1,6 @@
 import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
 import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
-import { Snackbar, styled, useTheme } from '@mui/material';
+import { styled, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -9,15 +9,15 @@ import Stack from '@mui/material/Stack';
 import BackgroundVideo from '@webapp/assets/videos/video-login.mp4';
 import FormWrapper from '@webapp/components/auth/form-wrapper';
 import Button from '@webapp/components/button';
+import Card from '@webapp/components/card';
 import InputField from '@webapp/components/form/input';
 import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
-import SnackbarUtils from '@webapp/components/snackbar';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useUserSignInMutation } from '@webapp/sdk/mutations/auth/user-sign-in-mutation';
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import { useLogin } from '@webapp/hooks/userHooks/useUserLogin';
+import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
-import Card from '@webapp/components/card';
+import { toast } from 'react-toastify';
 
 interface SignInPage2Props {
   className?: string;
@@ -28,7 +28,6 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const { formatMessage } = useIntl();
-  const login = useUserSignInMutation(navigate);
 
   const [emailHasAutoFilled, setEmailHasAutoFilled] = useState<boolean>(false);
   const [passwordHasAutoFilled, setPasswordHasAutoFilled] = useState<boolean>(false);
@@ -36,23 +35,9 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [touched, setTouched] = useState<Record<string, boolean>>({});
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-  const [isLoginLoading, setIsLoginLoading] = useState<boolean>(false);
+  const { login, isLoading, error } = useLogin();
 
   const hasValue = (value: string) => value !== '';
-
-  useEffect(() => {
-    if (login.error) {
-      setError(login.error.message);
-    }
-  }, [login.error]);
-
-  useEffect(() => {
-    if (login.isPending) {
-      setIsLoginLoading(true);
-    }
-  }, [login.isPending]);
 
   const makeAnimationStartHandler = (
     stateSetter: (value: boolean) => void
@@ -71,24 +56,21 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // signIn(email, password, navigate);
     try {
-      await login.mutateAsync({ email, password });
+      await login({ email, password });
 
       navigate('/home');
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error('Login failed:', error.message);
         if (error.message === 'El usuario registrado con Google no tiene contraseña establecida') {
           localStorage.setItem('email', email);
-          SnackbarUtils.warning(
+          toast.warning(
             'El usuario fue registrado con Google y no tiene contraseña establecida, establezca una contraseña para continuar.'
           );
           navigate('/set-password');
         }
         if (error.message === 'La contraseña no es correcta') {
-          SnackbarUtils.error('La contraseña no es correcta');
-          setIsLoginLoading(false);
+          toast.error(error.message);
         }
       } else {
         console.error('Unexpected error:', error);
@@ -124,7 +106,7 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
               title={formatMessage({ id: 'AUTH.SIGN_IN.TITLE' })}
               subtitle={formatMessage({ id: 'AUTH.SIGN_IN.SUBTITLE' })}
             >
-              <Card background_color='white' opacity={0.4}>
+              <Card background_color="white" opacity={0.4}>
                 <Box component="form" onSubmit={handleSubmit} noValidate>
                   <Stack direction="column" spacing={1}>
                     <InputField
@@ -197,7 +179,7 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
                     <Button
                       type="submit"
                       disabled={!email || !password || password.length < 8}
-                      loading={isLoginLoading}
+                      loading={isLoading}
                       sx={{ width: '100%' }}
                       fullWidth={isMobile}
                       aria-label={formatMessage({ id: 'AUTH.SIGN_IN.BUTTON.LABEL' })}
@@ -219,10 +201,7 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
                 </Box>
               </Card>
             </FormWrapper>
-            {error && <Snackbar open={true} autoHideDuration={6000} message={error} onClose={() => setError(null)} />}
-            {success && (
-              <Snackbar open={true} autoHideDuration={6000} message={success} onClose={() => setSuccess(null)} />
-            )}
+            {error && toast.error(error.toString())}
           </Stack>
         }
         rightContent={

@@ -3,8 +3,8 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
-import { useUpdateUser } from '@webapp/sdk/mutations/auth/user-update-mutation';
-import { User } from '@webapp/sdk/types/user-types';
+import { useUpdateUser } from '@webapp/services/mutations/auth/user-update-mutation';
+import { User } from '@webapp/services/types/user-types';
 import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -49,7 +49,10 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ user
         {formatMessage({ id: 'PROFILE.USER_INFO.SELECTED.OPTIONS' })}
       </Typography>
       <Divider sx={{ mb: 1 }} color="#000000" orientation="horizontal" />
-      <Stack gap={2} sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 2 }}>
+      <Stack
+        gap={2}
+        sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 2 }}
+      >
         <Typography
           variant="h4"
           fontWeight={600}

@@ -8,9 +8,9 @@ import CurrencySelectButtons from '@webapp/controller/cart/step-1/botones-moneda
 import DeliveryTypeButtons from '@webapp/controller/cart/step-1/botones-tipo-entrega';
 import DeliveryData from '@webapp/controller/cart/step-1/delivery-data';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useUpdateUser } from '@webapp/sdk/mutations/auth/user-update-mutation';
-import { OrderRequest } from '@webapp/sdk/types/orders-types';
-import { User } from '@webapp/sdk/types/user-types';
+import { useUpdateUser } from '@webapp/services/mutations/auth/user-update-mutation';
+import { OrderRequest } from '@webapp/services/types/orders-types';
+import { User } from '@webapp/services/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';

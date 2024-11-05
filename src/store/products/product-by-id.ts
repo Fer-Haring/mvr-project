@@ -1,4 +1,4 @@
-import { Product } from '@webapp/sdk/types/products-types';
+import { Product } from '@webapp/services/types/products-types';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 

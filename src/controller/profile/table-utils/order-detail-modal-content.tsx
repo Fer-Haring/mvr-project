@@ -1,5 +1,5 @@
 import { Box, Stack, Typography } from '@mui/material';
-import { CompletedOrder } from '@webapp/sdk/types/user-types';
+import { CompletedOrder } from '@webapp/services/types/user-types';
 import React from 'react';
 import { useIntl } from 'react-intl';
 

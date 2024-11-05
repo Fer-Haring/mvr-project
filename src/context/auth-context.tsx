@@ -1,7 +1,7 @@
+import SnackbarUtils from '@webapp/components/snackbar';
+import { emitter } from '@webapp/services/actions/auth/event-emitter';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import SnackbarUtils from "@webapp/components/snackbar";
-import { emitter } from '@webapp/sdk/actions/auth/event-emitter';
 
 export const useAuth = () => {
   const navigate = useNavigate();

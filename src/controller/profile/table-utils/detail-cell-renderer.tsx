@@ -1,4 +1,4 @@
-import { CartItem } from '@webapp/sdk/types/cart-types';
+import { CartItem } from '@webapp/services/types/cart-types';
 import { ValueGetterParams } from 'ag-grid-community';
 import React from 'react';
 

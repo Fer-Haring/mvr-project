@@ -5,12 +5,12 @@ import Button from '@webapp/components/button';
 import Modal from '@webapp/components/modal';
 import { CartPaymentDetail } from '@webapp/controller/cart/step-2/cart-payment-detail';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { uploadTransferReceipt } from '@webapp/sdk/actions/oders/upload-receipt-image';
-import { useClearCart } from '@webapp/sdk/mutations/cart/delete-cart-mutation';
-import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
-import { useCreateOrder } from '@webapp/sdk/mutations/orders/save-new-order-mutation';
-import { CartItem } from '@webapp/sdk/types/cart-types';
-import { OrderRequest } from '@webapp/sdk/types/orders-types';
+import { uploadTransferReceipt } from '@webapp/services/actions/oders/upload-receipt-image';
+import { useClearCart } from '@webapp/services/mutations/cart/delete-cart-mutation';
+import { useGetUserCart } from '@webapp/services/mutations/cart/get-cart-query';
+import { useCreateOrder } from '@webapp/services/mutations/orders/save-new-order-mutation';
+import { CartItem } from '@webapp/services/types/cart-types';
+import { OrderRequest } from '@webapp/services/types/orders-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useCartStore } from '@webapp/store/cart/cart';
 import { useUserData } from '@webapp/store/users/user-data';
@@ -50,7 +50,6 @@ export const Step2: FunctionComponent<Step2Props> = ({
   const [uploadingImage, setUploadingImage] = useState(false);
 
   const handleOpenModal = async () => {
-
     if (order.payment_method === 'Transferencia bancaria' && !image) {
       setError('Debes subir una imagen de comprobante de transferencia.');
     } else {

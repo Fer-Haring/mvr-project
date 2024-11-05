@@ -4,11 +4,13 @@ import CameraAltRoundedIcon from '@mui/icons-material/CameraAltRounded';
 import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { SxProps, Theme, styled, useTheme } from '@mui/material/styles';
-import { useAddFavorite } from '@webapp/sdk/mutations/auth/add-to-favorites-mutation';
-import { useGetUserByIdMutation } from '@webapp/sdk/mutations/auth/get-user-by-id-mutation';
-import { useRemoveFavorite } from '@webapp/sdk/mutations/auth/remove-from-favorites-mutation';
-import { Product } from '@webapp/sdk/types/products-types';
-import { useUserData } from '@webapp/store/users/user-data';
+import { useAddFavorite } from '@webapp/hooks/favoritesHooks/useAddFavorite';
+import { useRemoveFavorite } from '@webapp/hooks/favoritesHooks/useRemoveFavorite';
+import { useAppSelector } from '@webapp/hooks/redux-hooks';
+import { useGetUserById } from '@webapp/hooks/userHooks/useUserById';
+// import { useAddFavorite } from '@webapp/services/mutations/auth/add-to-favorites-mutation';
+// import { useRemoveFavorite } from '@webapp/services/mutations/auth/remove-from-favorites-mutation';
+import { Product } from '@webapp/services/types/products-types';
 import React, { FunctionComponent, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
@@ -60,30 +62,27 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
   const theme = useTheme();
   const isMobile = useIsMobile();
   const { formatMessage } = useIntl();
-  const { user } = useUserData();
-  const userId = user?.id;
-  const addFavorite = useAddFavorite();
-  const removeFavorite = useRemoveFavorite();
-  const userData = useGetUserByIdMutation(userId);
+  const userId = useAppSelector((state) => state.user.signIn.userInfo?.user_id) ?? '';
+  const addFavorite = useAddFavorite(userId);
+  const removeFavorite = useRemoveFavorite(userId);
+  const { user } = useGetUserById(userId);
+  const { fetchUserById } = useGetUserById(userId);
 
-  const imageUrl = product?.images_array && product.images_array.length > 0
-    ? product.images_array[0]
-    : product?.product_image || '';
+  const imageUrl =
+    product?.images_array && product.images_array.length > 0 ? product.images_array[0] : product?.product_image || '';
 
   const isFavorite = useMemo(() => {
     return user?.favorite_products?.some((p: Product) => p.id === product?.id);
   }, [user, product]);
 
   const handleAddFavorite = () => {
-    addFavorite.mutateAsync({ userId, product }).then(() => {
-      userData.refetch();
-    });
+    addFavorite.addFavoriteToUser(product);
+    fetchUserById();
   };
 
   const handleRemoveFavorite = () => {
-    removeFavorite.mutateAsync({ userId, productId: product.id }).then(() => {
-      userData.refetch();
-    });
+    removeFavorite.removeFavoriteFromUser(product.id);
+    fetchUserById();
   };
 
   const handleBookmarkClick = (event: React.MouseEvent<HTMLButtonElement>) => {

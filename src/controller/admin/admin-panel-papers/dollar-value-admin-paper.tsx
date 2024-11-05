@@ -1,7 +1,7 @@
 import { Typography, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import InputField from '@webapp/components/form/input';
-// import { useUpdateDollarValue } from '@webapp/sdk/mutations/admin/update-dollar-value-mutation';
+// import { useUpdateDollarValue } from '@webapp/services/mutations/admin/update-dollar-value-mutation';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';

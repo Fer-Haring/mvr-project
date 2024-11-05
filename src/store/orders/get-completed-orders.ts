@@ -1,7 +1,6 @@
-import { OrderResponse } from '@webapp/sdk/types/orders-types';
+import { OrderResponse } from '@webapp/services/types/orders-types';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-
 
 interface CompletedOrdersData {
   orders: OrderResponse[];

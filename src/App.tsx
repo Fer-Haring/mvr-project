@@ -5,6 +5,8 @@ import React from 'react';
 import TagManager from 'react-gtm-module';
 import { useIntl } from 'react-intl';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { Flip, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -16,7 +18,7 @@ import { useAuth } from './context/auth-context';
 // Ensure this is correctly imported
 import { ProjectRoutes } from './routes';
 import AuthGuard from './routes/auth-guard';
-import { firebase } from './sdk/firebase/firebase';
+import { firebase } from './services/firebase/firebase';
 
 const tagManagerArgs = {
   gtmId: import.meta.env.VITE_APP_GTM_ID || '',
@@ -58,6 +60,19 @@ const App: React.FunctionComponent = (): JSX.Element => {
   return (
     <main className="App">
       <ThemeProvider theme={theme}>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+          transition={Flip}
+        />
         <CssBaseline />
         <Routes>
           <Route element={<AuthGuard />}>

@@ -7,8 +7,7 @@ import Button from '@webapp/components/button';
 import ContentWrapper from '@webapp/components/content-wrapper';
 import ProductCardV2 from '@webapp/components/product-card-V2';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useGetDollarValue } from '@webapp/sdk/mutations/admin/get-dollar-value-query';
-import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
+import { useProducts } from '@webapp/hooks/productsHooks/useProductsList';
 import { useAdminDataStore } from '@webapp/store/admin/admin-data';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
@@ -27,20 +26,20 @@ export const HomePage: React.FunctionComponent = () => {
   const { setProduct } = useSingleProduct();
   const { setUsers, setOrders } = useAdminDataStore();
   const { productList, setProductList } = useProductsListData();
-  const productListArray = useProductListQuery(1, 500);
+  const { products: productListArray, loading: productListLoading } = useProducts(1, 500);
   const products = Object.values(productList);
   const featuredProducts = products.filter((product) => product.featured === true);
-  const getDollar = useGetDollarValue();
+  const { dollarValue } = useDollarValue();
 
   useEffect(() => {
-    setProductList(productListArray.data?.products || []);
-  }, [productListArray.data?.products, setOrders, setProductList, setUsers]);
+    setProductList(productListArray?.products || []);
+  }, [productListArray?.products, setOrders, setProductList, setUsers]);
 
   useEffect(() => {
-    if (getDollar.isSuccess) {
-      setDollarValue(getDollar.data?.venta || 0);
+    if (dollarValue) {
+      setDollarValue(dollarValue.value || '');
     }
-  }, [getDollar.data?.venta, getDollar.isSuccess, setDollarValue]);
+  }, []);
 
   return (
     <ContentWrapper>
@@ -117,7 +116,7 @@ export const HomePage: React.FunctionComponent = () => {
           >
             {formatMessage({ id: 'WELCOME.HOME.FEATURED.PRODUCTS.TITLE' })}
           </Typography>
-          {productListArray.isLoading ? (
+          {productListLoading ? (
             <CircularProgress
               size={60}
               sx={{

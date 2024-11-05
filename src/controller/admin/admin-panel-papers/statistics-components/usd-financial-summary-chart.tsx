@@ -1,5 +1,5 @@
-import { useGetAllOrders } from '@webapp/sdk/mutations/orders/get-all-orders-query';
-import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
+import { useGetAllOrders } from '@webapp/services/mutations/orders/get-all-orders-query';
+import { useProductListQuery } from '@webapp/services/mutations/products/get-product-list-query';
 import { AgCartesianChartOptions, AgTooltipRendererResult } from 'ag-charts-community';
 import { AgCharts } from 'ag-charts-react';
 import React, { useMemo, useState } from 'react';

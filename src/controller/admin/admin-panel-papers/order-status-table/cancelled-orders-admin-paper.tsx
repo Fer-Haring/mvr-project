@@ -1,9 +1,9 @@
 import { ISelectCellEditorParams } from '@ag-grid-community/core';
 import { alpha, styled } from '@mui/material';
-import { useGetAllOrders } from '@webapp/sdk/mutations/orders/get-all-orders-query';
-import { useGetPendingOrders } from '@webapp/sdk/mutations/orders/get-pending-orders-query';
-import { useUpdateOrderStatus } from '@webapp/sdk/mutations/orders/update-order-status-mutation';
-import { OrderResponse } from '@webapp/sdk/types/orders-types';
+import { useGetAllOrders } from '@webapp/services/mutations/orders/get-all-orders-query';
+import { useGetPendingOrders } from '@webapp/services/mutations/orders/get-pending-orders-query';
+import { useUpdateOrderStatus } from '@webapp/services/mutations/orders/update-order-status-mutation';
+import { OrderResponse } from '@webapp/services/types/orders-types';
 import { useEditingOrderStore } from '@webapp/store/orders/editing-order-store';
 import { CellEditingStoppedEvent, ColDef, GetRowIdParams } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';

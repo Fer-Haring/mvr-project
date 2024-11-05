@@ -3,9 +3,9 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@webapp/components/button';
 import SnackbarUtils from '@webapp/components/snackbar';
-import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
-import { useUpdateProduct } from '@webapp/sdk/mutations/products/update-product-mutation';
-import { Product } from '@webapp/sdk/types/products-types';
+import { useProductListQuery } from '@webapp/services/mutations/products/get-product-list-query';
+import { useUpdateProduct } from '@webapp/services/mutations/products/update-product-mutation';
+import { Product } from '@webapp/services/types/products-types';
 import React from 'react';
 import { useIntl } from 'react-intl';
 

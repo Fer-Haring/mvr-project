@@ -1,6 +1,6 @@
-import { alpha, Box, Stack, styled, Typography } from '@mui/material';
+import { Box, Stack, Typography, alpha, styled } from '@mui/material';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { User } from '@webapp/sdk/types/user-types';
+import { User } from '@webapp/services/types/user-types';
 import React from 'react';
 import { useIntl } from 'react-intl';
 
@@ -11,7 +11,7 @@ interface UserDetailModalContentProps {
 const UserDetailModalContent: React.FunctionComponent<UserDetailModalContentProps> = ({ user }) => {
   const { formatMessage } = useIntl();
   const isMobile = useIsMobile();
-  
+
   if (!user) {
     return null;
   }

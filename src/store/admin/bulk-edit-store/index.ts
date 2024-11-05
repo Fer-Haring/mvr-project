@@ -1,5 +1,4 @@
-
-import { Product } from '@webapp/sdk/types/products-types';
+import { Product } from '@webapp/services/types/products-types';
 import { create } from 'zustand';
 
 // Define el estado inicial de la tienda
@@ -23,21 +22,23 @@ const useBulkEditStore = create<BulkEditState & BulkEditActions>((set) => ({
   selectedProducts: [],
   originalSelectedProducts: [],
   setProducts: (products) => set({ products }),
-  setSelectedProducts: (products) => set({
-    selectedProducts: products,
-    originalSelectedProducts: JSON.parse(JSON.stringify(products)), // Guardamos una copia de los productos originales
-  }),
-  updateSelectedProducts: (updatedFields) => set((state) => ({
-    selectedProducts: state.selectedProducts.map((product) => ({
-      ...product,
-      ...updatedFields,
+  setSelectedProducts: (products) =>
+    set({
+      selectedProducts: products,
+      originalSelectedProducts: JSON.parse(JSON.stringify(products)), // Guardamos una copia de los productos originales
+    }),
+  updateSelectedProducts: (updatedFields) =>
+    set((state) => ({
+      selectedProducts: state.selectedProducts.map((product) => ({
+        ...product,
+        ...updatedFields,
+      })),
+      products: state.products.map((product) =>
+        state.selectedProducts.some((selected) => selected.id === product.id)
+          ? { ...product, ...updatedFields }
+          : product
+      ),
     })),
-    products: state.products.map((product) =>
-      state.selectedProducts.some((selected) => selected.id === product.id)
-        ? { ...product, ...updatedFields }
-        : product
-    ),
-  })),
   clearSelectedProducts: () => set({ selectedProducts: [], originalSelectedProducts: [] }),
 }));
 

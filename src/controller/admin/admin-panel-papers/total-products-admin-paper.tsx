@@ -1,8 +1,8 @@
 import { Typography, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
-import { Product } from '@webapp/sdk/types/products-types';
+import { useProductListQuery } from '@webapp/services/mutations/products/get-product-list-query';
+import { Product } from '@webapp/services/types/products-types';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 import UseAnimations from 'react-useanimations';
