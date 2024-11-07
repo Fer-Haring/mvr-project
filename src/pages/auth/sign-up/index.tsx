@@ -13,7 +13,7 @@ import InputField from '@webapp/components/form/input';
 import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
 import SnackbarUtils from '@webapp/components/snackbar';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useSignupMutation } from '@webapp/services/mutations/auth/user-sign-up-mutation';
+import { useUserSignUp } from '@webapp/hooks/userHooks/userHooks';
 import { validateEmail } from '@webapp/utils/input-validations';
 import { AnimatePresence } from 'framer-motion';
 import React, { FunctionComponent, useState } from 'react';
@@ -40,14 +40,14 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
-  const signUpMutation = useSignupMutation(navigate);
+  const { signUpUser, loading } = useUserSignUp();
 
-  const isSignUpLoading = signUpMutation.isPending;
+  const isSignUpLoading = loading;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      await signUpMutation.mutateAsync({
+      await signUpUser({
         name: firstName,
         last_name: lastName,
         username: username,
@@ -92,14 +92,6 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
   const goToLogin = () => {
     navigate('/sign-in');
   };
-
-  // async function loginWithGoogle() {
-  //   window.location.href = 'https://mvr-prod.onrender.com/login/google';
-  // }
-
-  // const handleGoogleSignUp = async () => {
-  //   await loginWithGoogle();
-  // };
 
   const handleDisabled =
     !validateEmail(email) ||
@@ -338,7 +330,6 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                     {formatMessage({ id: 'AUTH.SIGN_UP.LINK.LABEL' })}
                   </Button>
                 </Stack>
-                {/* <AlternateLogin type="signup" onClick={handleGoogleSignUp} /> */}
               </Box>
             </FormWrapper>
           </Stack>

@@ -4,7 +4,7 @@ import cartAnimation from '@webapp/assets/images/animations/cart.json';
 import DrawerNavbar from '@webapp/controller/drawer-navbar';
 import { useCart } from '@webapp/hooks/cartHooks/useGetCart';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useGetUserById } from '@webapp/hooks/userHooks/useUserById';
+import { useGetUserById } from '@webapp/hooks/userHooks/userHooks';
 // import { useGetUserByIdMutation } from '@webapp/services/mutations/auth/get-user-by-id-mutation';
 // import { useGetUserCart } from '@webapp/services/mutations/cart/get-cart-query';
 import { User } from '@webapp/services/types/user-types';

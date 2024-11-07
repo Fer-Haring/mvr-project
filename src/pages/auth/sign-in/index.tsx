@@ -13,7 +13,7 @@ import Card from '@webapp/components/card';
 import InputField from '@webapp/components/form/input';
 import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useLogin } from '@webapp/hooks/userHooks/useUserLogin';
+import { useLogin } from '@webapp/hooks/userHooks/userHooks';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';

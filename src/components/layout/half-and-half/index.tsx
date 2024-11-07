@@ -1,12 +1,10 @@
-import { styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import Logo from '@webapp/assets/images/content/background_nuevo.jpg';
-import BackgroundVideo from '@webapp/assets/videos/video-login.mp4';
 // Import necessary dependencies
 import { easing } from '@webapp/components/framer';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { useIsTablet } from '@webapp/hooks/is-tablet';
 import { motion } from 'framer-motion';
-import { url } from 'inspector';
 import React, { FunctionComponent } from 'react';
 
 /**
@@ -47,6 +45,7 @@ const HalfAndHalf: FunctionComponent<HalfAndHalfProps> = ({
       className={`${className || ''} ${mainSection ? `${mainSection}-first` : ''}`}
       role="region"
       aria-label={mainSection === 'left' ? 'Left Section' : 'Right Section'}
+      isMobile={isMobile}
     >
       <motion.div
         className="left"
@@ -61,12 +60,7 @@ const HalfAndHalf: FunctionComponent<HalfAndHalfProps> = ({
         role="region"
         aria-label="Left Section Content"
       >
-        {isTablet && mainSection === 'left' && (
-          // <VideoBackground autoPlay loop muted>
-          //   <source src={BackgroundVideo} type="video/mp4" />
-          // </VideoBackground>
-          <LogoStyle src={Logo} alt="Logo" />
-        )}
+        {isTablet && mainSection === 'left' && <LogoStyle src={Logo} alt="Logo" />}
         <div className={`left-content ${leftOverflow && !isTablet ? 'overflow' : ''}`}>{leftContent}</div>
       </motion.div>
       <motion.div
@@ -100,7 +94,7 @@ HalfAndHalf.defaultProps = {
 
 export default HalfAndHalf;
 
-const Section = styled('div')(({ theme }) => ({
+const Section = styled('div')<{ isMobile: boolean }>(({ theme, isMobile }) => ({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
@@ -125,6 +119,7 @@ const Section = styled('div')(({ theme }) => ({
     width: '50vw',
     height: '100vh',
     maxHeight: '100vh',
+    backgroundColor: !isMobile ? alpha(theme.palette.common.white, 0.3) : 'transparent',
     [theme.breakpoints.down('md')]: {
       width: '100%',
       maxHeight: 'none',
@@ -154,16 +149,6 @@ const Section = styled('div')(({ theme }) => ({
     overflowY: 'auto',
   },
 }));
-
-const VideoBackground = styled('video')({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: '100%',
-  objectFit: 'cover',
-  zIndex: -1, 
-});
 
 const LogoStyle = styled('img')({
   position: 'absolute',

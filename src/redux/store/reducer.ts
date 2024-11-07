@@ -1,14 +1,11 @@
 // reducer.ts
 import { combineReducers } from '@reduxjs/toolkit';
 
-
-
 import adminReducer from './slices/adminSlices';
 import cartReducer from './slices/cartSlices';
 import favoritesReducer from './slices/favoritesSlices';
 import productsReducer from './slices/productsSlice';
 import userReducer from './slices/userSlices';
-
 
 const rootReducer = combineReducers({
   user: userReducer,

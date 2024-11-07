@@ -8,8 +8,9 @@ import InputField from '@webapp/components/form/input';
 import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
 import { EMAIL_REGEX } from '@webapp/configuration/regex';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useSendRecoveryCodeMutation } from '@webapp/services/mutations/auth/password/send-password-recovery-code-mutation';
-import { useRecoveryPasswordData } from '@webapp/store/auth/recovery-password-data';
+import { useAppDispatch, useAppSelector } from '@webapp/hooks/redux-hooks';
+import { useSendCode } from '@webapp/hooks/userHooks/userHooks';
+import { setEmail } from '@webapp/redux/store/slices/userSlices';
 import { normalizeUserData } from '@webapp/utils/normalize-user-data';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -23,12 +24,21 @@ const ForgotPasswordPage2: FunctionComponent<ForgotPasswordPage2Props> = ({ clas
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const { formatMessage } = useIntl();
-  const { mutate, isPending } = useSendRecoveryCodeMutation();
+  const { sendCode, loading } = useSendCode();
 
-  const loading = isPending;
   const [touched, setTouched] = useState<Record<string, boolean>>({});
-  // const [email, setEmail] = useState(username || '');
-  const { email, setEmail } = useRecoveryPasswordData();
+  const dispatch = useAppDispatch();
+
+  const { email } = useAppSelector((state) => state.user.userData) || '';
+
+  const handleChangeEmail = (ev: React.ChangeEvent<HTMLInputElement>) => {
+    const newEmail = ev.target.value;
+    dispatch(setEmail(newEmail));
+  };
+
+  // useEffect(() => {
+  //   console.log('Valor de email en el selector:', email);
+  // }, [email]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -36,13 +46,11 @@ const ForgotPasswordPage2: FunctionComponent<ForgotPasswordPage2Props> = ({ clas
     const data = new FormData(event.currentTarget);
     const email = normalizeUserData(data.get('email'));
 
-    if (email) {
-      mutate({ email, navigate });
-    }
-
     if (!email || !EMAIL_REGEX.test(email)) {
       return;
     }
+    console.log(email);
+    sendCode({ email, navigate });
   };
 
   const getError = (email: string) => {
@@ -59,6 +67,8 @@ const ForgotPasswordPage2: FunctionComponent<ForgotPasswordPage2Props> = ({ clas
   };
 
   const goToLogin = () => navigate('/sign-in');
+
+  console.log(!EMAIL_REGEX.test(email), email);
 
   return (
     <section id="forgotPassword" className={className || ''} aria-labelledby="forgot-password-title">
@@ -86,13 +96,13 @@ const ForgotPasswordPage2: FunctionComponent<ForgotPasswordPage2Props> = ({ clas
                   type="email"
                   value={email}
                   onBlur={() => setTouched({ ...touched, email: true })}
-                  onChange={(ev) => setEmail(ev.target.value)}
+                  onChange={handleChangeEmail}
                   error={touched.email && !!getError(email)}
                   helperText={getError(email)}
-                  aria-invalid={!!getError(email)} // Indicate invalid input
+                  aria-invalid={!!getError(email)}
                 />
                 <Stack
-                  direction={{ xs: 'column-reverse', md: 'row' }}
+                  direction={{ xs: 'column', md: 'row' }}
                   spacing={1}
                   justifyContent={{
                     sm: 'center',
@@ -100,18 +110,17 @@ const ForgotPasswordPage2: FunctionComponent<ForgotPasswordPage2Props> = ({ clas
                   }}
                   sx={{ mt: { xs: 5, sm: 4 } }}
                 >
-                  <Button variant="text" onClick={goToLogin} fullWidth={isMobile} aria-label="Back to Login">
-                    {formatMessage({ id: 'AUTH.FORGOT_PASSWORD.BUTTON.BACK' })}
-                  </Button>
                   <Button
                     loading={loading}
                     disabled={!EMAIL_REGEX.test(email)}
                     type="submit"
-                    sx={{ flexShrink: 0 }}
+                    sx={{ flexShrink: 1 }}
                     fullWidth={isMobile}
-                    aria-label="Submit"
                   >
                     {formatMessage({ id: 'AUTH.FORGOT_PASSWORD.BUTTON.LABEL' })}
+                  </Button>
+                  <Button variant="text" onClick={goToLogin} fullWidth={isMobile}>
+                    {formatMessage({ id: 'AUTH.FORGOT_PASSWORD.BUTTON.BACK' })}
                   </Button>
                 </Stack>
               </Box>

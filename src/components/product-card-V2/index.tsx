@@ -7,7 +7,7 @@ import { SxProps, Theme, styled, useTheme } from '@mui/material/styles';
 import { useAddFavorite } from '@webapp/hooks/favoritesHooks/useAddFavorite';
 import { useRemoveFavorite } from '@webapp/hooks/favoritesHooks/useRemoveFavorite';
 import { useAppSelector } from '@webapp/hooks/redux-hooks';
-import { useGetUserById } from '@webapp/hooks/userHooks/useUserById';
+import { useGetUserById } from '@webapp/hooks/userHooks/userHooks';
 // import { useAddFavorite } from '@webapp/services/mutations/auth/add-to-favorites-mutation';
 // import { useRemoveFavorite } from '@webapp/services/mutations/auth/remove-from-favorites-mutation';
 import { Product } from '@webapp/services/types/products-types';

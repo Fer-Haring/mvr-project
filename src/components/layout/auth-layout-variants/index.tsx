@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import React from 'react';
 
 import AuthLayout, { AuthLayoutProps } from '../auth-layout';
 import HalfAndHalf, { HalfAndHalfProps } from '../half-and-half';
@@ -15,7 +15,11 @@ interface AuthLayoutContainerCenteredProps extends AuthLayoutProps {
 
 type AuthLayoutContainerProps = AuthLayoutContainerHalfProps | AuthLayoutContainerCenteredProps;
 
-const AuthLayoutContainer: FunctionComponent<AuthLayoutContainerProps> = ({ variant, className, ...restProps }) => {
+const AuthLayoutContainer: React.FunctionComponent<AuthLayoutContainerProps> = ({
+  variant,
+  className,
+  ...restProps
+}) => {
   switch (variant) {
     case 'half':
       return <HalfAndHalf {...(restProps as HalfAndHalfProps)} className={className} />;
