@@ -19,13 +19,14 @@ const OrderManagementPage: React.FunctionComponent = () => {
   const theme = useTheme();
   const { formatMessage } = useIntl();
   const isMobile = useIsMobile();
-  const { data: allOrdersData = [], isLoading, error } = useGetAllOrders();
+  const { data: allOrdersData = [], isLoading, error, refetch } = useGetAllOrders();
   const { setProductList } = useProductsListData();
   const productListArray = useProductListQuery(1, 500);
   const [activeTable, setActiveTable] = useState<'pending' | 'canceled' | 'completed'>('pending');
 
   useEffect(() => {
     setProductList(productListArray.data?.products || []);
+    refetch();
   }, [setProductList]);
 
   const pendingOrders = allOrdersData.filter((order) => order.status?.toLowerCase() === 'pending');
