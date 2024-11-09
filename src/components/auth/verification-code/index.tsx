@@ -1,9 +1,7 @@
-import { FunctionComponent } from 'react';
-
-import ReactInputVerificationCode from 'react-input-verification-code';
-
 import Box from '@mui/material/Box';
 import { alpha, styled } from '@mui/material/styles';
+import React from 'react';
+import ReactInputVerificationCode from 'react-input-verification-code';
 
 const codeLength = 6;
 
@@ -91,7 +89,7 @@ interface VerificationCodeCtrlProps {
   onCompleted: (data: string) => void;
 }
 
-const VerificationCodeCtrl: FunctionComponent<VerificationCodeCtrlProps> = ({
+const VerificationCodeCtrl: React.FC<VerificationCodeCtrlProps> = ({
   className,
   value, // Use value prop
   placeholder,
@@ -119,6 +117,5 @@ const VerificationCodeCtrl: FunctionComponent<VerificationCodeCtrlProps> = ({
     </Wrapper>
   );
 };
-
 
 export default VerificationCodeCtrl;

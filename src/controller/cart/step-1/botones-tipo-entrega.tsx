@@ -4,12 +4,11 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
+import { useAppDispatch, useAppSelector } from '@webapp/hooks/redux-hooks';
+import { setOrder } from '@webapp/redux/store/slices/messageSlice';
 import { User } from '@webapp/services/types/user-types';
-import { useMessageStore } from '@webapp/store/admin/message-store';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
-
-import CurrencySelectButtons from './botones-moneda-pago';
 
 interface DeliveryTypeButtonsProps {
   className?: string;
@@ -19,17 +18,13 @@ interface DeliveryTypeButtonsProps {
   setIsCurrencyPayValid: (isValid: boolean) => void;
 }
 
-const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({
-  userData,
-  setUser,
-  onValidChange,
-  setIsCurrencyPayValid,
-}) => {
+const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ userData, setUser, onValidChange }) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
   const isMobile = useIsMobile();
   const [deliveryType, setDeliveryType] = useState<string>(userData?.delivery_type || '');
-  const { setOrder, order } = useMessageStore();
+  const { order } = useAppSelector((state) => state.orders);
+  const dispatch = useAppDispatch();
 
   const handleSelectDelivery = () => {
     setDeliveryType('Delivery');
@@ -46,7 +41,7 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({
       onValidChange(true);
     }
     setUser({ ...userData, delivery_type: selectedDelivery });
-    setOrder({ ...order, delivery_type: selectedDelivery });
+    dispatch(setOrder({ ...order, delivery_type: selectedDelivery }));
   };
 
   React.useEffect(() => {

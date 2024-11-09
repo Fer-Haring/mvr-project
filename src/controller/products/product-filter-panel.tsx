@@ -17,8 +17,9 @@ import {
 import { AutocompleteOption } from '@webapp/components/form/autocomplete';
 import InputField from '@webapp/components/form/input';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
+import { useAppSelector } from '@webapp/hooks/redux-hooks';
 import { CustomAutoComplete, CustomSelect, FiltersHolder, Slider } from '@webapp/pages/products/products';
-import { useSelectedProductFilterStore } from '@webapp/store/products/selected-product-filter';
+import { setSelectedProductFilter } from '@webapp/redux/store/slices/productsSlice';
 import React, { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 
@@ -56,7 +57,7 @@ const ProductFilterPanel: React.FunctionComponent<ProductFilterPanelProps> = ({
   const { formatMessage } = useIntl();
   const isMobile = useIsMobile();
   const theme = useTheme();
-  const { selectedProductFilter, setSelectedProductFilter } = useSelectedProductFilterStore();
+  const { selectedProductFilter } = useAppSelector((state) => state.products);
 
   useEffect(() => {
     if (category) {

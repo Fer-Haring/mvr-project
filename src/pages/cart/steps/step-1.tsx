@@ -8,10 +8,11 @@ import CurrencySelectButtons from '@webapp/controller/cart/step-1/botones-moneda
 import DeliveryTypeButtons from '@webapp/controller/cart/step-1/botones-tipo-entrega';
 import DeliveryData from '@webapp/controller/cart/step-1/delivery-data';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
+import { useAppSelector } from '@webapp/hooks/redux-hooks';
+import { RootState } from '@webapp/redux/store/reducer';
 import { useUpdateUser } from '@webapp/services/mutations/auth/user-update-mutation';
 import { OrderRequest } from '@webapp/services/types/orders-types';
 import { User } from '@webapp/services/types/user-types';
-import { useMessageStore } from '@webapp/store/admin/message-store';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
@@ -46,7 +47,7 @@ export const Step1: FunctionComponent<Step1Props> = ({
   const { formatMessage } = useIntl();
   const isMobile = useIsMobile();
   const theme = useTheme();
-  const { order } = useMessageStore();
+  const { order } = useAppSelector((state: RootState) => state.message);
   const [isPaymentTypeValid, setIsPaymentTypeValid] = useState<boolean>(false);
   const [isDeliveryTypeValid, setIsDeliveryTypeValid] = useState(false);
   const [isCurrencyPayValid, setIsCurrencyPayValid] = useState(false);
@@ -71,7 +72,7 @@ export const Step1: FunctionComponent<Step1Props> = ({
         isCityValid &&
         isCurrencyUsedToPayValid &&
         isCurrencyPayValid &&
-        order.delivery_cost !== 0 &&
+        order?.delivery_cost !== 0 &&
         user?.delivery_cost !== 0
       );
     } else {

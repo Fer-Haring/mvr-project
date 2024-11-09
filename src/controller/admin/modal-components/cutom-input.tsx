@@ -1,7 +1,6 @@
 import { FormControl, styled } from '@mui/material';
-import { SxProps } from '@mui/material/styles';
 import InputField from '@webapp/components/form/input';
-import { ChangeEvent, FunctionComponent } from 'react';
+import React, { ChangeEvent, FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 
 interface CustomInputProps {

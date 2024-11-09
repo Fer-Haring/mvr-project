@@ -8,9 +8,8 @@ import ContentWrapper from '@webapp/components/content-wrapper';
 import ProductCardV2 from '@webapp/components/product-card-V2';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { useProduct } from '@webapp/hooks/productsHooks/useProducts';
-import { useAdminDataStore } from '@webapp/store/admin/admin-data';
-import { useDollarValue } from '@webapp/store/admin/dolar-value';
-import { useProductsListData } from '@webapp/store/products/products-list';
+import { useAppDispatch } from '@webapp/hooks/redux-hooks';
+import { setProducts } from '@webapp/redux/store/slices/productsSlice';
 import { motion } from 'framer-motion';
 import React, { useEffect } from 'react';
 import { useIntl } from 'react-intl';
@@ -21,27 +20,18 @@ export const HomePage: React.FunctionComponent = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useIsMobile();
-  const { setDollarValue } = useDollarValue();
-  const { setUsers, setOrders } = useAdminDataStore();
-  const { productList, setProductList } = useProductsListData();
+  const dispatch = useAppDispatch();
   const { products: productListArray, loading: productListLoading, fetchProductsList, fetchProductById } = useProduct();
-  const products = Object.values(productList);
+  const products = Object.values(productListArray || {});
   const featuredProducts = products.filter((product) => product.featured === true);
-  const { dollarValue } = useDollarValue();
 
   useEffect(() => {
     fetchProductsList(1, 500);
   }, []);
 
   useEffect(() => {
-    setProductList(productListArray?.products || []);
-  }, [productListArray?.products, setOrders, setProductList, setUsers]);
-
-  useEffect(() => {
-    if (dollarValue) {
-      setDollarValue(dollarValue.value || '');
-    }
-  }, []);
+    dispatch(setProducts(productListArray || []));
+  }, [productListArray, dispatch]);
 
   return (
     <ContentWrapper>

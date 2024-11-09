@@ -9,18 +9,19 @@ import StatisticsPanelAdminPaper from '@webapp/controller/admin/admin-panel-pape
 import TotalOrdersPaper from '@webapp/controller/admin/admin-panel-papers/total-orders-admin-paper';
 import TotalProductsPaper from '@webapp/controller/admin/admin-panel-papers/total-products-admin-paper';
 import TotalSalesPaper from '@webapp/controller/admin/admin-panel-papers/total-sales-admin-paper';
+import { useAppDispatch } from '@webapp/hooks/redux-hooks';
+import { setProducts } from '@webapp/redux/store/slices/productsSlice';
 import { useProductListQuery } from '@webapp/services/mutations/products/get-product-list-query';
-import { useProductsListData } from '@webapp/store/products/products-list';
 import React, { useEffect } from 'react';
 
 export const AdminDashboardPage: React.FunctionComponent = () => {
   const theme = useTheme();
-  const { setProductList } = useProductsListData();
+  const dispatch = useAppDispatch();
   const productListArray = useProductListQuery(1, 500);
 
   useEffect(() => {
-    setProductList(productListArray.data?.products || []);
-  }, [productListArray.data?.products, setProductList]);
+    dispatch(setProducts(productListArray.data?.products || []));
+  }, [productListArray.data?.products, dispatch]);
 
   return (
     <ContentWrapper>

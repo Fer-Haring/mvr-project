@@ -5,14 +5,15 @@ import Stack from '@mui/system/Stack';
 import NoImageProd from '@webapp/assets/images/prod-no-image.png';
 import SnackbarUtils from '@webapp/components/snackbar';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
+import { useAppSelector } from '@webapp/hooks/redux-hooks';
 import { useAddToCart } from '@webapp/services/mutations/cart/add-to-cart-mutation';
 import { useGetUserCart } from '@webapp/services/mutations/cart/get-cart-query';
 import { CartItem } from '@webapp/services/types/cart-types';
 import { OrderRequest } from '@webapp/services/types/orders-types';
-import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import React, { useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
+
 
 // import { useNavigate } from 'react-router-dom';
 
@@ -28,7 +29,7 @@ export const CartProductsDetailV2: React.FunctionComponent<CartProductsDetailV2P
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const { formatMessage } = useIntl();
-  const { dollarValue } = useDollarValue();
+  const { dollarValue } = useAppSelector((state) => state.admin);
   const { mutateAsync, isPending } = useAddToCart();
   const getCart = useGetUserCart();
   const [localCartProducts, setLocalCartProducts] = useState<CartItem[]>(cartProducts || []);
@@ -38,7 +39,7 @@ export const CartProductsDetailV2: React.FunctionComponent<CartProductsDetailV2P
     if (priceCurrency === 'ARS') {
       return `$ ${price} ARS`;
     } else if (priceCurrency === 'USD') {
-      const convertedPrice = Number(price * Number(dollarValue.value));
+      const convertedPrice = Number(price * Number(dollarValue?.venta));
       return `$ ${price} USD = ${convertedPrice.toFixed(2)} ARS`;
     }
   };

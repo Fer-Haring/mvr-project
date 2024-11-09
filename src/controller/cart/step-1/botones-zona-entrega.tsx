@@ -4,9 +4,10 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
+import { useAppDispatch, useAppSelector } from '@webapp/hooks/redux-hooks';
+import { setDeliverValue, setOrder } from '@webapp/redux/store/slices/messageSlice';
+import { setUserData } from '@webapp/redux/store/slices/userSlices';
 import { User } from '@webapp/services/types/user-types';
-import { useMessageStore } from '@webapp/store/admin/message-store';
-import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 
@@ -21,12 +22,12 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
   const { formatMessage } = useIntl();
   const theme = useTheme();
   const isMobile = useIsMobile();
-  const { setUser: setUserData } = useUserData();
-  const { setDeliverValue, setOrder, order } = useMessageStore();
+  const { order } = useAppSelector((state) => state.orders);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     let deliveryCost = 0;
-    const selectedDelivery = userData.delivery_zone || order.delivery_zone;
+    const selectedDelivery = userData.delivery_zone || order?.user?.delivery_zone;
 
     if (selectedDelivery === 'BSSO') {
       deliveryCost = 1400;
@@ -45,12 +46,12 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
         delivery_cost: deliveryCost,
       };
       setUser(updatedUserData);
-      setUserData(updatedUserData);
-      setDeliverValue(deliveryCost);
-      setOrder({
-        ...order,
-        user: updatedUserData,
-      });
+      dispatch(
+        setOrder({
+          ...order,
+          user: updatedUserData,
+        })
+      );
     }
   }, [userData]);
 
@@ -78,12 +79,14 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ userDa
     }
 
     setUser(updatedUserData);
-    setUserData(updatedUserData);
-    setDeliverValue(deliveryCost);
-    setOrder({
-      ...order,
-      user: updatedUserData,
-    });
+    dispatch(setUserData(updatedUserData));
+    dispatch(setDeliverValue(deliveryCost));
+    dispatch(
+      setOrder({
+        ...order,
+        user: updatedUserData,
+      })
+    );
   };
 
   React.useEffect(() => {

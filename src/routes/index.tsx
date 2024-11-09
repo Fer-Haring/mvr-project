@@ -14,7 +14,6 @@ import UserListPage from '@webapp/pages/admin/user-list';
 import ForgotPasswordPage2 from '@webapp/pages/auth/forgot-password';
 import ForgotPasswordNewPassword from '@webapp/pages/auth/forgot-password-new-password';
 import ForgotPasswordVerifyPage2 from '@webapp/pages/auth/forgot-password-verify';
-import GoogleAuthCallback from '@webapp/pages/auth/google_auth';
 import SetPasswrodPage from '@webapp/pages/auth/set-password';
 // Auth pages
 import SignInPage2 from '@webapp/pages/auth/sign-in';
@@ -96,10 +95,6 @@ const ProjectRoutes: Route[] = [
   {
     path: '/privacy-policy',
     component: <PrivacyPolicyPage />,
-  },
-  {
-    path: '/google-auth-callback',
-    component: <GoogleAuthCallback />,
   },
   {
     path: '/set-password',

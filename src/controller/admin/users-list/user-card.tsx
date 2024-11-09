@@ -1,20 +1,14 @@
-import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded';
-import BookmarkRoundedIcon from '@mui/icons-material/BookmarkRounded';
+
 import CameraAltRoundedIcon from '@mui/icons-material/CameraAltRounded';
-import { Box, IconButton, Tooltip, Typography } from '@mui/material';
+import { Box,Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { SxProps, Theme, styled, useTheme } from '@mui/material/styles';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useAddFavorite } from '@webapp/services/mutations/auth/add-to-favorites-mutation';
-import { useGetUserByIdMutation } from '@webapp/services/mutations/auth/get-user-by-id-mutation';
-import { useRemoveFavorite } from '@webapp/services/mutations/auth/remove-from-favorites-mutation';
-import { Product } from '@webapp/services/types/products-types';
 import { User } from '@webapp/services/types/user-types';
-import { useUserData } from '@webapp/store/users/user-data';
-import React, { FunctionComponent, useMemo } from 'react';
+import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 
-const Wrapper = styled(Paper)<{}>(({ theme }) => ({
+const Wrapper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(0),
   display: 'flex',
   flexDirection: 'row',

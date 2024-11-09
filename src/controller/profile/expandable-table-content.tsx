@@ -10,8 +10,8 @@ import {
   alpha,
   styled,
 } from '@mui/material';
+import { useAppSelector } from '@webapp/hooks/redux-hooks';
 import { CompletedOrder } from '@webapp/services/types/user-types';
-import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 
@@ -21,7 +21,7 @@ interface ExpandableTableContentProps {
 
 const ExpandableTableContent: FunctionComponent<ExpandableTableContentProps> = ({ row }) => {
   const { formatMessage } = useIntl();
-  const { dollarValue } = useDollarValue();
+  const { dollarValue } = useAppSelector((state) => state.admin);
   // const values = Object.values(dollarValue);
   // const firstValue = values[0];
 
@@ -29,7 +29,7 @@ const ExpandableTableContent: FunctionComponent<ExpandableTableContentProps> = (
     if (priceCurrency === 'ARS') {
       return price;
     } else if (priceCurrency === 'USD') {
-      return `${price} USD = $${(price * Number(dollarValue.value)).toFixed(2)} ARS`;
+      return `${price} USD = $${(price * Number(dollarValue?.venta)).toFixed(2)} ARS`;
     }
   };
 

@@ -10,11 +10,12 @@ import Modal from '@webapp/components/modal';
 import { useGetDollarValue } from '@webapp/services/mutations/admin/get-dollar-value-query';
 import { CartItem } from '@webapp/services/types/cart-types';
 import { OrderResponse } from '@webapp/services/types/orders-types';
-import { useEditingOrderStore } from '@webapp/store/orders/editing-order-store';
 import React from 'react';
 import { useIntl } from 'react-intl';
 
 import AddProductModalContainer from './add-product-modal-container';
+import { useAppDispatch, useAppSelector } from '@webapp/hooks/redux-hooks';
+import { setOrders } from '@webapp/redux/store/slices/ordersSlice';
 
 interface OrderDataProps {
   order: OrderResponse | undefined;
@@ -23,13 +24,14 @@ interface OrderDataProps {
 const OrderData: React.FC<OrderDataProps> = ({ order }) => {
   const { formatMessage } = useIntl();
   const [addProductModal, setAddProductModal] = React.useState(false);
-  const { orders, setOrders } = useEditingOrderStore();
+  const orders = useAppSelector((state) => state.orders.orders);
+  const dispatch = useAppDispatch();
   const exchangeRate = useGetDollarValue();
   const dollarValue = exchangeRate.data?.venta || 1;
 
   const updateOrderInStore = (updatedOrder: OrderResponse) => {
     const updatedOrders = orders.map((o) => (o.order_id === updatedOrder.order_id ? updatedOrder : o));
-    setOrders(updatedOrders);
+    dispatch(setOrders(updatedOrders));
   };
 
   const calculateSubTotal = (quantity: number, unitPrice: number) => {

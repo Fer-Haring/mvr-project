@@ -9,17 +9,18 @@ import UserData from '@webapp/controller/profile/user-data';
 import UserImageHolder from '@webapp/controller/profile/user-image-holder';
 import UserInfoPersonal from '@webapp/controller/profile/user-info-personal';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
+import { useAppSelector } from '@webapp/hooks/redux-hooks';
+import { RootState } from '@webapp/redux/store/reducer';
+import { setUser } from '@webapp/redux/store/slices/userSlices';
 import { useGetUserByIdMutation } from '@webapp/services/mutations/auth/get-user-by-id-mutation';
 import { User } from '@webapp/services/types/user-types';
-import { useUserStore } from '@webapp/store/auth/session';
-import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent, useEffect } from 'react';
 
 export const ProfilePage: FunctionComponent = () => {
-  const { user, setUser } = useUserData();
+  const { user } = useAppSelector((state: RootState) => state.user.userData);
   const theme = useTheme();
   const isMobile = useIsMobile();
-  const userData = useGetUserByIdMutation(useUserStore((state) => state.userInfo?.userId) || '');
+  const userData = useGetUserByIdMutation(useAppSelector((state: RootState) => state.user.userInfo?.userId) || '');
 
   useEffect(() => {
     userData.refetch();
@@ -37,16 +38,16 @@ export const ProfilePage: FunctionComponent = () => {
       >
         <Box sx={{ width: isMobile ? '100%' : '50%' }}>
           <Paper sx={{ p: 2, backgroundColor: alpha(theme.palette.common.white, 0.6) }}>
-            <UserImageHolder user={user} />
-            <UserInfoPersonal userData={user} setUser={setUser} />
+            <UserImageHolder user={user!} />
+            <UserInfoPersonal userData={user!} setUser={setUser} />
           </Paper>
         </Box>
         <Box sx={{ width: isMobile ? '100%' : '50%', gap: 2, display: 'flex', flexDirection: 'column' }}>
           <Paper sx={{ p: 2, backgroundColor: alpha(theme.palette.common.white, 0.6) }}>
-            <UserData userData={user} />
+            <UserData userData={user!} />
           </Paper>
           <Paper sx={{ p: 2, backgroundColor: alpha(theme.palette.common.white, 0.6) }}>
-            <FavoriteList userData={user} />
+            <FavoriteList userData={user!} />
           </Paper>
         </Box>
       </Stack>

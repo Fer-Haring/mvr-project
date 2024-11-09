@@ -3,10 +3,12 @@ import Button from '@webapp/components/button';
 import ContentWrapper from '@webapp/components/content-wrapper';
 import OrderData from '@webapp/controller/admin/edit-pending-orders/order-data';
 import UserData from '@webapp/controller/admin/edit-pending-orders/user-data';
+import { useAppSelector } from '@webapp/hooks/redux-hooks';
+import { RootState } from '@webapp/redux/store/reducer';
+import { resetStore } from '@webapp/redux/store/slices/ordersSlice';
 import { useGetPendingOrders } from '@webapp/services/mutations/orders/get-pending-orders-query';
 import { useUpdatePendingOrder } from '@webapp/services/mutations/orders/update-pending-order-mutation';
 import { OrderResponse } from '@webapp/services/types/orders-types';
-import { useEditingOrderStore } from '@webapp/store/orders/editing-order-store';
 import React from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -19,7 +21,7 @@ export const EditPendingOrdersPage: React.FC<EditPendingOrdersPageProps> = () =>
   const orderId = useParams<{ id: string }>().id;
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
-  const { orders, resetStore } = useEditingOrderStore();
+  const { orders } = useAppSelector((state: RootState) => state.orders);
   const saveOrder = useUpdatePendingOrder();
   const pendingOrders = useGetPendingOrders();
 

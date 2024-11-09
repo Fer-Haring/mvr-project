@@ -4,8 +4,9 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
+import { useAppDispatch, useAppSelector } from '@webapp/hooks/redux-hooks';
+import { setOrder } from '@webapp/redux/store/slices/messageSlice';
 import { User } from '@webapp/services/types/user-types';
-import { useMessageStore } from '@webapp/store/admin/message-store';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 
@@ -20,8 +21,8 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
   const { formatMessage } = useIntl();
   const isMobile = useIsMobile();
   const theme = useTheme();
-  const { setOrder, order } = useMessageStore();
-
+  const { order } = useAppSelector((state) => state.orders);
+  const dispatch = useAppDispatch();
   const [selectedPaymentType, setSelectedPaymentType] = useState(userData?.payment_method || '');
 
   const selectPaymentType = (paymentType: string) => {
@@ -35,7 +36,7 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
     }
 
     setUser({ ...userData, payment_method: selectedDelivery });
-    setOrder({ ...order, payment_method: selectedDelivery });
+    dispatch(setOrder({ ...order, payment_method: selectedDelivery }));
   };
 
   React.useEffect(() => {

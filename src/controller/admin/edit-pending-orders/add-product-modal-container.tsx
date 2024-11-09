@@ -1,9 +1,11 @@
 import { Autocomplete, Box, Paper, Stack, TextField, Typography, useTheme } from '@mui/material';
 import Button from '@webapp/components/button';
+import { useAppDispatch, useAppSelector } from '@webapp/hooks/redux-hooks';
+import { setOrders } from '@webapp/redux/store/slices/ordersSlice';
 import { useProductListQuery } from '@webapp/services/mutations/products/get-product-list-query';
 import { OrderResponse } from '@webapp/services/types/orders-types';
 import { Product } from '@webapp/services/types/products-types';
-import { useEditingOrderStore } from '@webapp/store/orders/editing-order-store';
+
 import React from 'react';
 import { useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
@@ -16,9 +18,10 @@ const AddProductModalContainer: React.FC<AddProductModalContainerProps> = ({ set
   const { id: orderId } = useParams<{ id: string }>();
   const { formatMessage } = useIntl();
   const theme = useTheme();
+  const dispatch = useAppDispatch();
   const { data: productListData, isLoading } = useProductListQuery(1, 500);
   const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
-  const { orders, setOrders } = useEditingOrderStore();
+  const orders = useAppSelector((state) => state.orders.orders);
 
   const filteredProducts = productListData?.products.filter((product) => product.actual_stock > 0) || [];
 
@@ -74,7 +77,7 @@ const AddProductModalContainer: React.FC<AddProductModalContainerProps> = ({ set
       };
     });
 
-    setOrders(updatedOrders);
+    dispatch(setOrders(updatedOrders));
     setSelectedProduct(null);
     setAddProductModal(false);
   };

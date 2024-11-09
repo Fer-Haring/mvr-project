@@ -12,15 +12,21 @@ import {
 } from '../thunks/productsThunks';
 
 export interface ProductsState {
-  products: ProductsListResponse | null;
+  productsList: ProductsListResponse | null;
+  products: Product[] | null;
   product: Product | null;
+  selectedMainCategory: string | null;
+  selectedProductFilter: string | null;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: ProductsState = {
+  productsList: null,
   products: null,
   product: null,
+  selectedMainCategory: null,
+  selectedProductFilter: null,
   loading: false,
   error: null,
 };
@@ -34,11 +40,31 @@ const productsSlice = createSlice({
       state.product = null;
       state.loading = false;
       state.error = null;
+      state.selectedMainCategory = null;
+      state.selectedProductFilter = null;
     },
     clearProductState: (state) => {
       state.product = null;
       state.loading = false;
       state.error = null;
+    },
+    setSelectedMainCategory: (state, action: PayloadAction<string | null>) => {
+      state.selectedMainCategory = action.payload;
+    },
+    setSelectedProductFilter: (state, action: PayloadAction<string | null>) => {
+      state.selectedProductFilter = action.payload;
+    },
+    setProductsList: (state, action: PayloadAction<ProductsListResponse>) => {
+      state.productsList = action.payload;
+    },
+    setProducts: (state, action: PayloadAction<Product[] | null>) => {
+      state.products = action.payload;
+    },
+    setProduct: (state, action: PayloadAction<Product | null>) => {
+      state.product = action.payload;
+    },
+    resetProduct: (state) => {
+      state.product = null;
     },
   },
   extraReducers: (builder) => {
@@ -50,7 +76,7 @@ const productsSlice = createSlice({
       })
       .addCase(getProductsListThunk.fulfilled, (state, action: PayloadAction<ProductsListResponse>) => {
         state.loading = false;
-        state.products = action.payload;
+        state.productsList  = action.payload;
       })
       .addCase(getProductsListThunk.rejected, (state, action) => {
         state.loading = false;
@@ -134,5 +160,15 @@ const productsSlice = createSlice({
   },
 });
 
-export const { clearProductsState, clearProductState } = productsSlice.actions;
+export const {
+  clearProductsState,
+  clearProductState,
+  setSelectedMainCategory,
+  setSelectedProductFilter,
+  setProductsList,
+  setProducts,
+  setProduct,
+  resetProduct,
+} = productsSlice.actions;
+
 export default productsSlice.reducer;

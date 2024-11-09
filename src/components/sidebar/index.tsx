@@ -6,7 +6,7 @@ import List from '@mui/material/List';
 import { styled, useTheme } from '@mui/material/styles';
 import MvpLogo from '@webapp/assets/images/content/logo.png';
 import ImageLogo from '@webapp/assets/images/content/name-image.png';
-import { useUserData } from '@webapp/store/users/user-data';
+import { useAppSelector } from '@webapp/hooks/redux-hooks';
 import { motion, useReducedMotion } from 'framer-motion';
 import React, { FunctionComponent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -39,7 +39,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ className }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useUserData();
+  const user = useAppSelector((state) => state.user.userById.user);
   const [collapsed, setCollapsed] = React.useState<boolean>(localStorage.getItem('sidebarCollapsed') === 'true');
 
   const shouldReduceMotion = useReducedMotion();

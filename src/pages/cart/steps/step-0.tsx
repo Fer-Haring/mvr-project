@@ -1,6 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope */
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
-import { useTheme } from '@mui/material';
 import { Box } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Button from '@webapp/components/button';
@@ -24,7 +23,6 @@ interface Step0Props {
 export const Step0: FunctionComponent<Step0Props> = ({ handleNextStep, cart, order, setOrder }) => {
   const { formatMessage } = useIntl();
   const isMobile = useIsMobile();
-  const theme = useTheme();
   return (
     <Stack direction={'column'} gap={2} width={'100%'} justifyContent={'center'} alignItems={'center'}>
       <Box

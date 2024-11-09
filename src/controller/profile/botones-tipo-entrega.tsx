@@ -3,9 +3,10 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
+import { useAppDispatch } from '@webapp/hooks/redux-hooks';
+import { setUser } from '@webapp/redux/store/slices/userSlices';
 import { useUpdateUser } from '@webapp/services/mutations/auth/user-update-mutation';
 import { User } from '@webapp/services/types/user-types';
-import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 
@@ -17,7 +18,7 @@ interface DeliveryTypeButtonsProps {
 const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ userData }) => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
-  const { setUser } = useUserData();
+  const dispatch = useAppDispatch();
   const [deliveryType, setDeliveryType] = useState(userData?.delivery_type);
   const { mutate } = useUpdateUser(userData?.id);
 
@@ -35,7 +36,7 @@ const DeliveryTypeButtons: FunctionComponent<DeliveryTypeButtonsProps> = ({ user
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id: ignoredUserId, ...restOfUserData } = userData;
     mutate({ payload: { ...restOfUserData, delivery_type: selectedDelivery } });
-    setUser({ ...userData, delivery_type: selectedDelivery });
+    dispatch(setUser({ ...userData, delivery_type: selectedDelivery }));
   };
 
   return (

@@ -43,7 +43,6 @@ const ContainerWrapper = styled(Box)<{ bagdesMet: boolean }>(({ theme, bagdesMet
   flexDirection: 'column',
 }));
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const verifyRule = (regex: RegExp, password: string): boolean => {
   return regex.test(password || '');
 };

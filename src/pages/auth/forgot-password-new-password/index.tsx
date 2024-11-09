@@ -12,8 +12,8 @@ import Button from '@webapp/components/button';
 import InputField from '@webapp/components/form/input';
 import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
+import { useAppSelector } from '@webapp/hooks/redux-hooks';
 import { useSendNewPasswordMutation } from '@webapp/services/mutations/auth/password/send-new-password-mutation';
-import { useRecoveryPasswordData } from '@webapp/store/auth/recovery-password-data';
 import { AnimatePresence } from 'framer-motion';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -36,7 +36,7 @@ const ForgotPasswordNewPassword: FunctionComponent<ForgotPasswordNewPasswordPage
   const [error, setError] = useState<string | null>(null);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
-  const { email } = useRecoveryPasswordData();
+  const { email } = useAppSelector((state) => state.user.recoveryData);
   const { mutate, isPending } = useSendNewPasswordMutation();
 
   const isLoading = isPending;

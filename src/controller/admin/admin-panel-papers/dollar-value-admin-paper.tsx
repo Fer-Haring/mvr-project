@@ -1,38 +1,24 @@
 import { Typography, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import InputField from '@webapp/components/form/input';
-// import { useUpdateDollarValue } from '@webapp/services/mutations/admin/update-dollar-value-mutation';
-import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import { CustomAdminPaper } from './papers-styles';
+import { useAppSelector } from '@webapp/hooks/redux-hooks';
 
 const DollarValueInputPaper: FunctionComponent = () => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
-  const { dollarValue } = useDollarValue();
+  const dollarValue = useAppSelector((state) => state.admin.dollarValue);
   // const { mutate } = useUpdateDollarValue();
 
-  const [inputValue, setInputValue] = useState(
-    Object.values(dollarValue?.value)[0] ? Object.values(dollarValue?.value)[0] : dollarValue.value
-  );
-
+  const [inputValue, setInputValue] = useState(dollarValue?.venta ? dollarValue.venta : dollarValue?.venta);
   useEffect(() => {
-    if (dollarValue?.value !== undefined && dollarValue.value.toString() !== inputValue) {
-      setInputValue(Object.values(dollarValue?.value)[0]);
+    if (dollarValue?.venta !== undefined && dollarValue.venta.toString() !== inputValue?.toString()) {
+      setInputValue(dollarValue.venta);
     }
   }, [dollarValue, inputValue]);
-
-  // const handleUpdateDollarValue = async (event: ChangeEvent<HTMLInputElement>) => {
-  //   const value = event.target.value;
-  //   setInputValue(value);
-  //   const parsedValue = parseFloat(value);
-  //   if (!isNaN(parsedValue)) {
-  //     setDollarValue(parsedValue);
-  //     mutate({ dollarValue: parsedValue });
-  //   }
-  // };
 
   return (
     <CustomAdminPaper>

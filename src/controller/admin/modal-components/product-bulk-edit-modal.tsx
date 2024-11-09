@@ -14,10 +14,10 @@ import Button from '@webapp/components/button';
 import Autocomplete, { AutocompleteOption } from '@webapp/components/form/autocomplete';
 import InputField from '@webapp/components/form/input';
 import Select from '@webapp/components/form/select';
-import { useSingleProduct } from '@webapp/store/products/product-by-id';
-import { useProductsListData } from '@webapp/store/products/products-list';
 import React, {useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useAppDispatch, useAppSelector } from '@webapp/hooks/redux-hooks';
+import { setProduct } from '@webapp/redux/store/slices/productsSlice';
 
 
 interface BulkEditModalProps {
@@ -44,12 +44,11 @@ const BulkEditModal: React.FC<BulkEditModalProps> = ({ open, handleClose, handle
   const intl = useIntl();
   const { formatMessage } = intl;
   const theme = useTheme();
-
-  const { setProduct, product } = useSingleProduct();
-  const { productList } = useProductsListData();
+  const dispatch = useAppDispatch();
+  const product = useAppSelector((state) => state.products.product);
+  const products = useAppSelector((state) => state.products.products);
   const [categoriesOptions, setCategoriesOptions] = useState<AutocompleteOption[]>([]);
   const [category, setCategory] = useState<AutocompleteOption | null>(null);
-  const products = Object.values(productList);
   const [inputValue, setInputValue] = React.useState('');
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,7 +61,7 @@ const BulkEditModal: React.FC<BulkEditModalProps> = ({ open, handleClose, handle
   };
 
   useEffect(() => {
-    if (products.length > 0) {
+    if (products && products.length > 0) {
       const categoriesMap = new Map();
       products.forEach((product) => {
         if (!categoriesMap.has(product.product_category)) {
@@ -75,7 +74,6 @@ const BulkEditModal: React.FC<BulkEditModalProps> = ({ open, handleClose, handle
       const uniqueCategories = Array.from(categoriesMap.values());
       setCategoriesOptions(uniqueCategories);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleCategoryChange = (
@@ -84,11 +82,11 @@ const BulkEditModal: React.FC<BulkEditModalProps> = ({ open, handleClose, handle
     reason: AutocompleteChangeReason
   ) => {
     if (typeof newValue === 'string') {
-      setProduct({ ...product, product_category: newValue });
+      dispatch(setProduct({ ...product!, product_category: newValue }));
       setCategory({ value: newValue, label: newValue });
       setInputValue(newValue); // Actualizamos el inputValue
     } else if (newValue && !Array.isArray(newValue)) {
-      setProduct({ ...product, product_category: newValue.value });
+      dispatch(setProduct({ ...product!, product_category: newValue.value }));
       setCategory(newValue);
       setInputValue(newValue.value); // Actualizamos el inputValue
     } else {
@@ -128,7 +126,7 @@ const BulkEditModal: React.FC<BulkEditModalProps> = ({ open, handleClose, handle
           <CustomAutoComplete
             size="small"
             id="organization-autocomplete"
-            value={category === null ? product.product_category : category}
+            value={category === null ? product!.product_category : category}
             options={categoriesOptions}
             isOptionEqualToValue={(option, value) => option.value === value.value}
             getOptionLabel={(option) => (typeof option === 'string' ? option : option.label)}
@@ -139,7 +137,7 @@ const BulkEditModal: React.FC<BulkEditModalProps> = ({ open, handleClose, handle
                 label={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.product_category' })}
                 placeholder={formatMessage({ id: 'ADD.NEWPRODUCT.LABEL.product_category' })}
                 noDefaultHelperText
-                defaultValue={product.product_category}
+                defaultValue={product!.product_category}
               />
             )}
             freeSolo

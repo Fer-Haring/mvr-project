@@ -118,7 +118,6 @@ const Avatar: FunctionComponent<AvatarProps> = ({ className, active, fullName, i
     persistor.purge();
     persistor.flush();
     dispatch(clearUserCart);
-    navigate('/sign-in');
   };
 
   const handleLogout = async () => {
@@ -127,6 +126,7 @@ const Avatar: FunctionComponent<AvatarProps> = ({ className, active, fullName, i
       const tokenType = localStorage.getItem('token_type');
       if (token && tokenType) {
         await logout();
+        navigate('/sign-in');
       } else {
         console.error('No token or token type available');
       }

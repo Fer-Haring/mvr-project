@@ -88,7 +88,7 @@ export interface User {
   address: string;
   admin: boolean;
   city: string;
-  completed_orders: CompletedOrder[];
+  completedOrders: CompletedOrder[];
   cart_items: CartItem[];
   delivery_zone: string;
   delivery_type: string;

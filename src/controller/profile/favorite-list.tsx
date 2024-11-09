@@ -1,8 +1,9 @@
 import { Box, Divider, Typography, useTheme } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import UserFavoriteProductCard from '@webapp/components/user-favorite-product-card';
+import { useAppDispatch } from '@webapp/hooks/redux-hooks';
+import { setProduct } from '@webapp/redux/store/slices/productsSlice';
 import { User } from '@webapp/services/types/user-types';
-import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import React from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +17,7 @@ const FavoriteList: React.FunctionComponent<FavoriteListProps> = ({ userData }) 
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
   const theme = useTheme();
-  const { setProduct } = useSingleProduct();
+  const dispatch = useAppDispatch();
   return (
     <Stack gap={4} sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
       <Typography
@@ -50,7 +51,7 @@ const FavoriteList: React.FunctionComponent<FavoriteListProps> = ({ userData }) 
               price={product.sale_price}
               currency={product.price_currency}
               onClick={() => {
-                setProduct(product);
+                dispatch(setProduct(product));
                 navigate(`/productos/${product.id}`);
               }}
             />

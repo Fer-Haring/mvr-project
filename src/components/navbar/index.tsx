@@ -5,18 +5,17 @@ import DrawerNavbar from '@webapp/controller/drawer-navbar';
 import { useCart } from '@webapp/hooks/cartHooks/useGetCart';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { useGetUserById } from '@webapp/hooks/userHooks/userHooks';
-// import { useGetUserByIdMutation } from '@webapp/services/mutations/auth/get-user-by-id-mutation';
-// import { useGetUserCart } from '@webapp/services/mutations/cart/get-cart-query';
 import { User } from '@webapp/services/types/user-types';
-import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent, useEffect } from 'react';
+
 import { useIntl } from 'react-intl';
 import Lottie from 'react-lottie';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import Avatar from '../avatar';
 import { NAVBAR_HEIGHT } from '../sidebar';
-import { useAppSelector } from '@webapp/hooks/redux-hooks';
+import { useAppDispatch, useAppSelector } from '@webapp/hooks/redux-hooks';
+import { setUser } from '@webapp/redux/store/slices/userSlices';
 
 interface NavbarProps {
   className?: string;
@@ -30,20 +29,21 @@ interface NavbarProps {
  */
 const Navbar: FunctionComponent<NavbarProps> = ({ className }) => {
   const { formatMessage } = useIntl();
+  const dispatch = useAppDispatch();
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, setUser } = useUserData();
   const userId = useAppSelector((state) => state.user.signIn.userInfo?.user_id);
   const { user: userData, fetchUserById } = useGetUserById(userId ?? '');
   const [paused, setPaused] = React.useState(true);
+  const user = useAppSelector((state) => state.user.userById.user);
 
   const { cartItems } = useCart();
 
   useEffect(() => {
     fetchUserById();
     if (userData) {
-      setUser(userData as User);
+      dispatch(setUser(userData as User));
     }
   }, []);
 

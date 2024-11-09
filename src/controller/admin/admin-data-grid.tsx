@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box, CircularProgress, Typography, alpha, styled, useTheme } from '@mui/material';
+import { useAppDispatch, useAppSelector } from '@webapp/hooks/redux-hooks';
+import { setColumnOrder, setFilters, setSelectedProducts } from '@webapp/redux/store/slices/adminTableSlice';
+import { setProducts } from '@webapp/redux/store/slices/productsSlice';
 import { useProductListQuery } from '@webapp/services/mutations/products/get-product-list-query';
 import { useUpdateProduct } from '@webapp/services/mutations/products/update-product-mutation';
 import { Product } from '@webapp/services/types/products-types';
-import { useAgGridColumnSortingStore } from '@webapp/store/admin/ag-grid-column-sort';
-import { useAgGridFilterStore } from '@webapp/store/admin/ag-grid-filters';
-import useBulkEditStore from '@webapp/store/admin/bulk-edit-store';
 import {
   CellEditingStoppedEvent,
   ColDef,
@@ -31,9 +32,8 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
   const gridRef = useRef<AgGridReact>(null);
   const [rowData, setRowData] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
-  const { setProducts, setSelectedProducts } = useBulkEditStore();
-  const { columnOrder, setColumnOrder } = useAgGridColumnSortingStore();
-  const { filters, setFilter } = useAgGridFilterStore();
+  const dispatch = useAppDispatch();
+  const { columnSort, filter } = useAppSelector((state) => state.adminTable);
   const productsList = useProductListQuery(1, 500);
   const { mutate } = useUpdateProduct();
   const [selectedRowProducts, setSelectedRowProducts] = useState<Product[]>([]);
@@ -44,7 +44,7 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
     if (productsList.data?.products && Array.isArray(productsList.data.products)) {
       const productsArray: Product[] = productsList.data.products;
       setRowData(productsArray);
-      setProducts(productsArray);
+      dispatch(setProducts(productsArray));
     } else {
       console.error('Products data is not an array:', productsList.data?.products);
     }
@@ -71,38 +71,38 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
   }, [gridRef, setColumnOrder]);
 
   useEffect(() => {
-    if (gridRef.current && gridRef.current.api && columnOrder && columnOrder.length > 0) {
+    if (gridRef.current && gridRef.current.api && columnSort.columnOrder && columnSort.columnOrder.length > 0) {
       const columnApi = gridRef.current.api;
 
       columnApi.applyColumnState({
-        state: columnOrder.map((colId) => ({
+        state: columnSort.columnOrder.map((colId: string) => ({
           colId,
-          order: columnOrder.indexOf(colId),
+          order: columnSort.columnOrder.indexOf(colId),
         })),
         applyOrder: true,
       });
     }
-  }, [gridRef.current?.api, columnOrder]);
+  }, [gridRef.current?.api, columnSort.columnOrder]);
 
   useEffect(() => {
-    if (gridRef.current && filters && rowData.length > 0 && !loading && !isFiltering.current) {
+    if (gridRef.current && filter.filters && rowData.length > 0 && !loading && !isFiltering.current) {
       isFiltering.current = true;
       const gridApi = gridRef.current.api;
 
       if (gridApi) {
-        gridApi.setFilterModel(filters);
+        gridApi.setFilterModel(filter.filters);
         gridApi.onFilterChanged();
       }
 
       isFiltering.current = false;
     }
-  }, [filters, rowData, loading]);
+  }, [filter.filters, rowData, loading]);
 
   const onFilterChanged = (params: FilterChangedEvent) => {
     const appliedFilters = params.api.getFilterModel();
     Object.keys(appliedFilters).forEach((colId) => {
-      if (JSON.stringify(filters[colId]) !== JSON.stringify(appliedFilters[colId])) {
-        setFilter(colId, appliedFilters[colId]);
+      if (JSON.stringify(filter.filters[colId]) !== JSON.stringify(appliedFilters[colId])) {
+        dispatch(setFilters({ [colId]: appliedFilters[colId] }));
       }
     });
   };
@@ -154,7 +154,7 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
   const onSelectionChanged = useCallback(
     (event: SelectionChangedEvent) => {
       const allSelectedRows: Product[] = event.api.getSelectedRows();
-      setSelectedProducts(allSelectedRows);
+      dispatch(setSelectedProducts(allSelectedRows));
       setSelectedRowProducts(allSelectedRows);
     },
     [setSelectedProducts]
@@ -189,14 +189,14 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
   const columns = useMemo(() => {
     const originalColumns = columnDefs(navigate);
 
-    if (columnOrder && columnOrder.length > 0) {
-      return columnOrder
-        .map((colId) => originalColumns.find((col) => col.field === colId))
-        .filter((col): col is ColDef<unknown, any> => col !== undefined);
+    if (columnSort.columnOrder && columnSort.columnOrder.length > 0) {
+      return columnSort.columnOrder
+        .map((colId: string) => originalColumns.find((col) => col.field === colId))
+        .filter((col: any): col is ColDef<unknown, any> => col !== undefined);
     }
 
     return originalColumns;
-  }, [navigate, columnOrder]);
+  }, [navigate, columnSort.columnOrder]);
   return (
     <div>
       <Typography variant="h5" sx={{ color: theme.palette.grey[800], fontWeight: 'bold', textAlign: 'center', mb: 5 }}>

@@ -1,9 +1,9 @@
 import { Box, Divider, Paper, Stack, Typography, alpha, styled, useTheme } from '@mui/material';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
+import { useAppDispatch, useAppSelector } from '@webapp/hooks/redux-hooks';
+import { setOrder } from '@webapp/redux/store/slices/messageSlice';
+import { setCompletedOrders } from '@webapp/redux/store/slices/userSlices';
 import { CartItem } from '@webapp/services/types/cart-types';
-import { useDollarValue } from '@webapp/store/admin/dolar-value';
-import { useMessageStore } from '@webapp/store/admin/message-store';
-import { useCompletedOrdersStore } from '@webapp/store/orders/get-completed-orders';
 import React from 'react';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -17,17 +17,17 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
   const theme = useTheme();
   const isMobile = useIsMobile();
   const { formatMessage } = useIntl();
-  const { dollarValue } = useDollarValue();
+  const { dollarValue } = useAppSelector((state) => state.admin);
   const [totalCartValue, setTotalCartValue] = useState(0);
   const [subTotal, setSubTotal] = useState(0);
+  const dispatch = useAppDispatch();
 
-  const { setOrders } = useCompletedOrdersStore();
-  const { order, setOrder, address, msgCity, deliverValue } = useMessageStore();
+  const { order, address, msgCity, deliverValue } = useAppSelector((state) => state.message);
 
   useEffect(() => {
     const calculateTotal = (): number => {
       return cartProducts.reduce((acc, product) => {
-        const conversionRate = product.price_currency === 'USD' ? dollarValue.value : 1;
+        const conversionRate = product.price_currency === 'USD' ? dollarValue?.venta : 1;
         const convertedValue = product.sub_total * Number(conversionRate);
         const roundedResult = Math.round(convertedValue * 100) / 100;
         return roundedResult + acc;
@@ -39,20 +39,22 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
   }, [cartProducts, dollarValue, deliverValue]);
 
   useEffect(() => {
-    const totalUSD = totalCartValue / Number(dollarValue.value);
+    const totalUSD = totalCartValue / Number(dollarValue?.venta);
     setOrder({
       ...order,
       total_order_amount_ars: totalCartValue,
       total_order_amount_usd: Math.round(totalUSD * 100) / 100,
     });
-    setOrders([
-      {
-        ...order,
-        total_order_amount: totalCartValue,
-        total_order_amount_ars: totalCartValue,
-        total_order_amount_usd: Math.round(totalUSD * 100) / 100,
-      },
-    ]);
+    dispatch(
+      setCompletedOrders([
+        {
+          ...order,
+          total_order_amount: totalCartValue,
+          total_order_amount_ars: totalCartValue,
+          total_order_amount_usd: Math.round(totalUSD * 100) / 100,
+        },
+      ])
+    );
   }, [totalCartValue]);
 
   return (
@@ -90,7 +92,7 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
             </TextsContainer>
             <TextsContainer>
               <CustomTypography variant="h5">{formatMessage({ id: 'CART.PAYMENT.DETAILS.PAYMENT' })}</CustomTypography>
-              <CustomTypography variant="subtitle1">{order.payment_method}</CustomTypography>
+              <CustomTypography variant="subtitle1">{order?.payment_method}</CustomTypography>
             </TextsContainer>
           </Stack>
           <Stack direction={isMobile ? 'row' : 'column'} gap={2} width={'100%'}>
@@ -98,13 +100,13 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
               <CustomTypography variant="h5">
                 {formatMessage({ id: 'CART.PAYMENT.DETAILS.DELIVER.TYPE' })}
               </CustomTypography>
-              <CustomTypography variant="subtitle1">{order.delivery_type}</CustomTypography>
+              <CustomTypography variant="subtitle1">{order?.delivery_type}</CustomTypography>
             </TextsContainer>
             <TextsContainer>
               <CustomTypography variant="h5">
                 {formatMessage({ id: 'CART.PAYMENT.DETAILS.SLECTED.CURRENCY' })}
               </CustomTypography>
-              {order.currency_used_to_pay === 'USD' ? (
+              {order?.currency_used_to_pay === 'USD' ? (
                 <CustomTypography variant="subtitle1">{formatMessage({ id: 'CART.PAYMENT.USD' })}</CustomTypography>
               ) : (
                 <CustomTypography variant="subtitle1">{formatMessage({ id: 'CART.PAYMENT.ARS' })}</CustomTypography>
@@ -133,9 +135,9 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
                 {formatMessage({ id: 'CART.PAYMENT.DETAILS.TOTAL' })}
               </CustomTypography>
               <StyledDivider orientation="horizontal" flexItem />
-              {order.currency_used_to_pay === 'USD' ? (
+              {order?.currency_used_to_pay === 'USD' ? (
                 <CustomTypography sx={{ fontSize: 24, fontWeight: 'bold' }} variant="subtitle1">
-                  $ {(totalCartValue / Number(dollarValue.value)).toFixed(2)}
+                  $ {(totalCartValue / Number(dollarValue?.venta)).toFixed(2)}
                 </CustomTypography>
               ) : (
                 <CustomTypography sx={{ fontSize: 24, fontWeight: 'bold' }} variant="subtitle1">

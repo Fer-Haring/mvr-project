@@ -12,16 +12,15 @@ import ProductFilterPanel from '@webapp/controller/products/product-filter-panel
 import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { useProduct } from '@webapp/hooks/productsHooks/useProducts';
 import { Product } from '@webapp/services/types/products-types';
-import { useSingleProduct } from '@webapp/store/products/product-by-id';
-import { useProductsListData } from '@webapp/store/products/products-list';
-import { useSelectedMainCategoryStore } from '@webapp/store/products/selected-main-category';
-import { useSelectedProductFilterStore } from '@webapp/store/products/selected-product-filter';
 import { motion } from 'framer-motion';
 import React, { FunctionComponent, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
 import { CategoryButton, CategoryButtonWrapper, StockWrapper } from './products';
+import { useAppDispatch, useAppSelector } from '@webapp/hooks/redux-hooks';
+import { RootState } from '@webapp/redux/store/reducer';
+import { setProduct, setProducts, setSelectedMainCategory, setSelectedProductFilter } from '@webapp/redux/store/slices/productsSlice';
 
 interface AutocompleteOption {
   label: string;
@@ -31,13 +30,14 @@ interface AutocompleteOption {
 export const ProductsPage: FunctionComponent = () => {
   const theme = useTheme();
   const isMobile = useIsMobile();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { formatMessage } = useIntl();
   const [priceRange, setPriceRange] = useState<number[]>([0, 20000]);
-  const { productList, setProductList } = useProductsListData();
-  const { setProduct } = useSingleProduct();
-  const { selectedMainCategory, setSelectedMainCategory } = useSelectedMainCategoryStore();
-  const { selectedProductFilter, setSelectedProductFilter } = useSelectedProductFilterStore();
+  const { products: productList } = useAppSelector((state: RootState) => state.products);
+
+  const { selectedMainCategory } = useAppSelector((state: RootState) => state.products);
+  const { selectedProductFilter } = useAppSelector((state: RootState) => state.products);
 
   const [sortCriteria, setSortCriteria] = useState<string>('all');
   const [selectedCategory, setSelectedCategory] = useState(selectedProductFilter);
@@ -56,20 +56,20 @@ export const ProductsPage: FunctionComponent = () => {
   const PASSWORD = 'MVRprivado';
 
   useEffect(() => {
-    if (productListData?.products) {
-      setProductList(productListData.products);
+    if (productListData) {
+      dispatch(setProducts(productListData));
     }
-  }, [productListData, setProductList]);
+  }, [productListData, dispatch]);
 
   useEffect(() => {
     if (selectedMainCategory) {
-      const filteredProducts = productList.filter((product) => product.main_product_category === selectedMainCategory);
-      const relatedCategories = filteredProducts.map((product) => product.product_category);
+      const filteredProducts = productList?.filter((product) => product.main_product_category === selectedMainCategory);
+      const relatedCategories = filteredProducts?.map((product) => product.product_category);
       const uniqueRelatedCategories = Array.from(new Set(relatedCategories));
       const formattedCategories = uniqueRelatedCategories.map((cat) => ({ label: cat, value: cat }));
       setCategoriesOptions(formattedCategories);
     } else {
-      const allCategories = productList.map((product) => product.product_category);
+      const allCategories = productList?.map((product) => product.product_category);
       const uniqueCategories = Array.from(new Set(allCategories));
       const formattedCategories = uniqueCategories.map((cat) => ({ label: cat, value: cat }));
       setCategoriesOptions(formattedCategories);
@@ -150,32 +150,30 @@ export const ProductsPage: FunctionComponent = () => {
     let result = productList;
 
     if (selectedMainCategory) {
-      result = result.filter((product) => product.main_product_category === selectedMainCategory);
+      result = result!.filter((product) => product.main_product_category === selectedMainCategory);
     }
 
     if (selectedCategory) {
-      result = result.filter((product) => product.product_category === selectedCategory);
+      result = result!.filter((product) => product.product_category === selectedCategory);
     }
 
     if (priceRange[0] !== 1000 || priceRange[1] !== 20000) {
-      result = result.filter(
-        (product) => parseInt(product.sale_price) >= priceRange[0] && parseInt(product.sale_price) <= priceRange[1]
-      );
+      result = result!.filter((product) => parseInt(product.sale_price) >= priceRange[0] && parseInt(product.sale_price) <= priceRange[1]);
     }
 
     if (searchTerms) {
-      result = result.filter((product) => product.product_name?.toLowerCase().includes(searchTerms.toLowerCase()));
+      result = result!.filter((product) => product.product_name?.toLowerCase().includes(searchTerms.toLowerCase()));
     }
 
     switch (sortCriteria) {
       case 'minorPrice':
-        result.sort((a, b) => parseInt(a.sale_price) - parseInt(b.sale_price));
+        result!.sort((a, b) => parseInt(a.sale_price) - parseInt(b.sale_price));
         break;
       case 'mayorPrice':
-        result.sort((a, b) => parseInt(b.sale_price) - parseInt(a.sale_price));
+        result!.sort((a, b) => parseInt(b.sale_price) - parseInt(a.sale_price));
         break;
       case 'name':
-        result.sort((a, b) => (a.product_name || '').localeCompare(b.product_name || ''));
+        result!.sort((a, b) => (a.product_name || '').localeCompare(b.product_name || ''));
         break;
       default:
         break;
@@ -185,7 +183,7 @@ export const ProductsPage: FunctionComponent = () => {
   }, [selectedMainCategory, priceRange, productList, searchTerms, selectedCategory, sortCriteria]);
 
   const mainCategories = useMemo(() => {
-    const allMainCategories = productList.map((product) => product.main_product_category);
+    const allMainCategories = productList!.map((product) => product.main_product_category);
     return Array.from(new Set(allMainCategories));
   }, [productList]);
 
@@ -305,13 +303,13 @@ export const ProductsPage: FunctionComponent = () => {
             </>
           )}
           {selectedMainCategory && (
-            <StockWrapper key={filteredAndSortedProducts.map((product) => product.id).join('')} isMobile={isMobile}>
-              {productList.length === 0 && (
+            <StockWrapper key={filteredAndSortedProducts?.map((product) => product.id).join('')} isMobile={isMobile}>
+              {productList!.length === 0 && (
                 <Typography variant="h4" sx={{ color: theme.palette.common.white }}>
                   {formatMessage({ id: 'PRODUCTS.NO_PRODUCTS' })}
                 </Typography>
               )}
-              {filteredAndSortedProducts.map((product, id) => (
+              {filteredAndSortedProducts!.map((product, id) => (
                 <ProductCardV2
                   key={product.id}
                   id={id}

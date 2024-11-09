@@ -4,7 +4,6 @@ import Button from '@webapp/components/button';
 import Modal from '@webapp/components/modal';
 import { CartItem } from '@webapp/services/types/cart-types';
 import { CompletedOrder } from '@webapp/services/types/user-types';
-import { useUserData } from '@webapp/store/users/user-data';
 import { ColDef, IGetRowsParams, PaginationNumberFormatterParams, ValueGetterParams } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
@@ -16,6 +15,7 @@ import { useIntl } from 'react-intl';
 import { localeText } from '../admin/table-utils/ag-grid-text-locale';
 import CustomDetailCellRenderer from './table-utils/detail-cell-renderer';
 import OrderDetailModalContent from './table-utils/order-detail-modal-content';
+import { useAppSelector } from '@webapp/hooks/redux-hooks';
 
 export const ProfileTable: React.FunctionComponent = () => {
   const { formatMessage } = useIntl();
@@ -23,9 +23,9 @@ export const ProfileTable: React.FunctionComponent = () => {
   const [loading, setLoading] = useState(false);
   const [openDetailModal, setOpenDetailModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<CompletedOrder | null>(null);
-  const { user } = useUserData();
+  const user = useAppSelector((state) => state.user);
   const [rowData, setRowData] = useState<CompletedOrder[]>([]);
-  const [data] = useState(() => (user?.completed_orders ? [...user.completed_orders] : []));
+  const [data] = useState(() => (user?.userById?.user?.completedOrders ? [...user.userById.user.completedOrders] : []));
 
   const TotalOrderCell: React.FC<ValueGetterParams> = (props) => {
     const { data } = props;

@@ -5,15 +5,16 @@ import Button from '@webapp/components/button';
 import Modal from '@webapp/components/modal';
 import { CartPaymentDetail } from '@webapp/controller/cart/step-2/cart-payment-detail';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
+import { useAppSelector } from '@webapp/hooks/redux-hooks';
+import { RootState } from '@webapp/redux/store/reducer';
+import { clearCart } from '@webapp/redux/store/slices/cartSlices';
+import { deleteMessageStore, setTransferImage } from '@webapp/redux/store/slices/messageSlice';
 import { uploadTransferReceipt } from '@webapp/services/actions/oders/upload-receipt-image';
 import { useClearCart } from '@webapp/services/mutations/cart/delete-cart-mutation';
 import { useGetUserCart } from '@webapp/services/mutations/cart/get-cart-query';
 import { useCreateOrder } from '@webapp/services/mutations/orders/save-new-order-mutation';
 import { CartItem } from '@webapp/services/types/cart-types';
 import { OrderRequest } from '@webapp/services/types/orders-types';
-import { useMessageStore } from '@webapp/store/admin/message-store';
-import { useCartStore } from '@webapp/store/cart/cart';
-import { useUserData } from '@webapp/store/users/user-data';
 import React from 'react';
 import { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -36,13 +37,12 @@ export const Step2: FunctionComponent<Step2Props> = ({
   order,
 }) => {
   const { mutateAsync } = useClearCart();
-  const { user } = useUserData();
+  const { userData: user } = useAppSelector((state: RootState) => state.user);
   const getCart = useGetUserCart();
   const isMobile = useIsMobile();
   const { formatMessage } = useIntl();
   const theme = useTheme();
-  const { deleteMessageStore, setTransferImage, transferImage } = useMessageStore();
-  const { clearCart } = useCartStore();
+  const { transferImage } = useAppSelector((state: RootState) => state.message);
   const [openModal, setOpenModal] = useState(false);
   const { mutateAsync: saveOrder } = useCreateOrder();
   const [image, setImage] = useState<File | null>(null);
@@ -56,7 +56,7 @@ export const Step2: FunctionComponent<Step2Props> = ({
       setUploadingImage(true);
       if (image) {
         try {
-          const imageUrl = await uploadTransferReceipt(image, user.id);
+          const imageUrl = await uploadTransferReceipt(image, user?.user?.id ?? '');
           setTransferImage(imageUrl);
           setUploadingImage(false);
         } catch (uploadError) {

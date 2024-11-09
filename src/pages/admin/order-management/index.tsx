@@ -9,24 +9,25 @@ import CancelledOrdersPaper from '@webapp/controller/admin/admin-panel-papers/or
 import CompletedOrdersPaper from '@webapp/controller/admin/admin-panel-papers/order-status-table/completed-orders-admin-paper';
 import PendingOrdersPaper from '@webapp/controller/admin/admin-panel-papers/order-status-table/pending-orders-admin-paper';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
+import { useAppDispatch } from '@webapp/hooks/redux-hooks';
+import { setProducts } from '@webapp/redux/store/slices/productsSlice';
 import { useGetAllOrders } from '@webapp/services/mutations/orders/get-all-orders-query';
 import { useProductListQuery } from '@webapp/services/mutations/products/get-product-list-query';
-import { useProductsListData } from '@webapp/store/products/products-list';
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 const OrderManagementPage: React.FunctionComponent = () => {
   const theme = useTheme();
+  const dispatch = useAppDispatch();
   const { formatMessage } = useIntl();
   const isMobile = useIsMobile();
   const { data: allOrdersData = [], isLoading, error } = useGetAllOrders();
-  const { setProductList } = useProductsListData();
   const productListArray = useProductListQuery(1, 500);
   const [activeTable, setActiveTable] = useState<'pending' | 'canceled' | 'completed'>('pending');
 
   useEffect(() => {
-    setProductList(productListArray.data?.products || []);
-  }, [setProductList]);
+    dispatch(setProducts(productListArray.data?.products || []));
+  }, [dispatch]);
 
   const pendingOrders = allOrdersData.filter((order) => order.status?.toLowerCase() === 'pending');
   const completedOrders = allOrdersData.filter((order) => order.status?.toLowerCase() === 'completed');

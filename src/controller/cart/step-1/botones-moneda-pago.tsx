@@ -4,8 +4,9 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
+import { useAppDispatch, useAppSelector } from '@webapp/hooks/redux-hooks';
+import { setOrder } from '@webapp/redux/store/slices/messageSlice';
 import { User } from '@webapp/services/types/user-types';
-import { useMessageStore } from '@webapp/store/admin/message-store';
 import React from 'react';
 import { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -26,8 +27,8 @@ const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({
   const theme = useTheme();
   const isMobile = useIsMobile();
   const [preferredCurrency, setPreferredCurrency] = useState(userData?.preferred_currency);
-  const setOrder = useMessageStore((state) => state.setOrder);
-  const order = useMessageStore((state) => state.order);
+  const dispatch = useAppDispatch();
+  const { order } = useAppSelector((state) => state.orders);
 
   const handleSelectDollar = () => {
     setPreferredCurrency('USD');
@@ -43,7 +44,7 @@ const CurrencySelectButtons: FunctionComponent<CurrencySelectButtonsProps> = ({
     const updatedUserData = { ...userData, preferred_currency: selectedCurrency };
     setIsCurrencyPayValid(true);
     setUser(updatedUserData);
-    setOrder({ ...order, currency_used_to_pay: selectedCurrency });
+    dispatch(setOrder({ ...order, currency_used_to_pay: selectedCurrency }));
   };
 
   React.useEffect(() => {

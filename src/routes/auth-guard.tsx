@@ -1,58 +1,48 @@
-import { useAppSelector } from '@webapp/hooks/redux-hooks';
-import { useUserGoogleStore } from '@webapp/store/auth/google-sessions';
-import { useUserStore } from '@webapp/store/auth/session';
+import { useAppDispatch, useAppSelector } from '@webapp/hooks/redux-hooks';
+import { logOut } from '@webapp/redux/store/slices/userSlices';
 import React, { useEffect } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import { isPublicRoute } from './utils';
 
-interface AuthGuardProps {
-  children?: React.ReactNode;
-}
-
 const SIGN_IN_PATH = '/sign-in';
 
-const AuthGuard: React.FunctionComponent<AuthGuardProps> = ({ children }) => {
-  const isGoogleLoggedIn = useUserGoogleStore((state) => state.isLoggedIn);
-  const { userInfo, isAuthenticated } = useAppSelector((state) => state.user.signIn);
+const AuthGuard: React.FunctionComponent = () => {
+  const dispatch = useAppDispatch();
+  const { isAuthenticated } = useAppSelector((state) => state.user.signIn);
+  const { token } = useAppSelector((state) => state.user);
+
   const location = useLocation();
 
-  // Validar el token sólo si hay un token presente
+  // Validar el token solo si está presente
   useEffect(() => {
     const validateToken = async () => {
-      if (userInfo?.access_token) {
+      if (token) {
         try {
           const response = await fetch('https://mvr-prod.onrender.com/verify-token', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${userInfo?.access_token}`,
+              Authorization: `Bearer ${token}`,
             },
           });
 
           if (!response.ok) {
             throw new Error('Token validation failed');
           }
-
-          const data = await response.json();
-          if (!data.isValid) {
-            useUserGoogleStore.getState().logOut();
-          }
         } catch (error) {
-          useUserGoogleStore.getState().logOut();
           console.error('Token validation error:', error);
+          dispatch(logOut());
         }
+      } else {
+        dispatch(logOut());
       }
     };
-    if (userInfo === null || userInfo?.refresh_token === undefined) {
-      useUserGoogleStore.getState().logOut();
-      useUserStore.getState().logOut();
-    }
 
     validateToken();
-  }, [userInfo]);
+  }, [token, dispatch]);
 
-  if (isGoogleLoggedIn || isAuthenticated) {
+  if (isAuthenticated) {
     if (location.pathname.includes(SIGN_IN_PATH)) {
       return <Navigate to={'/home'} replace />;
     }
@@ -62,7 +52,7 @@ const AuthGuard: React.FunctionComponent<AuthGuardProps> = ({ children }) => {
     }
   }
 
-  return children ? children : <Outlet />;
+  return <Outlet />;
 };
 
 export default AuthGuard;

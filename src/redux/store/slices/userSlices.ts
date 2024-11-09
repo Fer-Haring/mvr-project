@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { SendCodeResponse } from '@webapp/services/actions/auth/password/send-password-recovery-code';
 import { VerifyCodeResponse } from '@webapp/services/actions/auth/password/verify-recovery-code';
-import { LoginResponse, SignupResponse, User } from '@webapp/services/types/user-types';
+import { CompletedOrder, LoginResponse, SignupResponse, User } from '@webapp/services/types/user-types';
 
 import {
   getUserByIdThunk,
@@ -50,16 +50,29 @@ interface PasswordRecoveryState {
   error: string | null;
 }
 
+interface UserPasswordDataRecoveryState {
+  email: string;
+  code: string;
+}
+
 export interface UserState {
+  isLoggedIn: boolean;
+  userInfo: { userId: string; name: string } | null;
+  token: string | null;
   signIn: UserSignInState;
   signUp: UserSignUpState;
   userById: GetUserByIdState;
   updateUser: UpdateUserState;
   passwordRecovery: PasswordRecoveryState;
   userData: UserDataState;
+  recoveryData: UserPasswordDataRecoveryState;
+  completedOrders: CompletedOrder[];
 }
 
 const initialState: UserState = {
+  isLoggedIn: false,
+  userInfo: null,
+  token: null,
   signIn: {
     userInfo: null,
     loading: false,
@@ -92,12 +105,29 @@ const initialState: UserState = {
     loading: false,
     error: null,
   },
+  recoveryData: {
+    email: '',
+    code: '',
+  },
+  completedOrders: [],
 };
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    logIn: (state, action: PayloadAction<{ userId: string; name: string; token: string }>) => {
+      state.isLoggedIn = true;
+      state.userInfo = { userId: action.payload.userId, name: action.payload.name };
+      state.token = action.payload.token;
+      state.signIn.isAuthenticated = true;
+    },
+    logOut: (state) => {
+      state.isLoggedIn = false;
+      state.userInfo = null;
+      state.token = null;
+      state.signIn.isAuthenticated = false;
+    },
     clearSignUpState: (state) => {
       state.signUp = initialState.signUp;
     },
@@ -124,6 +154,18 @@ const userSlice = createSlice({
         state.userData = { user: null, email: '', loading: false, error: null };
       }
       state.userData.email = action.payload;
+    },
+    setRecoveryEmail: (state, action: PayloadAction<string>) => {
+      state.recoveryData.email = action.payload;
+    },
+    setRecoveryCode: (state, action: PayloadAction<string>) => {
+      state.recoveryData.code = action.payload;
+    },
+    setUser: (state, action: PayloadAction<User>) => {
+      state.userData.user = action.payload;
+    },
+    setCompletedOrders: (state, action: PayloadAction<CompletedOrder[]>) => {
+      state.completedOrders = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -208,6 +250,8 @@ const userSlice = createSlice({
 });
 
 export const {
+  logIn,
+  logOut,
   clearSignUpState,
   clearUserState,
   clearUserByIdState,
@@ -215,5 +259,10 @@ export const {
   clearPasswordRecoveryState,
   setUserData,
   setEmail,
+  setRecoveryEmail,
+  setRecoveryCode,
+  setUser,
+  setCompletedOrders,
 } = userSlice.actions;
+
 export default userSlice.reducer;

@@ -3,9 +3,10 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
+import { useAppDispatch } from '@webapp/hooks/redux-hooks';
+import { setUser } from '@webapp/redux/store/slices/userSlices';
 import { useUpdateUser } from '@webapp/services/mutations/auth/user-update-mutation';
 import { User } from '@webapp/services/types/user-types';
-import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 
@@ -16,7 +17,7 @@ interface PaymentTypeButtonsProps {
 
 const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userData }) => {
   const { formatMessage } = useIntl();
-  const { setUser } = useUserData();
+  const dispatch = useAppDispatch();
   const theme = useTheme();
   const { mutate } = useUpdateUser(userData?.id);
 
@@ -31,7 +32,7 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id: ignoredUserId, ...restOfUserData } = userData;
     mutate({ payload: { ...restOfUserData, payment_method: selected_delivery } });
-    setUser({ ...userData, payment_method: selected_delivery });
+    dispatch(setUser({ ...userData, payment_method: selected_delivery }));
   };
 
   return (

@@ -5,11 +5,11 @@ import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { SxProps, Theme, styled, useTheme } from '@mui/material/styles';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
+import { useAppSelector } from '@webapp/hooks/redux-hooks';
 import { useAddFavorite } from '@webapp/services/mutations/auth/add-to-favorites-mutation';
 import { useGetUserByIdMutation } from '@webapp/services/mutations/auth/get-user-by-id-mutation';
 import { useRemoveFavorite } from '@webapp/services/mutations/auth/remove-from-favorites-mutation';
 import { Product } from '@webapp/services/types/products-types';
-import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
@@ -61,25 +61,25 @@ const UserFavoriteProductCard: FunctionComponent<UserFavoriteProductCardProps> =
   const theme = useTheme();
   const { formatMessage } = useIntl();
   const isMobile = useIsMobile();
-  const { user } = useUserData();
+  const user = useAppSelector((state) => state.user.userById.user);
   const userId = user?.id;
   const strings = description;
   const addFavorite = useAddFavorite();
   const removeFavorite = useRemoveFavorite();
-  const userData = useGetUserByIdMutation(userId);
+  const userData = useGetUserByIdMutation(userId!);
 
   const isFavorite = useMemo(() => {
     return user?.favorite_products?.some((p: Product) => p.id === product?.id);
   }, [user, product]);
 
   const handleAddFavorite = () => {
-    addFavorite.mutateAsync({ userId, product }).then(() => {
+    addFavorite.mutateAsync({ userId: userId!, product }).then(() => {
       userData.refetch();
     });
   };
 
   const handleRemoveFavorite = () => {
-    removeFavorite.mutateAsync({ userId, productId: product?.id! }).then(() => {
+    removeFavorite.mutateAsync({ userId: userId!, productId: product!.id }).then(() => {
       userData.refetch();
     });
   };

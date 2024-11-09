@@ -1,10 +1,11 @@
 import Box from '@mui/material/Box';
 import { SxProps, Theme } from '@mui/material/styles';
 import ImageUploader from '@webapp/components/image-uploader';
+import { useAppDispatch } from '@webapp/hooks/redux-hooks';
+import { setUser } from '@webapp/redux/store/slices/userSlices';
 import { uploadAvatar } from '@webapp/services/firebase/user';
 import { useUpdateUser } from '@webapp/services/mutations/auth/user-update-mutation';
 import { User } from '@webapp/services/types/user-types';
-import { useUserData } from '@webapp/store/users/user-data';
 import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
 
@@ -17,7 +18,7 @@ interface UserImageHolderProps {
 const UserImageHolder: React.FunctionComponent<UserImageHolderProps> = ({ className, user, sx }) => {
   const { formatMessage } = useIntl();
   const [avatar, setAvatar] = useState<{ file?: File; url?: string }>({});
-  const { setUser } = useUserData();
+  const dispatch = useAppDispatch();
   const { mutate } = useUpdateUser(user?.id);
 
   const onAvatarChange = (avatarFile: File | undefined, url?: string) => {
@@ -35,7 +36,7 @@ const UserImageHolder: React.FunctionComponent<UserImageHolderProps> = ({ classN
     const downloadURL = await uploadAvatar(image);
     if (downloadURL) {
       const updatedUser = { ...user, profile_picture: downloadURL };
-      setUser(updatedUser);
+      dispatch(setUser(updatedUser));
       mutate({ payload: updatedUser, file: undefined });
     }
   };

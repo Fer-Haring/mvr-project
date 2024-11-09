@@ -8,23 +8,23 @@ import { AutocompleteOption } from '@webapp/components/form/autocomplete';
 import Modal from '@webapp/components/modal';
 import SnackbarUtils from '@webapp/components/snackbar';
 import ProductsInputsContent from '@webapp/controller/admin/add-new-product/product-inputs-content';
-import { useIsMobile } from '@webapp/hooks/is-mobile';
+import { useAppDispatch, useAppSelector } from '@webapp/hooks/redux-hooks';
+import { RootState } from '@webapp/redux/store/reducer';
+import { resetProduct, setProduct, setProducts } from '@webapp/redux/store/slices/productsSlice';
 import { useAddNewProduct } from '@webapp/services/mutations/products/add-new-product-mutation';
 import { useProductListQuery } from '@webapp/services/mutations/products/get-product-list-query';
-import { useSingleProduct } from '@webapp/store/products/product-by-id';
-import { useProductsListData } from '@webapp/store/products/products-list';
+import { Product } from '@webapp/services/types/products-types';
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
 const AdminAddProductPage = () => {
   const theme = useTheme();
-  const isMobile = useIsMobile();
   const navigate = useNavigate();
-  const { product, resetProduct, setProduct } = useSingleProduct();
+  const { product } = useAppSelector((state: RootState) => state.products);
   const addProduct = useAddNewProduct();
   const { formatMessage } = useIntl();
-  const { productList, setProductList } = useProductsListData();
+  const dispatch = useAppDispatch();
   const [categoriesOptions, setCategoriesOptions] = useState<AutocompleteOption[]>([]);
   const [category, setCategory] = useState<AutocompleteOption | null>(null);
   const [mainCategory, setMainCategory] = useState<AutocompleteOption | null>(null);
@@ -34,10 +34,10 @@ const AdminAddProductPage = () => {
   const productListArray = useProductListQuery(1, 500);
 
   useEffect(() => {
-    setProductList(productListArray.data?.products || []);
-  }, [productListArray.data?.products, setProductList]);
+    dispatch(setProducts(productListArray.data?.products || []));
+  }, [productListArray.data?.products, dispatch]);
 
-  const products = Object.values(productList);
+  const products = Object.values(productListArray.data?.products || {});
 
   const handleOpenModalContinueAdding = () => {
     setContinueAddingModalOpen(true);
@@ -45,19 +45,19 @@ const AdminAddProductPage = () => {
 
   const handleCloseModalContinueAdding = () => {
     setContinueAddingModalOpen(false);
-    resetProduct;
+    resetProduct();
   };
 
   const handelBackToDashboard = () => {
-    resetProduct;
+    resetProduct();
     navigate('/admin-dashboard');
   };
 
   const handleAddProduct = () => {
     addProduct
-      .mutateAsync(product)
+      .mutateAsync(product!)
       .then(() => {
-        SnackbarUtils.success(`Producto añadido con éxito, ID: ${product.product_name}`);
+        SnackbarUtils.success(`Producto añadido con éxito, ID: ${product!.product_name}`);
         handleOpenModalContinueAdding();
       })
       .catch((error) => {
@@ -69,7 +69,7 @@ const AdminAddProductPage = () => {
     if (products.length > 0) {
       const categoriesMap = new Map();
       const mainCategoryMap = new Map();
-      products.forEach((product) => {
+      products.forEach((product: Product) => {
         if (!categoriesMap.has(product.product_category)) {
           categoriesMap.set(product.product_category, {
             value: product.product_category,
@@ -90,24 +90,21 @@ const AdminAddProductPage = () => {
       const uniqueMainCategories = Array.from(mainCategoryMap.values());
       setMainCategoryOptions(uniqueMainCategories);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleCategoryChange = (
     event: React.SyntheticEvent | React.FocusEventHandler<HTMLDivElement>,
-    newValue: string | AutocompleteOption | (string | AutocompleteOption)[] | null,
-    reason: AutocompleteChangeReason
+    newValue: string | AutocompleteOption | (string | AutocompleteOption)[] | null
   ) => {
     if (typeof newValue === 'string') {
-      setProduct({ ...product, product_category: newValue });
+      setProduct({ ...product!, product_category: newValue });
       setCategory({ value: newValue, label: newValue });
     } else if (newValue && !Array.isArray(newValue)) {
-      setProduct({ ...product, product_category: newValue.value });
+      setProduct({ ...product!, product_category: newValue.value });
       setCategory(newValue);
     } else {
       setCategory(null);
     }
-    reason;
   };
 
   const handleMainCategoryChange = (
@@ -116,10 +113,10 @@ const AdminAddProductPage = () => {
     reason: AutocompleteChangeReason
   ) => {
     if (typeof newValue === 'string') {
-      setProduct({ ...product, main_product_category: newValue });
+      setProduct({ ...product!, main_product_category: newValue });
       setMainCategory({ value: newValue, label: newValue });
     } else if (newValue && !Array.isArray(newValue)) {
-      setProduct({ ...product, main_product_category: newValue.value });
+      setProduct({ ...product!, main_product_category: newValue.value });
       setMainCategory(newValue);
     } else {
       setMainCategory(null);
@@ -127,7 +124,7 @@ const AdminAddProductPage = () => {
     reason;
   };
 
-  const titleMessage = formatMessage({ id: 'ADMIN.CONTINUE.ADDING.PODUCTS' }, { product: product.product_name });
+  const titleMessage = formatMessage({ id: 'ADMIN.CONTINUE.ADDING.PODUCTS' }, { product: product?.product_name });
 
   return (
     <ContentWrapper>
@@ -146,7 +143,7 @@ const AdminAddProductPage = () => {
           {formatMessage({ id: 'ADMIN.CREATE.NEW.PRODUCT.MOBILE' })}
         </Typography>
         <ProductsInputsContent
-          product={product}
+          product={product!}
           setProduct={setProduct}
           category={category}
           categoriesOptions={categoriesOptions}
@@ -156,7 +153,7 @@ const AdminAddProductPage = () => {
           handleMainCategoryChange={handleMainCategoryChange}
         />
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4, gap: 4 }}>
-          <Button onClick={resetProduct} variant="contained" color="error">
+          <Button onClick={() => resetProduct()} variant="contained" color="error">
             {formatMessage({ id: 'ADMIN.RESET.PRODUCT' })}
           </Button>
           <Button onClick={handleAddProduct} variant="contained" color="primary">
@@ -164,7 +161,7 @@ const AdminAddProductPage = () => {
           </Button>
         </Box>
       </Paper>
-      {continueAddingModalOpen && product.product_name && (
+      {continueAddingModalOpen && product?.product_name && (
         <Modal
           open={continueAddingModalOpen}
           onClose={handleCloseModalContinueAdding}

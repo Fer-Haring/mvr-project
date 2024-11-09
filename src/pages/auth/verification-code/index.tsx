@@ -8,12 +8,14 @@ import VerificationCodeCtrl from '@webapp/components/auth/verification-code';
 import Button from '@webapp/components/button';
 import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
+import { useAppSelector } from '@webapp/hooks/redux-hooks';
+import { setRecoveryCode } from '@webapp/redux/store/slices/userSlices';
 import { useSendRecoveryCodeMutation } from '@webapp/services/mutations/auth/password/send-password-recovery-code-mutation';
 import { useVerifyRecoveryCodeMutation } from '@webapp/services/mutations/auth/password/verify-recovery-code-mutation';
-import { useRecoveryPasswordData } from '@webapp/store/auth/recovery-password-data';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 
 interface VerificationCodePageProps {
   className?: string;
@@ -23,12 +25,11 @@ const VerificationCodePage: FunctionComponent<VerificationCodePageProps> = ({ cl
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const theme = useTheme();
-  const params = new URLSearchParams(useLocation().search);
   const { formatMessage } = useIntl();
   const [alreadySent, setAlreadySent] = useState<boolean>(false);
   const { mutate, isPending } = useSendRecoveryCodeMutation();
   const { mutate: verifyCodeMutate, isPending: verifyCodeIsPending } = useVerifyRecoveryCodeMutation();
-  const { email, setCode: setVerifycationCode } = useRecoveryPasswordData();
+  const { email, code } = useAppSelector((state) => state.user.recoveryData);
 
   const username = email || '';
 
@@ -37,7 +38,6 @@ const VerificationCodePage: FunctionComponent<VerificationCodePageProps> = ({ cl
 
   const codeLength = 6;
 
-  const [code, setCode] = useState(params.get('code') || '');
   const [resentCode, setResentCode] = useState<boolean>(false);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -45,7 +45,7 @@ const VerificationCodePage: FunctionComponent<VerificationCodePageProps> = ({ cl
     if (!username || !code) {
       return;
     }
-    setVerifycationCode(code);
+    setRecoveryCode(code);
     verifyCodeMutate({ email: username, code, navigate });
   };
 
@@ -94,7 +94,7 @@ const VerificationCodePage: FunctionComponent<VerificationCodePageProps> = ({ cl
   };
 
   const handleVerificationOnChange = (data: string) => {
-    setCode(data);
+    setRecoveryCode(data);
   };
 
   const handleVerificationOnCompleted = (data: string) => {
@@ -185,62 +185,3 @@ const BackgroundVideoStyle = styled('video')({
   objectFit: 'cover',
   zIndex: -1,
 });
-
-{
-  /* <AuthLayoutContainer variant="centered">
-        <FormWrapper
-          title={formatMessage({ id: 'AUTH.VERIFICATION_CODE.TITLE' })}
-          customSubtitle={
-            <Stack gap={0.5} direction={{ xs: 'column', sm: 'row' }} alignItems="baseline">
-              <Typography component="h6" variant="h5">
-                {formatMessage({ id: 'AUTH.VERIFICATION_CODE.SUBTITLE' })}
-              </Typography>
-              <Typography component="h6" variant="h5" color={theme.palette.text.secondary}>
-                {username || ''}
-              </Typography>
-            </Stack>
-          }
-        >
-          <Box component="form" onSubmit={handleSubmit} noValidate>
-          <VerificationCodeCtrl
-              error={error}
-              placeholder={code}
-              value={code}
-              success={code.length >= codeLength}
-              length={codeLength}
-              onChange={handleVerificationOnChange}
-              onCompleted={handleVerificationOnCompleted}
-            />
-            <Stack
-              direction={{ xs: 'column-reverse', sm: 'row' }}
-              spacing={2}
-              justifyContent={{
-                xs: 'center',
-                md: 'flex-end',
-              }}
-              alignItems="center"
-              sx={{ mt: { xs: 5, sm: 4 } }}
-              role="group"
-              aria-labelledby="verification-code-button"
-            >
-              {renderResendLink()}
-              <Button
-                fullWidth={isMobile}
-                type="submit"
-                disabled={codeLength > code.length}
-                loading={loading}
-                sx={{ flexShrink: 0 }}
-                aria-label={formatMessage({ id: 'AUTH.VERIFICATION_CODE.BUTTON.LABEL' })}
-              >
-                {formatMessage({ id: 'AUTH.VERIFICATION_CODE.BUTTON.LABEL' })}
-              </Button>
-            </Stack>
-          </Box>
-        </FormWrapper>
-      </AuthLayoutContainer>
-    </section>
-  );
-};
-
-export default VerificationCodePage; */
-}

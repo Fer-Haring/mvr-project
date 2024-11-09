@@ -9,12 +9,12 @@ import ImageLogo from '@webapp/assets/images/content/name-image.png';
 import { COLLAPSED_SIDEBAR_WIDTH } from '@webapp/components/sidebar';
 import SidebarItem from '@webapp/components/sidebar/sidebar-item';
 import { sidebarItems } from '@webapp/components/sidebar/sidebarItems';
-import { useUserData } from '@webapp/store/users/user-data';
+import { useAppSelector } from '@webapp/hooks/redux-hooks';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const DrawerNavbar = () => {
-  const { user } = useUserData();
+  const user = useAppSelector((state) => state.user);
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
 
@@ -32,7 +32,7 @@ const DrawerNavbar = () => {
         <img src={ImageLogo} alt="Logo" onClick={() => navigate('/home')} className="logo" />
         <List>
           {sidebarItems
-            .filter((item) => !item.private || (item.private && user?.admin))
+            .filter((item) => !item.private || (item.private && user?.userById?.user?.admin))
             .filter((item) => !item.private || item.private)
             .map((item) => (
               <SidebarItem

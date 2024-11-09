@@ -1,10 +1,11 @@
 import { ISelectCellEditorParams } from '@ag-grid-community/core';
 import { alpha, styled } from '@mui/material';
+import { useAppDispatch } from '@webapp/hooks/redux-hooks';
+import { setOrders } from '@webapp/redux/store/slices/ordersSlice';
 import { useGetAllOrders } from '@webapp/services/mutations/orders/get-all-orders-query';
 import { useGetPendingOrders } from '@webapp/services/mutations/orders/get-pending-orders-query';
 import { useUpdateOrderStatus } from '@webapp/services/mutations/orders/update-order-status-mutation';
 import { OrderResponse } from '@webapp/services/types/orders-types';
-import { useEditingOrderStore } from '@webapp/store/orders/editing-order-store';
 import { CellEditingStoppedEvent, ColDef, GetRowIdParams } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -21,7 +22,7 @@ const CancelledOrdersPaper: FunctionComponent<CancelledOrdersPaperProps> = ({ or
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
   const [rowData, setRowData] = useState<OrderResponse[]>([]);
-  const { setOrders } = useEditingOrderStore();
+  const dispatch = useAppDispatch();
   const { mutateAsync } = useUpdateOrderStatus();
   const getPendingOrders = useGetPendingOrders();
   const getCompletedOrders = useGetAllOrders();
@@ -55,7 +56,7 @@ const CancelledOrdersPaper: FunctionComponent<CancelledOrdersPaperProps> = ({ or
       sort: 'desc',
       onCellClicked(event) {
         navigate(`/admin-dashboard/pedidos-pendientes/${event.data.order_id}`);
-        setOrders([event.data]);
+        dispatch(setOrders([event.data]));
       },
       cellClass: 'order-id-cell',
     },
