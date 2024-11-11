@@ -132,7 +132,6 @@ export const Step1: React.FC<Step1Props> = ({
     }
   }, [user]);
 
-  console.log('user?.delivery_type', user?.delivery_type);
   return (
     <Stack direction={'column'} gap={2} width={'100%'} justifyContent={'center'} alignItems={'center'}>
       <Button
