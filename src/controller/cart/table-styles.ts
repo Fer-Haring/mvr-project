@@ -1,5 +1,5 @@
-import styled from '@emotion/styled';
-import { ButtonGroup, Stack, Typography, alpha, useTheme } from '@mui/material';
+
+import { ButtonGroup, Stack, Typography, alpha, useTheme, styled } from '@mui/material';
 
 export const TableBox = styled(Stack)(() => {
   const theme = useTheme();
