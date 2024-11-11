@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { alpha, styled, useTheme } from '@mui/material/styles';
-import { useLogout } from '@webapp/sdk/mutations/auth/user-logout-mutation';
+import { useLogout } from '@webapp/service/mutations/auth/user-logout-mutation';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';

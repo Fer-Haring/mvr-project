@@ -2,7 +2,7 @@ import { Typography, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import statisticsAnimation from '@webapp/assets/images/animations/statistics.json';
-import { useGetAllOrders } from '@webapp/sdk/mutations/orders/get-all-orders-query';
+import { useGetAllOrders } from '@webapp/service/mutations/orders/get-all-orders-query';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 import Lottie from 'react-lottie';

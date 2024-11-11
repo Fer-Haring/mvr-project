@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import InputField from '@webapp/components/form/input';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { User } from '@webapp/sdk/types/user-types';
+import { User } from '@webapp/service/types/user-types';
 import React, { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 
@@ -55,7 +55,7 @@ const DeliveryData: React.FunctionComponent<DeliveryDataProps> = ({
         gap: 3,
       }}
     >
-      <ZoneDeliverButtons userData={user} setUser={setUser} onValidChange={setIsZoneDeliveryValid} />
+      <ZoneDeliverButtons user={user} setUser={setUser} onValidChange={setIsZoneDeliveryValid} />
       <Box sx={{ width: '80%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Typography
           variant="h4"
@@ -71,7 +71,7 @@ const DeliveryData: React.FunctionComponent<DeliveryDataProps> = ({
           fontWeight={600}
           textAlign="center"
           fontSize={isMobile ? '2.5vw' : '1.6vw'}
-          sx={{ mb: 4, color: theme.palette.grey[500] }}
+          sx={{ mb: 4, color: theme.palette.warning.dark }}
         >
           {formatMessage({ id: 'CART.PAYMENT.ADDRESS.DESCRIPTION.WARNING' })}
         </Typography>

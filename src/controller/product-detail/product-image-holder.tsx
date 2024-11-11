@@ -1,11 +1,11 @@
 import Box from '@mui/material/Box';
 import { SxProps, Theme } from '@mui/material/styles';
 import ImageUploader from '@webapp/components/image-uploader';
-import SnackbarUtils from '@webapp/components/snackbar';
-import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
-import { useUpdateProduct } from '@webapp/sdk/mutations/products/update-product-mutation';
-import useUploadImagesArrayMutation from '@webapp/sdk/mutations/products/upload-images-array-mutation';
-import { Product } from '@webapp/sdk/types/products-types';
+import { toast } from 'react-toastify';
+import { useProductListQuery } from '@webapp/service/mutations/products/get-product-list-query';
+import { useUpdateProduct } from '@webapp/service/mutations/products/update-product-mutation';
+import useUploadImagesArrayMutation from '@webapp/service/mutations/products/upload-images-array-mutation';
+import { Product } from '@webapp/service/types/products-types';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent } from 'react';
@@ -42,10 +42,10 @@ const ProductImageHolder: FunctionComponent<ProductImageHolderProps> = ({ classN
 
       getProducts.refetch();
       setProduct(updatedProduct);
-      SnackbarUtils.success(formatMessage({ id: 'PRODUCTS.DETAIL.IMAGE_SUCCESS_UPLOAD' }, { producto: product.product_name }));
+      toast.success(formatMessage({ id: 'PRODUCTS.DETAIL.IMAGE_SUCCESS_UPLOAD' }, { producto: product.product_name }));
     } catch (error) {
       console.error('Error uploading product images:', error);
-      SnackbarUtils.error(
+      toast.error(
         formatMessage({ id: 'PROFILE.USER_INFO.AVATAR_ERROR' }) +
           (error instanceof Error ? error.message : 'Unknown error')
       );
@@ -67,10 +67,10 @@ const ProductImageHolder: FunctionComponent<ProductImageHolderProps> = ({ classN
 
       getProducts.refetch();
       setProduct(updatedProduct);
-      SnackbarUtils.success(formatMessage({ id: 'PRODUCT.IMAGES_DELETED' }));
+      toast.success(formatMessage({ id: 'PRODUCT.IMAGES_DELETED' }));
     } catch (error) {
       console.error('Error deleting product images:', error);
-      SnackbarUtils.error(
+      toast.error(
         formatMessage({ id: 'PRODUCT.IMAGES_DELETE_ERROR' }) +
           (error instanceof Error ? error.message : 'Unknown error')
       );

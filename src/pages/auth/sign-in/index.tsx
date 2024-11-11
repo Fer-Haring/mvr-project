@@ -11,9 +11,9 @@ import FormWrapper from '@webapp/components/auth/form-wrapper';
 import Button from '@webapp/components/button';
 import InputField from '@webapp/components/form/input';
 import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
-import SnackbarUtils from '@webapp/components/snackbar';
+import { toast } from 'react-toastify';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useUserSignInMutation } from '@webapp/sdk/mutations/auth/user-sign-in-mutation';
+import { useUserSignInMutation } from '@webapp/service/mutations/auth/user-sign-in-mutation';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
@@ -81,13 +81,13 @@ const SignInPage2: FunctionComponent<SignInPage2Props> = ({ className }) => {
         console.error('Login failed:', error.message);
         if (error.message === 'El usuario registrado con Google no tiene contraseña establecida') {
           localStorage.setItem('email', email);
-          SnackbarUtils.warning(
+          toast.warning(
             'El usuario fue registrado con Google y no tiene contraseña establecida, establezca una contraseña para continuar.'
           );
           navigate('/set-password');
         }
         if (error.message === 'La contraseña no es correcta') {
-          SnackbarUtils.error('La contraseña no es correcta');
+          toast.error('La contraseña no es correcta');
           setIsLoginLoading(false);
         }
       } else {

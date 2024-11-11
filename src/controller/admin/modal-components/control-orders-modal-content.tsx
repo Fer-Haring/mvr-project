@@ -4,10 +4,10 @@
 // import Box from '@mui/material/Box';
 // import Stack from '@mui/material/Stack';
 // import Select from '@webapp/components/form/select';
-// import SnackbarUtils from '@webapp/components/snackbar';
-// import { updateOrderStatus } from '@webapp/sdk/firebase/admin';
-// import { getUser } from '@webapp/sdk/firebase/user';
-// import { CompletedOrder, User } from '@webapp/sdk/types/user-types';
+// import { toast } from 'react-toastify';
+// import { updateOrderStatus } from '@webapp/service/firebase/admin';
+// import { getUser } from '@webapp/service/firebase/user';
+// import { CompletedOrder, User } from '@webapp/service/types/user-types';
 // import { useAdminDataStore } from '@webapp/store/admin/admin-data';
 // import { FunctionComponent, useEffect, useState } from 'react';
 // import { useIntl } from 'react-intl';
@@ -42,7 +42,7 @@
 //     // Llama a la función que actualiza la base de datos
 //     updateOrderStatus(orderId as number, newStatus)
 //       .then(() => {
-//         SnackbarUtils.success('Estado actualizado con éxito');
+//         toast.success('Estado actualizado con éxito');
 
 //         const updatedOrders = ordersArray.map((order) => {
 //           if (order.order_id === orderId) {

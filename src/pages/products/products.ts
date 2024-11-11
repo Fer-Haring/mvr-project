@@ -236,7 +236,7 @@ export const CategoryButton = styled(Button)<{ isMobile: boolean }>(({ theme, is
   cursor: 'pointer',
   border: 'none',
   backgroundSize: ' 300% 100%',
-  borderRadius: '50px',
+  borderRadius: '12px',
   textWrap: 'nowrap',
   transition: 'all .4s ease-in-out',
 

@@ -1,7 +1,7 @@
 import { ValidationError, useForm } from '@formspree/react';
 import { Box, TextField, TextareaAutosize, styled } from '@mui/material';
 import Button from '@webapp/components/button';
-import SnackbarUtils from '@webapp/components/snackbar';
+import { toast } from 'react-toastify';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -34,7 +34,7 @@ const MailForm: FunctionComponent = () => {
 
   useEffect(() => {
     if (state.succeeded) {
-      SnackbarUtils.success(formatMessage({ id: 'CONTACT.PAGE.FORM.SUCCESS' }));
+      toast.success(formatMessage({ id: 'CONTACT.PAGE.FORM.SUCCESS' }));
     }
     setFormData({
       nombre: '',

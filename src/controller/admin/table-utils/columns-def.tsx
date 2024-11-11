@@ -8,6 +8,8 @@ import { ICellRendererParams } from 'ag-grid-community';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import CustomDataTableFilters from '../custom-data-table-filters';
+
 const currencyFormatter = (params: any) => {
   const { value, data } = params;
   if (!value || !data) return value;
@@ -61,12 +63,15 @@ export const columnDefs = (): ColDef[] => [
     headerName: 'Nombre del Producto',
     field: 'product_name',
     editable: true,
-    filter: true,
+    filter: CustomDataTableFilters,
+    filterParams: {
+      placeholder: 'Buscar producto...',
+    },
   },
-  { headerName: 'Descripción', field: 'description', editable: true, filter: true },
-  { headerName: 'Categoría Principal', field: 'main_product_category', editable: true, filter: true },
-  { headerName: 'Categoría del Producto', field: 'product_category', editable: true, filter: true },
-  { headerName: 'Tipo de Moneda', field: 'price_currency', editable: true, filter: true, width: 150 },
+  { headerName: 'Descripción', field: 'description', editable: true },
+  { headerName: 'Categoría Principal', field: 'main_product_category', editable: true, filter: CustomDataTableFilters },
+  { headerName: 'Categoría del Producto', field: 'product_category', editable: true, filter: CustomDataTableFilters },
+  { headerName: 'Tipo de Moneda', field: 'price_currency', editable: true, width: 150 },
   {
     headerName: 'Precio de Costo',
     field: 'cost_price',
@@ -99,7 +104,6 @@ export const columnDefs = (): ColDef[] => [
     headerName: 'Destacado',
     field: 'featured',
     editable: true,
-    filter: true,
     cellStyle: { display: 'flex', justifyContent: 'center' },
   },
   { headerName: 'Fracción', field: 'fraction', editable: true, filter: true },

@@ -4,8 +4,8 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import InputField from '@webapp/components/form/input';
-import { useUpdateUser } from '@webapp/sdk/mutations/auth/user-update-mutation';
-import { UpdateUserPayload, User } from '@webapp/sdk/types/user-types';
+import { useUpdateUser } from '@webapp/service/mutations/auth/user-update-mutation';
+import { UpdateUserPayload, User } from '@webapp/service/types/user-types';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 

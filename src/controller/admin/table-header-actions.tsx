@@ -1,12 +1,11 @@
 import { Box, Stack, useTheme } from '@mui/material';
 import Button from '@webapp/components/button';
 import Modal from '@webapp/components/modal';
-import SnackbarUtils from '@webapp/components/snackbar';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useExportCsvExcel } from '@webapp/sdk/mutations/admin/export-csv-excel-query';
-import { useImportXlsxCsv } from '@webapp/sdk/mutations/admin/import-xlsx-csv-mutation';
-import { useDeleteProduct } from '@webapp/sdk/mutations/products/delete-product-mutation';
-import { Product } from '@webapp/sdk/types/products-types';
+import { useExportCsvExcel } from '@webapp/service/mutations/admin/export-csv-excel-query';
+import { useImportXlsxCsv } from '@webapp/service/mutations/admin/import-xlsx-csv-mutation';
+import { useDeleteProduct } from '@webapp/service/mutations/products/delete-product-mutation';
+import { Product } from '@webapp/service/types/products-types';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import React, { useRef, useState } from 'react';
@@ -14,6 +13,7 @@ import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
 import BulkEditButton from './table-utils/bulk-edit-button';
+import { toast } from 'react-toastify';
 
 interface ProductHeaderActionsProps {
   selectedRows: Product[];
@@ -56,11 +56,11 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ selectedRow
       importXlsx
         .mutateAsync(file)
         .then(() => {
-          SnackbarUtils.success('Productos importados con éxito');
+          toast.success('Productos importados con éxito');
         })
         .catch((error) => {
           console.error('Error en la importación:', error);
-          SnackbarUtils.error(`Error al importar productos: ${error.message}`);
+          toast.error(`Error al importar productos: ${error.message}`);
         });
     }
   };
@@ -83,7 +83,7 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ selectedRow
         setOpenExportModal(false);
       })
       .catch((error) => {
-        SnackbarUtils.error(`Error al exportar: ${error.message}`);
+        toast.error(`Error al exportar: ${error.message}`);
       });
   };
 
@@ -104,7 +104,7 @@ const ProductHeaderActions: React.FC<ProductHeaderActionsProps> = ({ selectedRow
           onClick={
             selectedRows.length > 0
               ? handleDeleteProduct
-              : () => SnackbarUtils.error('Seleccione al menos un producto para eliminar')
+              : () => toast.error('Seleccione al menos un producto para eliminar')
           }
           sx={{
             height: 32,

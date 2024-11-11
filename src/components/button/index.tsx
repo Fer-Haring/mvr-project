@@ -82,7 +82,7 @@ const CustomButtonStyled = styled(MuiLoadingButton, { shouldForwardProp: (prop) 
   textAlign: 'center',
   border: 'none',
   backgroundSize: '300% 100%',
-  borderRadius: '50px',
+  borderRadius: '12px',
   textWrap: 'nowrap',
   transition: 'all .4s ease-in-out',
   backgroundImage: {

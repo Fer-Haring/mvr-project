@@ -1,6 +1,6 @@
 import { alpha, Box, Stack, styled, Typography } from '@mui/material';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { User } from '@webapp/sdk/types/user-types';
+import { User } from '@webapp/service/types/user-types';
 import React from 'react';
 import { useIntl } from 'react-intl';
 

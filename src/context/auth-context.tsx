@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import SnackbarUtils from "@webapp/components/snackbar";
-import { emitter } from '@webapp/sdk/actions/auth/event-emitter';
+import { emitter } from '@webapp/service/actions/auth/event-emitter';
+import { toast } from 'react-toastify';
 
 export const useAuth = () => {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ export const useAuth = () => {
     const handleRedirectToLogin = () => {
       localStorage.clear();
       navigate('/sign-in', { replace: true });
-      SnackbarUtils.error('La Sesión ha expirado, por favor inicie sesión nuevamente.');
+      toast.error('La Sesión ha expirado, por favor inicie sesión nuevamente.');
     };
 
     emitter.on('redirectToLogin', handleRedirectToLogin);

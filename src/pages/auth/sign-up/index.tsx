@@ -11,14 +11,14 @@ import PasswordRequirements from '@webapp/components/auth/password-requirements'
 import Button from '@webapp/components/button';
 import InputField from '@webapp/components/form/input';
 import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
-import SnackbarUtils from '@webapp/components/snackbar';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useSignupMutation } from '@webapp/sdk/mutations/auth/user-sign-up-mutation';
+import { useSignupMutation } from '@webapp/service/mutations/auth/user-sign-up-mutation';
 import { validateEmail } from '@webapp/utils/input-validations';
 import { AnimatePresence } from 'framer-motion';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 interface SignUpPage2Props {
   className?: string;
@@ -57,9 +57,9 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
       });
     } catch (error) {
       if (error instanceof Error) {
-        SnackbarUtils.error(error.message);
+        toast.error(error.message);
       } else {
-        SnackbarUtils.error('Ocurrió un error inesperado.');
+        toast.error('Ocurrió un error inesperado.');
       }
     }
   };
@@ -93,17 +93,8 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
     navigate('/sign-in');
   };
 
-  // async function loginWithGoogle() {
-  //   window.location.href = 'https://mvr-prod.onrender.com/login/google';
-  // }
-
-  // const handleGoogleSignUp = async () => {
-  //   await loginWithGoogle();
-  // };
-
   const handleDisabled =
     !validateEmail(email) ||
-    !/^(?=.*?[A-Z])(?=.*?[0-9])[\S]{8,}$/.test(password) ||
     !confirmPassword ||
     password !== confirmPassword ||
     !!getConfirmPasswordError() ||
@@ -229,7 +220,6 @@ const SignUpPage2: FunctionComponent<SignUpPage2Props> = ({ className }) => {
                       error={!!getPasswordError()}
                       helperText={getPasswordError()}
                       inputProps={{
-                        pattern: '^(?=.*?[A-Z])(?=.*?[0-9])[\\S]{8,}$',
                         autoComplete: 'new-password',
                         form: {
                           autoComplete: 'off',

@@ -1,12 +1,10 @@
-import { FunctionComponent } from 'react';
-
+// Import necessary dependencies
+import TextField, { TextFieldProps } from '@mui/material/TextField';
 // This takes the inputSize and inputVariant from the theme file
 import { inputSize, inputVariant } from '@webapp/configuration/material-ui/input';
 // Import custom hook
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-
-// Import necessary dependencies
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import React from 'react';
 
 type InputFieldProps = {
   className?: string;
@@ -15,11 +13,11 @@ type InputFieldProps = {
   ariaLabel?: string; // Added aria-label prop
 } & TextFieldProps;
 
-const InputField: FunctionComponent<InputFieldProps> = ({
-  className,
-  smallMobile,
-  noDefaultHelperText,
-  ariaLabel, // Destructured aria-label prop
+const InputField: React.FC<InputFieldProps> = ({
+  className = '',
+  smallMobile = false,
+  noDefaultHelperText = false,
+  ariaLabel = '',
   ...props
 }) => {
   const isMobile = useIsMobile();

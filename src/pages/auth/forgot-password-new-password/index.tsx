@@ -12,7 +12,7 @@ import Button from '@webapp/components/button';
 import InputField from '@webapp/components/form/input';
 import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useSendNewPasswordMutation } from '@webapp/sdk/mutations/auth/password/send-new-password-mutation';
+import { useSendNewPasswordMutation } from '@webapp/service/mutations/auth/password/send-new-password-mutation';
 import { useRecoveryPasswordData } from '@webapp/store/auth/recovery-password-data';
 import { AnimatePresence } from 'framer-motion';
 import React, { FunctionComponent, useState } from 'react';

@@ -16,11 +16,11 @@ import {
 } from '@mui/material';
 import Stack from '@mui/system/Stack';
 import NoImageProd from '@webapp/assets/images/prod-no-image.png';
-import SnackbarUtils from '@webapp/components/snackbar';
-import { useAddToCart } from '@webapp/sdk/mutations/cart/add-to-cart-mutation';
-import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
-import { CartItem } from '@webapp/sdk/types/cart-types';
-import { OrderRequest } from '@webapp/sdk/types/orders-types';
+import { toast } from 'react-toastify';
+import { useAddToCart } from '@webapp/service/mutations/cart/add-to-cart-mutation';
+import { useGetUserCart } from '@webapp/service/mutations/cart/get-cart-query';
+import { CartItem } from '@webapp/service/types/cart-types';
+import { OrderRequest } from '@webapp/service/types/orders-types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -83,15 +83,15 @@ export const CartProductsDetail: FunctionComponent<CartProductsDetailProps> = ({
       // Si la cantidad es 1 y se está disminuyendo, eliminar el producto del carrito
       const filteredCartProducts = localCartProducts.filter((item) => item.product_id !== cartProduct.product_id);
       setLocalCartProducts(filteredCartProducts);
-      SnackbarUtils.info(formatMessage({ id: 'CART.PRODUCT.REMOVED' }));
+      toast.info(formatMessage({ id: 'CART.PRODUCT.REMOVED' }));
     } else {
       setLocalCartProducts(updatedCartProducts);
 
       // Mostrar el snack adecuado para aumento o disminución
       if (quantityChange > 0) {
-        SnackbarUtils.success(formatMessage({ id: 'CART.PRODUCT.QUANTITY.INCREASED' }));
+        toast.success(formatMessage({ id: 'CART.PRODUCT.QUANTITY.INCREASED' }));
       } else if (quantityChange < 0) {
-        SnackbarUtils.success(formatMessage({ id: 'CART.PRODUCT.QUANTITY.DECREASED' }));
+        toast.success(formatMessage({ id: 'CART.PRODUCT.QUANTITY.DECREASED' }));
       }
     }
 

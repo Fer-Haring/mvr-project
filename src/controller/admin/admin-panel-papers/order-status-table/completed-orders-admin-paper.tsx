@@ -1,18 +1,25 @@
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
+import RemoveRedEyeRoundedIcon from '@mui/icons-material/RemoveRedEyeRounded';
 import { CircularProgress, IconButton, alpha, styled } from '@mui/material';
-import SnackbarUtils from '@webapp/components/snackbar';
-import { useDownloadOrderPdf } from '@webapp/sdk/mutations/admin/create-bill-mutation';
-import { useGetPendingOrders } from '@webapp/sdk/mutations/orders/get-pending-orders-query';
-import { useUpdateOrderStatus } from '@webapp/sdk/mutations/orders/update-order-status-mutation';
-import { OrderResponse } from '@webapp/sdk/types/orders-types';
+import { useDownloadOrderPdf } from '@webapp/service/mutations/admin/create-bill-mutation';
+import { useGetPendingOrders } from '@webapp/service/mutations/orders/get-pending-orders-query';
+import { useUpdateOrderStatus } from '@webapp/service/mutations/orders/update-order-status-mutation';
+import { OrderResponse } from '@webapp/service/types/orders-types';
+import { useCompletedOrderStore } from '@webapp/store/orders/get-completed-order';
 import { CellEditingStoppedEvent, ColDef, GetRowIdParams, ICellRendererParams } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgGridReact } from 'ag-grid-react';
 import { format } from 'date-fns';
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 interface DownloadCellRendererProps extends ICellRendererParams {
+  data: OrderResponse;
+}
+
+interface ActionCellRendererProps extends ICellRendererParams {
   data: OrderResponse;
 }
 
@@ -23,7 +30,6 @@ const CompletedOrdersPaper: FunctionComponent<CompletedOrdersPaperProps> = ({ or
   const [rowData, setRowData] = useState<OrderResponse[]>([]);
   const { mutateAsync } = useUpdateOrderStatus();
   const getPendingOrders = useGetPendingOrders();
-  // const { mutateAsync: createBillMutation, isPending } = useDownloadOrderPdf();
   const getRowId = (params: GetRowIdParams) => {
     return (params.data as OrderResponse).order_id || '';
   };
@@ -47,10 +53,10 @@ const CompletedOrdersPaper: FunctionComponent<CompletedOrdersPaperProps> = ({ or
       setIsLoading(true);
       try {
         await createBillMutation(props.data.order_id!).then(() => {
-          SnackbarUtils.success('Recibo Descargado');
+          toast.success('Recibo Descargado');
         });
       } catch (error) {
-        SnackbarUtils.error(`Error Descargando el Recibo: ${error} `);
+        toast.error(`Error Descargando el Recibo: ${error} `);
       } finally {
         setIsLoading(false);
       }
@@ -63,7 +69,29 @@ const CompletedOrdersPaper: FunctionComponent<CompletedOrdersPaperProps> = ({ or
     );
   };
 
+  const ActionCellRenderer: React.FC<ActionCellRendererProps> = (props) => {
+    const navigate = useNavigate();
+    const { setOrder } = useCompletedOrderStore();
+    const handleViewOrder = () => {
+      setOrder(props.data);
+      navigate(`/admin-dashboard/pedidos-completados/${props.data.order_id}`);
+    };
+
+    return (
+      <IconButton onClick={handleViewOrder} size="small">
+        <RemoveRedEyeRoundedIcon sx={{ color: '#000000' }} />
+      </IconButton>
+    );
+  };
+
   const columnDefs: ColDef[] = [
+    {
+      headerName: 'Ver Detalles',
+      width: 140,
+      field: 'actions',
+      cellStyle: { display: 'flex', justifyContent: 'center', alignItems: 'center' },
+      cellRenderer: ActionCellRenderer,
+    },
     {
       headerName: 'Recibo',
       field: 'download',
@@ -71,9 +99,9 @@ const CompletedOrdersPaper: FunctionComponent<CompletedOrdersPaperProps> = ({ or
       width: 100,
       cellStyle: { display: 'flex', justifyContent: 'center', alignItems: 'center' },
     },
-    { headerName: 'Order ID', field: 'order_id', sort: 'desc' },
+    { headerName: 'Cliente', field: 'user.name', width: 120 },
+    { headerName: 'Orden N°', field: 'order_id', sort: 'desc' },
     { headerName: 'User ID', field: 'user_id', hide: true },
-    { headerName: 'User Name', field: 'user.name' },
     { headerName: 'Total Productos', field: 'total_products' },
     { headerName: 'Total USD', field: 'total_order_amount_usd' },
     { headerName: 'Total ARS', field: 'total_order_amount_ars' },
@@ -82,7 +110,7 @@ const CompletedOrdersPaper: FunctionComponent<CompletedOrdersPaperProps> = ({ or
     { headerName: 'Metodo de Pago', field: 'payment_method' },
     { headerName: 'Tipo de Entrega', field: 'delivery_type' },
     { headerName: 'Fecha de Pedido', field: 'created_at', valueFormatter: (params) => formatDate(params.value) },
-    { headerName: 'Updated At', field: 'updated_at', hide: true, cellDataType: 'date' },
+    { headerName: 'Ultima Actualizacion', field: 'updated_at', hide: true, cellDataType: 'date' },
   ];
 
   const defaultColDef = useMemo<ColDef>(() => {

@@ -8,7 +8,7 @@ import InputField from '@webapp/components/form/input';
 import Select from '@webapp/components/form/select';
 import CustomInput from '@webapp/controller/admin/modal-components/cutom-input';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { Product } from '@webapp/sdk/types/products-types';
+import { Product } from '@webapp/service/types/products-types';
 import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
 

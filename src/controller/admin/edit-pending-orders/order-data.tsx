@@ -7,9 +7,9 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@webapp/components/button';
 import Modal from '@webapp/components/modal';
-import { useGetDollarValue } from '@webapp/sdk/mutations/admin/get-dollar-value-query';
-import { CartItem } from '@webapp/sdk/types/cart-types';
-import { OrderResponse } from '@webapp/sdk/types/orders-types';
+import { useGetDollarValue } from '@webapp/service/mutations/admin/get-dollar-value-query';
+import { CartItem } from '@webapp/service/types/cart-types';
+import { OrderResponse } from '@webapp/service/types/orders-types';
 import { useEditingOrderStore } from '@webapp/store/orders/editing-order-store';
 import React from 'react';
 import { useIntl } from 'react-intl';
@@ -18,9 +18,10 @@ import AddProductModalContainer from './add-product-modal-container';
 
 interface OrderDataProps {
   order: OrderResponse | undefined;
+  isCompleted?: boolean;
 }
 
-const OrderData: React.FC<OrderDataProps> = ({ order }) => {
+const OrderData: React.FC<OrderDataProps> = ({ order, isCompleted }) => {
   const { formatMessage } = useIntl();
   const [addProductModal, setAddProductModal] = React.useState(false);
   const { orders, setOrders } = useEditingOrderStore();
@@ -143,17 +144,19 @@ const OrderData: React.FC<OrderDataProps> = ({ order }) => {
         <Typography variant="h4" color="secondary" sx={{ mb: 2 }}>
           {formatMessage({ id: 'ADMIN.EDIT.PENDING.ORDERS.PAGE.ORDER.PRODUCTS.LIST' })}
         </Typography>
-        <Button
-          variant="contained"
-          size="small"
-          color="primary"
-          sx={{ maxWidth: '15vw', color: '#FFFFFF', fontSize: '0.9vw' }}
-          onClick={() => {
-            setAddProductModal(true);
-          }}
-        >
-          {formatMessage({ id: 'ADMIN.EDIT.PENDING.ORDERS.PAGE.ADD.PRODUCT.TO.ORDER' })}
-        </Button>
+        {!isCompleted && (
+          <Button
+            variant="contained"
+            size="small"
+            color="primary"
+            sx={{ maxWidth: '15vw', color: '#FFFFFF', fontSize: '0.9vw' }}
+            onClick={() => {
+              setAddProductModal(true);
+            }}
+          >
+            {formatMessage({ id: 'ADMIN.EDIT.PENDING.ORDERS.PAGE.ADD.PRODUCT.TO.ORDER' })}
+          </Button>
+        )}
       </Box>
       <Stack
         spacing={2}
@@ -195,31 +198,45 @@ const OrderData: React.FC<OrderDataProps> = ({ order }) => {
                 {product.sub_total} {product.price_currency}
               </Typography>
             </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                gap: 3,
-              }}
-            >
-              <Tooltip title={formatMessage({ id: 'ADMIN.EDIT.PENDING.ORDERS.PAGE.ORDER.PRODUCT.QUANTITY.DECREASE' })}>
-                <IconButton aria-label="delete" color="secondary" onClick={() => decreaseQuantity(product.product_id)}>
-                  <RemoveRoundedIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title={formatMessage({ id: 'ADMIN.EDIT.PENDING.ORDERS.PAGE.ORDER.PRODUCT.QUANTITY.INCREASE' })}>
-                <IconButton aria-label="add-one" color="secondary" onClick={() => increaseQuantity(product.product_id)}>
-                  <AddRoundedIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title={formatMessage({ id: 'ADMIN.EDIT.PENDING.ORDERS.PAGE.ORDER.PRODUCT.REMOVE' })}>
-                <IconButton aria-label="remove-one" color="error" onClick={() => removeProduct(product.product_id)}>
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
-            </Box>
+            {!isCompleted && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  gap: 3,
+                }}
+              >
+                <Tooltip
+                  title={formatMessage({ id: 'ADMIN.EDIT.PENDING.ORDERS.PAGE.ORDER.PRODUCT.QUANTITY.DECREASE' })}
+                >
+                  <IconButton
+                    aria-label="delete"
+                    color="secondary"
+                    onClick={() => decreaseQuantity(product.product_id)}
+                  >
+                    <RemoveRoundedIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip
+                  title={formatMessage({ id: 'ADMIN.EDIT.PENDING.ORDERS.PAGE.ORDER.PRODUCT.QUANTITY.INCREASE' })}
+                >
+                  <IconButton
+                    aria-label="add-one"
+                    color="secondary"
+                    onClick={() => increaseQuantity(product.product_id)}
+                  >
+                    <AddRoundedIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title={formatMessage({ id: 'ADMIN.EDIT.PENDING.ORDERS.PAGE.ORDER.PRODUCT.REMOVE' })}>
+                  <IconButton aria-label="remove-one" color="error" onClick={() => removeProduct(product.product_id)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            )}
           </Stack>
         ))}
       </Stack>

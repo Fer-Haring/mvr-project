@@ -1,4 +1,4 @@
-import { CartItem } from '@webapp/sdk/types/cart-types';
+import { CartItem } from '@webapp/service/types/cart-types';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 

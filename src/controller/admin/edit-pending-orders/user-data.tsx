@@ -2,7 +2,7 @@ import { Paper, alpha, styled } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { OrderResponse } from '@webapp/sdk/types/orders-types';
+import { OrderResponse } from '@webapp/service/types/orders-types';
 import { format } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
 import React from 'react';
@@ -14,6 +14,8 @@ interface UserDataProps {
 
 const UserData: React.FC<UserDataProps> = ({ order }) => {
   const { formatMessage } = useIntl();
+
+  console.dir(order);
 
   const translateStatus = (status: string | undefined) => {
     switch (status) {

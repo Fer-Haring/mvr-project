@@ -11,9 +11,9 @@ import PasswordRequirements from '@webapp/components/auth/password-requirements'
 import Button from '@webapp/components/button';
 import InputField from '@webapp/components/form/input';
 import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants';
-import SnackbarUtils from '@webapp/components/snackbar';
+import { toast } from 'react-toastify';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { setPassword } from '@webapp/sdk/actions/auth/set-password';
+import { setPassword } from '@webapp/service/actions/auth/set-password';
 import { AnimatePresence } from 'framer-motion';
 import React, { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -51,7 +51,7 @@ const SetPasswordPage: FunctionComponent<SetPasswordPageProps> = ({ className })
     try {
       await setPassword({ email, new_password: newPassword });
       navigate('/sign-in');
-      SnackbarUtils.success(formatMessage({ id: 'AUTH.CREATE.PASSWORD.SUCCESS' }));
+      toast.success(formatMessage({ id: 'AUTH.CREATE.PASSWORD.SUCCESS' }));
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message);

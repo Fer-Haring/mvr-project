@@ -1,4 +1,4 @@
-import { OrderResponse } from '@webapp/sdk/types/orders-types';
+import { OrderResponse } from '@webapp/service/types/orders-types';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 

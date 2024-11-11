@@ -5,23 +5,26 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import { default as MuiSelect, SelectProps as MuiSelectProps } from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
-import { SxProps, Theme, alpha, styled, useTheme } from '@mui/material/styles';
+import { alpha, styled, useTheme } from '@mui/material/styles';
 import React, { FunctionComponent } from 'react';
 
-interface SelectProps extends MuiSelectProps {
+interface CustomOption {
+  value: string;
+  label: React.ReactNode;
+  icon?: React.ReactNode;
+  disabled?: boolean;
+}
+
+interface AdditionalSelectProps {
   className?: string;
   id: string;
   label?: React.ReactNode;
-  value: string;
-  options?: {
-    value: string;
-    label: React.ReactNode;
-    icon?: React.ReactNode;
-    disabled?: boolean;
-  }[];
-  sx?: SxProps<Theme>;
+  options?: CustomOption[];
   ariaLabel?: string;
+  placeholder?: string;
 }
+
+type SelectProps = MuiSelectProps & AdditionalSelectProps;
 
 const StyledSelect = styled(MuiSelect)(() => ({
   '& .MuiSelect-select': {
@@ -39,7 +42,6 @@ const Select: FunctionComponent<SelectProps> = ({ className, id, label, value, o
       fullWidth={props.fullWidth}
       sx={{ ...sx }}
       disabled={props.disabled}
-      size={props.size}
       aria-labelledby={`${id}-label`} // ARIA attribute to associate the label with the select
     >
       {label ? <InputLabel id={`${id}-label`}>{label}</InputLabel> : null}

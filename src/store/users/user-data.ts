@@ -1,4 +1,4 @@
-import { User } from '@webapp/sdk/types/user-types';
+import { User } from '@webapp/service/types/user-types';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 

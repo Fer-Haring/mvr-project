@@ -1,9 +1,10 @@
 import { ISelectCellEditorParams } from '@ag-grid-community/core';
 import { alpha, styled } from '@mui/material';
-import { useGetAllOrders } from '@webapp/sdk/mutations/orders/get-all-orders-query';
-import { useGetPendingOrders } from '@webapp/sdk/mutations/orders/get-pending-orders-query';
-import { useUpdateOrderStatus } from '@webapp/sdk/mutations/orders/update-order-status-mutation';
-import { OrderResponse } from '@webapp/sdk/types/orders-types';
+import { useGetAllOrders } from '@webapp/service/mutations/orders/get-all-orders-query';
+import { useGetPendingOrders } from '@webapp/service/mutations/orders/get-pending-orders-query';
+import { useUpdateOrderStatus } from '@webapp/service/mutations/orders/update-order-status-mutation';
+import { useUpdateProductStock } from '@webapp/service/mutations/products/update-pproduct-stock-mutation';
+import { OrderResponse } from '@webapp/service/types/orders-types';
 import { useEditingOrderStore } from '@webapp/store/orders/editing-order-store';
 import { CellEditingStoppedEvent, ColDef, GetRowIdParams } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -23,8 +24,10 @@ const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders
   const [rowData, setRowData] = useState<OrderResponse[]>([]);
   const { setOrders } = useEditingOrderStore();
   const { mutateAsync } = useUpdateOrderStatus();
+  const updateProductStockMutation = useUpdateProductStock();
   const getPendingOrders = useGetPendingOrders();
   const getCompletedOrders = useGetAllOrders();
+  const [originalOrderData, setOriginalOrderData] = useState<OrderResponse[]>([]);
   const getRowId = (params: GetRowIdParams) => {
     return (params.data as OrderResponse).order_id || '';
   };
@@ -95,6 +98,10 @@ const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders
     };
   }, []);
 
+  useEffect(() => {
+    setOriginalOrderData(JSON.parse(JSON.stringify(orders)));
+  }, [orders]);
+
   const onCellEditingStopped = useCallback(
     async (event: CellEditingStoppedEvent) => {
       const updatedData = event.data;
@@ -122,6 +129,26 @@ const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders
           break;
       }
 
+      // Si el pedido cambia a estado "cancelado"
+      if (status === 'canceled' && id) {
+        // Encuentra el pedido original antes de la edición
+        const originalOrder = originalOrderData.find((order) => order.order_id === id);
+
+        if (originalOrder && originalOrder.cart_items) {
+          // Itera sobre los productos en el pedido y actualiza el stock de cada uno
+          for (const item of originalOrder.cart_items) {
+            const stockDelta = item.quantity; // Devolver la cantidad al stock
+
+            // Llamar a la mutación para actualizar el stock del producto
+            await updateProductStockMutation.mutateAsync({
+              productId: item.product_id,
+              stockDelta: stockDelta,
+            });
+          }
+        }
+      }
+
+      // Actualiza el estado del pedido en la base de datos
       if (id) {
         mutateAsync({ id: id, status: status }).then(() => {
           getPendingOrders.refetch();
@@ -129,7 +156,7 @@ const PendingOrdersPaper: FunctionComponent<PendingOrdersPaperProps> = ({ orders
         });
       }
     },
-    [mutateAsync]
+    [mutateAsync, updateProductStockMutation, originalOrderData]
   );
 
   return (

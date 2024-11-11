@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box, CircularProgress, Typography, alpha, styled, useTheme } from '@mui/material';
-import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
-import { useUpdateProduct } from '@webapp/sdk/mutations/products/update-product-mutation';
-import { Product } from '@webapp/sdk/types/products-types';
+import { useProductListQuery } from '@webapp/service/mutations/products/get-product-list-query';
+import { useUpdateProduct } from '@webapp/service/mutations/products/update-product-mutation';
+import { Product } from '@webapp/service/types/products-types';
 import { useAgGridColumnSortingStore } from '@webapp/store/admin/ag-grid-column-sort';
 import { useAgGridFilterStore } from '@webapp/store/admin/ag-grid-filters';
 import useBulkEditStore from '@webapp/store/admin/bulk-edit-store';
 import {
   CellEditingStoppedEvent,
   ColDef,
+  ColGroupDef,
   FilterChangedEvent,
   GetRowIdParams,
   PaginationNumberFormatterParams,
@@ -19,6 +20,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
+import CustomFilter from './custom-data-table-filters';
 import ProductHeaderActions from './table-header-actions';
 import { localeText } from './table-utils/ag-grid-text-locale';
 import { columnDefs } from './table-utils/columns-def';
@@ -193,12 +195,18 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
     if (columnOrder && columnOrder.length > 0) {
       return columnOrder
         .map((colId) => originalColumns.find((col) => col.field === colId))
-        .filter((col): col is ColDef<unknown, any> => col !== undefined);
+        .filter((col): col is ColDef<Product, any> => col !== undefined);
     }
 
-    return originalColumns;
-  }, [navigate, columnOrder]);
-
+    return originalColumns.map((col) => ({
+      ...col,
+      filterFramework: CustomFilter,
+      filterParams: {
+        colId: col.field,
+        setFilter,
+      },
+    }));
+  }, [navigate, columnOrder, setFilter]);
   return (
     <div>
       <Typography variant="h5" sx={{ color: theme.palette.grey[800], fontWeight: 'bold', textAlign: 'center', mb: 5 }}>
@@ -214,7 +222,7 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
           <StyledAgGridReact
             ref={gridRef}
             rowData={rowData}
-            columnDefs={columns}
+            columnDefs={columns as (ColDef<unknown, any> | ColGroupDef<unknown>)[]}
             pagination={true}
             enterNavigatesVertically={true}
             enterNavigatesVerticallyAfterEdit={true}
@@ -259,8 +267,12 @@ const StyledAgGridReact = styled(AgGridReact)(({ theme }) => ({
     padding: theme.spacing(2),
   },
   '& .ag-row-even': {
-    fontSize: 16,
+    fontSize: 14,
     backgroundColor: alpha(theme.palette.primary.main, 0.5),
+  },
+  '& .ag-row-odd': {
+    fontSize: 14,
+    backgroundColor: alpha(theme.palette.primary.main, 0.1),
   },
   '& .ag-header': {
     marginBottom: theme.spacing(2),

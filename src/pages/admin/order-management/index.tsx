@@ -9,8 +9,8 @@ import CancelledOrdersPaper from '@webapp/controller/admin/admin-panel-papers/or
 import CompletedOrdersPaper from '@webapp/controller/admin/admin-panel-papers/order-status-table/completed-orders-admin-paper';
 import PendingOrdersPaper from '@webapp/controller/admin/admin-panel-papers/order-status-table/pending-orders-admin-paper';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useGetAllOrders } from '@webapp/sdk/mutations/orders/get-all-orders-query';
-import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
+import { useGetAllOrders } from '@webapp/service/mutations/orders/get-all-orders-query';
+import { useProductListQuery } from '@webapp/service/mutations/products/get-product-list-query';
 import { useProductsListData } from '@webapp/store/products/products-list';
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';

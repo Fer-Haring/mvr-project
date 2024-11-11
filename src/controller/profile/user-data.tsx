@@ -1,5 +1,5 @@
 import Stack from '@mui/material/Stack';
-import { User } from '@webapp/sdk/types/user-types';
+import { User } from '@webapp/service/types/user-types';
 import React from 'react';
 
 import PaymentTypeButtons from './botones-metodo-pago';

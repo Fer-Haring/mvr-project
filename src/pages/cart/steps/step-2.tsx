@@ -5,12 +5,12 @@ import Button from '@webapp/components/button';
 import Modal from '@webapp/components/modal';
 import { CartPaymentDetail } from '@webapp/controller/cart/step-2/cart-payment-detail';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { uploadTransferReceipt } from '@webapp/sdk/actions/oders/upload-receipt-image';
-import { useClearCart } from '@webapp/sdk/mutations/cart/delete-cart-mutation';
-import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
-import { useCreateOrder } from '@webapp/sdk/mutations/orders/save-new-order-mutation';
-import { CartItem } from '@webapp/sdk/types/cart-types';
-import { OrderRequest } from '@webapp/sdk/types/orders-types';
+import { uploadTransferReceipt } from '@webapp/service/actions/oders/upload-receipt-image';
+import { useClearCart } from '@webapp/service/mutations/cart/delete-cart-mutation';
+import { useGetUserCart } from '@webapp/service/mutations/cart/get-cart-query';
+import { useCreateOrder } from '@webapp/service/mutations/orders/save-new-order-mutation';
+import { CartItem } from '@webapp/service/types/cart-types';
+import { OrderRequest } from '@webapp/service/types/orders-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useCartStore } from '@webapp/store/cart/cart';
 import { useUserData } from '@webapp/store/users/user-data';
@@ -108,7 +108,13 @@ export const Step2: FunctionComponent<Step2Props> = ({
         justifyContent={'center'}
         alignItems={'center'}
       >
-        <ReactWhatsapp number="5492213997379" message={fullMessageWithImage} element="span" rel="noopener noreferrer">
+        <ReactWhatsapp 
+          // number="5492213997379"
+          number="5492215248329"
+          message={fullMessageWithImage}
+          element="span"
+          rel="noopener noreferrer"
+        >
           <Button
             variant="contained"
             onClick={handleLastStep}

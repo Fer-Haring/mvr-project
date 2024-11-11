@@ -1,23 +1,21 @@
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
-import { Box, Checkbox, Divider, Link, Typography, useTheme } from '@mui/material';
+import { Box, Checkbox, Divider, Link, MenuItem, Select, Typography, styled, useTheme } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Button from '@webapp/components/button';
-import PaymentTypeButtons from '@webapp/controller/cart/step-1/botones-metodo-pago';
-import CurrencySelectButtons from '@webapp/controller/cart/step-1/botones-moneda-pago';
-import DeliveryTypeButtons from '@webapp/controller/cart/step-1/botones-tipo-entrega';
 import DeliveryData from '@webapp/controller/cart/step-1/delivery-data';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useUpdateUser } from '@webapp/sdk/mutations/auth/user-update-mutation';
-import { OrderRequest } from '@webapp/sdk/types/orders-types';
-import { User } from '@webapp/sdk/types/user-types';
+import { useUpdateUser } from '@webapp/service/mutations/auth/user-update-mutation';
+import { OrderRequest } from '@webapp/service/types/orders-types';
+import { User } from '@webapp/service/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import { useUserData } from '@webapp/store/users/user-data';
+import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 interface Step1Props {
   user: User;
-  setUser: (user: User) => void;
+  // setUser: (user: User) => void;
   handlePreviousStep: () => void;
   handleNextStep: () => void;
   city: string;
@@ -30,10 +28,10 @@ interface Step1Props {
   updatingUserLoading: boolean;
 }
 
-export const Step1: FunctionComponent<Step1Props> = ({
+export const Step1: React.FC<Step1Props> = ({
   handlePreviousStep,
-  user,
-  setUser,
+  // user,
+  // setUser,
   handleNextStep,
   city,
   setCity,
@@ -46,7 +44,8 @@ export const Step1: FunctionComponent<Step1Props> = ({
   const { formatMessage } = useIntl();
   const isMobile = useIsMobile();
   const theme = useTheme();
-  const { order } = useMessageStore();
+  const { order, setOrder } = useMessageStore();
+  const { user, setUser } = useUserData();
   const [isPaymentTypeValid, setIsPaymentTypeValid] = useState<boolean>(false);
   const [isDeliveryTypeValid, setIsDeliveryTypeValid] = useState(false);
   const [isCurrencyPayValid, setIsCurrencyPayValid] = useState(false);
@@ -96,6 +95,44 @@ export const Step1: FunctionComponent<Step1Props> = ({
     setIsCityValid(isValidField(city));
   }, [address, city]);
 
+  const handlePaymentMethodChange = (selectedPaymentMethod: string) => {
+    if (isPaymentTypeValid) {
+      setIsPaymentTypeValid(true);
+    }
+
+    // Actualizar usuario y orden en el store de Zustand
+    setUser({ ...user, payment_method: selectedPaymentMethod });
+    setOrder({ ...order, payment_method: selectedPaymentMethod });
+  };
+
+  const handleDeliveryTypeChange = (selectedDelivery: string) => {
+    setIsDeliveryTypeValid(true);
+    setUser({ ...user, delivery_type: selectedDelivery });
+    setOrder({ ...order, delivery_type: selectedDelivery });
+  };
+
+  const handleCurrencyUsedToPayChange = (selectedCurrency: string) => {
+    setIsCurrencyUsedToPayValid(true);
+    setUser({ ...user, preferred_currency: selectedCurrency });
+    setOrder({ ...order, currency_used_to_pay: selectedCurrency });
+  };
+
+  React.useEffect(() => {
+    if (isPaymentTypeValid) {
+      setIsPaymentTypeValid(!!user?.payment_method);
+    }
+    if (isCurrencyUsedToPayValid) {
+      setIsCurrencyUsedToPayValid(!!order?.currency_used_to_pay);
+    }
+    if (isCurrencyPayValid) {
+      setIsCurrencyPayValid(!!user?.preferred_currency);
+    }
+    if (isDeliveryTypeValid) {
+      setIsDeliveryTypeValid(!!user?.delivery_type);
+    }
+  }, [user]);
+
+  console.log('user?.delivery_type', user?.delivery_type);
   return (
     <Stack direction={'column'} gap={2} width={'100%'} justifyContent={'center'} alignItems={'center'}>
       <Button
@@ -107,9 +144,28 @@ export const Step1: FunctionComponent<Step1Props> = ({
       >
         {formatMessage({ id: 'CART.PAYMENT.BACK' })}
       </Button>
-
-      <PaymentTypeButtons userData={user} setUser={setUser} onValidChange={setIsPaymentTypeValid} />
-
+      <Typography
+        variant="h4"
+        fontWeight={600}
+        textAlign="center"
+        fontSize={isMobile ? '3vw' : '1.6vw'}
+        sx={{ mb: 0, color: theme.palette.grey[900] }}
+      >
+        {formatMessage({ id: 'CART.PAYMENT.PAYMENT.METHOD' })}
+      </Typography>
+      <CustomSelect
+        id="payment-method"
+        label={formatMessage({ id: 'CART.PAYMENT.PAYMENT.METHOD' })}
+        value={user?.payment_method}
+        onChange={(e) => handlePaymentMethodChange(e.target.value as string)}
+        fullWidth
+      >
+        <CustomMenuItem value="Efectivo">Efectivo</CustomMenuItem>
+        <CustomMenuItem value="Tarjeta Credito">Tarjeta Credito</CustomMenuItem>
+        <CustomMenuItem value="Tarjeta Debito">Tarjeta Debito</CustomMenuItem>
+        <CustomMenuItem value="Transferencia Bancaria">Transferencia Bancaria</CustomMenuItem>
+        <CustomMenuItem value="Pago con Crypto">Pago con Crypto</CustomMenuItem>
+      </CustomSelect>
       <Stack
         gap={2}
         sx={{
@@ -120,13 +176,65 @@ export const Step1: FunctionComponent<Step1Props> = ({
           flexDirection: isMobile ? 'column' : 'row',
         }}
       >
-        <DeliveryTypeButtons
-          userData={user}
-          setUser={setUser}
-          onValidChange={setIsDeliveryTypeValid}
-          setIsCurrencyPayValid={setIsCurrencyPayValid}
-        />
-        <CurrencySelectButtons userData={user} setIsCurrencyPayValid={setIsCurrencyPayValid} setUser={setUser} />
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+          }}
+        >
+          <Typography
+            variant="h4"
+            fontWeight={600}
+            textAlign="center"
+            fontSize={isMobile ? '3vw' : '1.6vw'}
+            sx={{ mb: 0, color: theme.palette.grey[900] }}
+          >
+            {formatMessage({ id: 'CART.PAYMENT.DELIVERY.METHOD' })}
+          </Typography>
+          <CustomSelect
+            id="delivery-type"
+            label={formatMessage({ id: 'PROFILE.USER_INFO.SELECTED.DELIVERY' })}
+            value={user?.delivery_type}
+            onChange={(e) => handleDeliveryTypeChange(e.target.value as string)}
+            fullWidth
+          >
+            <CustomMenuItem value="Delivery">Delivery</CustomMenuItem>
+            <CustomMenuItem value="Retiro en local">Retiro en Local</CustomMenuItem>
+          </CustomSelect>
+        </Box>
+
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+          }}
+        >
+          <Typography
+            variant="h4"
+            fontWeight={600}
+            textAlign="center"
+            fontSize={isMobile ? '3vw' : '1.6vw'}
+            sx={{ mb: 0, color: theme.palette.grey[900] }}
+          >
+            {formatMessage({ id: 'CART.CURRENCY.USED.TO.PAY' })}
+          </Typography>
+          <CustomSelect
+            id="currency-used-to-pay"
+            label={formatMessage({ id: 'CART.CURRENCY.USED.TO.PAY' })}
+            value={order?.currency_used_to_pay}
+            onChange={(e) => handleCurrencyUsedToPayChange(e.target.value as string)}
+            fullWidth
+          >
+            <CustomMenuItem value="USD">Dolares</CustomMenuItem>
+            <CustomMenuItem value="ARS">Pesos Argentinos</CustomMenuItem>
+          </CustomSelect>
+        </Box>
       </Stack>
       {user.delivery_type === 'Delivery' && (
         <DeliveryData
@@ -197,3 +305,16 @@ export const Step1: FunctionComponent<Step1Props> = ({
     </Stack>
   );
 };
+
+const CustomSelect = styled(Select)(() => ({
+  padding: '10px 14px',
+  color: '#000000',
+  '& .MuiSelect-icon': {
+    color: '#FFFFFF', // Color del ícono
+  },
+}));
+
+const CustomMenuItem = styled(MenuItem)(() => ({
+  fontSize: '14px',
+  color: '#000000',
+}));

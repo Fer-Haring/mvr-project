@@ -10,6 +10,7 @@ import {
 } from '@webapp/pages';
 import AdminAddProductPage from '@webapp/pages/admin/add-new-product';
 import OrderManagementPage from '@webapp/pages/admin/order-management';
+import StatisticsPage from '@webapp/pages/admin/statistics-page';
 import UserListPage from '@webapp/pages/admin/user-list';
 import ForgotPasswordPage2 from '@webapp/pages/auth/forgot-password';
 import ForgotPasswordNewPassword from '@webapp/pages/auth/forgot-password-new-password';
@@ -21,11 +22,12 @@ import SignInPage2 from '@webapp/pages/auth/sign-in';
 import SignUpPage2 from '@webapp/pages/auth/sign-up';
 import VerificationCodePage from '@webapp/pages/auth/verification-code';
 import { CartPage } from '@webapp/pages/cart';
+import { CompletedOrderPage } from '@webapp/pages/completed-orders';
+
 import PrivacyPolicyPage from '@webapp/pages/privacy_policies';
 // import UnderConstructionPage from '@webapp/pages/under-construction';
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import StatisticsPage from '@webapp/pages/admin/statistics-page';
 
 interface Route {
   path: string;
@@ -129,6 +131,10 @@ const ProjectRoutes: Route[] = [
   {
     path: '/admin-dashboard/pedidos-pendientes/:id?',
     component: <EditPendingOrdersPage />,
+  },
+  {
+    path: '/admin-dashboard/pedidos-completados/:id?',
+    component: <CompletedOrderPage />,
   },
 ];
 export { ProjectRoutes };

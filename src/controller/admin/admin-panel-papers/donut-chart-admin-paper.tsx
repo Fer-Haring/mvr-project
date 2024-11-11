@@ -1,4 +1,4 @@
-import { useGetAllOrders } from '@webapp/sdk/mutations/orders/get-all-orders-query';
+import { useGetAllOrders } from '@webapp/service/mutations/orders/get-all-orders-query';
 import React, { FunctionComponent } from 'react';
 import Chart from 'react-apexcharts';
 

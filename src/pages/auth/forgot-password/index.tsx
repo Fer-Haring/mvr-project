@@ -8,7 +8,7 @@ import AuthLayoutContainer from '@webapp/components/layout/auth-layout-variants'
 import { EMAIL_REGEX } from '@webapp/configuration/regex';
 import BackgroundVideo from '@webapp/assets/videos/video-login.mp4';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useSendRecoveryCodeMutation } from '@webapp/sdk/mutations/auth/password/send-password-recovery-code-mutation';
+import { useSendRecoveryCodeMutation } from '@webapp/service/mutations/auth/password/send-password-recovery-code-mutation';
 import { useRecoveryPasswordData } from '@webapp/store/auth/recovery-password-data';
 
 import { normalizeUserData } from '@webapp/utils/normalize-user-data';

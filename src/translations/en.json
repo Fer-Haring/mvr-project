@@ -448,6 +448,7 @@
   "CART.PAYMENT.DELIVERY.LOCAL_PICKUP": "Retiro en local",
   "CART.PAYMENT.DELIVERY.DELIVERY": "Delivery",
   "CART.PAYMENT.SELECT.CURRENCY": "Seleccionar Moneda de Pago",
+  "CART.CURRENCY.USED.TO.PAY": "Moneda de Pago",
   "CART.PAYMENT.USD": "Dólares",
   "CART.PAYMENT.ARS": "Pesos Argentinos",
   "CART.PAYMENT.NEXT": "Ver Detalles del Pedido",
@@ -496,7 +497,7 @@
   "CART.PAYMENT.CONFIRMATION": "Marque esta casilla para confirmar que los datos ingresados son correctos",
   "CART.PAYMENT.CONFIRMATION.WARNING.MISSING.PHONE.ADVICE": "Su perfil no cuenta con Numero de Teléfono, por favor complete su perfil para poder continuar, haciendo click ",
   "CART.PAYMENT.CONFIRMATION.WARNING.MISSING.PHONE.LINK": "aquí",
-  "CART.PAYMENT.CONFIRMATION.WARNING.ADVICE": "Recuerde verificar todos los datos para poder continuar con el pedido, todos los botones selectores o campos adicionales son OBLIGATORIOS!",
+  "CART.PAYMENT.CONFIRMATION.WARNING.ADVICE": "Recuerde verificar todos los datos para poder continuar con el pedido, todos los selectores o campos adicionales son OBLIGATORIOS!",
   "CART.PAYMENT.CONFIRMATION.ERROR": "Por favor, confirme que los datos ingresados son correctos",
   "CART.PAYMENT.CONFIRMATION.TITLE": "Confirmación",
   "CART.PAYMENT.ADRESS.TITLE": "Confirmar Datos de Entrega",
@@ -531,5 +532,7 @@
   "CONTACT.PAGE.FORM.ERRORS.NAME": "Por favor, ingrese su nombre",
   "CONTACT.PAGE.FORM.ERRORS.NAME.MIN": "El nombre debe tener al menos 2 caracteres",
   "CONTACT.PAGE.FORM.ERRORS.NAME.MAX": "El nombre debe tener menos de 100 caracteres",
-  "CONTACT.PAGE.FORM.ERRORS.GENERIC": "¡Oops! Algo salió mal, por favor inténtelo de nuevo"
+  "CONTACT.PAGE.FORM.ERRORS.GENERIC": "¡Oops! Algo salió mal, por favor inténtelo de nuevo",
+  "VISUALIZACION DE PEDIDOS COMPLETADOS": "___________________________________________________________________",
+  "ADMIN.VIEW.COMPLETED.ORDERS.PAGE.TITLE": "Visualización de Pedido Completado"
 }

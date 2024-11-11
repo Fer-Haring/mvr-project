@@ -6,11 +6,11 @@ import Button from '@webapp/components/button';
 import ContentWrapper from '@webapp/components/content-wrapper';
 import { AutocompleteOption } from '@webapp/components/form/autocomplete';
 import Modal from '@webapp/components/modal';
-import SnackbarUtils from '@webapp/components/snackbar';
+import { toast } from 'react-toastify';
 import ProductsInputsContent from '@webapp/controller/admin/add-new-product/product-inputs-content';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useAddNewProduct } from '@webapp/sdk/mutations/products/add-new-product-mutation';
-import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
+import { useAddNewProduct } from '@webapp/service/mutations/products/add-new-product-mutation';
+import { useProductListQuery } from '@webapp/service/mutations/products/get-product-list-query';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useProductsListData } from '@webapp/store/products/products-list';
 import React, { useEffect, useState } from 'react';
@@ -57,11 +57,11 @@ const AdminAddProductPage = () => {
     addProduct
       .mutateAsync(product)
       .then(() => {
-        SnackbarUtils.success(`Producto añadido con éxito, ID: ${product.product_name}`);
+        toast.success(`Producto añadido con éxito, ID: ${product.product_name}`);
         handleOpenModalContinueAdding();
       })
       .catch((error) => {
-        SnackbarUtils.error(`Error al añadir producto: ${error}`);
+        toast.error(`Error al añadir producto: ${error}`);
       });
   };
 

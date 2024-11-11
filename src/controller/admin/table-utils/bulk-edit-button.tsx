@@ -2,14 +2,14 @@ import { styled } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@webapp/components/button';
-import SnackbarUtils from '@webapp/components/snackbar';
-import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
-import { useUpdateProduct } from '@webapp/sdk/mutations/products/update-product-mutation';
-import { Product } from '@webapp/sdk/types/products-types';
+import { useProductListQuery } from '@webapp/service/mutations/products/get-product-list-query';
+import { useUpdateProduct } from '@webapp/service/mutations/products/update-product-mutation';
+import { Product } from '@webapp/service/types/products-types';
 import React from 'react';
 import { useIntl } from 'react-intl';
 
 import BulkEditModal from '../modal-components/product-bulk-edit-modal';
+import { toast } from 'react-toastify';
 
 interface BulkEditButtonProps {
   selectedProductIds: string[];
@@ -39,7 +39,7 @@ const BulkEditButton: React.FunctionComponent<BulkEditButtonProps> = ({ selected
 
   const handleSaveModal = async (value: string) => {
     if (selectedProductIds.length === 0) {
-      SnackbarUtils.error('No hay productos seleccionados para actualizar');
+      toast.error('No hay productos seleccionados para actualizar');
       return;
     }
 
@@ -80,10 +80,10 @@ const BulkEditButton: React.FunctionComponent<BulkEditButtonProps> = ({ selected
         {
           onSuccess: () => {
             productListArray.refetch();
-            SnackbarUtils.success(`Producto ${productData.product_name} actualizado correctamente`);
+            toast.success(`Producto ${productData.product_name} actualizado correctamente`);
           },
           onError: (error) => {
-            SnackbarUtils.error(`Error al actualizar el producto ${productData.product_name}: ${error.message}`);
+            toast.error(`Error al actualizar el producto ${productData.product_name}: ${error.message}`);
           },
         }
       );

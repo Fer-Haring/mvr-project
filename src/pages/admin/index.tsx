@@ -8,7 +8,7 @@ import ExtraAccesAdminPaperPaper from '@webapp/controller/admin/admin-panel-pape
 import TotalOrdersPaper from '@webapp/controller/admin/admin-panel-papers/total-orders-admin-paper';
 import TotalProductsPaper from '@webapp/controller/admin/admin-panel-papers/total-products-admin-paper';
 import TotalSalesPaper from '@webapp/controller/admin/admin-panel-papers/total-sales-admin-paper';
-import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
+import { useProductListQuery } from '@webapp/service/mutations/products/get-product-list-query';
 import { useProductsListData } from '@webapp/store/products/products-list';
 import React, { useEffect } from 'react';
 import StatisticsPanelAdminPaper from '@webapp/controller/admin/admin-panel-papers/statistics-panel-admin-paper';

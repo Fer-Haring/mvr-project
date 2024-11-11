@@ -1,6 +1,6 @@
 import { Box, Divider, Paper, Stack, Typography, alpha, styled, useTheme } from '@mui/material';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { CartItem } from '@webapp/sdk/types/cart-types';
+import { CartItem } from '@webapp/service/types/cart-types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useCompletedOrdersStore } from '@webapp/store/orders/get-completed-orders';

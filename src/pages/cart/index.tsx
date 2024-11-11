@@ -3,10 +3,10 @@ import { alpha, useTheme } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import ContentWrapper from '@webapp/components/content-wrapper';
 import CartEmptyState from '@webapp/controller/cart/empty-cart';
-import { useGetUserByIdMutation } from '@webapp/sdk/mutations/auth/get-user-by-id-mutation';
-import { useUpdateUser } from '@webapp/sdk/mutations/auth/user-update-mutation';
-import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
-import { User } from '@webapp/sdk/types/user-types';
+import { useGetUserByIdMutation } from '@webapp/service/mutations/auth/get-user-by-id-mutation';
+import { useUpdateUser } from '@webapp/service/mutations/auth/user-update-mutation';
+import { useGetUserCart } from '@webapp/service/mutations/cart/get-cart-query';
+import { User } from '@webapp/service/types/user-types';
 import { useMessageStore } from '@webapp/store/admin/message-store';
 import { useUserStore } from '@webapp/store/auth/session';
 import { useCompletedOrdersStore } from '@webapp/store/orders/get-completed-orders';
@@ -23,7 +23,7 @@ export const CartPage: FunctionComponent = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
-  const [user, setUser] = useState(useUserData().user);
+  const { user, setUser } = useUserData();
   const [address, setAddress] = useState(user?.address || '');
   const [city, setCity] = useState(user?.city || '');
   const [checked, setChecked] = useState(false);
@@ -157,7 +157,7 @@ export const CartPage: FunctionComponent = () => {
           {step === 1 && (
             <Step1
               user={user}
-              setUser={setUser}
+              // setUser={setUser}
               order={order}
               handlePreviousStep={handlePreviousStep}
               updatingUserLoading={updatingUserLoading}

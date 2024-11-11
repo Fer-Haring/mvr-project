@@ -1,7 +1,7 @@
-import { Product } from '@webapp/sdk/types/products-types';
+import { Product } from '@webapp/service/types/products-types';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-// import { Products } from '@webapp/sdk/types/user-types';
+// import { Products } from '@webapp/service/types/user-types';
 
 type ProductListData = {
   productList: Product[]; 

@@ -1,8 +1,8 @@
 import { Autocomplete, Box, Paper, Stack, TextField, Typography, useTheme } from '@mui/material';
 import Button from '@webapp/components/button';
-import { useProductListQuery } from '@webapp/sdk/mutations/products/get-product-list-query';
-import { OrderResponse } from '@webapp/sdk/types/orders-types';
-import { Product } from '@webapp/sdk/types/products-types';
+import { useProductListQuery } from '@webapp/service/mutations/products/get-product-list-query';
+import { OrderResponse } from '@webapp/service/types/orders-types';
+import { Product } from '@webapp/service/types/products-types';
 import { useEditingOrderStore } from '@webapp/store/orders/editing-order-store';
 import React from 'react';
 import { useIntl } from 'react-intl';

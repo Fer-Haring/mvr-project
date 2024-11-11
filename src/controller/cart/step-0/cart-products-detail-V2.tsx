@@ -3,16 +3,18 @@ import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutl
 import { Box, CircularProgress, IconButton, Typography, styled, useTheme } from '@mui/material';
 import Stack from '@mui/system/Stack';
 import NoImageProd from '@webapp/assets/images/prod-no-image.png';
-import SnackbarUtils from '@webapp/components/snackbar';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
-import { useAddToCart } from '@webapp/sdk/mutations/cart/add-to-cart-mutation';
-import { useGetUserCart } from '@webapp/sdk/mutations/cart/get-cart-query';
-import { CartItem } from '@webapp/sdk/types/cart-types';
-import { OrderRequest } from '@webapp/sdk/types/orders-types';
+import { useAddToCart } from '@webapp/service/mutations/cart/add-to-cart-mutation';
+import { useGetUserCart } from '@webapp/service/mutations/cart/get-cart-query';
+import { useUpdateProductStock } from '@webapp/service/mutations/products/update-pproduct-stock-mutation';
+import { CartItem } from '@webapp/service/types/cart-types';
+import { OrderRequest } from '@webapp/service/types/orders-types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import React, { useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 
 // import { useNavigate } from 'react-router-dom';
 
@@ -29,10 +31,17 @@ export const CartProductsDetailV2: React.FunctionComponent<CartProductsDetailV2P
   const navigate = useNavigate();
   const { formatMessage } = useIntl();
   const { dollarValue } = useDollarValue();
-  const { mutateAsync, isPending } = useAddToCart();
+  const { mutateAsync: updateCart, isPending } = useAddToCart();
   const getCart = useGetUserCart();
+  const { mutateAsync: updateProductStock } = useUpdateProductStock();
   const [localCartProducts, setLocalCartProducts] = useState<CartItem[]>(cartProducts || []);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (cartProducts) {
+      setLocalCartProducts(cartProducts);
+    }
+  }, [cartProducts]);
 
   const subTotalValue = (price: number, priceCurrency: string) => {
     if (priceCurrency === 'ARS') {
@@ -57,7 +66,23 @@ export const CartProductsDetailV2: React.FunctionComponent<CartProductsDetailV2P
     }
   }, [cartProducts]);
 
-  const updateQuantity = (cartProduct: CartItem, quantityChange: number) => {
+  const updateQuantity = async (cartProduct: CartItem, quantityChange: number) => {
+    // Calcular el nuevo stockDelta basado en el cambio de cantidad
+    const stockDelta = -quantityChange; // negativo al agregar, positivo al restar
+
+    // Actualizar el stock antes de modificar el carrito
+    try {
+      await updateProductStock({
+        productId: cartProduct.product_id,
+        stockDelta: stockDelta,
+      });
+    } catch (error) {
+      console.error('Error updating stock:', error);
+      toast.error(formatMessage({ id: 'CART.ERROR.UPDATING.STOCK' }));
+      return; // Salir si falla la actualización del stock
+    }
+
+    // Actualizar la cantidad en el carrito local
     const updatedCartProducts = localCartProducts.map((item) =>
       item.product_id === cartProduct.product_id
         ? {
@@ -72,15 +97,15 @@ export const CartProductsDetailV2: React.FunctionComponent<CartProductsDetailV2P
       // Si la cantidad es 1 y se está disminuyendo, eliminar el producto del carrito
       const filteredCartProducts = localCartProducts.filter((item) => item.product_id !== cartProduct.product_id);
       setLocalCartProducts(filteredCartProducts);
-      SnackbarUtils.info(formatMessage({ id: 'CART.PRODUCT.REMOVED' }));
+      toast.info(formatMessage({ id: 'CART.PRODUCT.REMOVED' }));
     } else {
       setLocalCartProducts(updatedCartProducts);
 
       // Mostrar el snack adecuado para aumento o disminución
       if (quantityChange > 0) {
-        SnackbarUtils.success(formatMessage({ id: 'CART.PRODUCT.QUANTITY.INCREASED' }));
+        toast.success(formatMessage({ id: 'CART.PRODUCT.QUANTITY.INCREASED' }));
       } else if (quantityChange < 0) {
-        SnackbarUtils.success(formatMessage({ id: 'CART.PRODUCT.QUANTITY.DECREASED' }));
+        toast.success(formatMessage({ id: 'CART.PRODUCT.QUANTITY.DECREASED' }));
       }
     }
 
@@ -91,7 +116,7 @@ export const CartProductsDetailV2: React.FunctionComponent<CartProductsDetailV2P
     debounceTimeout.current = setTimeout(() => {
       const updatedCartProduct = updatedCartProducts.find((item) => item.product_id === cartProduct.product_id);
       if (updatedCartProduct) {
-        mutateAsync({
+        updateCart({
           product_id: updatedCartProduct.product_id!,
           product_name: updatedCartProduct.product_name,
           unit_price: updatedCartProduct.unit_price,
@@ -109,12 +134,13 @@ export const CartProductsDetailV2: React.FunctionComponent<CartProductsDetailV2P
   };
 
   const increaseQuantity = (cartProduct: CartItem) => {
-    updateQuantity(cartProduct, 1);
+    updateQuantity(cartProduct, 1); // Aumenta la cantidad en 1
   };
 
   const decreaseQuantity = (cartProduct: CartItem) => {
-    updateQuantity(cartProduct, -1);
+    updateQuantity(cartProduct, -1); // Disminuye la cantidad en 1
   };
+
 
   return (
     <Stack direction={'column'} gap={2} width={'100%'}>

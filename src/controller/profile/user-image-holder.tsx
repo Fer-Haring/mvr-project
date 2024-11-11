@@ -1,9 +1,9 @@
 import Box from '@mui/material/Box';
 import { SxProps, Theme } from '@mui/material/styles';
 import ImageUploader from '@webapp/components/image-uploader';
-import { uploadAvatar } from '@webapp/sdk/firebase/user';
-import { useUpdateUser } from '@webapp/sdk/mutations/auth/user-update-mutation';
-import { User } from '@webapp/sdk/types/user-types';
+import { uploadAvatar } from '@webapp/service/firebase/user';
+import { useUpdateUser } from '@webapp/service/mutations/auth/user-update-mutation';
+import { User } from '@webapp/service/types/user-types';
 import { useUserData } from '@webapp/store/users/user-data';
 import React, { useState } from 'react';
 import { useIntl } from 'react-intl';

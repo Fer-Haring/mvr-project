@@ -4,7 +4,7 @@ import CameraAltRoundedIcon from '@mui/icons-material/CameraAltRounded';
 import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { SxProps, Theme, styled, useTheme } from '@mui/material/styles';
-import { Product } from '@webapp/sdk/types/products-types';
+import { Product } from '@webapp/service/types/products-types';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 

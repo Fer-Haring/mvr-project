@@ -4,14 +4,11 @@ import { alpha, styled } from '@mui/material/styles';
 import { ThemeOptions } from '@mui/material/styles/createTheme';
 import { MaterialDesignContent } from 'notistack';
 
-
-
 // Custom theme configuration
 import { button } from './button';
 import { colors } from './colors';
 import { sizes } from './sizes';
 import { typography } from './typography';
-
 
 // Extend the Material-UI palette to include custom colors
 declare module '@mui/material/styles' {
@@ -466,7 +463,7 @@ export const CustomThemeOptions = (mode: PaletteMode): Partial<ThemeOptions> => 
     MuiFormLabel: {
       styleOverrides: {
         root: {
-          color: mode === 'dark' ? '#000000' : lightModePalette[0].primaryText,
+          color: mode === 'dark' ? '#FFFFFF' : '#000000',
           fontWeight: 500,
           '.MuiFormLabel-asterisk, .MuiInputLabel-asterisk': {
             color: `${colors.error.main} !important`,
@@ -590,7 +587,7 @@ export const CustomThemeOptions = (mode: PaletteMode): Partial<ThemeOptions> => 
       styleOverrides: {
         root: {
           '&:hover:not(&.Mui-selected)': {
-            color: mode === 'dark' ? darkModePalette[0].primaryText : lightModePalette[0].primaryText,
+            color: mode === 'dark' ? '#FFFFFF ' : '#000000',
             backgroundColor:
               mode === 'dark' ? alpha(darkModePalette[0].grey300, 1) : alpha(lightModePalette[0].grey300, 1),
           },
