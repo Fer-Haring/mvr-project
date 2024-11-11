@@ -5,16 +5,19 @@ import ContentWrapper from '@webapp/components/content-wrapper';
 import AdminDataGrid from '@webapp/controller/admin/admin-data-grid';
 import DollarValueInputPaper from '@webapp/controller/admin/admin-panel-papers/dollar-value-admin-paper';
 import ExtraAccesAdminPaperPaper from '@webapp/controller/admin/admin-panel-papers/extra-access-admin-panel';
+import StatisticsPanelAdminPaper from '@webapp/controller/admin/admin-panel-papers/statistics-panel-admin-paper';
 import TotalOrdersPaper from '@webapp/controller/admin/admin-panel-papers/total-orders-admin-paper';
 import TotalProductsPaper from '@webapp/controller/admin/admin-panel-papers/total-products-admin-paper';
 import TotalSalesPaper from '@webapp/controller/admin/admin-panel-papers/total-sales-admin-paper';
+// import AdminMobileProductTable from '@webapp/controller/admin/mobile-product-table/admin-mobile-product-table';
+// import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { useProductListQuery } from '@webapp/service/mutations/products/get-product-list-query';
 import { useProductsListData } from '@webapp/store/products/products-list';
 import React, { useEffect } from 'react';
-import StatisticsPanelAdminPaper from '@webapp/controller/admin/admin-panel-papers/statistics-panel-admin-paper';
 
 export const AdminDashboardPage: React.FunctionComponent = () => {
   const theme = useTheme();
+  // const isMobile = useIsMobile();
   const { setProductList } = useProductsListData();
   const productListArray = useProductListQuery(1, 500);
 
@@ -39,9 +42,12 @@ export const AdminDashboardPage: React.FunctionComponent = () => {
         <ExtraAccesAdminPaperPaper />
         <StatisticsPanelAdminPaper />
       </Stack>
+
       <Paper sx={{ p: 2, width: '100%', mt: 2, backgroundColor: alpha(theme.palette.common.white, 0.7) }}>
         <AdminDataGrid />
       </Paper>
+
+      {/* {isMobile && <AdminMobileProductTable />} */}
     </ContentWrapper>
   );
 };

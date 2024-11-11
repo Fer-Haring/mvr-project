@@ -8,7 +8,6 @@ import { AutocompleteOption } from '@webapp/components/form/autocomplete';
 import Modal from '@webapp/components/modal';
 import { toast } from 'react-toastify';
 import ProductsInputsContent from '@webapp/controller/admin/add-new-product/product-inputs-content';
-import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { useAddNewProduct } from '@webapp/service/mutations/products/add-new-product-mutation';
 import { useProductListQuery } from '@webapp/service/mutations/products/get-product-list-query';
 import { useSingleProduct } from '@webapp/store/products/product-by-id';
@@ -19,7 +18,6 @@ import { useNavigate } from 'react-router-dom';
 
 const AdminAddProductPage = () => {
   const theme = useTheme();
-  const isMobile = useIsMobile();
   const navigate = useNavigate();
   const { product, resetProduct, setProduct } = useSingleProduct();
   const addProduct = useAddNewProduct();
@@ -90,7 +88,6 @@ const AdminAddProductPage = () => {
       const uniqueMainCategories = Array.from(mainCategoryMap.values());
       setMainCategoryOptions(uniqueMainCategories);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleCategoryChange = (

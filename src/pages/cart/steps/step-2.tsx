@@ -19,6 +19,7 @@ import { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 import ReactWhatsapp from 'react-whatsapp';
 
+
 interface Step2Props {
   step: number;
   cart: CartItem[];
@@ -51,7 +52,7 @@ export const Step2: FunctionComponent<Step2Props> = ({
 
   const handleOpenModal = async () => {
 
-    if (order.payment_method === 'Transferencia bancaria' && !image) {
+    if (order.payment_method === 'Transferencia Bancaria' && !image) {
       setError('Debes subir una imagen de comprobante de transferencia.');
     } else {
       setUploadingImage(true);
@@ -81,7 +82,7 @@ export const Step2: FunctionComponent<Step2Props> = ({
   };
 
   const handleLastStep = async () => {
-    if (order.payment_method === 'Transferencia bancaria' && !transferImage) {
+    if (order.payment_method === 'Transferencia Bancaria' && !transferImage) {
       setError('Debes subir una imagen de comprobante de transferencia.');
       return;
     }
@@ -119,7 +120,7 @@ export const Step2: FunctionComponent<Step2Props> = ({
             variant="contained"
             onClick={handleLastStep}
             size="medium"
-            disabled={order.payment_method === 'Transferencia bancaria' && !image} // Deshabilitar si falta la imagen
+            disabled={order.payment_method === 'Transferencia Bancaria' && !image} // Deshabilitar si falta la imagen
             sx={{
               maxWidth: 300,
               color: theme.palette.grey[800],
@@ -163,6 +164,7 @@ export const Step2: FunctionComponent<Step2Props> = ({
     );
   };
 
+  console.log(order.payment_method);
   return (
     <Stack direction={'column'} gap={2} width={'100%'} justifyContent={'center'} alignItems={'center'}>
       <Button
@@ -178,7 +180,7 @@ export const Step2: FunctionComponent<Step2Props> = ({
       >
         {formatMessage({ id: 'CART.PAYMENT.BACK' })}
       </Button>
-      {order.payment_method === 'Transferencia bancaria' && (
+      {order.payment_method === 'Transferencia Bancaria' && (
         <>
           <Typography variant="h4" color="secondary">
             {formatMessage({ id: 'CART.PAYMENT.TRANSFER.ADVICE' })}
@@ -198,7 +200,7 @@ export const Step2: FunctionComponent<Step2Props> = ({
       {order.currency_used_to_pay === null && (
         <Typography color={'error'}>{formatMessage({ id: 'CART.PAYMENT.MISSING.DATA' })}</Typography>
       )}
-      {order.payment_method === 'Transferencia bancaria' && (
+      {order.payment_method === 'Transferencia Bancaria' && (
         <>
           <input
             accept="image/*"

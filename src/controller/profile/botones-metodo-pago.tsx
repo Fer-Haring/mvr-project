@@ -92,8 +92,8 @@ const PaymentTypeButtons: FunctionComponent<PaymentTypeButtonsProps> = ({ userDa
           }}
         >
           <Button
-            onClick={() => selectPaymentType('Transferencia bancaria')}
-            color={selectedPaymentType === 'Transferencia bancaria' ? 'primary' : 'unselected'}
+            onClick={() => selectPaymentType('Transferencia Bancaria')}
+            color={selectedPaymentType === 'Transferencia Bancaria' ? 'primary' : 'unselected'}
             aria-label={formatMessage({ id: 'COMMON.SELECTED.PAYMENT.BANK_TRANSFER' })}
           >
             {formatMessage({ id: 'COMMON.SELECTED.PAYMENT.BANK_TRANSFER' })}
