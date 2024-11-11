@@ -109,8 +109,8 @@ export const Step2: FunctionComponent<Step2Props> = ({
         alignItems={'center'}
       >
         <ReactWhatsapp 
-          // number="5492213997379"
-          number="5492215248329"
+          number="5492213997379"
+          // number="5492215248329"
           message={fullMessageWithImage}
           element="span"
           rel="noopener noreferrer"
