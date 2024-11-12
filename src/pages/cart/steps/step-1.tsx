@@ -44,7 +44,7 @@ export const Step1: React.FC<Step1Props> = ({
   const { formatMessage } = useIntl();
   const isMobile = useIsMobile();
   const theme = useTheme();
-  const { order, setOrder } = useMessageStore();
+  const { order, setOrder, setDeliverValue } = useMessageStore();
   const { user, setUser } = useUserData();
   const [isPaymentTypeValid, setIsPaymentTypeValid] = useState<boolean>(false);
   const [isDeliveryTypeValid, setIsDeliveryTypeValid] = useState(false);
@@ -107,8 +107,9 @@ export const Step1: React.FC<Step1Props> = ({
 
   const handleDeliveryTypeChange = (selectedDelivery: string) => {
     setIsDeliveryTypeValid(true);
-    setUser({ ...user, delivery_type: selectedDelivery });
-    setOrder({ ...order, delivery_type: selectedDelivery });
+    setUser({ ...user, delivery_type: selectedDelivery, delivery_cost: 0 });
+    setOrder({ ...order, delivery_type: selectedDelivery, delivery_cost: 0 });
+    setDeliverValue(0);
   };
 
   const handleCurrencyUsedToPayChange = (selectedCurrency: string) => {

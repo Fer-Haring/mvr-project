@@ -19,7 +19,6 @@ import { FunctionComponent, useState } from 'react';
 import { useIntl } from 'react-intl';
 import ReactWhatsapp from 'react-whatsapp';
 
-
 interface Step2Props {
   step: number;
   cart: CartItem[];
@@ -51,7 +50,6 @@ export const Step2: FunctionComponent<Step2Props> = ({
   const [uploadingImage, setUploadingImage] = useState(false);
 
   const handleOpenModal = async () => {
-
     if (order.payment_method === 'Transferencia Bancaria' && !image) {
       setError('Debes subir una imagen de comprobante de transferencia.');
     } else {
@@ -109,7 +107,7 @@ export const Step2: FunctionComponent<Step2Props> = ({
         justifyContent={'center'}
         alignItems={'center'}
       >
-        <ReactWhatsapp 
+        <ReactWhatsapp
           number="5492213997379"
           // number="5492215248329"
           message={fullMessageWithImage}

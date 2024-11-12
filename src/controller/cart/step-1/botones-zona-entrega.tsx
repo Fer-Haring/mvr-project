@@ -26,7 +26,10 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ onVali
     let deliveryCost = 0;
     const selectedDelivery = user.delivery_zone || order.delivery_zone;
 
-    if (selectedDelivery === 'BSSO') {
+    // Condición para el costo de entrega en función de `delivery_type`
+    if (order.delivery_type === 'Retiro en local') {
+      deliveryCost = 0;
+    } else if (selectedDelivery === 'BSSO') {
       deliveryCost = 1400;
     } else if (selectedDelivery === 'CASCO') {
       deliveryCost = 2800;
@@ -49,7 +52,7 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ onVali
         user: updatedUserData,
       });
     }
-  }, [user]);
+  }, [user, order.delivery_zone, order.delivery_type, setUser, setDeliverValue, setOrder]);
 
   const handleOnChange = async (selectedDelivery: string) => {
     let deliveryCost = 0;
@@ -62,6 +65,8 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ onVali
       deliveryCost = 4000;
     } else if (selectedDelivery === 'LEJOS') {
       deliveryCost = 4500;
+    } else if (order.delivery_type === 'Retiro en local') {
+      deliveryCost = 0;
     }
 
     const updatedUserData = {
