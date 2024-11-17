@@ -1,5 +1,4 @@
 import { toast } from 'react-toastify';
-import { Product } from '@webapp/service/types/products-types';
 
 import { refreshToken } from '../auth/user-refresh-token';
 

@@ -66,9 +66,8 @@ const ProductCardV2: FunctionComponent<ProductCardV2Props> = ({
   const removeFavorite = useRemoveFavorite();
   const userData = useGetUserByIdMutation(userId);
 
-  const imageUrl = product?.images_array && product.images_array.length > 0
-    ? product.images_array[0]
-    : product?.product_image || '';
+  const imageUrl =
+    product?.images_array && product.images_array.length > 0 ? product.images_array[0] : product?.product_image || '';
 
   const isFavorite = useMemo(() => {
     return user?.favorite_products?.some((p: Product) => p.id === product?.id);

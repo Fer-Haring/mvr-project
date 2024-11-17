@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box';
 import { SxProps, Theme } from '@mui/material/styles';
 import ImageUploader from '@webapp/components/image-uploader';
-import { toast } from 'react-toastify';
 import { useProductListQuery } from '@webapp/service/mutations/products/get-product-list-query';
 import { useUpdateProduct } from '@webapp/service/mutations/products/update-product-mutation';
 import useUploadImagesArrayMutation from '@webapp/service/mutations/products/upload-images-array-mutation';
@@ -10,6 +9,7 @@ import { useSingleProduct } from '@webapp/store/products/product-by-id';
 import { useUserData } from '@webapp/store/users/user-data';
 import React, { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
+import { toast } from 'react-toastify';
 
 interface ProductImageHolderProps {
   className?: string;
@@ -92,7 +92,6 @@ const ProductImageHolder: FunctionComponent<ProductImageHolderProps> = ({ classN
         defaultImageUrls={product.images_array}
         defaultImageUrl={product.product_image}
         admin={user?.admin}
-        multiple={true}
         onImageDelete={onImagesDelete}
       />
     </Box>

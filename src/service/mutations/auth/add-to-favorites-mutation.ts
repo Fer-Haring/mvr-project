@@ -13,7 +13,7 @@ interface AddFavoriteVariables {
 export const useAddFavorite = () => {
   return useMutation<User, Error, AddFavoriteVariables>({
     mutationFn: ({ userId, product }) => addFavorite(userId, product!),
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success('Producto añadido a favoritos exitosamente');
     },
     onError: (error) => {

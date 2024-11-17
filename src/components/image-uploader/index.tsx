@@ -12,14 +12,12 @@ import { motion } from 'framer-motion';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { DropzoneOptions, useDropzone } from 'react-dropzone';
 import { useIntl } from 'react-intl';
-import {  Pagination } from 'swiper/modules';
+import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 const Wrapper = styled(Box)<{ isMobile: boolean }>(({ theme }) => ({
   minWidth: '245px',
   position: 'relative',
-  // backgroundColor: theme.palette.background.default,
-  // borderRadius: theme.shape.borderRadius,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
@@ -105,12 +103,10 @@ interface ImageUploaderProps {
   defaultImageUrls?: string[];
   sx?: SxProps<Theme>;
   disabled?: boolean;
-  onImageChange?: (imageFile: File | undefined) => void;
   onImagesChange?: (imageFiles: File[] | undefined) => void;
   onImageDelete: () => void;
   onImagesDelete?: () => void;
   admin?: boolean;
-  multiple?: boolean;
 }
 
 const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
@@ -118,11 +114,9 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
   defaultImageUrl,
   sx,
   disabled,
-  onImageChange,
   onImageDelete,
   admin,
   defaultImageUrls,
-  multiple,
   onImagesChange,
 }) => {
   const intl = useIntl();
@@ -146,8 +140,8 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
 
   const options: DropzoneOptions = {
     accept: { 'image/jpeg': [], 'image/png': [], 'image/gif': [], 'image/webp': [] },
-    maxFiles: multiple ? 20 : 1,
-    multiple: multiple,
+    maxFiles: 20,
+    multiple: true,
     // maxSize: 4194304,
     onDragEnter: undefined,
     onDragLeave: undefined,
@@ -173,17 +167,13 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
         .then((results) => {
           setStatus(DONE_STATUS);
           setImageUrls(results);
-          if (multiple) {
-            onImagesChange && onImagesChange(acceptedFiles as File[]);
-          } else {
-            onImageChange && onImageChange(acceptedFiles[0] as File);
-          }
+          onImagesChange && onImagesChange(acceptedFiles as File[]);
         })
         .catch(() => {
           setStatus(ERROR_STATUS);
         });
     },
-    [disabled, multiple, onImageChange, onImagesChange]
+    [disabled, onImagesChange]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, ...options });
@@ -208,18 +198,16 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
       return;
     }
     ev.stopPropagation();
-    if (multiple) {
-      const newImageUrls = [...imageUrls];
-      newImageUrls.splice(index!, 1);
-      setImageUrls(newImageUrls);
-      onImagesChange && onImagesChange(undefined);
-      if (newImageUrls.length === 0) {
-        setStatus(IDLE_STATUS);
-      }
+    const newImageUrls = [...imageUrls];
+    newImageUrls.splice(index!, 1);
+    setImageUrls(newImageUrls);
+    onImagesChange && onImagesChange(undefined);
+    if (newImageUrls.length === 0) {
+      setStatus(IDLE_STATUS);
     } else {
       setStatus(IDLE_STATUS);
       setImageUrls([]);
-      onImageChange && onImageChange(undefined);
+      onImagesChange && onImagesChange(undefined);
       onImageDelete();
     }
   };
@@ -259,62 +247,39 @@ const ImageUploader: FunctionComponent<ImageUploaderProps> = ({
       >
         <input {...getInputProps()} type="file" disabled={disabled} />
         {imageUrls && imageUrls.length > 0 ? (
-          multiple ? (
-            <Swiper
-              slidesPerView={isMobile ? 1.3 : 1.25}
-              centeredSlides={true}
-              spaceBetween={isMobile ? 20 : 20}
-              pagination={{ clickable: true }}
-              style={{ width: '100%', height: '100%' }}
-              modules={[Pagination]}
-            >
-              {imageUrls.map((url, index) => (
-                <SwiperSlide key={index}>
-                  <motion.div variants={ImageVariants} initial="initial" animate={'animate'}>
-                    <div style={{ position: 'relative' }}>
-                      <Avatar
-                        variant="square"
-                        className="upload-image-img"
-                        src={url}
-                        alt={`Image ${index + 1}`}
-                        sx={{ borderRadius: 2 }}
+          <Swiper
+            slidesPerView={isMobile ? 1.3 : 1.25}
+            centeredSlides={true}
+            spaceBetween={isMobile ? 20 : 20}
+            pagination={{ clickable: true }}
+            style={{ width: '100%', height: '100%' }}
+            modules={[Pagination]}
+          >
+            {imageUrls.map((url, index) => (
+              <SwiperSlide key={index}>
+                <motion.div variants={ImageVariants} initial="initial" animate={'animate'}>
+                  <div style={{ position: 'relative' }}>
+                    <Avatar
+                      variant="square"
+                      className="upload-image-img"
+                      src={url}
+                      alt={`Image ${index + 1}`}
+                      sx={{ borderRadius: 2 }}
+                    />
+                    {!disabled && (
+                      <DeleteForeverRoundedIcon
+                        className="delete-image-icon"
+                        onClick={(ev) => handleDeleteImage(ev, index)}
+                        tabIndex={0}
+                        role="button"
+                        aria-label="Delete Image"
                       />
-                      {!disabled && (
-                        <DeleteForeverRoundedIcon
-                          className="delete-image-icon"
-                          onClick={(ev) => handleDeleteImage(ev, index)}
-                          tabIndex={0}
-                          role="button"
-                          aria-label="Delete Image"
-                        />
-                      )}
-                    </div>
-                  </motion.div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          ) : (
-            <motion.div variants={ImageVariants} initial="initial" animate={'animate'}>
-              <div style={{ position: 'relative' }}>
-                <Avatar
-                  variant="square"
-                  className="upload-image-img"
-                  src={imageUrls[0]}
-                  alt="Image"
-                  sx={{ borderRadius: 2 }}
-                />
-                {!disabled && (
-                  <DeleteForeverRoundedIcon
-                    className="delete-image-icon"
-                    onClick={(ev) => handleDeleteImage(ev)}
-                    tabIndex={0}
-                    role="button"
-                    aria-label="Delete Image"
-                  />
-                )}
-              </div>
-            </motion.div>
-          )
+                    )}
+                  </div>
+                </motion.div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         ) : (
           <motion.div variants={ImageVariants} initial="initial" animate={'animate'}>
             <div className="upload-image-icon">
