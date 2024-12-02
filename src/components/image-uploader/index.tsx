@@ -103,6 +103,7 @@ interface ImageUploaderProps {
   defaultImageUrls?: string[];
   sx?: SxProps<Theme>;
   disabled?: boolean;
+  onImageChange?: (imageFile: File | undefined, imageUrl?: string) => void;
   onImagesChange?: (imageFiles: File[] | undefined) => void;
   onImageDelete: () => void;
   onImagesDelete?: () => void;
