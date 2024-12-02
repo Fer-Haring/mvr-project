@@ -21,7 +21,7 @@ const OrderManagementPage: React.FunctionComponent = () => {
   const isMobile = useIsMobile();
   const { data: allOrdersData = [], isLoading, error, refetch } = useGetAllOrders();
   const { setProductList } = useProductsListData();
-  const productListArray = useProductListQuery(1, 500);
+  const productListArray = useProductListQuery(1, 1500);
   const [activeTable, setActiveTable] = useState<'pending' | 'canceled' | 'completed'>('pending');
 
   useEffect(() => {

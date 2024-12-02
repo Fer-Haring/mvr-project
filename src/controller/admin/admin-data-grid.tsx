@@ -37,7 +37,7 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
   const { setProducts, setSelectedProducts } = useBulkEditStore();
   const { columnOrder, setColumnOrder } = useAgGridColumnSortingStore();
   const { filters, setFilter } = useAgGridFilterStore();
-  const productsList = useProductListQuery(1, 500);
+  const productsList = useProductListQuery(1, 1500);
   const { mutate } = useUpdateProduct();
   const [selectedRowProducts, setSelectedRowProducts] = useState<Product[]>([]);
   const isFiltering = useRef(false);

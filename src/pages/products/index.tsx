@@ -46,7 +46,7 @@ export const ProductsPage: FunctionComponent = () => {
   const [category, setCategory] = useState<AutocompleteOption | null>(null);
   const showHideFilters = true;
 
-  const { data: productListData } = useProductListQuery(1, 500);
+  const { data: productListData } = useProductListQuery(1, 1500);
 
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [enteredPassword, setEnteredPassword] = useState('');

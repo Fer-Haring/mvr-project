@@ -29,7 +29,7 @@ const AdminAddProductPage = () => {
   const [mainCategoryOptions, setMainCategoryOptions] = useState<AutocompleteOption[]>([]);
   const [continueAddingModalOpen, setContinueAddingModalOpen] = useState(false);
 
-  const productListArray = useProductListQuery(1, 500);
+  const productListArray = useProductListQuery(1, 1500);
 
   useEffect(() => {
     setProductList(productListArray.data?.products || []);

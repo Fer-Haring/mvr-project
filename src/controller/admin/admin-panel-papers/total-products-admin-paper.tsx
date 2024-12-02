@@ -13,7 +13,7 @@ import { CustomAdminPaper } from './papers-styles';
 const TotalProductsPaper: FunctionComponent = () => {
   const { formatMessage } = useIntl();
   const theme = useTheme();
-  const getProducts = useProductListQuery(1, 500);
+  const getProducts = useProductListQuery(1, 1500);
 
   const totalProductsInStock = Object.values(getProducts?.data?.products ?? {}).reduce((sum, product: Product) => {
     return sum + Number(product.actual_stock);

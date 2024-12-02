@@ -23,7 +23,7 @@ const BulkEditButton: React.FunctionComponent<BulkEditButtonProps> = ({ selected
   const [modalOpen, setModalOpen] = React.useState(false);
   const [modalTitle, setModalTitle] = React.useState('');
   const { mutate: updateProduct } = useUpdateProduct();
-  const productListArray = useProductListQuery(1, 500);
+  const productListArray = useProductListQuery(1, 1500);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);

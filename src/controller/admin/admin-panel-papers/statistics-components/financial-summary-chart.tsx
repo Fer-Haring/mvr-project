@@ -10,7 +10,7 @@ const FinancialBalanceChart: React.FunctionComponent = () => {
 
   // Obtener las órdenes y los productos
   const { data: allOrdersData = [] } = useGetAllOrders();
-  const productListArray = useProductListQuery(1, 500);
+  const productListArray = useProductListQuery(1, 1500);
 
   // Mapa de costos y precios de venta de productos
   const productPriceMap: { [productId: string]: { cost_price: number; sale_price: string } } = {};

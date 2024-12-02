@@ -27,7 +27,7 @@ export const HomePage: React.FunctionComponent = () => {
   const { setProduct } = useSingleProduct();
   const { setUsers, setOrders } = useAdminDataStore();
   const { productList, setProductList } = useProductsListData();
-  const productListArray = useProductListQuery(1, 500);
+  const productListArray = useProductListQuery(1, 1500);
   const products = Object.values(productList);
   const featuredProducts = products.filter((product) => product.featured === true);
   const getDollar = useGetDollarValue();

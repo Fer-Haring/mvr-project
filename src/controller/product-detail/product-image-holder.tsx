@@ -24,7 +24,7 @@ const ProductImageHolder: FunctionComponent<ProductImageHolderProps> = ({ classN
   const { user } = useUserData();
   const updateProductMutation = useUpdateProduct();
   const uploadImagesMutation = useUploadImagesArrayMutation();
-  const getProducts = useProductListQuery(1, 500);
+  const getProducts = useProductListQuery(1, 1500);
 
   const onImagesChange = (imageFiles: File[] | undefined) => {
     if (!imageFiles || imageFiles.length === 0) {

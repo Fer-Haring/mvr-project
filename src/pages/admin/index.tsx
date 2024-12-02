@@ -19,7 +19,7 @@ export const AdminDashboardPage: React.FunctionComponent = () => {
   const theme = useTheme();
   // const isMobile = useIsMobile();
   const { setProductList } = useProductsListData();
-  const productListArray = useProductListQuery(1, 500);
+  const productListArray = useProductListQuery(1, 1500);
 
   useEffect(() => {
     setProductList(productListArray.data?.products || []);

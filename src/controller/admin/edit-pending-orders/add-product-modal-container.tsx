@@ -16,7 +16,7 @@ const AddProductModalContainer: React.FC<AddProductModalContainerProps> = ({ set
   const { id: orderId } = useParams<{ id: string }>();
   const { formatMessage } = useIntl();
   const theme = useTheme();
-  const { data: productListData, isLoading } = useProductListQuery(1, 500);
+  const { data: productListData, isLoading } = useProductListQuery(1, 1500);
   const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
   const { orders, setOrders } = useEditingOrderStore();
 
