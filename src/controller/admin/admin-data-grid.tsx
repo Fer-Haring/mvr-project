@@ -18,7 +18,6 @@ import {
 import { AgGridReact } from 'ag-grid-react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { useNavigate } from 'react-router-dom';
 
 import CustomFilter from './custom-data-table-filters';
 import ProductHeaderActions from './table-header-actions';
@@ -29,7 +28,6 @@ interface AdminDataGridProps {}
 
 const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
   const theme = useTheme();
-  const navigate = useNavigate();
   const { formatMessage } = useIntl();
   const gridRef = useRef<AgGridReact>(null);
   const [rowData, setRowData] = useState<Product[]>([]);
@@ -190,23 +188,16 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
   );
 
   const columns = useMemo(() => {
-    const originalColumns = columnDefs();
-
-    if (columnOrder && columnOrder.length > 0) {
-      return columnOrder
-        .map((colId) => originalColumns.find((col) => col.field === colId))
-        .filter((col): col is ColDef<Product, any> => col !== undefined);
-    }
-
-    return originalColumns.map((col) => ({
+    return columnDefs().map((col) => ({
       ...col,
-      filterFramework: CustomFilter,
+      filter: CustomFilter,
       filterParams: {
         colId: col.field,
         setFilter,
+        buttons: ['reset'],
       },
     }));
-  }, [navigate, columnOrder, setFilter]);
+  }, [setFilter]);
   return (
     <div>
       <Typography variant="h5" sx={{ color: theme.palette.grey[800], fontWeight: 'bold', textAlign: 'center', mb: 5 }}>

@@ -11,24 +11,20 @@ interface CustomFilterProps extends IFilterParams {
 
 const CustomFilter = forwardRef<IFilterComp, CustomFilterProps>(({ colId, setFilter, filterChangedCallback }, ref) => {
   const [filterText, setFilterText] = useState('');
-  const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null);
 
   const onFilterTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newFilterText = event.target.value;
     setFilterText(newFilterText);
-
-    // Limpiar el timer anterior si el usuario sigue escribiendo
-    if (debounceTimer) {
-      clearTimeout(debounceTimer);
-    }
-
-    // Establecer un nuevo timer para aplicar el filtro después del delay
-    const timer = setTimeout(() => {
-      setFilter(colId, { filterType: 'text', type: 'contains', filter: newFilterText });
+    
+    setFilter(colId, {
+      filterType: 'text',
+      type: 'contains',
+      filter: newFilterText
+    });
+    
+    if (filterChangedCallback) {
       filterChangedCallback();
-    }, 1000);
-
-    setDebounceTimer(timer);
+    }
   };
 
   const clearFilter = () => {
@@ -39,17 +35,18 @@ const CustomFilter = forwardRef<IFilterComp, CustomFilterProps>(({ colId, setFil
 
   useImperativeHandle(ref, () => ({
     isFilterActive() {
-      return filterText !== '';
+      return !!filterText;
     },
     doesFilterPass(params: IDoesFilterPassParams) {
-      const columnValue = params.data[colId];
-      return columnValue && columnValue.toString().toLowerCase().includes(filterText.toLowerCase());
+      const value = params.data[colId];
+      if (!value) return false;
+      return value.toString().toLowerCase().includes(filterText.toLowerCase());
     },
     getModel() {
-      return { filter: filterText };
+      return filterText ? { value: filterText } : null;
     },
-    setModel(model) {
-      setFilterText(model ? model.filter : '');
+    setModel(model: any) {
+      setFilterText(model ? model.value : '');
     },
     getGui() {
       return null as unknown as HTMLElement;
