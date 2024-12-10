@@ -1,10 +1,8 @@
 /* eslint-disable react/react-in-jsx-scope */
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
-import { useTheme } from '@mui/material';
 import { Box } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Button from '@webapp/components/button';
-// import { CartProductsDetail } from '@webapp/controller/cart/step-0/cart-products-detail';
 import { CartProductsDetailV2 } from '@webapp/controller/cart/step-0/cart-products-detail-V2';
 import { CartProductsDetailV2Mobile } from '@webapp/controller/cart/step-0/cart-products-detail-V2-mobile';
 import { CartItem } from '@webapp/service/types/cart-types';
@@ -12,7 +10,7 @@ import { OrderRequest } from '@webapp/service/types/orders-types';
 import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 
-import { useIsMobile } from '../../../hooks/is-mobile';
+import { useIsMobile } from '@webapp/hooks/is-mobile';
 
 interface Step0Props {
   handleNextStep: () => void;
@@ -24,7 +22,6 @@ interface Step0Props {
 export const Step0: FunctionComponent<Step0Props> = ({ handleNextStep, cart, order, setOrder }) => {
   const { formatMessage } = useIntl();
   const isMobile = useIsMobile();
-  const theme = useTheme();
   return (
     <Stack direction={'column'} gap={2} width={'100%'} justifyContent={'center'} alignItems={'center'}>
       <Box

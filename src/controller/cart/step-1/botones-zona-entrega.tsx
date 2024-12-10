@@ -30,13 +30,13 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ onVali
     if (order.delivery_type === 'Retiro en local') {
       deliveryCost = 0;
     } else if (selectedDelivery === 'BSSO') {
-      deliveryCost = 1400;
+      deliveryCost = 1700;
     } else if (selectedDelivery === 'CASCO') {
-      deliveryCost = 2800;
+      deliveryCost = 3300;
     } else if (selectedDelivery === 'OUTCASCO') {
-      deliveryCost = 4000;
+      deliveryCost = 4700;
     } else if (selectedDelivery === 'LEJOS') {
-      deliveryCost = 4500;
+      deliveryCost = 5200;
     }
 
     // Actualizar el costo de entrega si es necesario
@@ -58,13 +58,13 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ onVali
     let deliveryCost = 0;
 
     if (selectedDelivery === 'BSSO') {
-      deliveryCost = 1400;
+      deliveryCost = 1700;
     } else if (selectedDelivery === 'CASCO') {
-      deliveryCost = 2800;
+      deliveryCost = 3300;
     } else if (selectedDelivery === 'OUTCASCO') {
-      deliveryCost = 4000;
+      deliveryCost = 4700;
     } else if (selectedDelivery === 'LEJOS') {
-      deliveryCost = 4500;
+      deliveryCost = 5200;
     } else if (order.delivery_type === 'Retiro en local') {
       deliveryCost = 0;
     }
