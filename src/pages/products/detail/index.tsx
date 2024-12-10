@@ -58,7 +58,7 @@ export const ProductDetailPage: FunctionComponent = () => {
       product_category: product?.product_category,
       product_description: product?.description,
       sub_total: parseFloat(product?.sale_price) * parseInt(selectedQuantity, 10),
-      product_image: product?.product_image,
+      product_image: product.images_array?.[0] || '',
       quantity: parseInt(selectedQuantity, 10),
     };
     addToCartMutation(cartItem).then(() => {
