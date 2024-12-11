@@ -1,11 +1,12 @@
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
+import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import { Box, CircularProgress, IconButton, Typography, styled, useTheme } from '@mui/material';
 import Stack from '@mui/system/Stack';
 import NoImageProd from '@webapp/assets/images/prod-no-image.png';
-import { toast } from 'react-toastify';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { useAddToCart } from '@webapp/service/mutations/cart/add-to-cart-mutation';
+import { useRemoveItemFromCart } from '@webapp/service/mutations/cart/delete-item-from-cart-mutation';
 import { useGetUserCart } from '@webapp/service/mutations/cart/get-cart-query';
 import { CartItem } from '@webapp/service/types/cart-types';
 import { OrderRequest } from '@webapp/service/types/orders-types';
@@ -13,6 +14,7 @@ import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import React, { useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 interface CartProductsDetailV2MobileProps {
   className?: string;
@@ -30,6 +32,7 @@ export const CartProductsDetailV2Mobile: React.FunctionComponent<CartProductsDet
   const { formatMessage } = useIntl();
   const { dollarValue } = useDollarValue();
   const { mutateAsync, isPending } = useAddToCart();
+  const { mutateAsync: removeItemFromCart, isPending: isRemovePending } = useRemoveItemFromCart();
   const getCart = useGetUserCart();
   const [localCartProducts, setLocalCartProducts] = useState<CartItem[]>(cartProducts || []);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
@@ -195,47 +198,77 @@ export const CartProductsDetailV2Mobile: React.FunctionComponent<CartProductsDet
                   <Stack
                     direction={'row'}
                     gap={1}
-                    sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}
+                    sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                   >
-                    <Typography variant={'body1'} fontWeight={600} sx={{ fontSize: '3vw' }}>
-                      {formatMessage({ id: 'CART.HEADER.QUANTITY' })}
-                    </Typography>
-                    <IconButton
-                      size="small"
-                      disabled={isPending}
-                      onClick={() => {
-                        decreaseQuantity(cartProduct);
-                      }}
-                      aria-label="Disminuir cantidad"
-                    >
-                      <RemoveCircleOutlineRoundedIcon
-                        sx={{
-                          width: 28,
-                          height: 28,
-                          color: isPending ? theme.palette.grey[200] : theme.palette.grey[800],
-                        }}
-                      />
-                    </IconButton>
-                    {isPending ? (
-                      <CircularProgress size={15} />
-                    ) : (
-                      <Typography variant={'body1'} fontWeight={600} sx={{ fontSize: '3.5vw' }}>
-                        {cartProduct.quantity}
+                    <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, alignItems: 'center' }}>
+                      <Typography variant={'body1'} fontWeight={600} sx={{ fontSize: '3vw' }}>
+                        {formatMessage({ id: 'CART.HEADER.QUANTITY' })}
                       </Typography>
-                    )}
+                      <IconButton
+                        size="small"
+                        disabled={isPending}
+                        onClick={() => {
+                          if (cartProduct.quantity > 1) {
+                            decreaseQuantity(cartProduct);
+                          }
+                        }}
+                        aria-label="Disminuir cantidad"
+                      >
+                        <RemoveCircleOutlineRoundedIcon
+                          sx={{
+                            width: 28,
+                            height: 28,
+                            color: isPending ? theme.palette.grey[200] : theme.palette.grey[800],
+                          }}
+                        />
+                      </IconButton>
+                      {isPending ? (
+                        <CircularProgress size={15} />
+                      ) : (
+                        <Typography variant={'body1'} fontWeight={600} sx={{ fontSize: '3.5vw' }}>
+                          {cartProduct.quantity}
+                        </Typography>
+                      )}
+                      <IconButton
+                        size="small"
+                        disabled={isPending}
+                        onClick={() => {
+                          increaseQuantity(cartProduct);
+                        }}
+                        aria-label="Aumentar cantidad"
+                      >
+                        <AddCircleOutlineRoundedIcon
+                          sx={{
+                            width: 28,
+                            height: 28,
+                            color: isPending ? theme.palette.grey[200] : theme.palette.grey[800],
+                          }}
+                        />
+                      </IconButton>
+                    </Box>
                     <IconButton
                       size="small"
-                      disabled={isPending}
+                      disabled={isRemovePending}
                       onClick={() => {
-                        increaseQuantity(cartProduct);
+                        removeItemFromCart(cartProduct.product_id)
+                          .then(() => {
+                            getCart.refetch();
+                            setLocalCartProducts((prev) =>
+                              prev.filter((item) => item.product_id !== cartProduct.product_id)
+                            );
+                            toast.info(formatMessage({ id: 'CART.PRODUCT.REMOVED' }));
+                          })
+                          .catch(() => {
+                            toast.error(formatMessage({ id: 'GENERAL.ERROR' }));
+                          });
                       }}
-                      aria-label="Aumentar cantidad"
+                      aria-label="Eliminar producto"
                     >
-                      <AddCircleOutlineRoundedIcon
+                      <DeleteForeverRoundedIcon
                         sx={{
                           width: 28,
                           height: 28,
-                          color: isPending ? theme.palette.grey[200] : theme.palette.grey[800],
+                          color: theme.palette.error.main,
                         }}
                       />
                     </IconButton>
