@@ -26,7 +26,7 @@ export const Step0: FunctionComponent<Step0Props> = ({ handleNextStep, cart, ord
     <Stack direction={'column'} gap={2} width={'100%'} justifyContent={'center'} alignItems={'center'}>
       <Box
         sx={{
-          p: 2,
+          p: 0,
           pb: 10,
           width: '100%',
           display: 'flex',

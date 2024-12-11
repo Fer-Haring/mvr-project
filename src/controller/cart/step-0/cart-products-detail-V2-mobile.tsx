@@ -1,7 +1,7 @@
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
-import { Box, CircularProgress, IconButton, Typography, styled, useTheme } from '@mui/material';
+import { Box, CircularProgress, Divider, IconButton, Typography, styled, useTheme } from '@mui/material';
 import Stack from '@mui/system/Stack';
 import NoImageProd from '@webapp/assets/images/prod-no-image.png';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
@@ -137,7 +137,7 @@ export const CartProductsDetailV2Mobile: React.FunctionComponent<CartProductsDet
               ) : (
                 <ImageContainer key={cartProduct.product_id} src={cartProduct.product_image} />
               )}
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%', p: 0 }}>
                 <Typography
                   variant={'h5'}
                   onClick={() => {
@@ -200,8 +200,8 @@ export const CartProductsDetailV2Mobile: React.FunctionComponent<CartProductsDet
                     gap={1}
                     sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                   >
-                    <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, alignItems: 'center' }}>
-                      <Typography variant={'body1'} fontWeight={600} sx={{ fontSize: '3vw' }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', gap: 0.5, alignItems: 'center' }}>
+                      <Typography variant={'body1'} fontWeight={600} sx={{ fontSize: '12px' }}>
                         {formatMessage({ id: 'CART.HEADER.QUANTITY' })}
                       </Typography>
                       <IconButton
@@ -216,8 +216,8 @@ export const CartProductsDetailV2Mobile: React.FunctionComponent<CartProductsDet
                       >
                         <RemoveCircleOutlineRoundedIcon
                           sx={{
-                            width: 28,
-                            height: 28,
+                            width: 24,
+                            height: 24,
                             color: isPending ? theme.palette.grey[200] : theme.palette.grey[800],
                           }}
                         />
@@ -239,8 +239,8 @@ export const CartProductsDetailV2Mobile: React.FunctionComponent<CartProductsDet
                       >
                         <AddCircleOutlineRoundedIcon
                           sx={{
-                            width: 28,
-                            height: 28,
+                            width: 24,
+                            height: 24,
                             color: isPending ? theme.palette.grey[200] : theme.palette.grey[800],
                           }}
                         />
@@ -278,6 +278,7 @@ export const CartProductsDetailV2Mobile: React.FunctionComponent<CartProductsDet
             </ProductDetailContainer>
           );
         })}
+        <Divider sx={{ width: '100%', borderColor: theme.palette.grey[800] }} />
       </Box>
     </Stack>
   );
@@ -297,5 +298,5 @@ const ProductDetailContainer = styled(Stack)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
-  gap: theme.spacing(2),
+  gap: theme.spacing(1),
 }));
