@@ -3,7 +3,7 @@ import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { CartItem } from '@webapp/service/types/cart-types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
 import { useMessageStore } from '@webapp/store/admin/message-store';
-import { useCompletedOrdersStore } from '@webapp/store/orders/get-completed-orders';
+// import { useCompletedOrdersStore } from '@webapp/store/orders/get-completed-orders';
 import React from 'react';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -23,69 +23,51 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
   const [totalCartValue, setTotalCartValue] = useState(0);
   const [subTotal, setSubTotal] = useState(0);
 
-  const { setOrders } = useCompletedOrdersStore();
-  const {
-    order,
-    setOrder,
-    shippingAddress,
-    setShippingAddress,
-    shippingCity,
-    setShippingCity,
-    shippingCost,
-    setShippingCost,
-  } = useMessageStore();
+  // const { setOrders } = useCompletedOrdersStore();
+  const { order, setOrder } = useMessageStore();
 
+  // Calculamos el total una sola vez cuando cambian los productos
   useEffect(() => {
     const calculateTotal = (): number => {
       return cartProducts.reduce((acc, product) => {
         const price = Number(product.sub_total) || 0;
         const conversionRate = product.price_currency === 'USD' ? Number(dollarValue.value) || 1 : 1;
-        const convertedValue = price * conversionRate;
-
-        return acc + Math.round(convertedValue * 100) / 100;
+        return acc + Math.round(price * conversionRate * 100) / 100;
       }, 0);
     };
 
-    const subTotal = calculateTotal();
-    const totalWithDelivery = subTotal + Number(shippingCost || 0);
+    const newSubTotal = calculateTotal();
+    setSubTotal(newSubTotal);
 
-    setTotalCartValue(totalWithDelivery);
-    setSubTotal(subTotal);
+    const newTotal = newSubTotal + Number(order.delivery_cost || 0);
+    setTotalCartValue(newTotal);
+  }, [cartProducts, dollarValue.value, order.delivery_cost]);
 
-    // Actualizamos el costo de envío en el store
-    setShippingCost(Number(shippingCost || 0));
-  }, [cartProducts, dollarValue, shippingCost]);
-
+  // Actualizamos la orden solo cuando es necesario
   useEffect(() => {
-    if (totalCartValue > 0) {
-      const totalUSD =
-        order.currency_used_to_pay === 'USD' ? totalCartValue / Number(dollarValue.value) : totalCartValue;
+    if (!address || !city || totalCartValue === 0) return;
 
-      const roundedTotalUSD = Math.round(totalUSD * 100) / 100;
+    // Tomamos solo la primera parte de la dirección antes de la primera coma
+    const cleanAddress = address.split(',')[0].trim();
+    const cleanCity = city.split(',')[0].trim();
+    const deliveryZone = `${cleanAddress}, ${cleanCity}`;
 
-      // Actualizamos la orden con los nuevos valores
-      const updatedOrder = {
-        ...order,
-        total_order_amount_ars: totalCartValue,
-        total_order_amount_usd: roundedTotalUSD,
-        delivery_cost: shippingCost,
-        delivery_zone: `${shippingAddress}, ${shippingCity}`,
-      };
-
-      setOrder(updatedOrder);
-      setOrders([updatedOrder]);
+    if (order.delivery_zone === deliveryZone && order.total_order_amount_ars === totalCartValue) {
+      return;
     }
-  }, [totalCartValue, order.currency_used_to_pay, shippingAddress, shippingCity, shippingCost]);
 
-  // Efecto para actualizar la dirección y ciudad de envío
-  useEffect(() => {
-    if (address) {
-      setShippingAddress(address);
-    }
-    if (city) {
-      setShippingCity(city);
-    }
-  }, [address, city, setShippingAddress, setShippingCity]);
+    const updatedOrder = {
+      ...order,
+      delivery_zone: deliveryZone,
+      total_order_amount_ars: totalCartValue,
+      total_order_amount_usd:
+        order.currency_used_to_pay === 'USD'
+          ? Math.round((totalCartValue / Number(dollarValue.value)) * 100) / 100
+          : totalCartValue,
+    };
+
+    setOrder(updatedOrder);
+  }, [address, city, totalCartValue, order.currency_used_to_pay]);
 
   return (
     <Paper
@@ -117,7 +99,7 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
             <TextsContainer>
               <CustomTypography variant="h5">{formatMessage({ id: 'CART.PAYMENT.DETAILS.ADDRESS' })}</CustomTypography>
               <CustomTypography variant="subtitle1">
-                {shippingAddress}, {shippingCity}
+                {address}, {city}
               </CustomTypography>
             </TextsContainer>
             <TextsContainer>
@@ -156,7 +138,7 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
               {formatMessage({ id: 'CART:PAYMENT.DETAILS.DELIVERY.PRICE' })}
             </CustomTypography>
             <StyledDivider orientation="horizontal" flexItem />
-            <CustomTypography variant="h5">$ {shippingCost}</CustomTypography>
+            <CustomTypography variant="h5">$ {order.delivery_cost}</CustomTypography>
           </TextsRowContainer>
 
           <Stack direction={'row'} gap={2} width={'100%'} sx={{ marginTop: 10 }}>
