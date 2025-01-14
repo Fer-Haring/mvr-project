@@ -5,6 +5,7 @@ import Stack from '@mui/system/Stack';
 import NoImageProd from '@webapp/assets/images/prod-no-image.png';
 import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { useAddToCart } from '@webapp/service/mutations/cart/add-to-cart-mutation';
+import { useRemoveItemFromCart } from '@webapp/service/mutations/cart/delete-item-from-cart-mutation';
 import { useGetUserCart } from '@webapp/service/mutations/cart/get-cart-query';
 import { useUpdateProductStock } from '@webapp/service/mutations/products/update-pproduct-stock-mutation';
 import { CartItem } from '@webapp/service/types/cart-types';
@@ -14,7 +15,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
 
 // import { useNavigate } from 'react-router-dom';
 
@@ -36,6 +36,7 @@ export const CartProductsDetailV2: React.FunctionComponent<CartProductsDetailV2P
   const { mutateAsync: updateProductStock } = useUpdateProductStock();
   const [localCartProducts, setLocalCartProducts] = useState<CartItem[]>(cartProducts || []);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  const removeFromCart = useRemoveItemFromCart();
 
   useEffect(() => {
     if (cartProducts) {
@@ -69,8 +70,36 @@ export const CartProductsDetailV2: React.FunctionComponent<CartProductsDetailV2P
   const updateQuantity = async (cartProduct: CartItem, quantityChange: number) => {
     // Calcular el nuevo stockDelta basado en el cambio de cantidad
     const stockDelta = -quantityChange; // negativo al agregar, positivo al restar
+    const newQuantity = cartProduct.quantity + quantityChange;
 
-    // Actualizar el stock antes de modificar el carrito
+    // Si la nueva cantidad es 0, eliminar el producto
+    if (newQuantity <= 0) {
+      try {
+        // Primero actualizamos el stock
+        await updateProductStock({
+          productId: cartProduct.product_id,
+          stockDelta: stockDelta,
+        });
+
+        // Luego eliminamos el item del carrito
+        await removeFromCart.mutateAsync(cartProduct.product_id);
+
+        // Actualizamos el estado local
+        const filteredCartProducts = localCartProducts.filter((item) => item.product_id !== cartProduct.product_id);
+        setLocalCartProducts(filteredCartProducts);
+
+        // Refrescamos el carrito
+        getCart.refetch();
+
+        return; // Salimos de la función aquí
+      } catch (error) {
+        console.error('Error removing item from cart:', error);
+        toast.error(formatMessage({ id: 'CART.ERROR.REMOVING.PRODUCT' }));
+        return;
+      }
+    }
+
+    // Si llegamos aquí, es porque la cantidad es > 0
     try {
       await updateProductStock({
         productId: cartProduct.product_id,
@@ -79,7 +108,7 @@ export const CartProductsDetailV2: React.FunctionComponent<CartProductsDetailV2P
     } catch (error) {
       console.error('Error updating stock:', error);
       toast.error(formatMessage({ id: 'CART.ERROR.UPDATING.STOCK' }));
-      return; // Salir si falla la actualización del stock
+      return;
     }
 
     // Actualizar la cantidad en el carrito local
@@ -87,26 +116,19 @@ export const CartProductsDetailV2: React.FunctionComponent<CartProductsDetailV2P
       item.product_id === cartProduct.product_id
         ? {
             ...item,
-            quantity: Math.max(item.quantity + quantityChange, 0),
-            sub_total: item.unit_price * Math.max(item.quantity + quantityChange, 0),
+            quantity: newQuantity,
+            sub_total: item.unit_price * newQuantity,
           }
         : item
     );
 
-    if (cartProduct.quantity === 1 && quantityChange === -1) {
-      // Si la cantidad es 1 y se está disminuyendo, eliminar el producto del carrito
-      const filteredCartProducts = localCartProducts.filter((item) => item.product_id !== cartProduct.product_id);
-      setLocalCartProducts(filteredCartProducts);
-      toast.info(formatMessage({ id: 'CART.PRODUCT.REMOVED' }));
-    } else {
-      setLocalCartProducts(updatedCartProducts);
+    setLocalCartProducts(updatedCartProducts);
 
-      // Mostrar el snack adecuado para aumento o disminución
-      if (quantityChange > 0) {
-        toast.success(formatMessage({ id: 'CART.PRODUCT.QUANTITY.INCREASED' }));
-      } else if (quantityChange < 0) {
-        toast.success(formatMessage({ id: 'CART.PRODUCT.QUANTITY.DECREASED' }));
-      }
+    // Mostrar el snack adecuado para aumento o disminución
+    if (quantityChange > 0) {
+      toast.success(formatMessage({ id: 'CART.PRODUCT.QUANTITY.INCREASED' }));
+    } else if (quantityChange < 0) {
+      toast.success(formatMessage({ id: 'CART.PRODUCT.QUANTITY.DECREASED' }));
     }
 
     if (debounceTimeout.current) {
@@ -140,7 +162,6 @@ export const CartProductsDetailV2: React.FunctionComponent<CartProductsDetailV2P
   const decreaseQuantity = (cartProduct: CartItem) => {
     updateQuantity(cartProduct, -1); // Disminuye la cantidad en 1
   };
-
 
   return (
     <Stack direction={'column'} gap={2} width={'100%'}>
@@ -210,7 +231,15 @@ export const CartProductsDetailV2: React.FunctionComponent<CartProductsDetailV2P
                     color: theme.palette.common.black,
                   }}
                 >
-                  <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, alignItems: 'center', justifyContent:'space-between' }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      gap: 2,
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                  >
                     <Typography variant={'body1'} fontWeight={600} sx={{ fontSize: '0.9vw' }}>
                       {formatMessage({ id: 'CART.HEADER.SUBTOTAL' })}
                     </Typography>

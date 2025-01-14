@@ -162,7 +162,6 @@ export const Step2: FunctionComponent<Step2Props> = ({
     );
   };
 
-  console.log(order.payment_method);
   return (
     <Stack direction={'column'} gap={2} width={'100%'} justifyContent={'center'} alignItems={'center'}>
       <Button

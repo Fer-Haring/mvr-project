@@ -109,7 +109,7 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
   };
 
   const paginationPageSizeSelector = useMemo<number[] | boolean>(() => {
-    return [200, 500, 1000];
+    return [1000, 1500, 2000];
   }, []);
 
   const paginationNumberFormatter = useCallback((params: PaginationNumberFormatterParams) => {
@@ -222,7 +222,7 @@ const AdminDataGrid: React.FC<AdminDataGridProps> = () => {
             onSelectionChanged={onSelectionChanged}
             getRowId={getRowId}
             localeText={localeText}
-            paginationPageSize={500}
+            paginationPageSize={1000}
             paginationPageSizeSelector={paginationPageSizeSelector}
             paginationNumberFormatter={paginationNumberFormatter}
             suppressServerSideFullWidthLoadingRow={true}

@@ -46,14 +46,15 @@ export const ProductsPage: FunctionComponent = () => {
   const [category, setCategory] = useState<AutocompleteOption | null>(null);
   const showHideFilters = true;
 
-  const { data: productListData } = useProductListQuery(1, 1500);
-
+  const { data: productListData, refetch: refetchProducts } = useProductListQuery(1, 1500);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [enteredPassword, setEnteredPassword] = useState('');
   const [passwordError, setPasswordError] = useState(false);
-
-  // Contraseña hardcodeada
   const PASSWORD = 'MVRprivado';
+
+  useEffect(() => {
+    refetchProducts();
+  });
 
   useEffect(() => {
     if (productListData?.products) {
@@ -66,24 +67,45 @@ export const ProductsPage: FunctionComponent = () => {
       const filteredProducts = productList.filter((product) => product.main_product_category === selectedMainCategory);
       const relatedCategories = filteredProducts.map((product) => product.product_category);
       const uniqueRelatedCategories = Array.from(new Set(relatedCategories));
-      const formattedCategories = uniqueRelatedCategories.map((cat) => ({ label: cat, value: cat }));
+      const formattedCategories = uniqueRelatedCategories.filter(Boolean).map((cat) => ({
+        label: cat,
+        value: cat,
+      }));
       setCategoriesOptions(formattedCategories);
     } else {
       const allCategories = productList.map((product) => product.product_category);
       const uniqueCategories = Array.from(new Set(allCategories));
-      const formattedCategories = uniqueCategories.map((cat) => ({ label: cat, value: cat }));
+      const formattedCategories = uniqueCategories.filter(Boolean).map((cat) => ({
+        label: cat,
+        value: cat,
+      }));
       setCategoriesOptions(formattedCategories);
     }
   }, [productList, selectedMainCategory]);
 
-  useEffect(() => {
-    const scrollableElement = document.querySelector('.content');
-    const savedScrollPosition = sessionStorage.getItem('scrollPosition');
-    if (scrollableElement && savedScrollPosition) {
-      scrollableElement.scrollTo({ top: parseInt(savedScrollPosition), behavior: 'auto' });
-      sessionStorage.removeItem('scrollPosition');
+  const filteredAndSortedProducts = useMemo(() => {
+    let result = [...productList];
+
+    if (selectedMainCategory) {
+      result = result.filter((product) => product.main_product_category === selectedMainCategory);
     }
-  }, [productList]);
+
+    if (selectedCategory) {
+      result = result.filter((product) => product.product_category === selectedCategory);
+    }
+
+    if (searchTerms) {
+      result = result.filter((product) => product.product_name?.toLowerCase().includes(searchTerms.toLowerCase()));
+    }
+
+    if (priceRange[0] !== 0 || priceRange[1] !== 20000) {
+      result = result.filter(
+        (product) => parseInt(product.sale_price) >= priceRange[0] && parseInt(product.sale_price) <= priceRange[1]
+      );
+    }
+
+    return result;
+  }, [selectedMainCategory, selectedCategory, productList, searchTerms, priceRange]);
 
   const handleMainCategoryChange = (category: string) => {
     if (category === 'Disposables 97%') {
@@ -109,8 +131,10 @@ export const ProductsPage: FunctionComponent = () => {
   };
 
   const handleCategoryChange = (event: React.SyntheticEvent, newValue: AutocompleteOption | null) => {
+    console.log('Categoría seleccionada:', newValue); // Debug del valor seleccionado
     setSelectedCategory(newValue ? newValue.label : '');
     setCategory(newValue);
+    refetchProducts();
   };
 
   const handlePriceRangeChange = (event: Event, newValue: number | number[]) => {
@@ -145,44 +169,6 @@ export const ProductsPage: FunctionComponent = () => {
     setSelectedProductFilter('');
     setCategory(null);
   };
-
-  const filteredAndSortedProducts = useMemo(() => {
-    let result = productList;
-
-    if (selectedMainCategory) {
-      result = result.filter((product) => product.main_product_category === selectedMainCategory);
-    }
-
-    if (selectedCategory) {
-      result = result.filter((product) => product.product_category === selectedCategory);
-    }
-
-    if (priceRange[0] !== 1000 || priceRange[1] !== 20000) {
-      result = result.filter(
-        (product) => parseInt(product.sale_price) >= priceRange[0] && parseInt(product.sale_price) <= priceRange[1]
-      );
-    }
-
-    if (searchTerms) {
-      result = result.filter((product) => product.product_name?.toLowerCase().includes(searchTerms.toLowerCase()));
-    }
-
-    switch (sortCriteria) {
-      case 'minorPrice':
-        result.sort((a, b) => parseInt(a.sale_price) - parseInt(b.sale_price));
-        break;
-      case 'mayorPrice':
-        result.sort((a, b) => parseInt(b.sale_price) - parseInt(a.sale_price));
-        break;
-      case 'name':
-        result.sort((a, b) => (a.product_name || '').localeCompare(b.product_name || ''));
-        break;
-      default:
-        break;
-    }
-
-    return result;
-  }, [selectedMainCategory, priceRange, productList, searchTerms, selectedCategory, sortCriteria]);
 
   const mainCategories = useMemo(() => {
     const allMainCategories = productList.map((product) => product.main_product_category);

@@ -96,19 +96,41 @@ export const Step1: React.FC<Step1Props> = ({
   }, [address, city]);
 
   const handlePaymentMethodChange = (selectedPaymentMethod: string) => {
-    if (isPaymentTypeValid) {
-      setIsPaymentTypeValid(true);
-    }
+    setIsPaymentTypeValid(true);
 
-    // Actualizar usuario y orden en el store de Zustand
+    // Actualizar usuario
     setUser({ ...user, payment_method: selectedPaymentMethod });
-    setOrder({ ...order, payment_method: selectedPaymentMethod });
+
+    // Actualizar orden con datos relevantes del usuario
+    setOrder({
+      ...order,
+      payment_method: selectedPaymentMethod,
+      user_id: user.id,
+      // Copiar datos relevantes del usuario
+      delivery_type: user.delivery_type,
+      delivery_zone: user.delivery_zone,
+      delivery_cost: user.delivery_cost,
+    });
   };
 
   const handleDeliveryTypeChange = (selectedDelivery: string) => {
     setIsDeliveryTypeValid(true);
-    setUser({ ...user, delivery_type: selectedDelivery, delivery_cost: 0 });
-    setOrder({ ...order, delivery_type: selectedDelivery, delivery_cost: 0 });
+
+    // Actualizar usuario
+    const updatedUser = {
+      ...user,
+      delivery_type: selectedDelivery,
+      delivery_cost: 0,
+    };
+    setUser(updatedUser);
+
+    // Actualizar orden
+    setOrder({
+      ...order,
+      delivery_type: selectedDelivery,
+      delivery_cost: 0,
+      user_id: user.id,
+    });
     setDeliverValue(0);
   };
 
@@ -130,6 +152,20 @@ export const Step1: React.FC<Step1Props> = ({
     }
     if (isDeliveryTypeValid) {
       setIsDeliveryTypeValid(!!user?.delivery_type);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user && order) {
+      setOrder({
+        ...order,
+        user_id: user.id,
+        delivery_type: user.delivery_type,
+        delivery_zone: user.delivery_zone,
+        delivery_cost: user.delivery_cost,
+        payment_method: user.payment_method,
+        currency_used_to_pay: user.preferred_currency,
+      });
     }
   }, [user]);
 

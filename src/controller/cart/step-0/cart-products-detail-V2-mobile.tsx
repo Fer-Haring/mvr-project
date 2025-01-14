@@ -8,6 +8,7 @@ import { useIsMobile } from '@webapp/hooks/is-mobile';
 import { useAddToCart } from '@webapp/service/mutations/cart/add-to-cart-mutation';
 import { useRemoveItemFromCart } from '@webapp/service/mutations/cart/delete-item-from-cart-mutation';
 import { useGetUserCart } from '@webapp/service/mutations/cart/get-cart-query';
+import { useUpdateProductStock } from '@webapp/service/mutations/products/update-pproduct-stock-mutation';
 import { CartItem } from '@webapp/service/types/cart-types';
 import { OrderRequest } from '@webapp/service/types/orders-types';
 import { useDollarValue } from '@webapp/store/admin/dolar-value';
@@ -31,11 +32,12 @@ export const CartProductsDetailV2Mobile: React.FunctionComponent<CartProductsDet
   const navigate = useNavigate();
   const { formatMessage } = useIntl();
   const { dollarValue } = useDollarValue();
-  const { mutateAsync, isPending } = useAddToCart();
+  const { mutateAsync: updateCart, isPending } = useAddToCart();
   const { mutateAsync: removeItemFromCart, isPending: isRemovePending } = useRemoveItemFromCart();
   const getCart = useGetUserCart();
   const [localCartProducts, setLocalCartProducts] = useState<CartItem[]>(cartProducts || []);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  const { mutateAsync: updateProductStock } = useUpdateProductStock();
 
   const subTotalValue = (price: number, priceCurrency: string) => {
     if (priceCurrency === 'ARS') {
@@ -60,31 +62,59 @@ export const CartProductsDetailV2Mobile: React.FunctionComponent<CartProductsDet
     }
   }, [cartProducts]);
 
-  const updateQuantity = (cartProduct: CartItem, quantityChange: number) => {
+  const updateQuantity = async (cartProduct: CartItem, quantityChange: number) => {
+    const stockDelta = -quantityChange;
+    const newQuantity = cartProduct.quantity + quantityChange;
+
+    if (newQuantity <= 0) {
+      try {
+        await updateProductStock({
+          productId: cartProduct.product_id,
+          stockDelta: stockDelta,
+        });
+
+        removeItemFromCart(cartProduct.product_id);
+
+        const filteredCartProducts = localCartProducts.filter((item) => item.product_id !== cartProduct.product_id);
+        setLocalCartProducts(filteredCartProducts);
+
+        getCart.refetch();
+
+        return;
+      } catch (error) {
+        console.error('Error removing item from cart:', error);
+        toast.error(formatMessage({ id: 'CART.ERROR.REMOVING.PRODUCT' }));
+        return;
+      }
+    }
+
+    try {
+      await updateProductStock({
+        productId: cartProduct.product_id,
+        stockDelta: stockDelta,
+      });
+    } catch (error) {
+      console.error('Error updating stock:', error);
+      toast.error(formatMessage({ id: 'CART.ERROR.UPDATING.STOCK' }));
+      return;
+    }
+
     const updatedCartProducts = localCartProducts.map((item) =>
       item.product_id === cartProduct.product_id
         ? {
             ...item,
-            quantity: Math.max(item.quantity + quantityChange, 0),
-            sub_total: item.unit_price * Math.max(item.quantity + quantityChange, 0),
+            quantity: newQuantity,
+            sub_total: item.unit_price * newQuantity,
           }
         : item
     );
 
-    if (cartProduct.quantity === 1 && quantityChange === -1) {
-      // Si la cantidad es 1 y se está disminuyendo, eliminar el producto del carrito
-      const filteredCartProducts = localCartProducts.filter((item) => item.product_id !== cartProduct.product_id);
-      setLocalCartProducts(filteredCartProducts);
-      toast.info(formatMessage({ id: 'CART.PRODUCT.REMOVED' }));
-    } else {
-      setLocalCartProducts(updatedCartProducts);
+    setLocalCartProducts(updatedCartProducts);
 
-      // Mostrar el snack adecuado para aumento o disminución
-      if (quantityChange > 0) {
-        toast.success(formatMessage({ id: 'CART.PRODUCT.QUANTITY.INCREASED' }));
-      } else if (quantityChange < 0) {
-        toast.success(formatMessage({ id: 'CART.PRODUCT.QUANTITY.DECREASED' }));
-      }
+    if (quantityChange > 0) {
+      toast.success(formatMessage({ id: 'CART.PRODUCT.QUANTITY.INCREASED' }));
+    } else if (quantityChange < 0) {
+      toast.success(formatMessage({ id: 'CART.PRODUCT.QUANTITY.DECREASED' }));
     }
 
     if (debounceTimeout.current) {
@@ -94,7 +124,7 @@ export const CartProductsDetailV2Mobile: React.FunctionComponent<CartProductsDet
     debounceTimeout.current = setTimeout(() => {
       const updatedCartProduct = updatedCartProducts.find((item) => item.product_id === cartProduct.product_id);
       if (updatedCartProduct) {
-        mutateAsync({
+        updateCart({
           product_id: updatedCartProduct.product_id!,
           product_name: updatedCartProduct.product_name,
           unit_price: updatedCartProduct.unit_price,
@@ -249,18 +279,17 @@ export const CartProductsDetailV2Mobile: React.FunctionComponent<CartProductsDet
                     <IconButton
                       size="small"
                       disabled={isRemovePending}
-                      onClick={() => {
-                        removeItemFromCart(cartProduct.product_id)
-                          .then(() => {
-                            getCart.refetch();
-                            setLocalCartProducts((prev) =>
-                              prev.filter((item) => item.product_id !== cartProduct.product_id)
-                            );
-                            toast.info(formatMessage({ id: 'CART.PRODUCT.REMOVED' }));
-                          })
-                          .catch(() => {
-                            toast.error(formatMessage({ id: 'GENERAL.ERROR' }));
-                          });
+                      onClick={async () => {
+                        try {
+                          await removeItemFromCart(cartProduct.product_id);
+                          getCart.refetch();
+                          setLocalCartProducts((prev) =>
+                            prev.filter((item) => item.product_id !== cartProduct.product_id)
+                          );
+                          toast.info(formatMessage({ id: 'CART.PRODUCT.REMOVED' }));
+                        } catch (error) {
+                          toast.error(formatMessage({ id: 'GENERAL.ERROR' }));
+                        }
                       }}
                       aria-label="Eliminar producto"
                     >

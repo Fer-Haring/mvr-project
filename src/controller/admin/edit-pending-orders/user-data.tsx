@@ -15,8 +15,6 @@ interface UserDataProps {
 const UserData: React.FC<UserDataProps> = ({ order }) => {
   const { formatMessage } = useIntl();
 
-  console.dir(order);
-
   const translateStatus = (status: string | undefined) => {
     switch (status) {
       case 'pending':
