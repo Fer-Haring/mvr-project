@@ -11,6 +11,12 @@ interface MessageStore {
   deleteMessageStore: () => void;
   transferImage: string | null;
   setTransferImage: (image: string | null) => void;
+  shippingAddress: string;
+  setShippingAddress: (address: string) => void;
+  shippingCity: string;
+  setShippingCity: (city: string) => void;
+  shippingCost: number;
+  setShippingCost: (cost: number) => void;
 }
 
 export const useMessageStore = create(
@@ -54,9 +60,18 @@ export const useMessageStore = create(
             user_id: '',
           },
           transferImage: null,
+          shippingAddress: '',
+          shippingCity: '',
+          shippingCost: 0,
         }),
       transferImage: null,
       setTransferImage: (image: string | null) => set({ transferImage: image }),
+      shippingAddress: '',
+      setShippingAddress: (address: string) => set({ shippingAddress: address }),
+      shippingCity: '',
+      setShippingCity: (city: string) => set({ shippingCity: city }),
+      shippingCost: 0,
+      setShippingCost: (cost: number) => set({ shippingCost: cost }),
     }),
     {
       name: 'message-store',

@@ -11,9 +11,11 @@ import { useIntl } from 'react-intl';
 interface CartProductsDetailProps {
   className?: string;
   cartProducts: CartItem[];
+  address: string;
+  city: string;
 }
 
-export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ cartProducts }) => {
+export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ cartProducts, address, city }) => {
   const theme = useTheme();
   const isMobile = useIsMobile();
   const { formatMessage } = useIntl();
@@ -22,38 +24,68 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
   const [subTotal, setSubTotal] = useState(0);
 
   const { setOrders } = useCompletedOrdersStore();
-  const { order, setOrder, address, msgCity, deliverValue } = useMessageStore();
+  const {
+    order,
+    setOrder,
+    shippingAddress,
+    setShippingAddress,
+    shippingCity,
+    setShippingCity,
+    shippingCost,
+    setShippingCost,
+  } = useMessageStore();
 
   useEffect(() => {
     const calculateTotal = (): number => {
       return cartProducts.reduce((acc, product) => {
-        const conversionRate = product.price_currency === 'USD' ? dollarValue.value : 1;
-        const convertedValue = product.sub_total * Number(conversionRate);
-        const roundedResult = Math.round(convertedValue * 100) / 100;
-        return roundedResult + acc;
+        const price = Number(product.sub_total) || 0;
+        const conversionRate = product.price_currency === 'USD' ? Number(dollarValue.value) || 1 : 1;
+        const convertedValue = price * conversionRate;
+
+        return acc + Math.round(convertedValue * 100) / 100;
       }, 0);
     };
-    const totalCartValue = calculateTotal() + deliverValue;
-    setTotalCartValue(totalCartValue);
-    setSubTotal(calculateTotal());
-  }, [cartProducts, dollarValue, deliverValue]);
+
+    const subTotal = calculateTotal();
+    const totalWithDelivery = subTotal + Number(shippingCost || 0);
+
+    setTotalCartValue(totalWithDelivery);
+    setSubTotal(subTotal);
+
+    // Actualizamos el costo de envío en el store
+    setShippingCost(Number(shippingCost || 0));
+  }, [cartProducts, dollarValue, shippingCost]);
 
   useEffect(() => {
-    const totalUSD = totalCartValue / Number(dollarValue.value);
-    setOrder({
-      ...order,
-      total_order_amount_ars: totalCartValue,
-      total_order_amount_usd: Math.round(totalUSD * 100) / 100,
-    });
-    setOrders([
-      {
+    if (totalCartValue > 0) {
+      const totalUSD =
+        order.currency_used_to_pay === 'USD' ? totalCartValue / Number(dollarValue.value) : totalCartValue;
+
+      const roundedTotalUSD = Math.round(totalUSD * 100) / 100;
+
+      // Actualizamos la orden con los nuevos valores
+      const updatedOrder = {
         ...order,
-        total_order_amount: totalCartValue,
         total_order_amount_ars: totalCartValue,
-        total_order_amount_usd: Math.round(totalUSD * 100) / 100,
-      },
-    ]);
-  }, [totalCartValue]);
+        total_order_amount_usd: roundedTotalUSD,
+        delivery_cost: shippingCost,
+        delivery_zone: `${shippingAddress}, ${shippingCity}`,
+      };
+
+      setOrder(updatedOrder);
+      setOrders([updatedOrder]);
+    }
+  }, [totalCartValue, order.currency_used_to_pay, shippingAddress, shippingCity, shippingCost]);
+
+  // Efecto para actualizar la dirección y ciudad de envío
+  useEffect(() => {
+    if (address) {
+      setShippingAddress(address);
+    }
+    if (city) {
+      setShippingCity(city);
+    }
+  }, [address, city, setShippingAddress, setShippingCity]);
 
   return (
     <Paper
@@ -85,7 +117,7 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
             <TextsContainer>
               <CustomTypography variant="h5">{formatMessage({ id: 'CART.PAYMENT.DETAILS.ADDRESS' })}</CustomTypography>
               <CustomTypography variant="subtitle1">
-                {address}, {msgCity}
+                {shippingAddress}, {shippingCity}
               </CustomTypography>
             </TextsContainer>
             <TextsContainer>
@@ -124,7 +156,7 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
               {formatMessage({ id: 'CART:PAYMENT.DETAILS.DELIVERY.PRICE' })}
             </CustomTypography>
             <StyledDivider orientation="horizontal" flexItem />
-            <CustomTypography variant="h5">$ {deliverValue}</CustomTypography>
+            <CustomTypography variant="h5">$ {shippingCost}</CustomTypography>
           </TextsRowContainer>
 
           <Stack direction={'row'} gap={2} width={'100%'} sx={{ marginTop: 10 }}>

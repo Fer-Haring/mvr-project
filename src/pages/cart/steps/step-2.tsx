@@ -193,7 +193,7 @@ export const Step2: FunctionComponent<Step2Props> = ({
           )}
         </>
       )}
-      <CartPaymentDetail cartProducts={cart} />
+      <CartPaymentDetail cartProducts={cart} address={order.delivery_zone!} city={order.delivery_zone!} />
       {order.currency_used_to_pay === null && (
         <Typography color={'error'}>{formatMessage({ id: 'CART.PAYMENT.MISSING.DATA' })}</Typography>
       )}
