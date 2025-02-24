@@ -1,22 +1,14 @@
 import { Product } from '@webapp/service/types/products-types';
 import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+
 // import { Products } from '@webapp/service/types/user-types';
 
 type ProductListData = {
-  productList: Product[]; 
+  productList: Product[];
   setProductList: (productList: Product[]) => void;
 };
 
-export const useProductsListData = create(
-  persist<ProductListData>(
-    (set) => ({
-      productList: [], 
-      setProductList: (productList) => set({ productList }),
-    }),
-    {
-      name: 'productListData',
-      storage: createJSONStorage(() => localStorage)
-    }
-  )
-);
+export const useProductsListData = create<ProductListData>((set) => ({
+  productList: [],
+  setProductList: (productList) => set({ productList }),
+}));

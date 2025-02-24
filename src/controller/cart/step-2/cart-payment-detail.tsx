@@ -23,51 +23,55 @@ export const CartPaymentDetail: FunctionComponent<CartProductsDetailProps> = ({ 
   const [totalCartValue, setTotalCartValue] = useState(0);
   const [subTotal, setSubTotal] = useState(0);
 
-  // const { setOrders } = useCompletedOrdersStore();
   const { order, setOrder } = useMessageStore();
 
-  // Calculamos el total una sola vez cuando cambian los productos
+  // Calculamos los totales cuando cambian los productos
   useEffect(() => {
-    const calculateTotal = (): number => {
-      return cartProducts.reduce((acc, product) => {
+    const calculateTotals = () => {
+      let totalARS = 0;
+      let totalUSD = 0;
+
+      cartProducts.forEach((product) => {
         const price = Number(product.sub_total) || 0;
-        const conversionRate = product.price_currency === 'USD' ? Number(dollarValue.value) || 1 : 1;
-        return acc + Math.round(price * conversionRate * 100) / 100;
-      }, 0);
+        if (product.price_currency === 'USD') {
+          totalUSD += price;
+          totalARS += price * Number(dollarValue.value);
+        } else {
+          totalARS += price;
+          totalUSD += price / Number(dollarValue.value);
+        }
+      });
+
+      // Redondeamos a 2 decimales
+      totalARS = Math.round(totalARS * 100) / 100;
+      totalUSD = Math.round(totalUSD * 100) / 100;
+
+      // Agregamos el costo de envío (siempre en ARS)
+      const deliveryCost = Number(order.delivery_cost || 0);
+      totalARS += deliveryCost;
+      totalUSD += deliveryCost / Number(dollarValue.value);
+
+      return {
+        totalARS: Math.round(totalARS * 100) / 100,
+        totalUSD: Math.round(totalUSD * 100) / 100,
+        subTotal: order.currency_used_to_pay === 'USD' ? totalUSD : totalARS,
+      };
     };
 
-    const newSubTotal = calculateTotal();
-    setSubTotal(newSubTotal);
+    const { totalARS, totalUSD, subTotal } = calculateTotals();
+    setSubTotal(subTotal);
+    setTotalCartValue(order.currency_used_to_pay === 'USD' ? totalUSD : totalARS);
 
-    const newTotal = newSubTotal + Number(order.delivery_cost || 0);
-    setTotalCartValue(newTotal);
-  }, [cartProducts, dollarValue.value, order.delivery_cost]);
-
-  // Actualizamos la orden solo cuando es necesario
-  useEffect(() => {
-    if (!address || !city || totalCartValue === 0) return;
-
-    // Tomamos solo la primera parte de la dirección antes de la primera coma
-    const cleanAddress = address.split(',')[0].trim();
-    const cleanCity = city.split(',')[0].trim();
-    const deliveryZone = `${cleanAddress}, ${cleanCity}`;
-
-    if (order.delivery_zone === deliveryZone && order.total_order_amount_ars === totalCartValue) {
-      return;
+    // Actualizamos la orden con los nuevos totales
+    if (address && city) {
+      setOrder({
+        ...order,
+        delivery_zone: `${address}, ${city}`,
+        total_order_amount_ars: totalARS,
+        total_order_amount_usd: totalUSD,
+      });
     }
-
-    const updatedOrder = {
-      ...order,
-      delivery_zone: deliveryZone,
-      total_order_amount_ars: totalCartValue,
-      total_order_amount_usd:
-        order.currency_used_to_pay === 'USD'
-          ? Math.round((totalCartValue / Number(dollarValue.value)) * 100) / 100
-          : totalCartValue,
-    };
-
-    setOrder(updatedOrder);
-  }, [address, city, totalCartValue, order.currency_used_to_pay]);
+  }, [cartProducts, dollarValue.value, order.delivery_cost, order.currency_used_to_pay, address, city]);
 
   return (
     <Paper
