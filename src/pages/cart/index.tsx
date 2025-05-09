@@ -13,13 +13,10 @@ import { useUserData } from '@webapp/store/users/user-data';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-
-
 import { Step0 } from './steps/step-0';
 import { Step1 } from './steps/step-1';
 import { Step2 } from './steps/step-2';
 import { Step3 } from './steps/step-3';
-
 
 export const CartPage: React.FunctionComponent = () => {
   const theme = useTheme();
@@ -114,7 +111,7 @@ export const CartPage: React.FunctionComponent = () => {
         setUpdatingUserLoading(false);
       }
     }
-  }
+  };
 
   const handlePreviousStep = () => {
     setStep((prevStep) => prevStep - 1);
