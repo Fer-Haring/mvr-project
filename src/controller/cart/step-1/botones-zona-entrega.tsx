@@ -39,6 +39,26 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ onVali
       deliveryCost = 5200;
     }
 
+    // Validación para asegurar que el delivery_cost no sea menor que el valor actual
+    if (user.delivery_cost < deliveryCost) {
+      // Si el costo actual es menor, forzamos al usuario a seleccionar nuevamente
+      const updatedUserData = {
+        ...user,
+        delivery_zone: '', // Limpiamos la zona de entrega
+        delivery_cost: 0, // Reseteamos el costo
+      };
+      setUser(updatedUserData);
+      setDeliverValue(0);
+      setOrder({
+        ...order,
+        user: updatedUserData,
+      });
+      if (onValidChange) {
+        onValidChange(false);
+      }
+      return;
+    }
+
     // Actualizar el costo de entrega si es necesario
     if (user.delivery_cost !== deliveryCost) {
       const updatedUserData = {
@@ -52,7 +72,7 @@ const ZoneDeliverButtons: FunctionComponent<ZoneDeliverButtonsProps> = ({ onVali
         user: updatedUserData,
       });
     }
-  }, [user, order.delivery_zone, order.delivery_type, setUser, setDeliverValue, setOrder]);
+  }, [user, order.delivery_zone, order.delivery_type, setUser, setDeliverValue, setOrder, onValidChange]);
 
   const handleOnChange = async (selectedDelivery: string) => {
     let deliveryCost = 0;
